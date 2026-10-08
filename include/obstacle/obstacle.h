@@ -4,6 +4,16 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+/*
+ * Maximum number of high-level actions
+ * Buddy 5 may place into one avoidance plan.
+ */
+#define OBSTACLE_MAX_ACTIONS 8U
+
+
+/*
+ * Buddy 5 state machine.
+ */
 typedef enum
 {
     OBSTACLE_STATE_MONITOR = 0,
@@ -17,6 +27,10 @@ typedef enum
     OBSTACLE_STATE_FAULT
 } obstacle_state_t;
 
+
+/*
+ * Selected side for avoiding an obstacle.
+ */
 typedef enum
 {
     BYPASS_NONE = 0,
@@ -25,6 +39,30 @@ typedef enum
     BYPASS_NO_SAFE_ROUTE
 } bypass_direction_t;
 
+
+/*
+ * High-level actions Buddy 5 can request.
+ *
+ * Buddy 5 does NOT directly control the motors.
+ * These actions will later be executed by the
+ * Mission Controller / Buddy 2.
+ */
+typedef enum
+{
+    OBSTACLE_ACTION_NONE = 0,
+    OBSTACLE_ACTION_STOP,
+    OBSTACLE_ACTION_REVERSE,
+    OBSTACLE_ACTION_TURN_LEFT,
+    OBSTACLE_ACTION_TURN_RIGHT,
+    OBSTACLE_ACTION_BYPASS,
+    OBSTACLE_ACTION_SEARCH_LINE,
+    OBSTACLE_ACTION_RESUME_LINE
+} obstacle_action_t;
+
+
+/*
+ * Faults that can be reported by Buddy 5.
+ */
 typedef enum
 {
     OBSTACLE_FAULT_NONE = 0,
@@ -38,6 +76,10 @@ typedef enum
     OBSTACLE_FAULT_LINE_RECOVERY_TIMEOUT
 } obstacle_fault_t;
 
+
+/*
+ * One ultrasonic scan measurement.
+ */
 typedef struct
 {
     uint8_t angle_deg;
@@ -45,6 +87,10 @@ typedef struct
     bool valid;
 } obstacle_scan_sample_t;
 
+
+/*
+ * Generated information about the obstacle.
+ */
 typedef struct
 {
     bool valid;
@@ -64,13 +110,40 @@ typedef struct
     uint8_t right_valid_samples;
 
     bypass_direction_t bypass_direction;
+
 } obstacle_profile_t;
 
+
 /*
- * These callbacks are the interface from Buddy 5
- * to the Mission Controller.
+ * High-level avoidance and recovery plan.
  *
- * Buddy 5 never directly controls the motors.
+ * Example:
+ *
+ * STOP
+ * REVERSE
+ * TURN_LEFT
+ * BYPASS
+ * SEARCH_LINE
+ *
+ * The actual motor distance, angle and speed
+ * are handled by Buddy 2 / Mission Controller.
+ */
+typedef struct
+{
+    obstacle_action_t actions[OBSTACLE_MAX_ACTIONS];
+
+    uint8_t action_count;
+
+    bypass_direction_t bypass_direction;
+
+    bool reverse_required;
+
+} obstacle_action_plan_t;
+
+
+/*
+ * Interfaces from Buddy 5 to the
+ * Mission Controller.
  */
 typedef struct
 {
@@ -84,10 +157,16 @@ typedef struct
 
     void (*request_fault)(
         obstacle_fault_t fault);
+
 } obstacle_callbacks_t;
 
+
+/*
+ * Initialise Buddy 5.
+ */
 bool obstacle_system_init(
     const obstacle_callbacks_t *callbacks);
+
 
 /*
  * Intended for the high-priority periodic
@@ -95,17 +174,23 @@ bool obstacle_system_init(
  */
 void obstacle_monitor_step(void);
 
+
 /*
- * Intended for the medium-high priority
- * event-driven Obstacle Handling Task.
+ * Intended for the medium-high-priority
+ * Obstacle Handling Task.
  */
 void obstacle_handling_step(void);
 
-void obstacle_reset(void);
 
 /*
- * Notifications received from other subsystems
- * through the Mission Controller.
+ * Reset subsystem after fault / mission reset.
+ */
+void obstacle_reset(void);
+
+
+/*
+ * Notifications received from other parts
+ * of the robot.
  */
 void obstacle_notify_vehicle_stopped(void);
 
@@ -113,8 +198,9 @@ void obstacle_notify_bypass_complete(void);
 
 void obstacle_notify_line_found(void);
 
+
 /*
- * Telemetry / status getters.
+ * Status and telemetry getters.
  */
 obstacle_state_t obstacle_get_state(void);
 
@@ -123,12 +209,20 @@ obstacle_fault_t obstacle_get_fault(void);
 const obstacle_profile_t *
 obstacle_get_profile(void);
 
+const obstacle_action_plan_t *
+obstacle_get_action_plan(void);
+
 const obstacle_scan_sample_t *
 obstacle_get_scan_samples(
     uint32_t *sample_count);
 
 uint32_t obstacle_get_forward_distance_cm(void);
 
+
+/*
+ * Human-readable names for debugging
+ * and telemetry.
+ */
 const char *obstacle_state_name(
     obstacle_state_t state);
 
@@ -137,5 +231,8 @@ const char *obstacle_fault_name(
 
 const char *obstacle_bypass_name(
     bypass_direction_t direction);
+
+const char *obstacle_action_name(
+    obstacle_action_t action);
 
 #endif
