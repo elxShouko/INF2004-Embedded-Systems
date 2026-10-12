@@ -1,0 +1,7 @@
+buddy4_tests
+buddy4_tests_asan
+buddy4_replay
+synthetic_log.txt
+cov/
+*.gcda
+*.gcno
