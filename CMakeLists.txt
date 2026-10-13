@@ -45,3 +45,30 @@ pico_enable_stdio_uart(
 pico_add_extra_outputs(
     INF2004_Embedded_Systems
 )
+
+# Reusable Member 3 algorithms; no motor, network, or RTOS ownership.
+add_library(member3_navigation STATIC
+    src/line/ir_input.c
+    src/line/line_tracking.c
+    src/line/junction.c
+    src/line/barcode.c
+    src/line/navigation_map.c
+)
+target_include_directories(member3_navigation PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
+target_compile_options(member3_navigation PRIVATE -Wall -Wextra -Werror)
+
+# Member 3 bench firmware is separate from the existing Member 5 executable.
+option(BUILD_MEMBER3_IR_DIAGNOSTIC "Build Member 3 IR bench diagnostic" OFF)
+if(BUILD_MEMBER3_IR_DIAGNOSTIC)
+    add_executable(member3_ir_diagnostic
+        examples/member3_ir_diagnostic.c
+        src/line/ir_gpio.c
+    )
+    target_include_directories(member3_ir_diagnostic PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/include)
+    target_link_libraries(member3_ir_diagnostic pico_stdlib member3_navigation)
+    target_compile_options(member3_ir_diagnostic PRIVATE -Wall -Wextra -Werror)
+    pico_enable_stdio_usb(member3_ir_diagnostic 1)
+    pico_enable_stdio_uart(member3_ir_diagnostic 0)
+    pico_add_extra_outputs(member3_ir_diagnostic)
+endif()
