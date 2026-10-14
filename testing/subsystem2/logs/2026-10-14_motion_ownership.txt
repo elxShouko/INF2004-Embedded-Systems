@@ -1,0 +1,111 @@
+Buddy 2 M3-M7 ownership and verification audit - 2026-10-14
+
+Repository: C:/Users/Hp/Documents/GitHub/INF2004-Embedded-Systems
+Branch before/after: buddy2-Motor-and-encoder-control
+HEAD before/after: 9e40a56d55955291c54957c459e02af1480bc31e
+Local main: 2886fa8a0118185674f59964ab832d7c4e3ceabb
+git rev-list --left-right --count main...HEAD: 0 2
+Starting git status --short: clean
+Final index diff: empty. No stage/commit/push/merge/rebase/branch switch/fetch.
+No Make invocation, source/build/config change outside subsystem2, flash or hardware test.
+
+Whole-repository SHA256 comparison excluding .git:
+748 baseline files; 745 preserved byte-for-byte; 3 modified within subsystem2.
+No baseline file deleted. No file added/modified outside subsystem2.
+Accepted M1/M2 production/test files and task_producer.c remain byte-identical.
+Existing M1A assertions and inherited S2-U01/U02 match HEAD after newline normalization.
+The original pure test calls are relocated to a static-stack worker in TEST=1.
+No existing test assertion/group removed or weakened.
+
+Final Git paths: 3 modified tracked files and 36 untracked additions (including this log).
+git diff --name-status shows only the three subsystem2 modifications.
+git status --short --untracked-files=all lists the additions below.
+git diff --check PASS; Git reports only LF-to-CRLF advisory messages.
+The 17-file style subset PASS. It is not certification of all Barr-C rules.
+
+Tests: 95/95 PASS in both C99 default and O2/fshort-enums host profiles.
+All original 54 groups retained, plus S2-U57..S2-U97 (41 new).
+Strict compiler warning checks with Werror and GCC fanalyzer: zero diagnostics.
+All 19 Buddy 2 C files compile in SMP=0/1 x APP_TEST=0/1: 76 ARM compilations.
+Strict warnings applied to application code; unchanged inherited demo/test files
+use professor flags. No ARM firmware link or physical validation claimed.
+Final post-compile edit only wraps a comparison onto two lines for <=80 columns;
+it changes no C tokens or behavior. The final style check passes.
+See verify_final_default.log, verify_final_optimized.log, verify_final_arm.log
+and verify_final_stack.log for expanded commands, output and individual frames.
+Temporary exe/o/d/su files with the verified-generated prefix were removed.
+Compiler temporaries are absent. Existing accepted evidence/output files preserved.
+
+Remaining release blockers:
+- Team-owned shared GPIO-bank IRQ13 subscription implementation and validation.
+- Vehicle Controller arbitration/API agreement and explicit enable procedure.
+- SDK 2.2.0 full Make/link verification (installed location is SDK 1.5.1).
+- Measured encoder/motor calibration, physical pin/power/current verification.
+- Target RTOS/IRQ/WCET/stack/latency validation including emergency stop.
+No known remaining high-severity portable-code defect identified by this review.
+Software cannot establish electrical safety, current limiting or physical accuracy.
+
+Changed-file allowlist (ordinary git diff omits untracked content):
+app_program/subsystem2/MOTION_OWNERSHIP.log
+app_program/subsystem2/MOTION_SYSTEM.md
+app_program/subsystem2/drv_encoder.c
+app_program/subsystem2/drv_encoder.h
+app_program/subsystem2/enc_capture.c
+app_program/subsystem2/enc_capture.h
+app_program/subsystem2/motion_api.h
+app_program/subsystem2/motion_bus.c
+app_program/subsystem2/motion_bus.h
+app_program/subsystem2/motion_run.c
+app_program/subsystem2/motion_run.h
+app_program/subsystem2/move_plan.c
+app_program/subsystem2/move_plan.h
+app_program/subsystem2/subsystem2.c
+app_program/subsystem2/subsystem2.h
+app_program/subsystem2/subsystem2_test.c
+app_program/subsystem2/task_motion.c
+app_program/subsystem2/task_motion.h
+app_program/subsystem2/test_drive.c
+app_program/subsystem2/test_drive.h
+app_program/subsystem2/verify_M3_default.log
+app_program/subsystem2/verify_M3_optimized.log
+app_program/subsystem2/verify_M4_default.log
+app_program/subsystem2/verify_M4_optimized.log
+app_program/subsystem2/verify_M5_default.log
+app_program/subsystem2/verify_M5_optimized.log
+app_program/subsystem2/verify_M6_default.log
+app_program/subsystem2/verify_M6_optimized.log
+app_program/subsystem2/verify_M7_arm.log
+app_program/subsystem2/verify_M7_default.log
+app_program/subsystem2/verify_M7_optimized.log
+app_program/subsystem2/verify_final_arm.log
+app_program/subsystem2/verify_final_default.log
+app_program/subsystem2/verify_final_optimized.log
+app_program/subsystem2/verify_final_stack.log
+app_program/subsystem2/verify_motion.py
+app_program/subsystem2/verify_strict_arm.log
+app_program/subsystem2/wheel_loop.c
+app_program/subsystem2/wheel_loop.h
+
+Final source/header/verification-script SHA256:
+f92daf16ac1943b39fd29e22cd6f63c35a3043e875472b7e1aaeecd420e2ef3e  app_program/subsystem2/drv_encoder.c
+caa9f52de95f0710c6ca86f1e6779171d3dbadc40e447b3c08d6b9b0750ba235  app_program/subsystem2/drv_encoder.h
+586878820dee0bf82abc03b716be40727a9acee310ed4e09cbb9b9ba3bbccf87  app_program/subsystem2/enc_capture.c
+3ee5ff131bd9aa8a545c67f92da8483a83ce878946fb618c132c99cda68e6670  app_program/subsystem2/enc_capture.h
+07ec7ef7c0613c5542dacadf43a1ec4fb4afe1cb3baf89ecc5a6a313c9cee484  app_program/subsystem2/motion_api.h
+19ad1ef597c806193ca5afff70ab0f8652fc4a47b89d4bad4782df608a282768  app_program/subsystem2/motion_bus.c
+8491e984eb398be793d53eedab8bc6b154d36ed5f0d3dd5684b115448b5fa7eb  app_program/subsystem2/motion_bus.h
+cd9239b966e8cbf60106a34cad5f349b2cf19a10fe6d6855ba6178be89b9d0c9  app_program/subsystem2/motion_run.c
+5c04fb91b51d318acd9c992636b61194eeca3be8f251442ad88c110a88a41f42  app_program/subsystem2/motion_run.h
+727d78a41c066b142bfd92efeda157271e6da9aaa83289e514f7fd2d32ae7aaa  app_program/subsystem2/move_plan.c
+35b0496acb1def9c86497ff59bbdbdf8138cbcd0c2c2847ec98ee95f274160c9  app_program/subsystem2/move_plan.h
+26b17efd7c8819c7830b643a588b85e18421e61fa6c39e4902714e7d3b907228  app_program/subsystem2/subsystem2.c
+32659be92095df9e5f1d2ec280df1a25905c6b906b1c3a8faeafb728a64d0d2f  app_program/subsystem2/subsystem2.h
+5d593125e20e92a25cc1f095a20dcab05e84ec6d60f57c616114f5195ba291d0  app_program/subsystem2/subsystem2_test.c
+6c4418c6f577c8fa04a782575fbcfc501e8c4f13e555c2253100c4ad929f58bc  app_program/subsystem2/task_motion.c
+0776fa9b415fc07ed00b9258cbcbabcfd29e2df0256e7b3a3a9511ad61751bf0  app_program/subsystem2/task_motion.h
+7d1b563d2b1bc643b353f75238c94f4b5cc6a738e0128f3b206ff9c8f168c646  app_program/subsystem2/test_drive.c
+9a83c11b8a5f11bec84f69555dd8582c2ab0a47799c4ec953ee53cdfc8f07256  app_program/subsystem2/test_drive.h
+8f16c303beacfe2e2115f6ff03de2c2a90290c911534c86672786d0632f4cc61  app_program/subsystem2/verify_motion.py
+7697b40c05693952a7015b7f2757926556b60e3fa95372c8425bf9285df9e141  app_program/subsystem2/wheel_loop.c
+2e79492ffba21a7151f894658a30e10e5a19bf89c6fd58584e8de55046c45d34  app_program/subsystem2/wheel_loop.h
+

@@ -235,8 +235,15 @@ production build flag changed to suppress these. Initial Buddy 2 compilation
 errors (test-helper name collision and missing config_device.h include) were
 corrected before final successful runs; earlier diagnostics remain in records.
 
-Saved local evidence: m2_host_default.log, m2_host_optimized.log,
-m2_make_recipes.txt and m2_arm_compile.log (exact compiler invocations/results).
+Saved evidence (byte-preserved relocation during the approved folder cleanup):
+[default host output](../../testing/subsystem2/logs/2026-10-14_m2_host_default.txt),
+[optimized host output](../../testing/subsystem2/logs/2026-10-14_m2_host_optimized.txt),
+[ARM compiler history](../../testing/subsystem2/logs/2026-10-14_m2_arm_compile.txt)
+and [original Make recipe](m2_make_recipes.txt) (exact compiler invocations/results).
+The [archive manifest](../../testing/subsystem2/logs/2026-10-14_evidence_manifest.md)
+records original names/hashes; [official results](../../testing/subsystem2/TEST_LOG.md)
+retain the uncommitted runs as preliminary evidence. Historical outcomes above
+are unchanged.
 Generated executables/objects/dependency files are removed after verification.
 Full linking was NOT attempted again and is not claimed: the known SDK 1.5.1
 versus required 2.x USB include-layout mismatch remains outside M2 scope.

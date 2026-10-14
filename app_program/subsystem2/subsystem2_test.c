@@ -36,6 +36,7 @@
 #include "motion_config.h"
 #include "motion_foundation_test.h"
 #include "test_motor.h"
+#include "test_drive.h"
 
 #if defined(MOTION_CONFIG_HOST_TEST) || APP_TEST
 
@@ -368,9 +369,10 @@ int main(void)
     uint32_t foundation_failures = motion_foundation_test();
 
     uint32_t motor_failures = test_motor();
+    uint32_t motion_failures = test_drive(NULL);
 
     return ((b_config_pass && (0U == foundation_failures) &&
-             (0U == motor_failures)) ? 0 : 1);
+             (0U == motor_failures) && (0U == motion_failures)) ? 0 : 1);
 }
 #else
 
@@ -400,10 +402,8 @@ EXPORT void subsystem2_test(void)
 
 	TEST_SUMMARY("subsystem2");
 
-    (void)motion_config_tests();
-    /* Report all pure foundation failures; no motor actuation is involved. */
-    (void)motion_foundation_test();
-    (void)test_motor();
+    /* Preserve all pure groups, on the Buddy 2 test worker's static stack. */
+    (void)test_drive(motion_config_tests);
 }
 
 #endif /* MOTION_CONFIG_HOST_TEST */
