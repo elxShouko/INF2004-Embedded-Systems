@@ -35,6 +35,7 @@
 
 #include "motion_config.h"
 #include "motion_foundation_test.h"
+#include "test_motor.h"
 
 #if defined(MOTION_CONFIG_HOST_TEST) || APP_TEST
 
@@ -366,7 +367,10 @@ int main(void)
     bool b_config_pass = motion_config_tests();
     uint32_t foundation_failures = motion_foundation_test();
 
-    return ((b_config_pass && (0U == foundation_failures)) ? 0 : 1);
+    uint32_t motor_failures = test_motor();
+
+    return ((b_config_pass && (0U == foundation_failures) &&
+             (0U == motor_failures)) ? 0 : 1);
 }
 #else
 
@@ -399,6 +403,7 @@ EXPORT void subsystem2_test(void)
     (void)motion_config_tests();
     /* Report all pure foundation failures; no motor actuation is involved. */
     (void)motion_foundation_test();
+    (void)test_motor();
 }
 
 #endif /* MOTION_CONFIG_HOST_TEST */
