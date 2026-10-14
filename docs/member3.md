@@ -250,19 +250,24 @@ Those task/queue connections are pending the team's interface.
 
 ## Still deferred until supplied or measured
 
-- Steering gain/speed and continuous line-following state machine.
+- Steering gain/speed and connections to the real motor/controller interfaces.
 - Actual junction/line calibration, odometry delivery and controller queue hookup.
-- Live line-loss/recovery decisions, reacquisition confirmation and timeouts.
+- Hardware validation of line-loss/recovery timing and reacquisition confirmation.
 - Final capture quiet/timeout timing, sensor filtering, width tolerance tuning
   and hardware validation across intended speeds.
 - Actual navigation callbacks/queues, Mission Controller contracts, manoeuvre
   acknowledgement and telemetry transport.
-- Micro T-Kernel task wrapper/priorities: the starter/API is absent here.
+- Final team priority allocation and on-board RTOS scheduling validation.
 - Exact Barr C conformance audit against the course's supplied standard.
 
 The state/event enums reserve the confirmed responsibilities, including U-turn;
 the junction algorithm returns an event structure, but transport to the actual
 controller is not wired and none of these algorithms drives the robot.
+The separate `app_program/subsystem3/` template integration now provides the
+owner task, message buffers, navigation state machine and recovery handling.
+See [template integration](member3-template-integration.md) for the runtime API,
+installation/build instructions, and verified scope. The original CMake
+diagnostic remains a standalone bench tool.
 Member 2 owns motors/encoders; Member 1 owns MQTT; Members 4/5 own IMU/obstacles.
 Member 3 will report line reacquisition through the Mission Controller rather
 than implementing Member 5's avoidance/recovery manoeuvres.

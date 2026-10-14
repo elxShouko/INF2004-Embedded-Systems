@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/sirfonzie/INF2004_ProjectTemplate",
+  "archive_sha256": "918beecbede551f0bf531c8c584a2f3aab8078c351bad15b7743b1a795c5651f",
+  "template_files": 643,
+  "added_files": 637,
+  "import_date": "2026-10-14",
+  "note": "Complete cached template archive imported. Existing Member 3 integration and standalone source preserved. README/gitignore merged, and only Member 3 ownership rows updated in template TEAM.md."
+}
