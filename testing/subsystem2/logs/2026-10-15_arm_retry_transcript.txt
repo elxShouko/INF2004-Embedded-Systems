@@ -1,0 +1,9 @@
+START_UTC 2026-10-15T04:52:20.494313+00:00
+COMMAND C:\Users\Hp\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -B app_program/subsystem2/verify_motion.py --label finalnormal20261015b --arm --strict
+ARM SMP 0 TEST 0 PASS
+ARM SMP 0 TEST 1 PASS
+ARM SMP 1 TEST 0 PASS
+ARM SMP 1 TEST 1 PASS
+
+EXIT 0
+END_UTC 2026-10-15T04:52:53.112052+00:00

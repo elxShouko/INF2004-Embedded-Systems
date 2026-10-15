@@ -1,3 +1,8 @@
+> Current location: normal repository `C:/Users/Hp/Documents/GitHub/INF2004-Embedded-Systems`,
+> branch `buddy2-Motor-and-encoder-control`. The 2026-10-14 development report
+> below is historical; see the current handoff at the end and the official
+> test record for subsequent runs. Source C/H files remain in subsystem2.
+
 # Buddy 2 M3–M7 software and integration handoff
 
 Implemented and verified on 2026-10-14 on branch
@@ -13,7 +18,8 @@ Controller connection, calibration and target timing remain prerequisites.
 
 ## Implementation and ownership
 
-All paths below are relative to `app_program/subsystem2/`.
+Production/test file names below are relative to `app_program/subsystem2/`;
+this document and the other technical narratives are in `docs/buddy2/`.
 
 | Files | Responsibility |
 |---|---|
@@ -377,25 +383,90 @@ Exercise controller TTLs, arbitration, rejection, busy retry, cancellation,
 acknowledgement and emergency events from all relevant buddies. Preserve videos
 and official test records only in separately approved locations.
 
-## Pull-request preparation — instructions only
+## Normal-repository handoff — 2026-10-15
 
-1. Review the [archived ownership report](../../testing/subsystem2/logs/2026-10-14_motion_ownership.txt), all new files (ordinary git diff omits untracked
-   content) and `git diff -- app_program/subsystem2/`. Agree the provisional
-   contracts and clearly retain blocked-feature notes in the PR description.
-2. Obtain approval for official test-record/shared integration changes and a
-   complete SDK 2.2.0 build. Run `cd build_make; make -j8` and
-   `make TEST=1 -j8` in the documented environment only when output writes are
-   authorised. Record actual ELF/UF2 names, link warnings, size and results.
-3. Resolve any main-branch integration differences with the team. Fetching,
-   merging/rebasing or switching is a separate permission step; no remote
-   freshness or merge-conflict-free claim is made by this task.
-4. With explicit staging/commit approval, stage an explicit reviewed Buddy 2
-   source/header/doc/script/evidence allowlist. Exclude executables, .o/.d/.su,
-   compiler temporaries, unrelated files, credentials and reference_docs/.
-   Review `git diff --cached --check` and `git diff --cached --name-status`.
-5. With explicit commit/push/PR approval, commit and push this authorised branch
-   and open a PR targeting main. Describe the unconnected IRQ/controller and
-   hardware verification requirements; distinguish object compilation from a
-   successful link. Do not merge until team review and required checks pass.
+Final organisation is performed in the original repository and branch, starting
+at HEAD `0482b352c4d30e8e95831ae8ff931c8952dbfeb9`. No branch/worktree is
+created or switched. The previous worktree was already archived at the user's
+request; its snapshot `7215e6055c9539535e19c434433c398a7750ba5e` is inspected
+read-only to preserve documentation and later genuine test records. All 38 C/H
+files, script and recipe match its implementation apart from line endings.
 
-No commands in this preparation section were executed to alter Git state.
+### Requirement coverage and release boundary
+
+| Responsibility | Actual implementation | Remaining verification/integration |
+|---|---|---|
+| Two motors, signed effort, PWM, brake/coast, guarded reversal | drv_motor and drv_rp2040; synthetic U43–U56 | Electrical sequencing/current, polarity and guard measurements |
+| Two encoders, x4 polarity/count/invalid/overflow handling | motion_quad and enc_capture; U13–U18/U57–U61 | Real dispatcher hooks, edge rate/loss and SMP target tests |
+| Signed wheel speed and distance | motion_estimator; U19–U25/U38–U39 | Loaded circumference, decoded counts/rev and physical error |
+| Two PIDs, saturation and anti-windup | motion_pid and wheel_loop; U26–U42/U64–U70 | Gains, timing, plant stability and target WCET |
+| Continuous differential speeds | MOVE_PLAN_SPEED, same-ID TTL refresh, acceleration/deceleration | Controller arbitration and line-following integration |
+| Forward/reverse travel and straight correction | Relative wheel goals, leading-wheel reduction, both-wheel completion | Distance/stopping/slip calibration |
+| Left/right and U-turns | Opposite wheel arcs and separate compensation; U83–U87 | Effective track width and angle accuracy |
+| Stop/cancel/deadlines/latched emergency faults | motion_run, motion_bus, dedicated safety flag | Actual scheduling/stop latency and independent power-removal policy |
+| Lifecycle and status | Real task init/start, copied status and immutable configuration | Team API agreement; no automatic configuration/enable caller |
+
+Portable logic is implemented. Kernel/hardware paths are not proven by host
+tests. Priority 15, TP_PRC2 affinity, 4 KiB motion stack and 8 KiB TEST worker
+remain provisional until team scheduling review and measured stack margins.
+Emergency work avoids ordinary queues, but no hard response bound has been
+measured. Fault acknowledgement does not clear the latch; recovery requires an
+unpowered reviewed restart, not automatic re-enable.
+
+### Demonstration retirement — coordinated integration task
+
+`subsystem2_start()` already starts the real motion task, alongside the retained
+producer. Removing only producer startup would strand Buddy 3's consumer in
+`tk_rcv_mbx(...,TMO_FEVR)` (`app_program/subsystem3/task_consumer.c:25`).
+Removing SAMPLE_MSG, sem_slots or mpf_samples would also break that consumer's
+compiled references and Buddy 4's monitor (`task_monitor.c:92–93`), plus S2-U01/02.
+The pool, semaphore, declarations and producer are therefore the minimum
+unchanged compatibility chain for the currently started examples.
+
+Buddy 3 must retire its consumer startup and mailbox/pool return dependencies
+while retaining the real navigation task. Buddy 4 must retire synthetic batch,
+statistics, semaphore/pool monitoring and related tests. Shared startup/tests
+and TEAM.md then require coordinated updates. Only afterwards can Buddy 2
+remove producer_task, s2_make_value, sample types and compatibility objects.
+This is not a pre-merge code blocker for a non-actuating compatibility-preserving
+merge; it is required before the final robot configuration claims no synthetic
+producer activity. No other buddy's code was changed.
+
+### Unresolved shared contracts
+
+The Vehicle/Mission Controller must arbitrate Buddy 1 remote requests, Buddy 3
+line/turn intent, Buddy 4 motion/terrain events and Buddy 5 stop/avoidance intent.
+Buddy 2 alone owns motor outputs. motion_api_* remains provisional. Agree IDs,
+TTL/refresh, BUSY retry, cancellation/acknowledgement, emergency callers and
+configuration lifetime. Week 6 FR17 requests raw left/right encoder counts;
+current motion_run_status_t exposes speed and historical wheel position, not
+raw counts. Adding raw count telemetry is a team-reviewed interface decision,
+not an implemented capability. No public contract was silently changed.
+
+The external GPIO-bank dispatcher must supply reserve/enable/release, both
+edge directions on GP7/GP28/GP0/GP1, one simultaneous input sample, owned-bit
+acknowledgement, agreed core affinity and quiescent release. Pin/PWM reservations
+need TEAM.md agreement. GP0/GP1 cannot use UART/crash reporting; GP28 requires
+checking the VBAT jumper and ADC ownership; GP8/GP9 conflict with I2C0, and GP7
+with I2C1. Current disabled I2C/ADC-pin setup is not permanent ownership proof.
+
+### Manual Git readiness
+
+The user explicitly approves retaining root AGENTS.md and reference_docs.
+Those files are unchanged. Six historical integrated ARM/Make verification
+logs have been moved from build_make into testing/subsystem2/logs, with original
+bytes and hashes preserved. See the [relocation index and integrity record](../../testing/subsystem2/logs/2026-10-15_final_verification.md#integrated-arm-log-relocation--2026-10-15).
+
+The final working-tree diff against locally available main
+`2886fa8a0118185674f59964ab832d7c4e3ceabb` contains no build_make changes.
+The committed-only diff still contains the old log additions until the user
+commits the relocation. The previous scope-only merge blocker is resolved by
+this approval and file move; full linking and shared integration limitations
+remain. No remote freshness or conflict-free merge is asserted. Review and
+commit the final file changes manually; no staging, commit, push, merge, fetch
+or history rewrite is performed by this organisation task.
+
+The installed SDK remains 1.5.1; the documented build requires SDK 2.2.0
+(or the README's separately tested 2.3.0). Full firmware linking remains
+unverified. Provision a compatible SDK/tool environment separately; do not
+patch the professor's Makefiles. No firmware was flashed or motor energised.
