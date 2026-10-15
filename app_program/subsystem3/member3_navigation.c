@@ -594,7 +594,12 @@ static void recover_line (s3_context_t *     p_context,
         return;
     }
 
+    /* The filter retains its last stable observation during a transition.
+     * Raw loss of either front sensing point must break confirmation now,
+     * rather than allowing old centred evidence to complete recovery.
+     */
     if ((p_context->status.line_valid) &&
+        (3U == (p_context->status.black_mask & 3U)) &&
         (LINE_OBSERVATION_CENTRED == observation))
     {
         if (!p_context->b_finding)

@@ -122,6 +122,12 @@ IMPORT volatile ID tid_s3_navigation;
 /* Task-context APIs. All processing/configuration is serialized by S3 task.
  * E_OK here means queued; use S3_OUTPUT_REPLY for actual validation result.
  * Controller should drain output frequently and poll status for latched fault.
+ * Line events are changes, not motion keepalives. A controller must validate
+ * calibrated/line_valid, fault, mode/state AND the age of raw.timestamp_us
+ * before refreshing Buddy 2 motion. A fresh raw sample alone does not make
+ * a retained filtered observation suitable for steering. See the proposed
+ * handoff in docs/buddy3/production-timing-and-handoff.md. No controller or
+ * direct motor connection is implemented by these provider APIs.
  */
 /** @brief Copy one request into the bounded owner-task input queue. */
 ER s3_submit (const s3_input_t * p_input, TMO timeout);

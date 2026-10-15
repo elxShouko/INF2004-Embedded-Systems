@@ -115,6 +115,10 @@ on top of the retained demo consumer's existing objects.
 
 ## Scheduling and calibration limits
 
+See [production timing and handoff](production-timing-and-handoff.md) for the
+separate 10 ms host suite, change-only event/continuous-motion refresh policy,
+recovery confirmation fix and pending hardware/controller acceptance procedure.
+
 The template's CNF_TIMER_PERIOD is 10 ms. Configuration period must be an
 integer multiple of that tick, and max_sample_gap_us must allow the requested
 period and real jitter. A request for 1 ms polling cannot provide 1 ms sampling
