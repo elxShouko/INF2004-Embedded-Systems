@@ -12,8 +12,6 @@
 #define S5_FINE_SCAN_HALF_SPAN_DEG	20U
 #define S5_MIN_VALID_FINE_SAMPLES	3U
 #define S5_MIN_VALID_SIDE_SAMPLES	2U
-#define S5_MIN_VALID_DISTANCE_CM	2U
-#define S5_MAX_VALID_DISTANCE_CM	400U
 #define S5_MAX_SCAN_DURATION_MS		0x7fffffffU
 
 /* Development defaults; tune only from repeatable hardware measurements. */

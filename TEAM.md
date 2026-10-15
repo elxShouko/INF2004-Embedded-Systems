@@ -63,7 +63,7 @@ fixed.
 | GP12 | | |
 | GP13 | | |
 | GP14 | | |
-| GP15 | S5 | Servo signal; Robo Pico GP15 servo header (user-confirmed) |
+| GP15 | S5 (provisional; unverified) | Possible servo signal only; actual signal GPIO is not confirmed; do not configure |
 | GP16 | S4 | I2C0 SDA, Week 6 design; physical wiring unverified |
 | GP17 | S4 | I2C0 SCL, Week 6 design; physical wiring unverified |
 | GP18 | | |
@@ -75,11 +75,12 @@ fixed.
 | GP27 | S3 | Side IR barcode/junction sensor, digital DOUT |
 | GP28 | S2 | Left encoder B; ADC2/VBAT jumper must not drive this pin |
 
-Buddy 5's user-confirmed wiring is GP26 for ultrasonic TRIG, GP6 for ECHO, and
-GP15 for the servo signal. Sensor model, ECHO voltage/power suitability, and
-servo electrical requirements remain unverified. GP26 must stay GPIO/SIO-only:
-it aliases PWM5A with Buddy 2's GP10 motor output. These pin claims do not
-enable the unimplemented Buddy 5 driver.
+Current observed Buddy 5 wiring is HC-SR04 VCC to 3V3, GND to GND, GP26 to
+TRIG, and GP6 to ECHO. The module's operating suitability at 3V3, ECHO voltage,
+and any level shifting are unverified. The servo model, signal GPIO, supply,
+and wiring are unconfirmed; GP15 remains only an unverified candidate. GP26
+must stay GPIO/SIO-only because it aliases PWM5A with Buddy 2's GP10 motor
+output. These records do not enable the unimplemented Buddy 5 driver.
 
 ## 3. Peripherals
 
@@ -119,13 +120,13 @@ the drivers have no locking to stop it.
 | ADC | | | GP26–GP28 |
 | PWM4A/B, PWM5A/B | S2 | motion owner (core 1) | GP8/9, GP10/11 |
 | IO_BANK0 IRQ13 | Shared integration | dispatcher, core 1 only | S2 encoders; GP6 reserved for future S5 client |
-| PWM slices (list) | S5 (reserved; task TBD) | TBD — hardware integration pending | PWM7B (GP15 servo); do not initialize until approved |
+| PWM slices (list) | S5 (provisional; task TBD) | TBD — no verified servo signal/PWM assignment | GP15/PWM7B is unconfirmed; do not initialize |
 | WiFi radio, TCP/IP, MQTT | *kernel* | `cyw43_utk_task` (built in) | GP23–25, GP29 |
 
-Buddy 5's servo PWM resource is reserved as slice 7 channel B (GP15); its
-owning task remains TBD. Ultrasonic GPIO acquisition and all drivers remain
-unimplemented. Do not initialize or drive these peripherals until the task,
-electrical checks, and startup/fault behavior are reviewed.
+Buddy 5 has no verified servo PWM resource or owning task; GP15/PWM7B is an
+unconfirmed candidate only. Ultrasonic GPIO acquisition and all drivers remain
+unimplemented. Do not initialize or drive these peripherals until the pin,
+task, electrical checks, and startup/fault behavior are reviewed.
 
 ### WiFi and MQTT are special
 

@@ -22,8 +22,10 @@ does not execute actual vehicle motion. Neither that demo nor the current
 host-only logic proves physical sensing, safe bypass, or line reacquisition.
 
 The integrated `subsystem5_start()` currently returns `E_NOSPT`. The current
-`usermain()` reports subsystem start errors and then continues startup, so
-this placeholder is not a system-wide fail-safe or a vehicle stop mechanism.
+`usermain()` treats that specific result as missing Buddy 5 readiness and
+passes the missing-start bit to the Vehicle Controller. The controller has no
+default mission setup, so it remains interlocked; this is not a physical
+emergency-stop guarantee.
 
 The sections below describe the legacy standalone design unless explicitly
 identified as integrated status. State names, callbacks, task names, and
@@ -48,12 +50,24 @@ prove vehicle clearance. Plan generation therefore returns
 plan non-executable. Reverse is likewise advisory metadata only. The caller
 must not interpret the profile or candidate as permission to move.
 
-These checks are host-testable logic only. They do not implement or validate
-physical acquisition, servo settling, stop confirmation, an RTOS task/state
-machine, motion requests or timeouts, fault recovery, or line reacquisition.
-The context is only as trustworthy as its future producer. Hardware use
-remains blocked on the unresolved items below, approved interfaces, validated
-vehicle geometry and clearance, and authorized target testing.
+The host-only `s5_obstacle_runtime` policy layer checks configured forward
+sample freshness, counts distinct proximity samples, requests a stop before a
+full scan, keeps requesting stop until the stopped acknowledgement and
+throughout scanning, and fails closed on stop/scan timeouts, cancellation,
+movement during a scan, acquisition errors, or unverified clearance. A valid
+scan is copied into a fixed-size status snapshot. Fault outputs remain
+asserted on subsequent calls so a future owner task can retry delivery. Its
+configuration has no production defaults; callers must provide
+measured/approved values.
+
+This policy module does not acquire sensor data, drive a servo, create an RTOS
+task, or transport requests to the Vehicle Controller. Its status-copy API is
+single-owner-task only; a cross-task reader needs an agreed bounded RTOS
+publication mechanism. The current profile planner still marks every route
+non-executable because vehicle clearance is unverified, so bypass and line
+recovery are intentionally unreachable. Hardware use remains blocked on the
+unresolved items below, approved interfaces, measured geometry and clearance,
+and authorized target testing.
 
 ## Unresolved integration placeholders
 
@@ -64,22 +78,23 @@ approved interface.
 
 | Item | Placeholder / current status | Required before implementation or vehicle use |
 |---|---|---|
-| Sensor and servo models | `TBD — exact part numbers not confirmed` | Record manufacturer and model; check datasheets and operating limits |
-| Servo signal pin | `GP15 — user identified the GP15 three-pin servo header; close-up board photo shows the GP12–GP15 servo header bank` | Signal GPIO identified; verify servo voltage/current and retain single-task PWM ownership before driver implementation |
-| Ultrasonic TRIG/ECHO pins | `GP26` = TRIG and `GP6` = ECHO (user-confirmed against the sensor labels) | Keep TRIG as GPIO/SIO; verify sensor model and electrical limits before enabling the driver |
-| Ultrasonic ECHO voltage | `TBD — not measured or confirmed from the photos` | Verify the sensor model's ECHO high voltage and provide level shifting if required before RP2040 connection |
-| Sensor/servo power and ground | `TBD — not verified` | Confirm supply voltage/current, common ground, and Robo Pico power constraints |
-| PWM resource / owner task | GP15 is PWM7B; Buddy 5 resource reserved, owning task TBD | Implement only in one approved owning task; check servo signal/power compatibility before driving |
+| Sensor and servo models | Module is visually identified as HC-SR04, exact revision unknown; a small servo is mounted beneath it, servo model unknown | Verify exact module revisions and datasheets/operating limits |
+| Servo signal pin | `TBD — user now reports signal GPIO/model not confirmed` | Physically trace and verify before reserving or configuring a PWM pin; do not assume GP15 |
+| Ultrasonic TRIG/ECHO pins | Current observed wiring: `GP26` = TRIG and `GP6` = ECHO | Verify wiring electrically before enabling a driver; keep GP26 GPIO/SIO-only because of the GP10/PWM5A alias |
+| Ultrasonic supply / ECHO voltage | Current observed VCC is 3V3, GND is common; ECHO voltage and level shifting are unverified | Establish the actual module's supply and ECHO-high limits; do not connect an unverified ECHO level to RP2040 GPIO |
+| Servo power and ground | `TBD — wiring and supply not electrically verified` | Verify supply/current, signal-level compatibility, and common ground |
+| PWM resource / owner task | No verified servo signal pin or owning task; previous GP15/PWM7B assignment is unconfirmed | Resolve the GP15 claim in `TEAM.md` before PWM allocation; use exactly one reviewed owning task |
 | Servo angle, pulse mapping, direction, settling time | `TBD — uncalibrated` | Measure on the assembled vehicle; define bounds and command-failure behavior |
 | Sensor filtering, detection and range limits | `TBD — development values only` | Calibrate against repeatable measurements; document invalid, timeout, and overflow handling |
-| Bypass clearance, reverse distance, turn targets | `TBD — heuristic values only` | Agree with Buddy 2/controller and validate against vehicle geometry and stopping tests |
+| Vehicle and sensor geometry / clearance | Vehicle width, sensor height/offset, beam geometry, centre angle, and approved safety margin are unmeasured; the sensor appears near front-centre and faces approximately forward when centred | Measure the assembled vehicle and sensor geometry; validate known obstacle distances and both-side clearances before setting a margin |
 | Mission Controller stop/fault contract | `TBD — interface not agreed` | Define bounded, prioritized stop/fault delivery, acknowledgement, expiry, timeout, and recovery |
 | Buddy 2 motion contract | `TBD — interface not agreed` | Define request/status types, ownership, arbitration, cancellation, completion, and failure results |
 | Buddy 3 line-reacquisition contract | `TBD — interface not agreed` | Define request/event data, line-found/failure semantics, timeout, and ownership |
+| Proposed obstacle integration | Buddy 5 proposes owning monitoring/handling, sending stop/fault and high-level bypass requests through the Mission Controller, and requesting line recovery from Buddy 3; Buddy 2 would return motion completion through the controller. This is not a team agreement. | Agree task/CPU ownership, message/event objects, data lifetime, acknowledgements, timeout ownership, cancellation, and fault behavior before implementation |
 | Buddy 1 telemetry contract | `TBD — optional interface not agreed` | Specify payload and provider/consumer; use only the approved kernel network-service path |
 | RTOS task structure and timing | `TBD — no Buddy 5 tasks implemented` | Agree task count, owners, priority/affinity, period/deadline, timeout, and overload behavior |
 | Kernel object budget | `TBD — currently no Buddy 5 objects allocated` | Reserve required objects in TEAM.md/config review before creating them |
-| Startup/error policy | `TBD — subsystem start returns E_NOSPT; usermain logs errors and continues` | Agree how the integrated vehicle is kept stopped or prevented from entering motion when any required subsystem fails |
+| Startup/error policy | `subsystem5_start()` returns `E_NOSPT`; current controller startup remains interlocked without Buddy 5 readiness/configuration | Preserve the readiness blocker; physical stop behavior still requires target verification and the approved fault contract |
 | Integrated target build | `TBD — not run` | Run documented `make TEST=1 -j8` profile with configured WSL, Arm toolchain, and Pico SDK |
 | On-target tests | `TBD — not run` | Build/flash only with authorization; record exact revision and test output |
 | Physical calibration and system validation | `TBD — not run` | Obtain wiring authorization; record conditions, measurements/errors, results, and evidence |
@@ -381,18 +396,25 @@ The legacy standalone configuration contains GP26/TRIG and GP6/ECHO values.
 The old source comment calling these connections “confirmed” was incorrect;
 they are unverified demo values and are not used by the integrated Make build.
 
-The user confirmed the ultrasonic connections as GND, 3V3, GP6, and GP26, and
-then traced the signal labels: GP26 is TRIG and GP6 is ECHO. The legacy
-standalone source uses that mapping. GP26 is also PWM5A, which aliases Buddy
-2's motor output on GP10. Buddy 5 must use GP26 as ordinary GPIO/SIO only and
-must not configure its PWM mux or write the PWM5A compare value.
+Current assembly observation: HC-SR04 VCC is connected to 3V3, GND to GND,
+TRIG to GP26, and ECHO to GP6. The sensor's operating range at 3V3 and its
+ECHO-high level at the Pico input have not been electrically verified or
+measured with a meter/scope; no external level shifter/divider is confirmed.
+Do not enable or connect the ECHO input to the RP2040 until the actual module
+and signal level are checked.
+GP26 is also PWM5A, which aliases Buddy 2's motor output on GP10. Buddy 5 must
+use GP26 as ordinary GPIO/SIO only and must not configure its PWM mux or write
+the PWM5A compare value.
 
-The user identified the servo as connected to the board's GP15 three-pin
-servo header, also visible in the close-up. GP15 is PWM7B. The legacy servo
-GPIO remains at its disabled placeholder value 255 because the standalone
-demo must not begin driving a physical servo before its supply, signal level,
-PWM behavior, and command bounds are validated. The integrated µT-Kernel
-subsystem has no servo driver and remains disabled.
+The small servo is visually mounted beneath the HC-SR04 and is reported to
+rotate it, but its model, signal pin, supply, and wiring are not confirmed.
+The sensor appears near the vehicle's front-centre and faces approximately
+forward when centred; its exact height, offset, centre angle, and beam
+geometry are unmeasured. Earlier notes and `TEAM.md` claim GP15/PWM7B, but
+the servo signal GPIO has not been physically traced. Treat GP15 as unresolved
+and do not drive it until the pin, wiring, electrical limits, and shared PWM
+ownership are verified. The legacy servo GPIO remains disabled at placeholder
+255; the integrated µT-Kernel subsystem has no servo driver.
 
 ---
 
@@ -400,10 +422,10 @@ subsystem has no servo driver and remains disabled.
 
 ### Hardware
 
-- Confirm the actual servo GPIO
-- Obtain/install the Raspberry Pi Pico W on the Robo Pico
-- Test HC-SR04 measurements on the real robot
-- Test servo movement
+- Verify the HC-SR04 module's supply requirements and ECHO voltage; add/verify level shifting if required
+- Verify Pico W installation, 3V3/Robo Pico supply and common ground
+- Trace and record the servo model, signal GPIO, supply and wiring
+- Test HC-SR04 acquisition and servo movement only after electrical review and authorization
 - Verify servo direction and centre position
 
 ### Calibration
@@ -448,15 +470,17 @@ subsystem has no servo driver and remains disabled.
 
 ## Current Progress Summary
 
-The integrated Buddy 5 calculation module generates bounded development scan
-angles, estimates an obstacle profile from supplied samples, and creates
-high-level bypass/recovery action plans. Host tests cover off-axis profiles
-centered on every coarse scan direction. Its scan orientation, thresholds,
-and range-based bypass heuristic are development assumptions, not calibrated
-safety limits. The off-axis projection regression is S5-U11.
+The integrated Buddy 5 calculation module validates caller-supplied scan
+contexts, creates profiles, and deliberately refuses to emit an executable
+route without clearance evidence. The new host-only runtime policy validates
+configured forward-sample freshness, requires repeated distinct proximity
+samples, requests a stop before full scanning, and fails closed for timeout,
+cancellation, scan/motion faults, and unverified clearance. Host-only status
+copies include scan timestamps, bounded samples, validity, profile, plan,
+busy/completion state, and fault.
 
-The sensor drivers, µT-Kernel tasks, communication with the Mission Controller,
-motion execution by Buddy 2, and line-found coordination with Buddy 3 are not
-implemented. The subsystem therefore does not yet perform obstacle avoidance
-on the vehicle. Hardware wiring/voltage confirmation, interface agreement,
-target build/test, calibration, and physical validation remain required.
+None of this code acquires real measurements or connects a thread-safe status
+provider to the Vehicle Controller. The sensor/servo drivers and µT-Kernel
+tasks, agreed stop/bypass/recovery communication, geometry-aware clearance
+proof, target build, calibration, and physical validation remain outstanding.
+The subsystem does not yet perform obstacle avoidance on the vehicle.

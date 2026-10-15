@@ -1,0 +1,30 @@
+Date: 2026-10-15
+Tested revision: afbbbd7 + uncommitted Buddy 5 working-tree changes
+Environment: Windows, GCC 14.2; host-only, no RTOS/hardware validation
+Command: gcc -std=c99 -Wall -Wextra -Werror -Wconversion -Wsign-conversion -pedantic -fanalyzer app_program\subsystem5\s5_obstacle_logic.c app_program\subsystem5\s5_obstacle_runtime.c testing\subsystem5\host\test_obstacle_runtime.c -o %TEMP%\s5_obstacle_runtime_hold.exe
+
+[TEST] S5-U24 PASS  runtime rejects missing timeout configuration
+[TEST] S5-U25 PASS  invalid forward sample requests stop and latches fault
+[TEST] S5-U26 PASS  distinct confirmed proximity samples request a stop
+[TEST] S5-U27 PASS  a full scan is requested only after stopped acknowledgement
+[TEST] S5-U28 PASS  missing stopped acknowledgement fails closed on timeout
+[TEST] S5-U29 PASS  cancelled scan requests stop and latches fault
+[TEST] S5-U30 PASS  vehicle movement during a full scan fails closed
+[TEST] S5-U31 PASS  unfinished full scan fails closed at configured timeout
+[TEST] S5-U32 PASS  echo acquisition failure cannot produce a profile or route
+[TEST] S5-U33 PASS  valid scan without measured clearance never emits bypass
+[TEST] S5-U34 PASS  status snapshot copies scan completion and acquisition fault
+[TEST] S5-U35 PASS  latched fault keeps requesting stop and fault handling
+[TEST] S5-U36 PASS  invalid runtime input requests a safe stop and latches fault
+[TEST] S5-U37 PASS  stale forward sample cannot maintain motion monitoring
+[TEST] S5-U38 PASS  backwards runtime clock fails closed
+[TEST] S5-U39 PASS  valid runtime timestamp wrap is accepted
+[TEST] S5-U40 PASS  scan startup grace is bounded by the full-scan timeout
+[TEST] S5-U41 PASS  bypass completion requests line recovery
+[TEST] S5-U42 PASS  bypass acknowledgement timeout fails closed
+[TEST] S5-U43 PASS  LINE_FOUND returns the policy to forward monitoring
+[TEST] S5-U44 PASS  line reacquisition timeout fails closed
+[TEST] S5-U45 PASS  renewed forward obstacle during bypass fails closed
+[TEST] S5-U46 PASS  stop request remains asserted until stopped acknowledgement
+[TEST] S5-U47 PASS  stop request remains asserted throughout stationary scanning
+[TEST] subsystem5 runtime failures: 0
