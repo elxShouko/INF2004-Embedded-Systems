@@ -3,10 +3,13 @@
  * @brief Buddy 1: kernel objects and API between the application and the
  * Wi-Fi/MQTT service task.
  *
- * ASSUMPTION: The hooks run only in the Wi-Fi service task, so the counters
- * have a single writer. Other tasks read them with plain 32-bit loads, which
- * are atomic on this core. A snapshot may mix values from two moments, which
- * is acceptable for diagnostics.
+ * SHARED STATUS: The status block (s1_net_stats_t) is written by the Wi-Fi
+ * service task (core 1) and read by application tasks that may run on the
+ * other core. Plain loads or volatile are not enough on SMP, so every access
+ * goes through one brief micro T-Kernel mutex (priority inheritance). The
+ * lock covers only memory copies and counter updates. No kernel waiting call,
+ * lwIP call, MQTT call or print is made while it is held, and a reader gets
+ * a coherent snapshot taken at a single moment.
  */
 
 #include "s1_net.h"
@@ -23,6 +26,7 @@
 
 typedef struct
 {
+    ID             status_mutex_id;
     ID             telemetry_buffer_id;
     ID             command_buffer_id;
     ID             event_flag_id;
@@ -42,6 +46,9 @@ static const mqtt_utk_app_t g_s1_net_app = {
     .on_event       = on_mqtt_event};
 #endif
 
+static bool     status_lock (void);
+static void     status_unlock (void);
+static void     status_count (uint32_t * p_counter);
 static void     queue_command (const s1_codec_command_t * p_command);
 static void     flush_telemetry (void);
 static uint32_t now_ms (void);
@@ -57,7 +64,11 @@ s1_net_init (void)
     T_CMBF telemetry_info = {0};
     T_CMBF command_info   = {0};
     T_CFLG flag_info      = {0};
+    T_CMTX mutex_info     = {0};
     ER     result         = E_OK;
+
+    mutex_info.mtxatr        = TA_INHERIT;
+    g_s1_net.status_mutex_id = tk_cre_mtx(&mutex_info);
 
     telemetry_info.mbfatr = TA_TFIFO;
     telemetry_info.bufsz  = S1_NET_TELEMETRY_DEPTH *
@@ -74,7 +85,11 @@ s1_net_init (void)
     flag_info.flgatr       = TA_TFIFO | TA_WMUL;
     g_s1_net.event_flag_id = tk_cre_flg(&flag_info);
 
-    if (g_s1_net.telemetry_buffer_id < E_OK)
+    if (g_s1_net.status_mutex_id < E_OK)
+    {
+        result = g_s1_net.status_mutex_id;
+    }
+    else if (g_s1_net.telemetry_buffer_id < E_OK)
     {
         result = g_s1_net.telemetry_buffer_id;
     }
@@ -140,18 +155,37 @@ s1_net_events_wait (UINT pattern, UINT * p_flags, TMO timeout)
                       p_flags, timeout);
 }
 
-/* True while the MQTT session is open. */
+/* True while the MQTT session is open. False if the status is unavailable. */
 bool
 s1_net_is_connected (void)
 {
-    return g_s1_net.stats.b_connected;
+    bool b_connected = false;
+
+    if (status_lock())
+    {
+        b_connected = g_s1_net.stats.b_connected;
+        status_unlock();
+    }
+    return b_connected;
 }
 
-/* Copy the diagnostic counters. */
-void
+/* Copy the whole status block at one moment. On error the copy is zeroed. */
+ER
 s1_net_get_stats (s1_net_stats_t * p_stats)
 {
-    *p_stats = g_s1_net.stats;
+    ER result = E_OK;
+
+    if (status_lock())
+    {
+        *p_stats = g_s1_net.stats;
+        status_unlock();
+    }
+    else
+    {
+        *p_stats = (s1_net_stats_t){0};
+        result   = E_SYS;
+    }
+    return result;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -168,7 +202,7 @@ s1_net_hook_pull_telemetry (char * p_buffer, uint32_t capacity)
 
     if (size > 0)
     {
-        g_s1_net.stats.telemetry_pulled++;
+        status_count(&g_s1_net.stats.telemetry_pulled);
         /* The sequence counts every frame that leaves the buffer, so a drop
          * shows up as a gap in the numbers the laptop sees. */
         length = s1_codec_encode_telemetry(&frame, g_s1_net.telemetry_sequence,
@@ -176,7 +210,7 @@ s1_net_hook_pull_telemetry (char * p_buffer, uint32_t capacity)
         g_s1_net.telemetry_sequence++;
         if (0u == length)
         {
-            g_s1_net.stats.telemetry_oversize++;
+            status_count(&g_s1_net.stats.telemetry_oversize);
         }
     }
     return length;
@@ -196,13 +230,13 @@ s1_net_hook_on_command (const char * p_payload, uint32_t length, uint32_t rx_ms)
 {
     s1_codec_command_t command = {S1_CMD_NONE, 0u};
 
-    g_s1_net.stats.commands_received++;
+    status_count(&g_s1_net.stats.commands_received);
     command.command_id      = s1_codec_parse_command(p_payload, length);
     command.rx_timestamp_ms = rx_ms;
 
     if (S1_CMD_NONE == command.command_id)
     {
-        g_s1_net.stats.commands_rejected++;
+        status_count(&g_s1_net.stats.commands_rejected);
     }
     else
     {
@@ -210,40 +244,61 @@ s1_net_hook_on_command (const char * p_payload, uint32_t length, uint32_t rx_ms)
     }
 }
 
-/* Count the connection events and keep the buffer fresh. */
+/* Count the connection events and keep the buffer fresh. A change of the
+ * connected state is announced once, whichever event caused it. */
 void
 s1_net_hook_on_event (uint32_t event, uint32_t value)
 {
+    bool b_changed = false;
+
     if (S1_NET_EVENT_CONNECTED == event)
     {
-        g_s1_net.stats.connects++;
-        g_s1_net.stats.b_connected = true;
+        if (status_lock())
+        {
+            g_s1_net.stats.connects++;
+            g_s1_net.stats.b_connected = true;
+            status_unlock();
+        }
         flush_telemetry();
         tk_set_flg(g_s1_net.event_flag_id, S1_NET_FLG_LINK_CHANGED);
     }
-    else if (S1_NET_EVENT_DISCONNECTED == event)
+    else if ((S1_NET_EVENT_DISCONNECTED == event) ||
+             (S1_NET_EVENT_BACKOFF == event))
     {
-        g_s1_net.stats.disconnects++;
-        g_s1_net.stats.b_connected = false;
-        tk_set_flg(g_s1_net.event_flag_id, S1_NET_FLG_LINK_CHANGED);
-    }
-    else if (S1_NET_EVENT_BACKOFF == event)
-    {
-        g_s1_net.stats.backoff_count++;
-        g_s1_net.stats.backoff_last_ms = value;
-        g_s1_net.stats.b_connected     = false;
+        /* BACKOFF can arrive without a DISCONNECTED before it (for example
+         * when publishing keeps failing), so both leave the connected state
+         * here. Only the first one is a change. */
+        if (status_lock())
+        {
+            if (S1_NET_EVENT_BACKOFF == event)
+            {
+                g_s1_net.stats.backoff_count++;
+                g_s1_net.stats.backoff_last_ms = value;
+            }
+            if (g_s1_net.stats.b_connected)
+            {
+                g_s1_net.stats.disconnects++;
+                g_s1_net.stats.b_connected = false;
+                b_changed                  = true;
+            }
+            status_unlock();
+        }
+        if (b_changed)
+        {
+            tk_set_flg(g_s1_net.event_flag_id, S1_NET_FLG_LINK_CHANGED);
+        }
     }
     else if (S1_NET_EVENT_PUBLISH_OK == event)
     {
-        g_s1_net.stats.telemetry_published++;
+        status_count(&g_s1_net.stats.telemetry_published);
     }
     else if (S1_NET_EVENT_PUBLISH_FAILED == event)
     {
-        g_s1_net.stats.telemetry_failed++;
+        status_count(&g_s1_net.stats.telemetry_failed);
     }
     else if (S1_NET_EVENT_TELEMETRY_DISCARDED == event)
     {
-        g_s1_net.stats.telemetry_discarded++;
+        status_count(&g_s1_net.stats.telemetry_discarded);
     }
     else
     {
@@ -265,6 +320,31 @@ now_ms (void)
     return time.lo;
 }
 
+/* Take the status mutex. It is held only for a copy or a counter update. */
+static bool
+status_lock (void)
+{
+    return (E_OK == tk_loc_mtx(g_s1_net.status_mutex_id, TMO_FEVR));
+}
+
+/* Release the status mutex. */
+static void
+status_unlock (void)
+{
+    tk_unl_mtx(g_s1_net.status_mutex_id);
+}
+
+/* Add one to a counter of the status block. */
+static void
+status_count (uint32_t * p_counter)
+{
+    if (status_lock())
+    {
+        (*p_counter)++;
+        status_unlock();
+    }
+}
+
 /* Put a command in the buffer and wake the Vehicle Controller. An
  * EMERGENCY_STOP is never refused: if the buffer is full the oldest command
  * is discarded to make room. Any other command is dropped when it is full. */
@@ -279,14 +359,14 @@ queue_command (const s1_codec_command_t * p_command)
 
     if ((E_OK != result) && (S1_CMD_EMERGENCY_STOP == p_command->command_id))
     {
-        g_s1_net.stats.commands_dropped++;
+        status_count(&g_s1_net.stats.commands_dropped);
         tk_rcv_mbf(g_s1_net.command_buffer_id, scratch, TMO_POL);
         result = tk_snd_mbf(g_s1_net.command_buffer_id, p_command,
                             sizeof(s1_codec_command_t), TMO_POL);
     }
     else if (E_OK != result)
     {
-        g_s1_net.stats.commands_dropped++;
+        status_count(&g_s1_net.stats.commands_dropped);
     }
     else
     {
@@ -296,9 +376,13 @@ queue_command (const s1_codec_command_t * p_command)
     if (E_OK == result)
     {
         forward_ms = now_ms() - p_command->rx_timestamp_ms;
-        if (forward_ms > g_s1_net.stats.command_forward_max_ms)
+        if (status_lock())
         {
-            g_s1_net.stats.command_forward_max_ms = forward_ms;
+            if (forward_ms > g_s1_net.stats.command_forward_max_ms)
+            {
+                g_s1_net.stats.command_forward_max_ms = forward_ms;
+            }
+            status_unlock();
         }
         if (S1_CMD_EMERGENCY_STOP == p_command->command_id)
         {
@@ -321,7 +405,7 @@ flush_telemetry (void)
         size = tk_rcv_mbf(g_s1_net.telemetry_buffer_id, &frame, TMO_POL);
         if (size > 0)
         {
-            g_s1_net.stats.telemetry_flushed++;
+            status_count(&g_s1_net.stats.telemetry_flushed);
         }
         count++;
     }

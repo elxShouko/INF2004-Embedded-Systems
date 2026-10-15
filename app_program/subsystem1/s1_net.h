@@ -42,7 +42,9 @@
 #define S1_NET_EVENT_PUBLISH_FAILED 5u
 #define S1_NET_EVENT_TELEMETRY_DISCARDED 6u
 
-/** Diagnostic counters. Written only by the Wi-Fi service task. */
+/** Status and diagnostic counters. Written by the Wi-Fi service task, read
+ *  through s1_net_get_stats() / s1_net_is_connected() only (mutex-protected).
+ */
 typedef struct
 {
     uint32_t telemetry_pulled;    /**< Frames taken from the buffer. */
@@ -99,8 +101,12 @@ ER s1_net_events_wait (UINT pattern, UINT * p_flags, TMO timeout);
 /** @brief True while the MQTT session to the broker is open. */
 bool s1_net_is_connected (void);
 
-/** @brief Copy of the diagnostic counters. */
-void s1_net_get_stats (s1_net_stats_t * p_stats);
+/**
+ * @brief Copy the whole status block at one moment (one coherent snapshot).
+ * @param p_stats Receives the copy; zeroed if the status is unavailable.
+ * @return E_OK, or E_SYS if the status mutex could not be taken.
+ */
+ER s1_net_get_stats (s1_net_stats_t * p_stats);
 
 /** @brief Build the next telemetry JSON from the buffer. Returns the length,
  *  or 0 if the buffer was empty. Called by the Wi-Fi task (and by tests). */
