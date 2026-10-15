@@ -12,7 +12,9 @@
 
 #define APP_H
 #define TK_SUPPORT_SMP 1
-#define CNF_TIMER_PERIOD 1 /* Simulated clock; actual template tick is 10 ms. */
+#ifndef CNF_TIMER_PERIOD
+#define CNF_TIMER_PERIOD 1 /* Logical suite only; production suite uses 10. */
+#endif
 typedef int32_t ER;
 typedef int32_t ID;
 typedef int32_t INT;
@@ -66,8 +68,10 @@ ER tk_snd_mbf(ID id, const void *message, INT size, TMO timeout)
     }
     return E_OK;
 }
+#ifndef S3_HOST_PRODUCTION
 INT tk_rcv_mbf(ID id, void *message, TMO timeout)
 { (void)id; (void)message; (void)timeout; return E_TMOUT; }
+#endif
 ER tk_loc_mtx(ID id, TMO timeout) { (void)id; (void)timeout; return E_OK; }
 ER tk_unl_mtx(ID id) { (void)id; return E_OK; }
 ID tk_cre_mtx(const T_CMTX *p_create) { (void)p_create; return g_next_id++; }
@@ -77,10 +81,12 @@ ER tk_sta_tsk(ID id, INT code) { (void)id; (void)code; return E_OK; }
 ER tk_del_tsk(ID id) { (void)id; return E_OK; }
 ER tk_del_mtx(ID id) { (void)id; return E_OK; }
 ER tk_del_mbf(ID id) { (void)id; return E_OK; }
+#ifndef S3_HOST_PRODUCTION
 ER tk_dly_tsk(uint32_t delay) { (void)delay; return E_OK; }
 ER s3_ir_init(void) { return E_OK; }
 void s3_ir_read(ir_sample_t *p_sample) { memset(p_sample, 0, sizeof(*p_sample)); }
 uint64_t s3_clock_us(void) { return 0U; }
+#endif
 
 static void init_context(s3_context_t *p_context)
 {

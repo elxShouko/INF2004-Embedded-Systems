@@ -8,6 +8,7 @@ barcode recognition and navigation events. Its integrated source is in
 | --- | --- |
 | [Member 3 guide](member3.md) | Algorithms, sensor mounting, standalone diagnostic use and limitations |
 | [Template integration](member3-template-integration.md) | Integrated task lifecycle, configuration, messages and connections required from other subsystems |
+| [Production timing and handoff](production-timing-and-handoff.md) | 10 ms host coverage, pending hardware envelope and proposed controller coordination |
 | [Barr-C review](BARR_COMPLIANCE.md) | Coding-standard cleanup, approved compatibility exceptions and verification limits |
 
 The linked guides include historical implementation notes; current code and

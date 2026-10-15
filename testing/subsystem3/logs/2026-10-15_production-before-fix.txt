@@ -1,0 +1,1 @@
+Assertion failed: 0U == events(NAV_EVENT_LINE_FOUND), file testing/subsystem3/member3_production_test.c, line 414
