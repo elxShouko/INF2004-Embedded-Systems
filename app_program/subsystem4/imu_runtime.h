@@ -25,9 +25,14 @@ ER imu_runtime_get_event (imu_core_status_t *p_event);
  * This is NOT a motor-stop implementation. Only reboot clears the latch.
  */
 ER imu_runtime_wait_fault (TMO timeout);
-/** Proposed input from Buddy 2/controller; clock is drv_imu_time_ms().
- * Speed must be calibrated, forward, <=1000 mm/s, and <=40 ms old.
- * False validity explicitly revokes the previous input.
+/** Controller assertion that wheel traction is suitable for path integration.
+ * False revokes any previous assertion, including between IMU samples.
+ * Default is false. Caller must revoke on slip, unavailable feedback or mode
+ * change. S4 also checks signed, fresh Buddy 2 wheel status independently.
+ */
+ER imu_runtime_set_motion_trust (bool b_trusted);
+/** Deprecated scalar input: insufficient to prove straight, nonslip motion.
+ * b_valid=false revokes trust; b_valid=true returns E_PAR and revokes trust.
  */
 ER imu_runtime_set_speed (float32_t speed_mm_s, uint32_t time_ms,
                           bool b_valid);

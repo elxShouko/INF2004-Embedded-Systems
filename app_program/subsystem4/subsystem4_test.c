@@ -1,14 +1,13 @@
 /*
  *	subsystem4_test.c
  *	On-target tests for subsystem 4.  Built only with: make TEST=1
- *	Record new IMU results in testing/buddy4/TEST_LOG.md and the
- *	INT- result in testing/integration/TEST_LOG.md. Legacy records remain
- *	in testing/subsystem4/TEST_LOG.md.
+ *	Record S4 results in testing/subsystem4/TEST_LOG.md and the
+ *	INT- result in testing/integration/TEST_LOG.md.
  */
 
 #include "subsystem4.h"
 #include "../test_report.h"
-#include "../../testing/buddy4/buddy4_cases.h"
+#include "../../testing/subsystem4/host/buddy4_cases.h"
 
 #if APP_TEST
 

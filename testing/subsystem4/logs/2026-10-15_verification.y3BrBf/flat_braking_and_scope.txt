@@ -1,0 +1,72 @@
+Buddy 4 verification — 2026-10-15 (Asia/Singapore)
+Subject: buddy4-fix, HEAD 4240895a455679ad0a3996057e03723cf2e9daea plus
+the existing uncommitted test relocation and path-reference changes.
+No production algorithm or registered test case changed in this verification.
+
+Ad-hoc diagnostic of the previously reported braking-validity defect (AUD-05).
+This is a NEW synthetic sequence, NOT the exact previously reported 2.313 mm
+fixture and NOT a physical vehicle measurement. It is outside the 51-case suite.
+
+Compiler: Apple Clang 21; C99, -Wall -Wextra -Werror -Wconversion -Wshadow
+-pedantic -O2; linked app_program/subsystem4/imu_core.c directly with -lm.
+The C harness was supplied through compiler stdin and executed from a unique
+/private/tmp/subsystem4-probe.* directory. No SDK, RTOS or hardware was used.
+
+Source SHA-256:
+e50258251f8998c3c51beb1a642033372c0a766f185c727ce2069ae60a687053  app_program/subsystem4/imu_core.c
+c8d98c62d51231968de63934f9a2499a6fa59c9456817c9485208911345a90a8  app_program/subsystem4/imu_core.h
+
+Complete deterministic input definition:
+- Zero-initialize imu_core_t and imu_core_sample_t.
+- Use imu_core_defaults() without changing thresholds/calibration settings.
+- imu_core_init(); set acceleration to {0, 0, 1} g.
+- Feed 100 stationary samples, increasing uint32 time_ms by 20 each time.
+  Require phase IMU_MONITORING after calibration.
+- Set b_distance_valid=true, initial forward speed v=500.0f mm/s.
+- Feed one level cruise sample, distance=v*0.020f, time+=20.
+- Repeat ten times, all calculations float32_t:
+    delta_speed = 0.2f * 9806.65f * 0.020f;
+    next_speed = v - delta_speed;
+    distance_mm = (v + next_speed) * 0.5f * 0.020f;
+    v = next_speed;
+    accel_g = {-0.2f, 0.0f, 1.0f};
+    time_ms += 20;
+    imu_core_update(&core, &sample);
+- Feed one further sample with accel_g={0,0,1}, distance=v*0.020f,
+  time_ms+=20. All samples have b_mag_valid=false.
+- Expected: flat-ground motion must not create a valid positive hump maximum.
+- Harness returns 1 if b_highest_valid && highest_hump_mm > 0, else 0.
+  Return 2 is reserved for initialization/calibration failure.
+
+Actual console output (process exit 1):
+Flat ground, calibration_samples=100; start speed=500 mm/s
+10 braking intervals: dt=20 ms, ax=-0.2 g, ay=0, az=1 g
+step=0 distance=9.607734 pitch=11.309933 phase=2
+step=1 distance=8.823202 pitch=11.309933 phase=2
+step=2 distance=8.038671 pitch=11.309933 phase=2
+step=3 distance=7.254138 pitch=11.309933 phase=2
+step=4 distance=6.469607 pitch=11.309933 phase=2
+step=5 distance=5.685074 pitch=11.309933 phase=2
+step=6 distance=4.900543 pitch=11.309933 phase=2
+step=7 distance=4.116011 pitch=11.309933 phase=2
+step=8 distance=3.331479 pitch=11.309933 phase=2
+step=9 distance=2.546947 pitch=11.309933 phase=2
+After braking: speed=107.734062 phase=3 highest_mm=11.187815 height_valid=1 highest_valid=1 events=0x04
+FAIL: flat braking contaminated the valid run maximum.
+
+Source inspection:
+- imu_core.c:148 infers pitch directly from longitudinal acceleration.
+- imu_core.c:154-156 accepts sqrt(1 + 0.2^2) g (~1.0198 g) as gravity-like.
+- imu_core.c:357-366 records this estimate as a valid run maximum at PEAK.
+- Motion classification occurs after hump_update and does not veto the candidate.
+- rg of app_program shows declarations/definitions, but no production caller of
+  imu_runtime_set_speed/get_status/get_event/wait_fault.
+- imu_config.h defaults S4_IMU_ENABLE to 0 and S4_MAG_CALIBRATED to false.
+
+Other verification:
+- Registered cases S4-U116 through S4-U166: 51 unique PASS IDs in each normal
+  and sanitizer run, matching the registry; zero FAIL IDs.
+- Shell syntax checks and git diff --check: exit 0.
+- testing/buddy4 and tests/imu are absent.
+- Four GNU Make profiles: exit 0, no warning:/error: diagnostics.
+- No flashing, sensor/bus trials, SMP timing validation or height calibration.

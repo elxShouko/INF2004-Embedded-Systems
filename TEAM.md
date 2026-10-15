@@ -22,7 +22,7 @@ subsystem, ask its owner or open a pull request for them to review.
 | 3 | IR line sensing, junction detection and barcode navigation; retained example consumer for compatibility | 2500734 | | `app_program/subsystem3/` | `tests/member3_*.c`, `testing/subsystem3/` |
 | 4 | *example:* Monitor: prints reports, pauses the LED | | | `app_program/subsystem4/` | `testing/subsystem4/` |
 | 5 | Obstacle scan/profile calculations and avoidance planning (software-only; hardware integration pending) | | | `app_program/subsystem5/` | `testing/subsystem5/` |
-| 6 | IMU sensing, calibration, terrain and collision events; retained monitor example | | | `app_program/subsystem4/` | `testing/buddy4/` (current), `testing/subsystem4/` (history) |
+| 6 | IMU sensing, calibration, terrain and collision events; retained monitor example | | | `app_program/subsystem4/` | `testing/subsystem4/` |
 | 7 | | | | `app_program/subsystem5/` | `testing/subsystem5/` |
 
 Shared files (`app_program/app_main.c`, `app_program/app.h`, this file)
@@ -194,8 +194,8 @@ Buddy 4 additionally provides `imu_runtime.h`: copied status/event reads,
 a latched fault wait, and a proposed calibrated forward-speed input.
 These are **provider proposals**, not agreed cross-subsystem interfaces;
 no Vehicle/Mission Controller exists here. Fault flags do not stop motors.
-Only Buddy 2 may actuate motors. See `testing/buddy4/README.md` for timing,
-validity and the required controller watchdog/stop-path review.
+Only Buddy 2 may actuate motors. See `testing/subsystem4/TEST_LOG.md` for test
+scope and pending hardware/fault-to-stop acceptance checks.
 
 ## 6. Kernel object budget
 
