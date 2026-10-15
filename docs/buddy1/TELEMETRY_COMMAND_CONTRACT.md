@@ -47,9 +47,41 @@ TEAM.md section 5.
 | 7 | **Obstacle distance** | Frame: `obstacle_distance_x10` (tenths of cm). S5 reports whole centimetres (`uint16_t`). | Send centimetres to match S5, with one decimal kept only if S5 can supply it. | Buddy 5 |
 | 8 | **Validity and stale data** | The frame has no validity. A dead sensor looks like a good value. | Add a `valid_mask` byte to the frame (one bit each for motion, line, IMU/hump, obstacle). The aggregator clears a bit when the source reports invalid or its sample is older than 3 periods (300 ms, adjustable). The JSON prints `null` for an invalid field, which is also shorter than a number, so NFR10 holds. | Every provider (what "invalid" means for each) |
 | 9 | **Remote-command consumer** | None. The test monitor `s1_cmd_echo` (patch, off by default) only prints. | The Vehicle/Mission Controller is the single reader of `s1_net_command_receive()`. Two readers would steal commands from each other, so the test monitor is removed when it exists. | Team (the controller owner) |
-| 10 | **Emergency stop** | `EMERGENCY_STOP` is queued, evicts the oldest command if needed, and sets `S1_NET_FLG_ESTOP`. Nothing consumes it. | A small high-priority task waits only on `S1_NET_FLG_ESTOP` and calls `motion_api_estop()`. It never reads the ordinary command queue. This remote stop is a convenience path over Wi-Fi/MQTT, not the safety function: a local stop must exist independently. Needs Buddy 2's rules for which context may call `motion_api_estop()`, and a measured end-to-end time on hardware (NFR7: 50 ms). | Buddy 2 + team; hardware validation |
+| 10 | **Emergency stop** | IMPLEMENTED in Buddy 1 (host-tested): `EMERGENCY_STOP` is published FIRST, before any queue or mutex work, as a latch (`s1_net_estop_latched()`) and a pulse (`S1_NET_FLG_ESTOP`); it also goes in the command queue, evicting the oldest command when full. The latch is cleared only by `s1_net_estop_clear()`; ordinary commands, reconnects and queue draining never clear it. A failed publish is retried 3 times and counted (`estop_post_failures`). Nothing consumes it yet. | Buddy 1 owns DELIVERY only. The vehicle controller owns the decision to inhibit or stop motion, and decides when the safety policy calls `s1_net_estop_clear()` (for example after a local, deliberate operator action). A small high-priority task waits on the latch or pulse and calls `motion_api_estop()`; it never reads the ordinary queue. This remote stop is a Wi-Fi convenience path, not the safety function; a local stop must exist independently. Needs Buddy 2's rules for which context may call `motion_api_estop()`, and a measured end-to-end time on hardware (NFR7: 50 ms). | Controller owner + Buddy 2 + team; hardware validation |
 | 11 | **Simulation switch** | `S1_SIMULATE_TELEMETRY` defaults to 1; build with `-DS1_SIMULATE_TELEMETRY=0` to remove it. | The robot profile sets it to 0 once rows 1 to 8 are closed. A build-profile variable in `build_make` is a shared-file change and needs approval. | Team |
 | 12 | **TEAM.md entries** | IF-06, IF-07, IF-08 are not recorded; the S1 budget row still shows the template example. | Add IF-06 to IF-08 and the S1 budget from section 1 once rows 1 to 10 are agreed. | Team (shared file) |
+
+
+### 3a. Further questions the real telemetry needs answered (added after safety review)
+
+Buddy 1 has NOT changed `s1_codec.h` or the frame struct for these: `vehicle.c` builds the frames,
+and a guess here would put an invented meaning into the telemetry.
+
+| # | Question | Mismatch found in the current code | Needed from |
+|---|---|---|---|
+| 13 | **Encoder reset semantics**: signed counts per wheel (type, sign for reverse), what resets them (boot only, new run, START_RUN?), and what the wrap does | Frame field is `uint32_t`; S2 exposes `position_um[2]` as `int64_t` micrometres | Buddy 2 |
+| 14 | **Line and side sensors**: what "front-left", "front-right" and "side" mean physically, and which GPIO each is | Frame uses a 3-bit left/centre/right placeholder; S3 has a 2-bit mask (GP2 left, GP4 right); `vehicle_frame()` returns false with the note that no S3 side-sensor mapping is agreed | Buddy 3 + controller owner |
+| 15 | **Units and timestamp domain**: one unit per field, and one time base for the frame timestamp (ms since boot from `tk_get_otm`?) and for the age of each source sample | Mixed: mm/s (S2), float mm (S4), whole cm (S5), tenths in the frame | Every provider |
+| 16 | **Unavailable, stale or uncalibrated**: how each is shown | No representation today: a dead sensor looks like a good value. Proposed (row 8): `valid_mask` plus JSON `null`; "uncalibrated" would be a separate bit or be treated as invalid | Every provider |
+
+Until 13 to 16 are answered, no validity or boundary test for real telemetry can be written. The
+codec already tests the worst-case frame size (NFR10) and the numeric extremes of the current fields.
+
+### 3b. Command delivery contract (implemented)
+
+* `s1_net_command_receive()` returns exactly one complete, validated command or an error. It never
+  returns a partly filled one: a message of the wrong size or with an unknown id gives `E_SYS`
+  (counted in `commands_bad_size`); a kernel error such as `E_TMOUT` is returned unchanged.
+* A non-emergency command older than `S1_NET_COMMAND_MAX_AGE_MS` (1 s) is dropped and counted in
+  `commands_stale`. An emergency stop is never dropped for age.
+* `s1_net_get_stats()` waits at most 5 ms and can return `E_TMOUT`; `s1_net_is_connected()` and
+  `s1_net_estop_latched()` never block (the latter reads true if the read itself fails).
+
+### 3c. Network profile
+
+The default build (`make`) does not include lwIP or MQTT; telemetry and commands over MQTT exist
+only with `make NET=lwip MQTT=1`. The robot profile therefore has to be selected deliberately (a
+shared `build_make` change that needs approval). lwIP and MQTT stay in the Wi-Fi task.
 
 ## 4. Shared files touched by Buddy 1 (need explicit approval)
 

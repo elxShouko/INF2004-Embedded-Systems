@@ -17,6 +17,11 @@ Each run saves its commands, revision metadata and raw output to
 | S1-U13a..e | entering BACKOFF from connected clears the state, counts one disconnect and raises link-changed once; repeats while down do not re-notify | feedback 3 | PC + Pico |
 | S1-U14a..d | writer on one core, reader on the other, 20000 updates: every snapshot coherent, no lost update, both states observed | feedback 2 | PC (real threads) + Pico (two cores) |
 | S1-U15a..c | simulator enable switch: 5000 changes from another core, silent when off, running when on | feedback 2 | Pico only |
+| S1-U16a..d | EMERGENCY_STOP with the diagnostic mutex held by another core and the command queue full: latch and pulse published while the hook is blocked; `get_stats` times out, `is_connected` and `estop_latched` never block; stop still reaches the queue | safety review 1 | PC (real threads); skipped without threads |
+| S1-U17..U19 | latch set only by EMERGENCY_STOP; RESUME, START_RUN, PAUSE, link events and a queue drain do not clear it; only `s1_net_estop_clear()` does | safety review 2 | PC + Pico |
+| S1-U20a,b | a failed flag post is retried; a persistent failure is counted and the queued command still delivers the stop | safety review 1 | PC only (fault injection) |
+| S1-U21a..d | truncated message and unknown id give E_SYS with zeroed output and a count; kernel E_TMOUT unchanged; the queue works afterwards | safety review 2 | PC + Pico |
+| S1-U22a..c | a command older than 1 s is dropped and counted; an old EMERGENCY_STOP is not | safety review 2 | PC + Pico |
 | W1 | first join request refused, second accepted: retry after 1 s, then normal operation | feedback 1, FR15 | PC (scripted driver, real `cyw43_utk_task`) |
 | W2 | every join request refused: gaps 1, 2, 4, 8, 8, 8 s; the task never waits more than 2 ms | feedback 1, FR19 | PC |
 | W3 | link up, then lost: rejoin after 1 s again (not the old 4 s step) | feedback 1, FR19 | PC |
@@ -33,6 +38,8 @@ Each run saves its commands, revision metadata and raw output to
 | 9b34dae | Negative controls: status mutex removed (S1-U14b fails, 46 incoherent snapshots), BACKOFF without notification (S1-U13b fails), Wi-Fi task before the fix (13 of 17 checks fail), runner exit status when a check count is missed (exit 1) | all fail as intended | `logs/negative_controls_9b34dae.txt` |
 | 04f9c2a (code identical) | `make`, `make NET=lwip MQTT=1`, `make NET=lwip MQTT=1 TEST=1`, `make TEST=1`, SDK 2.2.0, arm-none-eabi-gcc 13.2.1 | build OK, 0 warnings in each | `logs/make_all_configs_9b34dae.txt` |
 | 04f9c2a | BARR-C:2018 kit (format, lexical, tidy) on `s1_net.c/.h`, `s1_sim.c`, `subsystem1_test.c` | clean, except 3 `readability-isolate-declaration` hits that come from the template's `TEST_INIT` macro in the test file | run by hand, not saved |
+| (this change) | `run_host_tests.sh` after the safety-path change: 43 checks pass with real threads, 40 in no-thread mode; four `make` profiles build with 0 warnings against current main | PASS | `logs/host_run_*.txt` |
+| (this change) | Negative controls: emergency published after the lock (S1-U16a,b,d fail), size check removed (S1-U21a fails), stale drop removed (S1-U22a..c fail) | all fail as intended | run by hand |
 | pending | **Pico, `make TEST=1`**: S1-U12, S1-U14, S1-U15 on two real cores | not run | save the console output as `logs/pico_test_<date>.txt` |
 | pending | **Pico, `make NET=lwip MQTT=1`**: first join refused (for example wrong SSID, then correct), then AP power-cycle | not run | save serial output |
 | pending | Hardware: 5-minute delivery (NFR8), CPU during an outage (NFR9) | not run | |
@@ -43,3 +50,5 @@ Each run saves its commands, revision metadata and raw output to
   behaviour on the RP2040's two cores; S1-U14 and S1-U15 must be run on the Pico.
 * The Wi-Fi tests use a scripted driver. They prove the decisions in `cyw43_utk_task`, not what the
   CYW43 firmware does on a real access point.
+* Emergency latency (NFR7, 50 ms) is not measured. The host tests show the ORDER of operations and that no lock or
+  full queue can delay the publish; the time itself needs a scope or GPIO timestamp on the Pico.

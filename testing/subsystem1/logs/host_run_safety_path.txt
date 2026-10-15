@@ -1,0 +1,212 @@
+=== subsystem 1 host test run ===
+date:     2026-10-15T13:19:32Z
+commit:   f3e77ffb5fc0d1ddeb7b963bed939fa926db89fc
+branch:   Buddy1
+dirty:    10 modified tracked file(s)
+host:     Linux 6.18.44-fc-v114 x86_64
+compiler: gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+
+--- 1. pure logic: codec, backoff, MQTT client
++ gcc -std=c99 -Wall -Wextra -Wshadow -Wundef -Wswitch-default -Wfloat-equal -o /tmp/tmp.mJTMnGWcly/codec test_codec_host.c /home/claude/b1/testing/subsystem1/host/../../../app_program/subsystem1/s1_codec.c
++ /tmp/tmp.mJTMnGWcly/codec
+T-codec-1 typical: {"seq":7,"timestamp":123456,"robot_state":2,"left_motor_speed":120,"right_motor_speed":-120,"left_encoder_count":1234567,"right_encoder_count":1234560,"line_status":2,"hump_peak":1.2,"obstacle_distance":45.5}
+T-codec-2 worst case (243 bytes): {"seq":4294967295,"timestamp":4294967295,"robot_state":255,"left_motor_speed":-32768,"right_motor_speed":-32768,"left_encoder_count":4294967295,"right_encoder_count":4294967295,"line_status":255,"hump_peak":-9999.9,"obstacle_distance":-9999.9}
+T-codec-3 heartbeat: {"status":"ALIVE","uptime_ms":74829}
+
+33 checks, 0 failed
++ gcc -std=c99 -Wall -Wextra -Wshadow -Wundef -Wswitch-default -Wfloat-equal -o /tmp/tmp.mJTMnGWcly/backoff test_backoff_host.c
++ /tmp/tmp.mJTMnGWcly/backoff
+T-backoff-1 sequence: 1000 -> 2000 -> 4000 -> 8000 -> 8000 -> 8000
+
+15 checks, 0 failed
++ gcc -std=c99 -Wall -Wextra -Wshadow -Wundef -Wswitch-default -Wfloat-equal -Imocks -I/home/claude/b1/testing/subsystem1/host/../../../lib/liblwip/sysdepend/pico_rp2040 -o /tmp/tmp.mJTMnGWcly/mqtt test_mqtt_host.c /home/claude/b1/testing/subsystem1/host/../../../lib/liblwip/sysdepend/pico_rp2040/mqtt_utk.c
++ /tmp/tmp.mJTMnGWcly/mqtt
+T1 connect, subscribe, CONNECTED event
+T2 backoff 1,2,4,8,8 s while the broker refuses, then reset after success (FR19)
+  gap 1 = 1000 ms (expected 1000)
+  gap 2 = 2000 ms (expected 2000)
+  gap 3 = 4000 ms (expected 4000)
+  gap 4 = 8000 ms (expected 8000)
+  gap 5 = 8000 ms (expected 8000)
+T3 connect timeout (no answer) after 5 s
+T4 subscribe failure -> backoff
+T5 dead link from publish failures: 10 in a row yes, a 4-frame stall no
+T6 Wi-Fi link loss: no backoff, discards frames, reconnects at once when the link returns
+T7 commands: fragments, wrong topic, oversize
+T8 cadence: telemetry 100 +/- 10 ms, heartbeat 1000 +/- 50 ms, for several poll intervals
+  poll every  3 ms: telemetry frames 600, worst period error  3 ms | heartbeat worst error  3 ms
+  poll every  5 ms: telemetry frames 600, worst period error  0 ms | heartbeat worst error  0 ms
+  poll every 12 ms: telemetry frames 600, worst period error  8 ms | heartbeat worst error  8 ms
+  poll every 20 ms: telemetry frames 600, worst period error  0 ms | heartbeat worst error  0 ms
+
+33 checks, 0 failed
+
+--- 2. Wi-Fi service task (cyw43_utk.c) against a scripted driver
++ gcc -std=gnu11 -Wall -Wextra -DTM_NET_LWIP=1 -DTM_MQTT=1 -DCNF_SMP=1 -Imocks_wifi -I/home/claude/b1/testing/subsystem1/host/../../../lib/libwifi/sysdepend/pico_rp2040 -I/home/claude/b1/testing/subsystem1/host/../../../lib/liblwip/sysdepend/pico_rp2040 -o /tmp/tmp.mJTMnGWcly/wifi test_wifi_host.c /home/claude/b1/testing/subsystem1/host/../../../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk.c
++ /tmp/tmp.mJTMnGWcly/wifi
+
+W1: first join request fails immediately, second succeeds
+  ok:   two join requests were made (got 2)
+  ok:   retry came after the 1 s backoff (1000 ms)
+  ok:   radio reported ready, init_result 0
+  ok:   task entered the poll loop (2500 polls)
+  ok:   link up, MQTT polled with link up
+  ok:   no delay longer than 2 ms in the task (max 2)
+
+W2: every join request fails immediately -> 1,2,4,8,8,8 s
+  ok:   at least 7 requests in 40 s (got 8)
+        gap 0: 1000 ms (want 1000)
+        gap 1: 2000 ms (want 2000)
+        gap 2: 4000 ms (want 4000)
+        gap 3: 8000 ms (want 8000)
+        gap 4: 8000 ms (want 8000)
+        gap 5: 8000 ms (want 8000)
+  ok:   gaps follow 1,2,4,8,8,8 s (FR19)
+  ok:   never blocks longer than 2 ms (max 2)
+
+W3: link established, then lost -> rejoin after 1 s again
+  ok:   a rejoin request followed the loss (4 requests)
+  ok:   the link was lost at 3100 ms
+  ok:   rejoin came 1 s after the loss, not at the old 4 s step (1000 ms)
+
+W4: radio/interface bring-up failure is NOT retried
+  ok:   no join request when the interface never came up
+  ok:   radio not ready, init_result -5
+  ok:   network service is not polled
+
+W5: interface disappears during a retry -> stop, report not ready
+  ok:   exactly two requests, then no more (got 2)
+  ok:   radio reported not ready after the interface was lost
+
+17 checks, 0 failed
+
+--- 3. application tests (s1_net.c, s1_sim.c, subsystem1_test.c) on an emulated kernel
+pthreads available: the concurrent-status test uses real threads
++ gcc -std=gnu11 -Wall -Wextra -DHOST_THREADS=1 -pthread -c -o /tmp/tmp.mJTMnGWcly/host_sync.o host_sync.c
++ gcc -std=gnu11 -Wall -Wextra -Wno-int-to-pointer-cast -DPROHIBIT_DEF_SIZE_T -include stddef.h -DAPP_TEST=1 -D_PICO_RP2040_ -DS1_SIMULATE_TELEMETRY=0 -DTM_MQTT=0 -DS1_TEST_HOST_FAULTS=1 -I/home/claude/b1/testing/subsystem1/host/../../../include -I/home/claude/b1/testing/subsystem1/host/../../../config -I/home/claude/b1/testing/subsystem1/host/../../../app_program -o /tmp/tmp.mJTMnGWcly/target kernel_emulation.c /tmp/tmp.mJTMnGWcly/host_sync.o target_main.c /home/claude/b1/testing/subsystem1/host/../../../app_program/subsystem1/s1_net.c /home/claude/b1/testing/subsystem1/host/../../../app_program/subsystem1/s1_codec.c /home/claude/b1/testing/subsystem1/host/../../../app_program/subsystem1/s1_sim.c /home/claude/b1/testing/subsystem1/host/../../../app_program/subsystem1/subsystem1_test.c -DHOST_THREADS=1 -pthread
++ /tmp/tmp.mJTMnGWcly/target
+[TEST] S1-U01 PASS  telemetry JSON has all FR17 fields
+[TEST] S1-U02 PASS  worst-case JSON is under 256 bytes
+[TEST] S1-U05 PASS  heartbeat is {status ALIVE, uptime_ms}
+[TEST] subsystem1 codec SUMMARY 3 passed, 0 failed
+[TEST] S1-U03 PASS  command parser accepts the four commands, rejects junk
+[TEST] S1-U04 PASS  backoff 1,2,4,8 then capped at 8 s
+[TEST] subsystem1 commands and backoff SUMMARY 2 passed, 0 failed
+[TEST] S1-U06 PASS  telemetry frames keep their order
+[TEST] S1-U07 PASS  full telemetry buffer returns E_TMOUT, does not block
+[TEST] S1-U07b PASS  buffer accepts frames again after it is drained
+[TEST] subsystem1 telemetry buffer SUMMARY 3 passed, 0 failed
+[TEST] S1-U08a PASS  EMERGENCY_STOP sets the E-STOP event flag
+[TEST] S1-U08b PASS  EMERGENCY_STOP delivered, forwarded in under 50 ms
+[TEST] S1-U09 PASS  unknown command is rejected and not queued
+[TEST] S1-U10 PASS  EMERGENCY_STOP evicts the oldest command when full
+[TEST] subsystem1 command path SUMMARY 4 passed, 0 failed
+[TEST] S1-U11a PASS  CONNECTED flushes stale telemetry
+[TEST] S1-U11b PASS  CONNECTED raises the link-changed flag
+[TEST] S1-U11c PASS  DISCONNECTED clears the connected state
+[TEST] subsystem1 link events SUMMARY 3 passed, 0 failed
+[TEST] S1-U13a PASS  start connected; initial notification consumed
+[TEST] S1-U13b PASS  BACKOFF clears connected and raises link-changed
+[TEST] S1-U13c PASS  BACKOFF is counted and the disconnect is counted once
+[TEST] S1-U13d PASS  repeat BACKOFF / DISCONNECTED while down: no new notification
+[TEST] S1-U13e PASS  DISCONNECTED (without BACKOFF first) still notifies once
+[TEST] subsystem1 backoff notification SUMMARY 5 passed, 0 failed
+[TEST] S1-U14a PASS  writer and reader tasks finished (no deadlock)
+[TEST] S1-U14b PASS  every concurrent snapshot was coherent
+[TEST] S1-U14c PASS  reader saw both states while the writer ran
+[TEST] S1-U14d PASS  no update was lost under contention
+s1: S1-U14 reads=861543 violations=0 seen_up=845007 seen_down=16536
+[TEST] subsystem1 concurrent status SUMMARY 4 passed, 0 failed
+[TEST] S1-U16a PASS  latch and pulse published while the hook is still blocked on the held mutex
+[TEST] S1-U16b PASS  readers stay bounded: get_stats times out, latch and link reads never block
+[TEST] S1-U16c PASS  after the mutex is released the hook finishes and counts it
+[TEST] S1-U16d PASS  EMERGENCY_STOP also reaches the queue (full of PAUSE)
+[TEST] subsystem1 emergency with held mutex SUMMARY 4 passed, 0 failed
+[TEST] S1-U17a PASS  an ordinary command does not latch an emergency
+[TEST] S1-U17b PASS  EMERGENCY_STOP sets the latch and the pulse flag
+[TEST] S1-U18a PASS  RESUME, START_RUN, PAUSE, reconnects and draining the queue leave the latch set
+[TEST] S1-U19a PASS  s1_net_estop_clear() releases the latch
+[TEST] S1-U19b PASS  after the clear, RESUME does not latch again
+[TEST] S1-U19c PASS  a new EMERGENCY_STOP latches again; no post failures counted
+[TEST] subsystem1 emergency latch SUMMARY 6 passed, 0 failed
+[TEST] S1-U20a PASS  one failed flag post is retried; the latch is set
+[TEST] S1-U20b PASS  a persistent post failure is counted and the queued command still delivers the emergency
+[TEST] subsystem1 emergency post failure SUMMARY 2 passed, 0 failed
+[TEST] S1-U21a PASS  truncated message: E_SYS, output zeroed, counted
+[TEST] S1-U21b PASS  unknown command id: E_SYS, output zeroed
+[TEST] S1-U21c PASS  empty queue returns the kernel's E_TMOUT unchanged
+[TEST] S1-U21d PASS  a good message after a bad one is delivered
+[TEST] S1-U22a PASS  a 2 s old PAUSE is discarded, the fresh RESUME is delivered
+[TEST] S1-U22b PASS  an old EMERGENCY_STOP is still delivered
+[TEST] S1-U22c PASS  only a stale command queued: nothing is delivered
+[TEST] subsystem1 command validation SUMMARY 7 passed, 0 failed
+[TEST] subsystem1 simulator SUMMARY 0 passed, 0 failed
+[TEST] subsystem1 simulator switch SUMMARY 0 passed, 0 failed
+HOST-RUN: 43 passed, 0 failed, threads=1
+
+--- 4. structure: application code never touches the radio or lwIP
++ grep for cyw43/lwip use in app_program/subsystem1 (allowed: mqtt_utk_set_app hook registration, net_backoff.h)
+ok: no direct radio/lwIP/MQTT calls in subsystem1 sources
+
+--- 5. optional: the same harness built for Windows (MinGW cross compiler, run under wine if present)
++ x86_64-w64-mingw32-gcc -std=gnu11 -Wall -Wextra -c -o /tmp/tmp.mJTMnGWcly/host_sync_win.o host_sync.c
++ x86_64-w64-mingw32-gcc -std=gnu11 -Wall -Wextra -Wno-int-to-pointer-cast -DPROHIBIT_DEF_SIZE_T -include stddef.h -DAPP_TEST=1 -D_PICO_RP2040_ -DS1_SIMULATE_TELEMETRY=0 -DTM_MQTT=0 -DS1_TEST_HOST_FAULTS=1 -DS1_TEST_SERIAL_HOST=1 -DS1_TEST_REQUIRE_OVERLAP=0 -I/home/claude/b1/testing/subsystem1/host/../../../include -I/home/claude/b1/testing/subsystem1/host/../../../config -I/home/claude/b1/testing/subsystem1/host/../../../app_program -o /tmp/tmp.mJTMnGWcly/target_win.exe kernel_emulation.c /tmp/tmp.mJTMnGWcly/host_sync_win.o target_main.c /home/claude/b1/testing/subsystem1/host/../../../app_program/subsystem1/s1_net.c /home/claude/b1/testing/subsystem1/host/../../../app_program/subsystem1/s1_codec.c /home/claude/b1/testing/subsystem1/host/../../../app_program/subsystem1/s1_sim.c /home/claude/b1/testing/subsystem1/host/../../../app_program/subsystem1/subsystem1_test.c
++ env WINEDEBUG=-all wine /tmp/tmp.mJTMnGWcly/target_win.exe
+[TEST] S1-U01 PASS  telemetry JSON has all FR17 fields
+[TEST] S1-U02 PASS  worst-case JSON is under 256 bytes
+[TEST] S1-U05 PASS  heartbeat is {status ALIVE, uptime_ms}
+[TEST] subsystem1 codec SUMMARY 3 passed, 0 failed
+[TEST] S1-U03 PASS  command parser accepts the four commands, rejects junk
+[TEST] S1-U04 PASS  backoff 1,2,4,8 then capped at 8 s
+[TEST] subsystem1 commands and backoff SUMMARY 2 passed, 0 failed
+[TEST] S1-U06 PASS  telemetry frames keep their order
+[TEST] S1-U07 PASS  full telemetry buffer returns E_TMOUT, does not block
+[TEST] S1-U07b PASS  buffer accepts frames again after it is drained
+[TEST] subsystem1 telemetry buffer SUMMARY 3 passed, 0 failed
+[TEST] S1-U08a PASS  EMERGENCY_STOP sets the E-STOP event flag
+[TEST] S1-U08b PASS  EMERGENCY_STOP delivered, forwarded in under 50 ms
+[TEST] S1-U09 PASS  unknown command is rejected and not queued
+[TEST] S1-U10 PASS  EMERGENCY_STOP evicts the oldest command when full
+[TEST] subsystem1 command path SUMMARY 4 passed, 0 failed
+[TEST] S1-U11a PASS  CONNECTED flushes stale telemetry
+[TEST] S1-U11b PASS  CONNECTED raises the link-changed flag
+[TEST] S1-U11c PASS  DISCONNECTED clears the connected state
+[TEST] subsystem1 link events SUMMARY 3 passed, 0 failed
+[TEST] S1-U13a PASS  start connected; initial notification consumed
+[TEST] S1-U13b PASS  BACKOFF clears connected and raises link-changed
+[TEST] S1-U13c PASS  BACKOFF is counted and the disconnect is counted once
+[TEST] S1-U13d PASS  repeat BACKOFF / DISCONNECTED while down: no new notification
+[TEST] S1-U13e PASS  DISCONNECTED (without BACKOFF first) still notifies once
+[TEST] subsystem1 backoff notification SUMMARY 5 passed, 0 failed
+[TEST] S1-U14a PASS  writer and reader tasks finished (no deadlock)
+[TEST] S1-U14b PASS  every concurrent snapshot was coherent
+[TEST] S1-U14c PASS  reader saw both states while the writer ran
+[TEST] S1-U14d PASS  no update was lost under contention
+s1: S1-U14 reads=100 violations=0 seen_up=0 seen_down=100
+[TEST] subsystem1 concurrent status SUMMARY 4 passed, 0 failed
+[TEST] S1-U16a PASS  skipped on a PC without threads (Pico only)
+[TEST] subsystem1 emergency with held mutex SUMMARY 1 passed, 0 failed
+[TEST] S1-U17a PASS  an ordinary command does not latch an emergency
+[TEST] S1-U17b PASS  EMERGENCY_STOP sets the latch and the pulse flag
+[TEST] S1-U18a PASS  RESUME, START_RUN, PAUSE, reconnects and draining the queue leave the latch set
+[TEST] S1-U19a PASS  s1_net_estop_clear() releases the latch
+[TEST] S1-U19b PASS  after the clear, RESUME does not latch again
+[TEST] S1-U19c PASS  a new EMERGENCY_STOP latches again; no post failures counted
+[TEST] subsystem1 emergency latch SUMMARY 6 passed, 0 failed
+[TEST] S1-U20a PASS  one failed flag post is retried; the latch is set
+[TEST] S1-U20b PASS  a persistent post failure is counted and the queued command still delivers the emergency
+[TEST] subsystem1 emergency post failure SUMMARY 2 passed, 0 failed
+[TEST] S1-U21a PASS  truncated message: E_SYS, output zeroed, counted
+[TEST] S1-U21b PASS  unknown command id: E_SYS, output zeroed
+[TEST] S1-U21c PASS  empty queue returns the kernel's E_TMOUT unchanged
+[TEST] S1-U21d PASS  a good message after a bad one is delivered
+[TEST] S1-U22a PASS  a 2 s old PAUSE is discarded, the fresh RESUME is delivered
+[TEST] S1-U22b PASS  an old EMERGENCY_STOP is still delivered
+[TEST] S1-U22c PASS  only a stale command queued: nothing is delivered
+[TEST] subsystem1 command validation SUMMARY 7 passed, 0 failed
+[TEST] subsystem1 simulator SUMMARY 0 passed, 0 failed
+[TEST] subsystem1 simulator switch SUMMARY 0 passed, 0 failed
+HOST-RUN: 40 passed, 0 failed, threads=0
+
+RESULT: PASS (all builds succeeded and all tests passed)
+log saved: /home/claude/b1/testing/subsystem1/host/../logs/host_run_f3e77ff.txt (exit status 0)
