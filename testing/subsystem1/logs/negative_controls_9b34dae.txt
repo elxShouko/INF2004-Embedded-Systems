@@ -1,0 +1,39 @@
+# Negative controls (code revision 04f9c2a, runner revision 9b34dae): the new tests must FAIL when the fix is removed
+
+## A. status mutex removed from s1_net.c
+[TEST] S1-U14b FAIL  every concurrent snapshot was coherent   (/tmp/negc/app_program/subsystem1/subsystem1_test.c:504)
+s1: S1-U14 reads=30098 violations=46 seen_up=14824 seen_down=15274
+HOST-RUN: 23 passed, 1 failed, threads=1
+HOST-RUN: FAILED (need 0 failed and >= 24 passed)
+exit status: 1
+
+## B. BACKOFF does not raise LINK_CHANGED (original behaviour)
+[TEST] S1-U13b FAIL  BACKOFF clears connected and raises link-changed   (/tmp/negc/app_program/subsystem1/subsystem1_test.c:345)
+HOST-RUN: 23 passed, 1 failed, threads=1
+HOST-RUN: FAILED (need 0 failed and >= 24 passed)
+exit status: 1
+
+## C. Wi-Fi task from before the fix (git show 6732d28 version of cyw43_utk.c)
+  FAIL: two join requests were made (got 1) (line 143)
+  FAIL: retry came after the 1 s backoff (0 ms) (line 144)
+  FAIL: radio reported ready, init_result 0 (line 145)
+  FAIL: task entered the poll loop (0 polls) (line 146)
+  FAIL: link up, MQTT polled with link up (line 147)
+  FAIL: no delay longer than 2 ms in the task (max 1000) (line 148)
+  FAIL: at least 7 requests in 40 s (got 1) (line 161)
+  FAIL: gaps follow 1,2,4,8,8,8 s (FR19) (line 163)
+  FAIL: never blocks longer than 2 ms (max 1000) (line 164)
+  FAIL: a rejoin request followed the loss (1 requests) (line 191)
+  FAIL: the link was lost at 0 ms (line 192)
+  FAIL: rejoin came 1 s after the loss, not at the old 4 s step (0 ms) (line 193)
+  FAIL: exactly two requests, then no more (got 1) (line 219)
+17 checks, 13 failed
+exit status: 1
+
+## D. runner exit status when the expected check count is not reached (S1_HOST_MIN_CHECKS=99)
+HOST-RUN: 24 passed, 0 failed, threads=1
+HOST-RUN: FAILED (need 0 failed and >= 99 passed)
+HOST-RUN: 24 passed, 0 failed, threads=0
+HOST-RUN: FAILED (need 0 failed and >= 99 passed)
+RESULT: FAIL (2 step(s) failed)
+runner exit status: 1

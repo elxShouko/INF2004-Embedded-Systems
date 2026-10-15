@@ -1,0 +1,12 @@
+=== make 
+exit=0 warnings=0 errors=0
+mtk3pico_smp1_usb_cdc_wifi.uf2 mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt.uf2 mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_test.uf2 mtk3pico_smp1_usb_cdc_wifi_test.uf2 
+=== make NET=lwip MQTT=1
+exit=0 warnings=0 errors=0
+mtk3pico_smp1_usb_cdc_wifi.uf2 mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt.uf2 mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_test.uf2 mtk3pico_smp1_usb_cdc_wifi_test.uf2 
+=== make NET=lwip MQTT=1 TEST=1
+exit=0 warnings=0 errors=0
+mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt.uf2 mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_test.uf2 mtk3pico_smp1_usb_cdc_wifi_test.uf2 
+=== make TEST=1
+exit=0 warnings=0 errors=0
+mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt.uf2 mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_test.uf2 mtk3pico_smp1_usb_cdc_wifi_test.uf2 
