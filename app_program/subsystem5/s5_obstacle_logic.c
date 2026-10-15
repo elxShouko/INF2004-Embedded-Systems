@@ -14,6 +14,7 @@
 #define S5_MIN_VALID_SIDE_SAMPLES	2U
 #define S5_MIN_VALID_DISTANCE_CM	2U
 #define S5_MAX_VALID_DISTANCE_CM	400U
+#define S5_MAX_SCAN_DURATION_MS		0x7fffffffU
 
 /* Development defaults; tune only from repeatable hardware measurements. */
 #define S5_DEV_MIN_RANGE_FOR_BYPASS_CM	25U
@@ -119,6 +120,164 @@ s5_fine_samples_are_valid(
 	return true;
 }
 
+static bool
+s5_sample_times_are_valid(
+	const s5_scan_context_t *scan_context,
+	const s5_scan_sample_t *coarse_samples,
+	const s5_scan_sample_t *fine_samples,
+	size_t fine_count,
+	uint32_t scan_duration_ms)
+{
+	uint32_t previous_elapsed_ms;
+	uint32_t sample_elapsed_ms;
+	bool have_previous_sample;
+
+	previous_elapsed_ms = 0U;
+	have_previous_sample = false;
+
+	for (size_t index = 0U; index < S5_COARSE_SCAN_COUNT; index++)
+	{
+		sample_elapsed_ms =
+			coarse_samples[index].captured_at_ms -
+			scan_context->started_at_ms;
+		if (sample_elapsed_ms > scan_duration_ms ||
+		    (have_previous_sample &&
+		     (sample_elapsed_ms <= previous_elapsed_ms)))
+		{
+			return false;
+		}
+		previous_elapsed_ms = sample_elapsed_ms;
+		have_previous_sample = true;
+	}
+
+	for (size_t index = 0U; index < fine_count; index++)
+	{
+		sample_elapsed_ms =
+			fine_samples[index].captured_at_ms -
+			scan_context->started_at_ms;
+		if (sample_elapsed_ms > scan_duration_ms ||
+		    (have_previous_sample &&
+		     (sample_elapsed_ms <= previous_elapsed_ms)))
+		{
+			return false;
+		}
+		previous_elapsed_ms = sample_elapsed_ms;
+		have_previous_sample = true;
+	}
+
+	return true;
+}
+
+static bool
+s5_sample_ranges_are_consistent(
+	const s5_scan_sample_t *samples,
+	size_t sample_count,
+	uint16_t max_adjacent_range_delta_cm)
+{
+	uint16_t previous_distance_cm;
+	bool have_previous_valid_sample;
+
+	previous_distance_cm = 0U;
+	have_previous_valid_sample = false;
+
+	for (size_t index = 0U; index < sample_count; index++)
+	{
+		uint16_t range_delta_cm;
+
+		if (!samples[index].valid)
+		{
+			have_previous_valid_sample = false;
+			continue;
+		}
+
+		if (have_previous_valid_sample)
+		{
+			range_delta_cm =
+				(samples[index].distance_cm >= previous_distance_cm)
+					? (uint16_t)(samples[index].distance_cm -
+						     previous_distance_cm)
+					: (uint16_t)(previous_distance_cm -
+						     samples[index].distance_cm);
+			if (range_delta_cm > max_adjacent_range_delta_cm)
+			{
+				return false;
+			}
+		}
+
+		previous_distance_cm = samples[index].distance_cm;
+		have_previous_valid_sample = true;
+	}
+
+	return true;
+}
+
+static s5_logic_status_t
+s5_validate_scan_context(
+	const s5_scan_context_t *scan_context,
+	const s5_scan_sample_t *coarse_samples,
+	const s5_scan_sample_t *fine_samples,
+	size_t fine_count)
+{
+	uint32_t scan_duration_ms;
+	uint32_t scan_age_ms;
+
+	if (scan_context->cancelled)
+	{
+		return S5_LOGIC_SCAN_CANCELLED;
+	}
+	if ((scan_context->acquisition_status != S5_ACQUISITION_OK) ||
+	    !scan_context->servo_settled)
+	{
+		return S5_LOGIC_ACQUISITION_FAILED;
+	}
+	if (!scan_context->complete)
+	{
+		return S5_LOGIC_INCOMPLETE_SCAN;
+	}
+	if (!scan_context->vehicle_stationary)
+	{
+		return S5_LOGIC_SCAN_NOT_STATIONARY;
+	}
+	if ((scan_context->max_duration_ms == 0U) ||
+	    (scan_context->max_duration_ms > S5_MAX_SCAN_DURATION_MS) ||
+	    (scan_context->max_age_ms == 0U) ||
+	    (scan_context->max_age_ms > S5_MAX_SCAN_DURATION_MS) ||
+	    (scan_context->max_adjacent_range_delta_cm == 0U))
+	{
+		return S5_LOGIC_INVALID_SCAN;
+	}
+
+	scan_duration_ms =
+		scan_context->completed_at_ms - scan_context->started_at_ms;
+	scan_age_ms =
+		scan_context->evaluated_at_ms - scan_context->completed_at_ms;
+	if ((scan_duration_ms > scan_context->max_duration_ms) ||
+	    (scan_age_ms > scan_context->max_age_ms) ||
+	    !s5_sample_times_are_valid(
+		    scan_context,
+		    coarse_samples,
+		    fine_samples,
+		    fine_count,
+		    scan_duration_ms))
+	{
+		return S5_LOGIC_STALE_SCAN;
+	}
+
+	if (!s5_sample_ranges_are_consistent(
+		    coarse_samples,
+		    S5_COARSE_SCAN_COUNT,
+		    scan_context->max_adjacent_range_delta_cm) ||
+	    !s5_sample_ranges_are_consistent(
+		    fine_samples,
+		    fine_count,
+		    scan_context->max_adjacent_range_delta_cm))
+	{
+		return S5_LOGIC_INCONSISTENT_SCAN;
+	}
+
+	return S5_LOGIC_OK;
+}
+
 static uint16_t
 s5_project_distance(
 	uint16_t distance_cm,
@@ -194,20 +353,20 @@ s5_set_bypass_direction(s5_obstacle_profile_t *profile)
 	{
 		profile->bypass_direction =
 			(profile->left_min_range_cm >= profile->right_min_range_cm)
-				? S5_BYPASS_LEFT
-				: S5_BYPASS_RIGHT;
+				? S5_BYPASS_LEFT_CANDIDATE
+				: S5_BYPASS_RIGHT_CANDIDATE;
 	}
 	else if (left_range_passes)
 	{
-		profile->bypass_direction = S5_BYPASS_LEFT;
+		profile->bypass_direction = S5_BYPASS_LEFT_CANDIDATE;
 	}
 	else if (right_range_passes)
 	{
-		profile->bypass_direction = S5_BYPASS_RIGHT;
+		profile->bypass_direction = S5_BYPASS_RIGHT_CANDIDATE;
 	}
 	else
 	{
-		profile->bypass_direction = S5_BYPASS_NO_SAFE_ROUTE;
+		profile->bypass_direction = S5_BYPASS_NO_CANDIDATE;
 	}
 }
 
@@ -294,6 +453,7 @@ s5_make_fine_scan_angles(
 
 s5_logic_status_t
 s5_build_obstacle_profile(
+	const s5_scan_context_t *scan_context,
 	const s5_scan_sample_t *coarse_samples,
 	size_t coarse_count,
 	const s5_scan_sample_t *fine_samples,
@@ -310,6 +470,7 @@ s5_build_obstacle_profile(
 	size_t first_edge_index;
 	size_t last_edge_index;
 	uint8_t valid_fine_samples;
+	s5_logic_status_t context_status;
 
 	if (profile == NULL)
 	{
@@ -317,7 +478,9 @@ s5_build_obstacle_profile(
 	}
 	memset(profile, 0, sizeof(*profile));
 
-	if ((coarse_samples == NULL) || (fine_samples == NULL))
+	if ((scan_context == NULL) ||
+	    (coarse_samples == NULL) ||
+	    (fine_samples == NULL))
 	{
 		return S5_LOGIC_INVALID_ARGUMENT;
 	}
@@ -325,6 +488,15 @@ s5_build_obstacle_profile(
 	    !s5_fine_samples_are_valid(fine_samples, fine_count))
 	{
 		return S5_LOGIC_INVALID_SCAN;
+	}
+	context_status = s5_validate_scan_context(
+		scan_context,
+		coarse_samples,
+		fine_samples,
+		fine_count);
+	if (context_status != S5_LOGIC_OK)
+	{
+		return context_status;
 	}
 
 	left_minimum_cm = UINT32_MAX;
@@ -456,9 +628,6 @@ s5_build_obstacle_plan(
 	const s5_obstacle_profile_t *profile,
 	s5_obstacle_plan_t *plan)
 {
-	s5_obstacle_action_t first_turn;
-	s5_obstacle_action_t return_turn;
-
 	if ((profile == NULL) || (plan == NULL))
 	{
 		return S5_LOGIC_INVALID_ARGUMENT;
@@ -474,45 +643,20 @@ s5_build_obstacle_plan(
 		return S5_LOGIC_INVALID_ARGUMENT;
 	}
 
-	if (profile->bypass_direction == S5_BYPASS_LEFT)
+	if ((profile->bypass_direction != S5_BYPASS_LEFT_CANDIDATE) &&
+	    (profile->bypass_direction != S5_BYPASS_RIGHT_CANDIDATE) &&
+	    (profile->bypass_direction != S5_BYPASS_NO_CANDIDATE))
 	{
-		if ((profile->left_valid_samples < S5_MIN_VALID_SIDE_SAMPLES) ||
-		    (profile->left_min_range_cm <
-		     S5_DEV_MIN_RANGE_FOR_BYPASS_CM))
-		{
-			return S5_LOGIC_NO_SAFE_ROUTE;
-		}
-		first_turn = S5_ACTION_TURN_LEFT;
-		return_turn = S5_ACTION_TURN_RIGHT;
-	}
-	else if (profile->bypass_direction == S5_BYPASS_RIGHT)
-	{
-		if ((profile->right_valid_samples < S5_MIN_VALID_SIDE_SAMPLES) ||
-		    (profile->right_min_range_cm <
-		     S5_DEV_MIN_RANGE_FOR_BYPASS_CM))
-		{
-			return S5_LOGIC_NO_SAFE_ROUTE;
-		}
-		first_turn = S5_ACTION_TURN_RIGHT;
-		return_turn = S5_ACTION_TURN_LEFT;
-	}
-	else
-	{
-		return S5_LOGIC_NO_SAFE_ROUTE;
+		return S5_LOGIC_INVALID_ARGUMENT;
 	}
 
 	plan->bypass_direction = profile->bypass_direction;
-	plan->actions[plan->action_count++] = S5_ACTION_STOP;
-	if (profile->closest_distance_cm <= S5_DEV_REVERSE_DISTANCE_CM)
-	{
-		plan->actions[plan->action_count++] = S5_ACTION_REVERSE;
-		plan->reverse_required = true;
-	}
-	plan->actions[plan->action_count++] = first_turn;
-	plan->actions[plan->action_count++] = S5_ACTION_BYPASS;
-	plan->actions[plan->action_count++] = return_turn;
-	plan->actions[plan->action_count++] = S5_ACTION_SEARCH_LINE;
-	plan->actions[plan->action_count++] = S5_ACTION_RESUME_LINE;
+	plan->reverse_candidate =
+		(profile->closest_distance_cm <= S5_DEV_REVERSE_DISTANCE_CM);
 
-	return S5_LOGIC_OK;
+	/*
+	 * Range samples do not prove a collision-free vehicle path. Do not
+	 * produce executable actions until geometry and motion contracts exist.
+	 */
+	return S5_LOGIC_CLEARANCE_UNVERIFIED;
 }

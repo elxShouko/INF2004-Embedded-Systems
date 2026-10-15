@@ -56,7 +56,7 @@ fixed.
 | GP3 | | |
 | GP4 | S3 | Right IR line sensor (user-confirmed assignment) |
 | GP5 | | |
-| GP6 | | |
+| GP6 | S5 | Ultrasonic ECHO (user-confirmed) |
 | GP7 | | |
 | GP8 | | |
 | GP9 | | |
@@ -65,7 +65,7 @@ fixed.
 | GP12 | | |
 | GP13 | | |
 | GP14 | | |
-| GP15 | | |
+| GP15 | S5 | Servo signal; Robo Pico GP15 servo header (user-confirmed) |
 | GP16 | S4 | I2C0 SDA, Week 6 design; physical wiring unverified |
 | GP17 | S4 | I2C0 SCL, Week 6 design; physical wiring unverified |
 | GP18 | | |
@@ -73,13 +73,15 @@ fixed.
 | GP20 | | |
 | GP21 | | |
 | GP22 | | |
-| GP26 | | (ADC0 capable) |
+| GP26 | S5 | Ultrasonic TRIG (user-confirmed); use GPIO/SIO only (PWM5A aliases GP10 motor) |
 | GP27 | S3 | Side IR barcode/junction sensor, digital DOUT |
 | GP28 | | (ADC2 capable) |
 
-**Buddy 5 pin placeholder:** no Buddy 5 GPIOs are currently claimed. Servo,
-TRIG, and ECHO assignments remain `TBD`; verify wiring and ECHO voltage, check
-pin ownership, and fill this table before connecting or enabling hardware.
+Buddy 5's user-confirmed wiring is GP26 for ultrasonic TRIG, GP6 for ECHO, and
+GP15 for the servo signal. Sensor model, ECHO voltage/power suitability, and
+servo electrical requirements remain unverified. GP26 must stay GPIO/SIO-only:
+it aliases PWM5A with Buddy 2's GP10 motor output. These pin claims do not
+enable the unimplemented Buddy 5 driver.
 
 ## 3. Peripherals
 
@@ -117,12 +119,13 @@ the drivers have no locking to stop it.
 | SPI0 | | | |
 | SPI1 | | | |
 | ADC | | | GP26–GP28 |
-| PWM slices (list) | | | |
+| PWM slices (list) | S5 (reserved; task TBD) | TBD — hardware integration pending | PWM7B (GP15 servo); do not initialize until approved |
 | WiFi radio, TCP/IP, MQTT | *kernel* | `cyw43_utk_task` (built in) | GP23–25, GP29 |
 
-Buddy 5 has no peripheral or owning task reserved yet. In particular, servo
-PWM ownership/slice and the ultrasonic GPIO owner remain `TBD`; resolve them
-with the pin claims before adding drivers.
+Buddy 5's servo PWM resource is reserved as slice 7 channel B (GP15); its
+owning task remains TBD. Ultrasonic GPIO acquisition and all drivers remain
+unimplemented. Do not initialize or drive these peripherals until the task,
+electrical checks, and startup/fault behavior are reviewed.
 
 ### WiFi and MQTT are special
 

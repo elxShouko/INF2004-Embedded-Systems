@@ -15,15 +15,21 @@ typedef enum
 	S5_LOGIC_INVALID_ARGUMENT,
 	S5_LOGIC_INVALID_SCAN,
 	S5_LOGIC_INSUFFICIENT_DATA,
-	S5_LOGIC_NO_SAFE_ROUTE
+	S5_LOGIC_SCAN_CANCELLED,
+	S5_LOGIC_ACQUISITION_FAILED,
+	S5_LOGIC_INCOMPLETE_SCAN,
+	S5_LOGIC_SCAN_NOT_STATIONARY,
+	S5_LOGIC_STALE_SCAN,
+	S5_LOGIC_INCONSISTENT_SCAN,
+	S5_LOGIC_CLEARANCE_UNVERIFIED
 } s5_logic_status_t;
 
 typedef enum
 {
 	S5_BYPASS_NONE = 0,
-	S5_BYPASS_LEFT,
-	S5_BYPASS_RIGHT,
-	S5_BYPASS_NO_SAFE_ROUTE
+	S5_BYPASS_LEFT_CANDIDATE,
+	S5_BYPASS_RIGHT_CANDIDATE,
+	S5_BYPASS_NO_CANDIDATE
 } s5_bypass_direction_t;
 
 typedef enum
@@ -38,12 +44,39 @@ typedef enum
 	S5_ACTION_RESUME_LINE
 } s5_obstacle_action_t;
 
+typedef enum
+{
+	S5_ACQUISITION_OK = 0,
+	S5_ACQUISITION_TRIGGER_FAILED,
+	S5_ACQUISITION_ECHO_TIMEOUT,
+	S5_ACQUISITION_ECHO_STUCK_HIGH,
+	S5_ACQUISITION_ECHO_STUCK_LOW,
+	S5_ACQUISITION_SERVO_INIT_FAILED,
+	S5_ACQUISITION_SERVO_POSITION_FAILED
+} s5_acquisition_status_t;
+
 typedef struct
 {
 	uint8_t angle_deg;
 	uint16_t distance_cm;
+	uint32_t captured_at_ms;
 	bool valid;
 } s5_scan_sample_t;
+
+typedef struct
+{
+	uint32_t started_at_ms;
+	uint32_t completed_at_ms;
+	uint32_t evaluated_at_ms;
+	uint32_t max_duration_ms;
+	uint32_t max_age_ms;
+	uint16_t max_adjacent_range_delta_cm;
+	s5_acquisition_status_t acquisition_status;
+	bool complete;
+	bool cancelled;
+	bool servo_settled;
+	bool vehicle_stationary;
+} s5_scan_context_t;
 
 typedef struct
 {
@@ -59,6 +92,7 @@ typedef struct
 	uint16_t right_min_range_cm;
 	uint8_t left_valid_samples;
 	uint8_t right_valid_samples;
+	/* Range-only proposal; this is not a clearance or safety decision. */
 	s5_bypass_direction_t bypass_direction;
 } s5_obstacle_profile_t;
 
@@ -66,13 +100,15 @@ typedef struct
 {
 	s5_obstacle_action_t actions[S5_ACTION_PLAN_MAX];
 	uint8_t action_count;
+	/* Candidate metadata only; action_count remains zero until approved. */
 	s5_bypass_direction_t bypass_direction;
-	bool reverse_required;
+	bool reverse_candidate;
+	bool executable;
 } s5_obstacle_plan_t;
 
 /*
  * Development assumptions: 90 degrees is forward; smaller angles are left.
- * Range-based bypass selection is a heuristic, not a physical safety proof.
+ * Range-based direction candidates are not a physical clearance proof.
  */
 s5_logic_status_t s5_make_coarse_scan_angles(
 	uint8_t *angles,
@@ -85,6 +121,7 @@ s5_logic_status_t s5_make_fine_scan_angles(
 	size_t *angle_count);
 
 s5_logic_status_t s5_build_obstacle_profile(
+	const s5_scan_context_t *scan_context,
 	const s5_scan_sample_t *coarse_samples,
 	size_t coarse_count,
 	const s5_scan_sample_t *fine_samples,

@@ -1,0 +1,30 @@
+Date: 2026-10-15
+Revision: 4240895 + uncommitted working-tree changes
+Compiler: gcc.exe (Rev2, Built by MSYS2 project) 14.2.0
+Command: gcc -std=c99 -Wall -Wextra -Werror -Wconversion -Wsign-conversion -pedantic -fanalyzer app_program\subsystem5\s5_obstacle_logic.c testing\subsystem5\host\test_obstacle_logic.c -o <temporary executable>
+C11 syntax check: gcc -std=c11 -Wall -Wextra -Werror -Wconversion -Wsign-conversion -pedantic -fsyntax-only on both source files (PASS)
+Scope: Host-only logic tests; no micro T-Kernel, physical sensors, servo, vehicle, or hardware validation.
+
+[TEST] S5-U02 PASS  coarse and fine angles are bounded and edge-clamped
+[TEST] S5-U03 PASS  profile reports nearest point, geometry, width and side ranges
+[TEST] S5-U11 PASS  profiles off-axis scans centred at coarse directions
+[TEST] S5-U04 PASS  left range candidate is not emitted as an executable route
+[TEST] S5-U05 PASS  reverse remains an advisory candidate, never an action
+[TEST] S5-U06 PASS  missing range candidates are not misreported as proven unsafe
+[TEST] S5-U07 PASS  malformed scan is rejected and output is cleared
+[TEST] S5-U08 PASS  right range candidate is not emitted as an executable route
+[TEST] S5-U09 PASS  too few valid fine readings cannot produce a profile
+[TEST] S5-U12 PASS  cancelled scan is rejected and profile cleared
+[TEST] S5-U13 PASS  echo timeout or unsettled servo rejects scan
+[TEST] S5-U14 PASS  partial or moving-vehicle scan is rejected
+[TEST] S5-U15 PASS  scan exceeding supplied maximum duration is rejected
+[TEST] S5-U16 PASS  non-monotonic sample times are rejected
+[TEST] S5-U17 PASS  range jumps over supplied consistency limit are rejected
+[TEST] S5-U18 PASS  scan older than configured maximum age is rejected
+[TEST] S5-U19 PASS  late sample beyond scan completion is rejected
+[TEST] S5-U20 PASS  trigger, echo, and servo faults reject profile creation
+[TEST] S5-U21 PASS  missing scan-validation configuration is rejected
+[TEST] S5-U22 PASS  out-of-range measurement is rejected
+[TEST] S5-U23 PASS  valid scan across millisecond-counter wrap is accepted
+[TEST] S5-U10 PASS  a profile that was not successfully built cannot create a plan
+[TEST] subsystem5 host failures: 0
