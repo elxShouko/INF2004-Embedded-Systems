@@ -53,17 +53,26 @@ must not interpret the profile or candidate as permission to move.
 The host-only `s5_obstacle_runtime` policy layer checks configured forward
 sample freshness, counts distinct proximity samples, requests a stop before a
 full scan, keeps requesting stop until the stopped acknowledgement and
-throughout scanning, and fails closed on stop/scan timeouts, cancellation,
-movement during a scan, acquisition errors, or unverified clearance. A valid
-scan is copied into a fixed-size status snapshot. Fault outputs remain
-asserted on subsequent calls so a future owner task can retry delivery. Its
-configuration has no production defaults; callers must provide
+throughout scanning. Scan, bypass, and recovery requests remain asserted until
+the policy observes their corresponding acknowledgement; a fault request
+remains asserted while the fault state is latched. Stopped/bypass/line
+acknowledgements must be fresh and timestamped after their corresponding
+policy state begins. It fails closed on stop/scan timeouts, stale stopped
+status, cancellation, movement during a scan, acquisition errors, or
+unverified clearance. A valid scan is copied into a fixed-size status
+snapshot. Its configuration has no production defaults; callers must provide
 measured/approved values.
 
 This policy module does not acquire sensor data, drive a servo, create an RTOS
 task, or transport requests to the Vehicle Controller. Its status-copy API is
 single-owner-task only; a cross-task reader needs an agreed bounded RTOS
-publication mechanism. The current profile planner still marks every route
+publication mechanism. Future providers must supply timestamps on the same
+monotonic clock; the policy rejects same-tick acknowledgements as ambiguous.
+Timestamps do not replace request IDs or a formally agreed acknowledgement
+contract. A completed but malformed scan is reported as complete and invalid,
+with a latched fault. A forward-input fault revokes the cached forward-valid
+status while retaining its timestamp and value for diagnostics. The current
+profile planner still marks every route
 non-executable because vehicle clearance is unverified, so bypass and line
 recovery are intentionally unreachable. Hardware use remains blocked on the
 unresolved items below, approved interfaces, measured geometry and clearance,

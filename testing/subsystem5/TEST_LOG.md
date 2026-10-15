@@ -57,6 +57,18 @@ Define a test here before running it. Test IDs never change.
 | S5-U45 | Keep forward obstacle protection active during bypass | Forward protection | auto | `host/test_obstacle_runtime.c` | A renewed close forward reading faults and requests stop |
 | S5-U46 | Keep requesting stop until stopped acknowledgement | Stop/scan sequencing | auto | `host/test_obstacle_runtime.c` | Stop remains requested in `WAIT_STOP` and alongside scan request on transition to `SCANNING` |
 | S5-U47 | Keep requesting stop throughout stationary scanning | Scan safety | auto | `host/test_obstacle_runtime.c` | An active scan continues to request stop without raising a fault |
+| S5-U48 | Reject a stopped status sampled before stop request | Acknowledgement freshness | auto | `host/test_obstacle_runtime.c` | Stale stopped status does not start a scan; stop remains requested |
+| S5-U49 | Reject stale stopped status during a scan | Scan safety | auto | `host/test_obstacle_runtime.c` | Stale stop status faults and requests stop |
+| S5-U50 | Reject bypass completion from before the bypass request | Acknowledgement freshness | auto | `host/test_obstacle_runtime.c` | Pre-request completion cannot begin line recovery |
+| S5-U51 | Reject LINE_FOUND from before the recovery request | Acknowledgement freshness | auto | `host/test_obstacle_runtime.c` | Pre-request line evidence cannot resume monitoring |
+| S5-U52 | Enforce bypass acknowledgement deadline | Recovery timeout | auto | `host/test_obstacle_runtime.c` | Completion at the deadline faults instead of being accepted |
+| S5-U53 | Require a configured acknowledgement freshness limit | Runtime policy configuration | auto | `host/test_obstacle_runtime.c` | Zero acknowledgement freshness is rejected |
+| S5-U54 | Report completion separately from scan validity | Scan lifecycle/status | auto | `host/test_obstacle_runtime.c` | A malformed completed scan is marked complete, invalid, and faulted |
+| S5-U55 | Clear old scan status on a new obstacle sequence | Runtime status lifecycle | auto | `host/test_obstacle_runtime.c` | New request clears previous timestamps, validity, and acquisition fault |
+| S5-U56 | Revoke forward validity when forward sensing faults | Forward status validity | auto | `host/test_obstacle_runtime.c` | A stale forward sample faults and status reports the last forward value invalid |
+| S5-U57 | Retry scan request until scan owner acknowledges busy | Scan request delivery | auto | `host/test_obstacle_runtime.c` | Repeated request is asserted until scan-busy is reported |
+| S5-U58 | Retry bypass request until completion | Bypass request delivery | auto | `host/test_obstacle_runtime.c` | Request persists while waiting; completion stops retries and requests recovery |
+| S5-U59 | Retry line recovery until LINE_FOUND | Recovery request delivery | auto | `host/test_obstacle_runtime.c` | Request persists while waiting and clears after line-found acknowledgement |
 
 *Method:* **auto** = an automated check prints a result; **manual** = a person
 observes the result (LED, scope, meter, phone app…). S5-U02–S5-U11 are host
@@ -64,13 +76,22 @@ checks; S5-U12–S5-U23 are also host-only context-validation checks. None
 exercise the RTOS, sensors, servo, vehicle, or hardware safety. The acquisition
 fault cases test rejection of supplied status values; they do not prove a
 physical driver can detect those faults. S5-U01 remains defined but has no
-recorded result; S5-U24–S5-U45 test a pure, single-owner-task policy module and
-status-copy shape only. The integrated `TEST=1` image and on-target test have
-not been run. S5-U41–S5-U45 seed the policy state directly to cover branches
-that remain unreachable through normal planning because clearance is unverified;
-they do not authorize or demonstrate an executable bypass. S5-U46–S5-U47
-check that stop requests persist during stop acknowledgement and scanning;
-they still do not prove that an external controller consumes those requests.
+recorded result. S5-U24–S5-U59 test a pure, single-owner-task policy module
+and status-copy shape only. The integrated `TEST=1` image and on-target test
+have not been run. S5-U41–S5-U45 and S5-U50–S5-U52 seed the policy
+state directly to cover branches that remain unreachable through normal
+planning because clearance is unverified; they do not authorize or demonstrate
+an executable bypass. S5-U46–S5-U47 check that stop requests persist during
+stop acknowledgement and scanning; they still do not prove that an external
+controller consumes those requests. S5-U48–S5-U53 validate timestamped,
+post-request acknowledgements and their freshness/deadline limits. They do not
+provide request IDs or prove correlation with any unagreed external interface.
+S5-U54 verifies completion remains distinct from validity when scan data is
+malformed. S5-U55 verifies scan status does not leak across obstacle sequences.
+S5-U56 verifies forward data is not advertised as valid after a forward-input
+fault. S5-U57–S5-U59 verify requests are held for retry until their matching
+provider acknowledgement. They do not specify the transport or request-ID
+contract needed for cross-task integration.
 
 ## Results
 
@@ -191,3 +212,220 @@ Add a new row for every run. Never edit or delete old rows.
 | 2026-10-15 | S5-U45 | `afbbbd7 + WT` | GCC 14.2 | PASS | `logs/2026-10-15_prepush.txt` | Branch-level forward obstacle during bypass |
 | 2026-10-15 | S5-U46 | `afbbbd7 + WT` | GCC 14.2 | PASS | `logs/2026-10-15_runtime_hold.txt` | Stop request persists until stopped acknowledgement |
 | 2026-10-15 | S5-U47 | `afbbbd7 + WT` | GCC 14.2 | PASS | `logs/2026-10-15_runtime_hold.txt` | Stop request persists during stationary scanning |
+| 2026-10-15 | S5-U02 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U03 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U04 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U05 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U06 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U07 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U08 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U09 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U10 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U11 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U12 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U13 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U14 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U15 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U16 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U17 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U18 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U19 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U20 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U21 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U22 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U23 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U24 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U25 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U26 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U27 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U28 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U29 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U30 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U31 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U32 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U33 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U34 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U35 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U36 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U37 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U38 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U39 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U40 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U41 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Branch-level bypass-to-line-recovery test |
+| 2026-10-15 | S5-U42 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Branch-level bypass timeout |
+| 2026-10-15 | S5-U43 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Branch-level LINE_FOUND handling |
+| 2026-10-15 | S5-U44 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Branch-level line timeout |
+| 2026-10-15 | S5-U45 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Branch-level forward-obstacle handling |
+| 2026-10-15 | S5-U46 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Stop request persists until stopped acknowledgement |
+| 2026-10-15 | S5-U47 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Stop request persists during scanning |
+| 2026-10-15 | S5-U48 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Pre-stop stopped sample rejected |
+| 2026-10-15 | S5-U49 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Stale stopped status faults during scan |
+| 2026-10-15 | S5-U50 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Pre-request bypass completion rejected |
+| 2026-10-15 | S5-U51 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Pre-request LINE_FOUND rejected |
+| 2026-10-15 | S5-U52 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Bypass acknowledgement deadline enforced |
+| 2026-10-15 | S5-U53 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Missing acknowledgement-age limit rejected |
+| 2026-10-15 | S5-U02 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U03 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U04 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U05 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U06 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U07 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U08 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U09 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U10 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U11 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U12 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U13 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U14 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U15 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U16 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U17 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U18 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U19 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U20 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U21 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U22 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U23 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 host logic suite |
+| 2026-10-15 | S5-U24 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U25 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U26 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U27 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U28 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U29 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U30 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U31 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U32 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U33 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U34 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U35 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U36 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U37 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U38 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U39 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U40 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Strict C99 runtime suite and GCC analyzer |
+| 2026-10-15 | S5-U41 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Direct-state bypass-to-recovery policy test |
+| 2026-10-15 | S5-U42 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Direct-state bypass timeout policy test |
+| 2026-10-15 | S5-U43 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Direct-state LINE_FOUND policy test |
+| 2026-10-15 | S5-U44 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Direct-state line timeout policy test |
+| 2026-10-15 | S5-U45 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Direct-state forward-obstacle policy test |
+| 2026-10-15 | S5-U46 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Persistent stop request policy test |
+| 2026-10-15 | S5-U47 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Persistent stop request during scan |
+| 2026-10-15 | S5-U48 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Pre-stop acknowledgement rejected |
+| 2026-10-15 | S5-U49 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Stale stopped status fails closed |
+| 2026-10-15 | S5-U50 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Pre-request bypass completion rejected |
+| 2026-10-15 | S5-U51 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Pre-request line-found event rejected |
+| 2026-10-15 | S5-U52 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Bypass deadline enforced |
+| 2026-10-15 | S5-U53 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Acknowledgement freshness required |
+| 2026-10-15 | S5-U54 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_final_host.txt` | Malformed completed scan remains complete and invalid |
+| 2026-10-15 | S5-U02 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U03 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U04 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U05 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U06 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U07 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U08 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U09 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U10 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U11 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U12 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U13 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U14 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U15 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U16 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U17 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U18 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U19 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U20 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U21 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U22 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U23 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final strict C99 host logic run |
+| 2026-10-15 | S5-U24 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U25 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U26 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U27 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U28 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U29 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U30 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U31 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U32 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U33 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U34 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U35 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U36 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U37 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U38 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U39 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U40 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Final runtime suite; strict C99 and GCC analyzer |
+| 2026-10-15 | S5-U41 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Direct-state bypass-to-recovery policy test |
+| 2026-10-15 | S5-U42 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Direct-state bypass timeout policy test |
+| 2026-10-15 | S5-U43 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Direct-state LINE_FOUND policy test |
+| 2026-10-15 | S5-U44 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Direct-state line timeout policy test |
+| 2026-10-15 | S5-U45 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Direct-state forward obstacle policy test |
+| 2026-10-15 | S5-U46 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Persistent stop request policy test |
+| 2026-10-15 | S5-U47 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Persistent stop request during scan |
+| 2026-10-15 | S5-U48 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Pre-stop acknowledgement rejected |
+| 2026-10-15 | S5-U49 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Stale stopped status fails closed |
+| 2026-10-15 | S5-U50 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Pre-request bypass completion rejected |
+| 2026-10-15 | S5-U51 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Pre-request line-found event rejected |
+| 2026-10-15 | S5-U52 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Bypass deadline enforced |
+| 2026-10-15 | S5-U53 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Acknowledgement freshness required |
+| 2026-10-15 | S5-U54 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Malformed completed scan remains complete and invalid |
+| 2026-10-15 | S5-U55 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_status_refresh.txt` | Previous scan status cleared on new sequence |
+| 2026-10-16 | S5-U02 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U03 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U04 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U05 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U06 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U07 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U08 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U09 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U10 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U11 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U12 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U13 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U14 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U15 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U16 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U17 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U18 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U19 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U20 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U21 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U22 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U23 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Final strict C99 host logic run |
+| 2026-10-16 | S5-U24 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U25 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U26 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U27 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U28 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U29 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U30 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U31 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U32 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U33 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U34 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U35 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U36 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U37 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U38 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U39 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U40 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Runtime host suite; GCC analyzer |
+| 2026-10-16 | S5-U41 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Direct-state recovery policy test |
+| 2026-10-16 | S5-U42 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Direct-state bypass-timeout policy test |
+| 2026-10-16 | S5-U43 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Direct-state LINE_FOUND policy test |
+| 2026-10-16 | S5-U44 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Direct-state line-timeout policy test |
+| 2026-10-16 | S5-U45 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Direct-state forward-obstacle policy test |
+| 2026-10-16 | S5-U46 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Persistent stop-request policy test |
+| 2026-10-16 | S5-U47 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Stop remains asserted throughout scanning |
+| 2026-10-16 | S5-U48 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Pre-stop stopped sample rejected |
+| 2026-10-16 | S5-U49 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Stale stopped status fails closed |
+| 2026-10-16 | S5-U50 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Pre-request bypass completion rejected |
+| 2026-10-16 | S5-U51 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Pre-request line-found event rejected |
+| 2026-10-16 | S5-U52 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Bypass acknowledgement deadline enforced |
+| 2026-10-16 | S5-U53 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Acknowledgement freshness required |
+| 2026-10-16 | S5-U54 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Malformed complete scan reported invalid |
+| 2026-10-16 | S5-U55 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Old scan status cleared on new sequence |
+| 2026-10-16 | S5-U56 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Forward validity revoked after stale-data fault |
+| 2026-10-16 | S5-U57 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Scan request held until scan-busy acknowledgement |
+| 2026-10-16 | S5-U58 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Bypass request held until completion acknowledgement |
+| 2026-10-16 | S5-U59 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-16_final.txt` | Recovery request held until LINE_FOUND acknowledgement |

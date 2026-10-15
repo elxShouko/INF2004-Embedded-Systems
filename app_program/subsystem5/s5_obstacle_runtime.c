@@ -8,6 +8,9 @@ s5_runtime_config_is_valid(const s5_runtime_config_t *config)
 	return (config != NULL) &&
 	       (config->forward_sample_max_age_ms > 0U) &&
 	       (config->forward_sample_max_age_ms <= S5_RUNTIME_MAX_TIMEOUT_MS) &&
+	       (config->acknowledgement_max_age_ms > 0U) &&
+	       (config->acknowledgement_max_age_ms <=
+		S5_RUNTIME_MAX_TIMEOUT_MS) &&
 	       (config->stop_timeout_ms > 0U) &&
 	       (config->stop_timeout_ms <= S5_RUNTIME_MAX_TIMEOUT_MS) &&
 	       (config->scan_timeout_ms > 0U) &&
@@ -39,6 +42,24 @@ s5_runtime_forward_is_fresh(
 	return (age_ms <= runtime->config.forward_sample_max_age_ms);
 }
 
+static bool
+s5_runtime_timestamp_is_fresh_after(
+	uint32_t now_ms,
+	uint32_t timestamp_ms,
+	uint32_t reference_ms,
+	uint32_t max_age_ms,
+	uint32_t max_elapsed_ms)
+{
+	uint32_t elapsed_since_reference_ms;
+	uint32_t age_ms;
+
+	elapsed_since_reference_ms = timestamp_ms - reference_ms;
+	age_ms = now_ms - timestamp_ms;
+	return (elapsed_since_reference_ms > 0U) &&
+	       (elapsed_since_reference_ms < max_elapsed_ms) &&
+	       (age_ms <= max_age_ms);
+}
+
 static void
 s5_runtime_set_fault(
 	s5_runtime_t *runtime,
@@ -49,6 +70,11 @@ s5_runtime_set_fault(
 	runtime->status.fault = fault;
 	runtime->status.busy = false;
 	runtime->status.scan_busy = false;
+	if ((fault == S5_RUNTIME_FAULT_INVALID_INPUT) ||
+	    (fault == S5_RUNTIME_FAULT_FORWARD_SENSOR))
+	{
+		runtime->status.forward_valid = false;
+	}
 	events->request_stop = true;
 	events->request_fault = true;
 }
@@ -287,6 +313,9 @@ s5_runtime_step(
 			runtime->status.scan_complete = false;
 			runtime->status.scan_busy = false;
 			runtime->status.scan_valid = false;
+			runtime->status.scan_started_at_ms = 0U;
+			runtime->status.scan_completed_at_ms = 0U;
+			runtime->status.acquisition_status = S5_ACQUISITION_OK;
 			runtime->status.fault = S5_RUNTIME_FAULT_NONE;
 			runtime->status.scan_status = S5_LOGIC_INVALID_SCAN;
 			memset(&runtime->status.scan_context, 0,
@@ -301,14 +330,25 @@ s5_runtime_step(
 			       sizeof(runtime->status.plan));
 			runtime->status.coarse_count = 0U;
 			runtime->status.fine_count = 0U;
+			runtime->status.stop_ack_time_ms = 0U;
+			runtime->status.bypass_completed_at_ms = 0U;
+			runtime->status.line_found_at_ms = 0U;
 			events->request_stop = true;
 		}
 		break;
 
 	case S5_RUNTIME_WAIT_STOP:
 		events->request_stop = true;
-		if (input->vehicle_stopped)
+		if (input->vehicle_stopped &&
+		    s5_runtime_timestamp_is_fresh_after(
+			    input->now_ms,
+			    input->vehicle_stopped_sample_time_ms,
+			    runtime->state_started_at_ms,
+			    runtime->config.acknowledgement_max_age_ms,
+			    runtime->config.stop_timeout_ms))
 		{
+			runtime->status.stop_ack_time_ms =
+				input->vehicle_stopped_sample_time_ms;
 			runtime->status.state = S5_RUNTIME_SCANNING;
 			runtime->state_started_at_ms = input->now_ms;
 			runtime->status.scan_started_at_ms = input->now_ms;
@@ -328,8 +368,32 @@ s5_runtime_step(
 
 	case S5_RUNTIME_SCANNING:
 		events->request_stop = true;
+		events->request_scan =
+			!input->scan_busy && !input->scan_complete;
 		runtime->status.scan_busy = input->scan_busy;
-		if (!input->vehicle_stopped)
+		if (s5_runtime_timeout_elapsed(
+			    runtime,
+			    input->now_ms,
+			    runtime->config.scan_timeout_ms))
+		{
+			s5_runtime_set_fault(
+				runtime,
+				S5_RUNTIME_FAULT_SCAN_TIMEOUT,
+				events);
+		}
+		else if (!s5_runtime_timestamp_is_fresh_after(
+			    input->now_ms,
+			    input->vehicle_stopped_sample_time_ms,
+			    runtime->state_started_at_ms,
+			    runtime->config.acknowledgement_max_age_ms,
+			    runtime->config.scan_timeout_ms))
+		{
+			s5_runtime_set_fault(
+				runtime,
+				S5_RUNTIME_FAULT_STOP_STATUS_STALE,
+				events);
+		}
+		else if (!input->vehicle_stopped)
 		{
 			s5_runtime_set_fault(
 				runtime,
@@ -343,23 +407,14 @@ s5_runtime_step(
 				S5_RUNTIME_FAULT_SCAN_CANCELLED,
 				events);
 		}
-		else if (s5_runtime_timeout_elapsed(
-				 runtime,
-				 input->now_ms,
-				 runtime->config.scan_timeout_ms))
-		{
-			s5_runtime_set_fault(
-				runtime,
-				S5_RUNTIME_FAULT_SCAN_TIMEOUT,
-				events);
-		}
 		else if (input->scan_complete)
 		{
 			runtime->status.scan_busy = false;
+			runtime->status.scan_complete = true;
+			runtime->status.acquisition_status =
+				input->acquisition_status;
 			if (input->acquisition_status != S5_ACQUISITION_OK)
 			{
-				runtime->status.acquisition_status =
-					input->acquisition_status;
 				runtime->status.scan_status =
 					S5_LOGIC_ACQUISITION_FAILED;
 				runtime->status.scan_complete = true;
@@ -403,8 +458,16 @@ s5_runtime_step(
 				S5_RUNTIME_FAULT_FORWARD_SENSOR,
 				events);
 		}
-		else if (input->bypass_complete)
+		else if (input->bypass_complete &&
+			 s5_runtime_timestamp_is_fresh_after(
+				 input->now_ms,
+				 input->bypass_complete_time_ms,
+				 runtime->state_started_at_ms,
+				 runtime->config.acknowledgement_max_age_ms,
+				 runtime->config.bypass_timeout_ms))
 		{
+			runtime->status.bypass_completed_at_ms =
+				input->bypass_complete_time_ms;
 			runtime->status.state = S5_RUNTIME_LINE_RECOVERY;
 			runtime->state_started_at_ms = input->now_ms;
 			events->request_line_recovery = true;
@@ -418,6 +481,10 @@ s5_runtime_step(
 				runtime,
 				S5_RUNTIME_FAULT_BYPASS_TIMEOUT,
 				events);
+		}
+		else
+		{
+			events->request_bypass = true;
 		}
 		break;
 
@@ -437,8 +504,16 @@ s5_runtime_step(
 				S5_RUNTIME_FAULT_FORWARD_SENSOR,
 				events);
 		}
-		else if (input->line_found)
+		else if (input->line_found &&
+			 s5_runtime_timestamp_is_fresh_after(
+				 input->now_ms,
+				 input->line_found_time_ms,
+				 runtime->state_started_at_ms,
+				 runtime->config.acknowledgement_max_age_ms,
+				 runtime->config.line_timeout_ms))
 		{
+			runtime->status.line_found_at_ms =
+				input->line_found_time_ms;
 			runtime->status.state = S5_RUNTIME_MONITOR;
 			runtime->status.busy = false;
 			runtime->state_started_at_ms = input->now_ms;
@@ -454,6 +529,10 @@ s5_runtime_step(
 				runtime,
 				S5_RUNTIME_FAULT_LINE_TIMEOUT,
 				events);
+		}
+		else
+		{
+			events->request_line_recovery = true;
 		}
 		break;
 
