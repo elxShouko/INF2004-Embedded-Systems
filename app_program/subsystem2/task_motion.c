@@ -240,15 +240,22 @@ motion_api_result_t motion_api_status (motion_run_status_t * p_status)
             {
                 (void)task_motion_signal(TASK_MOTION_INTERNAL);
             }
-            if (p_status->b_measurement_valid)
+            if (p_status->b_measurement_valid || p_status->b_encoder_valid)
             {
                 uint64_t now_us = 0U;
-                bool b_fresh = motion_api_now(&now_us) &&
+                bool b_time_valid = motion_api_now(&now_us);
+                bool b_fresh = b_time_valid &&
                     (now_us >= p_status->measurement_timestamp_us) &&
                     ((now_us-p_status->measurement_timestamp_us) <=
                      p_status->measurement_max_age_us);
 
-                p_status->b_measurement_valid = b_fresh;
+                p_status->b_encoder_valid = p_status->b_encoder_valid &&
+                    b_time_valid &&
+                        (now_us >= p_status->encoder_timestamp_us) &&
+                    ((now_us-p_status->encoder_timestamp_us) <=
+                     p_status->measurement_max_age_us);
+                p_status->b_measurement_valid =
+                    p_status->b_measurement_valid && b_fresh;
                 p_status->b_standstill = p_status->b_standstill && b_fresh;
             }
         }

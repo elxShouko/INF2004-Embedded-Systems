@@ -91,14 +91,17 @@ def host_checks(log, scratch, adapter_sources, timeout):
          'tk_set_flg(g_task_motion_safety,cause)',
          'tk_set_flg(g_task_motion_safety,(cause & 0U))', [108]),
         ('always_stale', 'task_motion.c',
-         'bool b_fresh = motion_api_now(&now_us) &&',
-         'bool b_fresh = (motion_api_now(&now_us) && false) &&', [116]),
+         'bool b_fresh = b_time_valid &&',
+         'bool b_fresh = (b_time_valid && false) &&', [116]),
         ('skip_enable', 'drv_encoder.c',
          'b_ok = p_port->p_enable(p_port->p_context, ENC_CAPTURE_MASK);',
          'b_ok = false;', [110]),
         ('missing_pool_rollback', 'subsystem2.c',
          '(E_OK == tk_del_mpf(mpf_samples))',
          '(false && (E_OK == tk_del_mpf(mpf_samples)))', [123]),
+        ('count_precision', 'motion_run.c',
+         'p_sample->sample[wheel].count;',
+         '(int32_t)p_sample->sample[wheel].count;', [135]),
     ]
     for name, source, old, new, cases in mutations:
         original = BASE/source
@@ -140,15 +143,15 @@ def verify_host(opts, out, scratch):
             exe = scratch/('rtos_'+profile+'.exe')
             run(flags + ['-DMOTION_RTOS_HOST_TEST'] + list(map(str,adapter)) +
                 ['-o',str(exe)],log,scratch)
-            for case in range(98,135):
+            for case in range(98,141):
                 output = run([str(exe),str(case)],log,scratch,opts.host_timeout)
                 ids = re.findall(r'^\[TEST\] (S2-U\d+) PASS ',output,re.M)
                 if ids != [f'S2-U{case}']:
                     raise SystemExit('Missing/duplicate adapter test ID')
-            print(profile, 'PASS: 95 pure + 37 adapter/lifecycle groups')
+            print(profile, 'PASS: 95 pure + 43 adapter/lifecycle/feedback groups')
     with (out/f'verify_{opts.label}_checks.log').open('x') as log:
         host_checks(log,scratch,adapter,opts.host_timeout)
-    print('Timeout, host-only guards and 7 focused mutations PASS')
+    print('Timeout, host-only guards and 8 focused mutations PASS')
 
 
 def verify_arm(opts, out, scratch):

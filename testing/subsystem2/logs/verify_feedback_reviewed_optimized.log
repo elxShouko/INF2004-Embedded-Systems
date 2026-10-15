@@ -1,0 +1,240 @@
+C:/msys64/ucrt64/bin/gcc.exe --version
+gcc.exe (Rev2, Built by MSYS2 project) 14.2.0
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -DMOTION_CONFIG_HOST_TEST -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2 -fanalyzer -O2 -fshort-enums C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\drv_encoder.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\drv_motor.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\drv_rp2040.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\enc_capture.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_bus.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_config.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_estimator.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_foundation_test.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_pid.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_quad.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_run.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\move_plan.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\subsystem2_test.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\task_motion.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\test_drive.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\test_motor.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\wheel_loop.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\optimized.exe
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\optimized.exe
+[TEST] S2-U03 PASS  reset and zero configuration remain unconfigured
+[TEST] S2-U04 PASS  null arguments are rejected
+[TEST] S2-U05 PASS  both wheels require nonzero resolution and circumference
+[TEST] S2-U06 PASS  unknown and invalid polarities are rejected
+[TEST] S2-U07 PASS  zero track and nonpositive speed limits are rejected
+[TEST] S2-U08 PASS  calibration evidence and enum states are checked
+[TEST] S2-U09 PASS  asymmetric wheels and independent polarities are supported
+[TEST] S2-U10 PASS  representation boundaries impose no invented calibration
+[TEST] S2-U11 PASS  validation preserves every field on all nonnull paths
+[TEST] S2-U12 PASS  unusual invalid enum values are rejected in every field
+[TEST] subsystem2 M1A SUMMARY 10 passed, 0 failed
+[TEST] S2-U13 PASS  quadrature directions, reversal and repeated states
+[TEST] S2-U14 PASS  invalid jumps resync; diagnostics saturate
+[TEST] S2-U15 PASS  decoder init, null, polarity and state validation
+[TEST] S2-U16 PASS  signed count limits latch until explicit reset
+[TEST] S2-U17 PASS  independent decoders apply polarity exactly once
+[TEST] S2-U18 PASS  all sixteen state transitions match the convention
+[TEST] S2-U19 PASS  distance, signed speed and actual variable elapsed time
+[TEST] S2-U20 PASS  independent left/right wheel scales
+[TEST] S2-U21 PASS  fractional distance, reversal and repeatability
+[TEST] S2-U22 PASS  zero/backward/future/stale timing and fresh zero speed
+[TEST] S2-U23 PASS  count, product, position and speed overflow rejection
+[TEST] S2-U24 PASS  source generation and explicit odometry baseline reset
+[TEST] S2-U25 PASS  invalid/unverified calibration and null estimation
+[TEST] S2-U26 PASS  zero error and signed proportional response
+[TEST] S2-U27 PASS  integral limits, variable elapsed time and reversal
+[TEST] S2-U28 PASS  output saturation, anti-windup and recovery
+[TEST] S2-U29 PASS  derivative on measurement avoids target kick
+[TEST] S2-U30 PASS  reset, idle, stop and invalid timing clear dynamics
+[TEST] S2-U31 PASS  invalid gains, bounds, confirmation and null arguments
+[TEST] S2-U32 PASS  nonfinite arithmetic disables output safely
+[TEST] S2-U33 PASS  independent PID state for both wheels
+[TEST] S2-U34 PASS  caller edits do not alter copied calibration
+[TEST] S2-U35 PASS  decoder to estimator to PID preserves vehicle sign
+[TEST] S2-U36 PASS  pure-I large steps reach both output limits repeatedly
+[TEST] S2-U37 PASS  integral crosses saturation and recovers from overspeed
+[TEST] S2-U38 PASS  null updates invalidate cached speed and retain baseline
+[TEST] S2-U39 PASS  nonzero fractional speeds and exact timing boundaries
+[TEST] S2-U40 PASS  all PID bounds reject nonfinite and invalid values
+[TEST] S2-U41 PASS  derivative, integral and output overflow disable PID
+[TEST] S2-U42 PASS  asymmetric output headroom includes P/D and I bounds
+[TEST] subsystem2 M1B-M1D SUMMARY 30 passed, 0 failed
+[TEST] S2-U43 PASS  fake motor backend
+[TEST] S2-U44 PASS  fake motor backend
+[TEST] S2-U45 PASS  fake motor backend
+[TEST] S2-U46 PASS  fake motor backend
+[TEST] S2-U47 PASS  fake motor backend
+[TEST] S2-U48 PASS  fake motor backend
+[TEST] S2-U49 PASS  fake motor backend
+[TEST] S2-U50 PASS  fake motor backend
+[TEST] S2-U51 PASS  fake motor backend
+[TEST] S2-U52 PASS  fake motor backend
+[TEST] S2-U53 PASS  fake motor backend
+[TEST] S2-U54 PASS  fake motor backend
+[TEST] S2-U55 PASS  fake motor backend
+[TEST] S2-U56 PASS  fake motor backend
+[TEST] subsystem2 M2 SUMMARY 14 passed, 0 failed
+[TEST] S2-U57 PASS motion integration
+[TEST] S2-U58 PASS motion integration
+[TEST] S2-U59 PASS motion integration
+[TEST] S2-U60 PASS motion integration
+[TEST] S2-U61 PASS motion integration
+[TEST] S2-U62 PASS motion integration
+[TEST] S2-U63 PASS motion integration
+[TEST] S2-U64 PASS motion integration
+[TEST] S2-U65 PASS motion integration
+[TEST] S2-U66 PASS motion integration
+[TEST] S2-U67 PASS motion integration
+[TEST] S2-U68 PASS motion integration
+[TEST] S2-U69 PASS motion integration
+[TEST] S2-U70 PASS motion integration
+[TEST] S2-U71 PASS motion integration
+[TEST] S2-U72 PASS motion integration
+[TEST] S2-U73 PASS motion integration
+[TEST] S2-U74 PASS motion integration
+[TEST] S2-U75 PASS motion integration
+[TEST] S2-U76 PASS motion integration
+[TEST] S2-U77 PASS motion integration
+[TEST] S2-U78 PASS motion integration
+[TEST] S2-U79 PASS motion integration
+[TEST] S2-U80 PASS motion integration
+[TEST] S2-U81 PASS motion integration
+[TEST] S2-U82 PASS motion integration
+[TEST] S2-U83 PASS motion integration
+[TEST] S2-U84 PASS motion integration
+[TEST] S2-U85 PASS motion integration
+[TEST] S2-U86 PASS motion integration
+[TEST] S2-U87 PASS motion integration
+[TEST] S2-U88 PASS motion integration
+[TEST] S2-U89 PASS motion integration
+[TEST] S2-U90 PASS motion integration
+[TEST] S2-U91 PASS motion integration
+[TEST] S2-U92 PASS motion integration
+[TEST] S2-U93 PASS motion integration
+[TEST] S2-U94 PASS motion integration
+[TEST] S2-U95 PASS motion integration
+[TEST] S2-U96 PASS motion integration
+[TEST] S2-U97 PASS motion integration
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -DMOTION_CONFIG_HOST_TEST -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2 -fanalyzer -O2 -fshort-enums -DMOTION_RTOS_HOST_TEST C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\drv_encoder.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\drv_motor.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\enc_capture.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_bus.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_config.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_estimator.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_pid.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_quad.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_run.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\move_plan.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\subsystem2.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\task_motion.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\wheel_loop.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\test_rtos.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 98
+[TEST] S2-U98 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 99
+[TEST] S2-U99 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 100
+[TEST] S2-U100 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 101
+[TEST] S2-U101 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 102
+[TEST] S2-U102 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 103
+[TEST] S2-U103 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 104
+[TEST] S2-U104 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 105
+[TEST] S2-U105 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 106
+[TEST] S2-U106 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 107
+[TEST] S2-U107 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 108
+[TEST] S2-U108 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 109
+[TEST] S2-U109 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 110
+[TEST] S2-U110 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 111
+[TEST] S2-U111 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 112
+[TEST] S2-U112 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 113
+[TEST] S2-U113 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 114
+[TEST] S2-U114 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 115
+[TEST] S2-U115 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 116
+[TEST] S2-U116 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 117
+[TEST] S2-U117 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 118
+[TEST] S2-U118 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 119
+[TEST] S2-U119 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 120
+[TEST] S2-U120 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 121
+[TEST] S2-U121 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 122
+[TEST] S2-U122 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 123
+[TEST] S2-U123 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 124
+[TEST] S2-U124 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 125
+[TEST] S2-U125 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 126
+[TEST] S2-U126 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 127
+[TEST] S2-U127 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 128
+[TEST] S2-U128 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 129
+[TEST] S2-U129 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 130
+[TEST] S2-U130 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 131
+[TEST] S2-U131 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 132
+[TEST] S2-U132 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 133
+[TEST] S2-U133 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 134
+[TEST] S2-U134 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 135
+[TEST] S2-U135 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 136
+[TEST] S2-U136 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 137
+[TEST] S2-U137 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 138
+[TEST] S2-U138 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 139
+[TEST] S2-U139 PASS actual adapter with host doubles
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\verify_pw9trd8o\rtos_optimized.exe 140
+[TEST] S2-U140 PASS actual adapter with host doubles
+EXIT 0

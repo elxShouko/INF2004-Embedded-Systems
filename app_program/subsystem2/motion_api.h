@@ -20,6 +20,23 @@ typedef enum
  * acknowledge terminal_id before submitting a higher ID. No ID wrap permitted.
  * now() uses kernel monotonic operating time (10 ms resolution here). Status
  * timestamp_us is publication time; measurement_timestamp_us is sample time.
+ * encoder_count[0/1] is signed int64 x4 decoded left/right transitions, with
+ * encoder polarity already applied once. No gearing/distance reconstruction.
+ * The pair, encoder_timestamp_us (kernel us, observation time) and nonzero
+ * encoder_generation describe one accepted acquisition. b_encoder_valid is
+ * independent of speed validity: the first healthy baseline has counts only.
+ * Zero-init/configuration is unavailable, not a valid stationary zero count.
+ * Status copy is under the existing inheritance mutex; never read ISR counters
+ * directly across cores. BUSY/UNAVAILABLE/INVALID do not supply a new snapshot;
+ * callers must check the result before using output. ERROR rejects the copy.
+ * Freshness uses measurement_max_age_us and clears copied validity on a stale,
+ * future or unreadable clock. Historical counts/time/generation are preserved;
+ * publication/command/stop events never re-stamp counts. Faults invalidate
+ * them.
+ * Signed counts never wrap: count limits latch a sensor fault with held
+ * history.
+ * There is no runtime count reset/fault recovery; reboot starts a new origin.
+ * Generation is local to acquisition, not a unique identity across reboots.
  * Configuration is copied once before enable; active replacement is rejected.
  */
 motion_api_result_t motion_api_configure (wheel_loop_config_t const * p_config,

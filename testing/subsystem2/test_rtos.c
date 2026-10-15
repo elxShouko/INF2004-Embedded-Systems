@@ -50,6 +50,7 @@ typedef struct
     uint32_t control[30];
     uint32_t fail_pin;
     uint32_t first_drive_ms;
+    uint64_t encoder_sample_us;
     uint16_t levels[2][2];
     T_CTSK task;
     ID task_id;
@@ -58,6 +59,7 @@ typedef struct
     bool b_ok;
     bool b_mutex_busy;
     bool b_spin_busy;
+    bool b_capture_locked;
     bool b_clock_error;
     bool b_wait_error;
     bool b_ref_error;
@@ -88,6 +90,7 @@ static void test_rtos_script (void);
 static void test_rtos_active (motion_run_status_t const * p_status);
 static void test_rtos_run (void);
 static bool test_rtos_case (void);
+static bool test_rtos_feedback (void);
 static void test_rtos_sink (void * p_context, uint32_t events,
     uint32_t levels);
 
@@ -306,12 +309,18 @@ ER InitSpinLock (T_SPLOCK * p_lock)
 ER ISpinTryLock (T_SPLOCK * p_lock, UINT * p_saved)
 {
     (void)p_lock; *p_saved = 0U;
-    return (g_test_rtos.b_spin_busy ? E_BUSY : E_OK);
+    if (g_test_rtos.b_spin_busy) { return (E_BUSY); }
+    g_test_rtos.b_ok = !g_test_rtos.b_capture_locked && g_test_rtos.b_ok;
+    g_test_rtos.b_capture_locked = true;
+    return (E_OK);
 }
 
 ER ISpinUnlock (T_SPLOCK * p_lock, UINT saved)
 {
-    (void)p_lock; (void)saved; return (E_OK);
+    (void)p_lock; (void)saved;
+    g_test_rtos.b_ok = g_test_rtos.b_capture_locked && g_test_rtos.b_ok;
+    g_test_rtos.b_capture_locked = false;
+    return (E_OK);
 }
 
 uint32_t in_w (uint32_t address)
@@ -417,7 +426,8 @@ static void test_rtos_release (void * p_context, uint32_t mask)
 {
     (void)p_context;
     ++g_test_rtos.releases;
-    g_test_rtos.b_ok = g_test_rtos.b_reserved && g_test_rtos.b_ok;
+    g_test_rtos.b_ok = g_test_rtos.b_reserved &&
+        !g_test_rtos.b_capture_locked && g_test_rtos.b_ok;
     g_test_rtos.b_reserved = false;
     g_test_rtos.b_ok = (ENC_CAPTURE_MASK == mask) && g_test_rtos.b_ok;
 }
@@ -525,6 +535,39 @@ static void test_rtos_script (void)
         g_test_rtos.b_ok = false;
         longjmp(g_test_rtos_exit, 1);
     }
+    if ((139U == g_test_rtos.case_id) && status.b_encoder_valid &&
+        !status.b_measurement_valid)
+    {
+        motion_run_status_t copy = {0};
+        bool b_pass = (10000U == status.encoder_timestamp_us) &&
+            (1U == status.encoder_generation) &&
+            (0 == status.encoder_count[0]) && (0 == status.encoder_count[1]);
+
+        g_test_rtos.now_ms = 110U;
+        b_pass = (MOTION_API_QUEUED == motion_api_status(&copy)) &&
+            copy.b_encoder_valid && !copy.b_measurement_valid && b_pass;
+        g_test_rtos.now_ms = 111U;
+        b_pass = (MOTION_API_QUEUED == motion_api_status(&copy)) &&
+            !copy.b_encoder_valid && (10000U == copy.encoder_timestamp_us) &&
+            (1U == copy.encoder_generation) && b_pass;
+        g_test_rtos.now_ms = 9U;
+        b_pass = (MOTION_API_QUEUED == motion_api_status(&copy)) &&
+            !copy.b_encoder_valid && b_pass;
+        g_test_rtos.now_ms = 10U;
+        g_test_rtos.b_clock_error = true;
+        b_pass = (MOTION_API_QUEUED == motion_api_status(&copy)) &&
+            !copy.b_encoder_valid && b_pass;
+        g_test_rtos.b_clock_error = false;
+        b_pass = (MOTION_API_QUEUED == motion_api_status(&copy)) &&
+            copy.b_encoder_valid && !copy.b_measurement_valid && b_pass;
+        g_test_rtos.b_mutex_busy = true;
+        copy.encoder_count[0] = 777;
+        b_pass = (MOTION_API_BUSY == motion_api_status(&copy)) &&
+            (777 == copy.encoder_count[0]) && b_pass;
+        g_test_rtos.b_mutex_busy = false;
+        g_test_rtos.b_checked = b_pass;
+        longjmp(g_test_rtos_exit, 1);
+    }
     if (MOTION_RUN_CONFIGURED == status.state)
     {
         g_test_rtos.b_ok = (MOTION_API_QUEUED == motion_api_enable()) &&
@@ -544,6 +587,16 @@ static void test_rtos_script (void)
     }
     else if (MOTION_RUN_FAULT == status.state)
     {
+        if (140U == g_test_rtos.case_id)
+        {
+            g_test_rtos.b_checked = !status.b_encoder_valid &&
+                (1 == status.encoder_count[0]) &&
+                (-1 == status.encoder_count[1]) &&
+                (g_test_rtos.encoder_sample_us ==
+                    status.encoder_timestamp_us) &&
+                (1U == status.encoder_generation) &&
+                (1U == g_test_rtos.releases) && !g_test_rtos.b_reserved;
+        }
         longjmp(g_test_rtos_exit, 1);
     }
     else
@@ -554,7 +607,30 @@ static void test_rtos_script (void)
 
 static void test_rtos_active (motion_run_status_t const * p_status)
 {
-    if (119U == g_test_rtos.case_id)
+    if (140U == g_test_rtos.case_id)
+    {
+        if (0U == g_test_rtos.stage)
+        {
+            g_test_rtos.stage = 1U;
+            g_test_rtos.p_sink(g_test_rtos.p_sink_context,
+                ENC_CAPTURE_MASK, (1UL << 28U) | (1UL << 0U));
+        }
+        else if ((1U == g_test_rtos.stage) &&
+            (p_status->measurement_timestamp_us >= 20000U))
+        {
+            g_test_rtos.b_ok = p_status->b_encoder_valid &&
+                (1 == p_status->encoder_count[0]) &&
+                (-1 == p_status->encoder_count[1]) &&
+                (1U == p_status->encoder_generation) &&
+                (p_status->measurement_timestamp_us ==
+                 p_status->encoder_timestamp_us) && g_test_rtos.b_ok;
+            g_test_rtos.encoder_sample_us = p_status->encoder_timestamp_us;
+            g_test_rtos.b_ok = (MOTION_API_QUEUED == motion_api_estop()) &&
+                g_test_rtos.b_ok;
+            g_test_rtos.stage = 2U;
+        }
+    }
+    else if (119U == g_test_rtos.case_id)
     {
         if (0U == g_test_rtos.stage)
         {
@@ -564,7 +640,13 @@ static void test_rtos_active (motion_run_status_t const * p_status)
         }
         else if (p_status->measurement_timestamp_us >= 20000U)
         {
-            g_test_rtos.b_ok = (100 == p_status->position_um[0]) &&
+            g_test_rtos.b_ok = p_status->b_encoder_valid &&
+                (1 == p_status->encoder_count[0]) &&
+                (0 == p_status->encoder_count[1]) &&
+                (1U == p_status->encoder_generation) &&
+                (p_status->encoder_timestamp_us ==
+                    p_status->measurement_timestamp_us) &&
+                (100 == p_status->position_um[0]) &&
                 (0 == p_status->position_um[1]) &&
                 (10 == p_status->speed_mm_s[0]) &&
                 (0 == p_status->speed_mm_s[1]) && g_test_rtos.b_ok;
@@ -607,6 +689,12 @@ static void test_rtos_active (motion_run_status_t const * p_status)
             g_test_rtos.b_ok =
                 (MOTION_API_QUEUED == motion_api_status(&stale)) &&
                 !stale.b_measurement_valid && !stale.b_standstill &&
+                !stale.b_encoder_valid &&
+                (stale.encoder_count[0] == p_status->encoder_count[0]) &&
+                (stale.encoder_count[1] == p_status->encoder_count[1]) &&
+                (stale.encoder_timestamp_us ==
+                    p_status->encoder_timestamp_us) &&
+                (stale.encoder_generation == p_status->encoder_generation) &&
                 (stale.measurement_timestamp_us ==
                     p_status->measurement_timestamp_us) &&
                 (stale.timestamp_us == p_status->timestamp_us) &&
@@ -659,11 +747,19 @@ static bool test_rtos_case (void)
                                test_rtos_release};
     motion_run_status_t status = {0};
 
-    if ((id < 98U) || (id > 134U))
+    if ((id >= 135U) && (id <= 138U)) { return (test_rtos_feedback()); }
+    if (139U == id)
+    {
+        if ((MOTION_API_UNAVAILABLE != motion_api_status(&status)) ||
+            status.b_encoder_valid ||
+            (MOTION_API_INVALID != motion_api_status(NULL))) { return (false); }
+        g_test_rtos.now_ms = 10U;
+    }
+    if ((id < 98U) || (id > 140U))
     {
         return (false);
     }
-    if (id >= 121U) { return (test_rtos_lifecycle()); }
+    if ((id >= 121U) && (id <= 134U)) { return (test_rtos_lifecycle()); }
     g_test_rtos.b_spin_init_error = (102U == id);
     if ((id >= 99U) && (id <= 101U))
     {
@@ -751,6 +847,18 @@ static bool test_rtos_case (void)
     {
         return (false);
     }
+    if (139U == id)
+    {
+        return (g_test_rtos.b_checked && status.b_encoder_valid &&
+            !status.b_measurement_valid && (MOTION_RUN_SETTLING ==
+                status.state));
+    }
+    if (140U == id)
+    {
+        return (g_test_rtos.b_checked && !status.b_encoder_valid &&
+            (MOTION_RUN_FAULT == status.state) &&
+            (MOTION_RUN_EMERGENCY == status.fault_result));
+    }
     if ((105U == id) || (116U == id) || (119U == id))
     {
         return (g_test_rtos.b_checked &&
@@ -792,6 +900,7 @@ static bool test_rtos_case (void)
         (MOTION_RUN_FAULT == status.state) &&
         (expected_fault == status.fault_result) &&
         !status.b_measurement_valid && !status.b_standstill &&
+        !status.b_encoder_valid &&
         (0U == g_test_rtos.levels[0][0]) &&
         (0U == g_test_rtos.levels[0][1]) &&
         (0U == g_test_rtos.levels[1][0]) &&
@@ -800,6 +909,104 @@ static bool test_rtos_case (void)
             (0U == g_test_rtos.prepares) :
             (g_test_rtos.stops > 0U)) &&
         (g_test_rtos.releases == (((109U == id) || (118U == id)) ? 0U : 1U)));
+}
+
+static bool test_rtos_feedback (void)
+{
+    uint32_t id = g_test_rtos.case_id;
+    motion_run_t run = {0};
+    wheel_loop_config_t cfg = test_rtos_config();
+    drv_motor_io_t io = {NULL, test_rtos_prepare, test_rtos_apply,
+        test_rtos_stop};
+    enc_capture_sample_t sample = {0};
+
+    sample.b_healthy = true;
+    sample.sample[0].generation = 9U;
+    sample.sample[1].generation = 9U;
+    if (!motion_run_init(&run, &cfg, &io) || run.status.b_encoder_valid ||
+        (0U != run.status.encoder_generation) ||
+        !motion_run_enable(&run, 0U) || run.status.b_encoder_valid)
+    { return (false); }
+    if (138U == id)
+    {
+        sample.sample[1].generation = 10U;
+        if (motion_run_tick(&run, &sample, 0U) || run.status.b_encoder_valid)
+        { return (false); }
+        if (!motion_run_init(&run, &cfg, &io) || !motion_run_enable(&run, 0U))
+        { return (false); }
+        sample.sample[0].generation = 0U;
+        sample.sample[1].generation = 0U;
+        return (!motion_run_tick(&run, &sample, 0U) &&
+            !run.status.b_encoder_valid && (MOTION_RUN_SENSOR ==
+                run.status.fault_result));
+    }
+    if (135U == id)
+    {
+        sample.sample[0].count = INT64_MAX - 1;
+        sample.sample[1].count = INT64_MIN + 1;
+    }
+    else
+    {
+        sample.sample[0].count = 1;
+        sample.sample[1].count = -1;
+    }
+    if (!motion_run_tick(&run, &sample, 0U) || !run.status.b_encoder_valid ||
+        run.status.b_measurement_valid ||
+            (9U != run.status.encoder_generation) ||
+        (run.status.encoder_count[0] != sample.sample[0].count) ||
+        (run.status.encoder_count[1] != sample.sample[1].count))
+    { return (false); }
+    if (137U == id)
+    {
+        sample.sample[0].count = 2;
+        sample.sample[1].count = -2;
+        sample.sample[0].timestamp_us = 5000U;
+        sample.sample[1].timestamp_us = 5000U;
+        if (!motion_run_tick(&run, &sample, 5000U) ||
+            (1 != run.status.encoder_count[0]) ||
+            (-1 != run.status.encoder_count[1]) ||
+            (0U != run.status.encoder_timestamp_us)) { return (false); }
+        motion_run_stop(&run, false, 5000U);
+        if (!run.status.b_encoder_valid ||
+            (0U != run.status.encoder_timestamp_us))
+        { return (false); }
+        motion_run_emergency(&run, MOTION_RUN_EMERGENCY, 6000U);
+        return (!run.status.b_encoder_valid &&
+            (1 == run.status.encoder_count[0]) && (-1 ==
+                run.status.encoder_count[1]) &&
+            (0U == run.status.encoder_timestamp_us) && (9U ==
+                run.status.encoder_generation) &&
+            !motion_run_tick(&run, &sample, 10000U));
+    }
+    ++sample.sample[0].count;
+    --sample.sample[1].count;
+    sample.sample[0].timestamp_us = 10000U;
+    sample.sample[1].timestamp_us = 10000U;
+    if (!motion_run_tick(&run, &sample, 10000U) ||
+        !run.status.b_encoder_valid ||
+        !run.status.b_measurement_valid ||
+            (10000U != run.status.encoder_timestamp_us) ||
+        (run.status.encoder_count[0] != sample.sample[0].count) ||
+        (run.status.encoder_count[1] != sample.sample[1].count))
+        { return (false); }
+    if (135U == id)
+    {
+        return ((INT64_MAX == run.status.encoder_count[0]) &&
+            (INT64_MIN == run.status.encoder_count[1]));
+    }
+    motion_types_encoder_count_t left = run.status.encoder_count[0];
+    motion_types_encoder_count_t right = run.status.encoder_count[1];
+
+    ++sample.sample[0].count;
+    /* Left accepts before right conversion fails. */
+    sample.sample[1].count = INT64_MAX;
+    sample.sample[0].timestamp_us = 20000U;
+    sample.sample[1].timestamp_us = 20000U;
+    return (!motion_run_tick(&run, &sample, 20000U) &&
+        !run.status.b_encoder_valid && (left == run.status.encoder_count[0]) &&
+        (right == run.status.encoder_count[1]) &&
+        (10000U == run.status.encoder_timestamp_us) && (9U ==
+            run.status.encoder_generation));
 }
 
 static bool test_rtos_lifecycle (void)

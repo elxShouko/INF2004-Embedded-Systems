@@ -138,6 +138,7 @@ void motion_run_emergency (motion_run_t * p_run, motion_run_result_t cause,
 {
     if (NULL != p_run)
     {
+        p_run->status.b_encoder_valid = false;
         wheel_loop_fault(&p_run->loop);
         if (MOTION_RUN_FAULT != p_run->status.state)
         {
@@ -160,6 +161,8 @@ bool motion_run_tick (motion_run_t * p_run,
 
     /* Invalid capture must stop even before the next PID deadline. */
     if (b_ok && ((NULL == p_sample) || !p_sample->b_healthy ||
+        (0U == p_sample->sample[0].generation) ||
+        (p_sample->sample[0].generation != p_sample->sample[1].generation) ||
         (p_sample->sample[0].timestamp_us !=
          p_sample->sample[1].timestamp_us) ||
         (p_sample->sample[0].timestamp_us > now_us) ||
@@ -204,6 +207,19 @@ bool motion_run_tick (motion_run_t * p_run,
             }
             else
             {
+                /* Publish only after BOTH estimators accepted the capture.
+                 * A partial measurement failure must retain the previous pair.
+                 */
+                for (uint32_t wheel = 0U; wheel < 2U; ++wheel)
+                {
+                    p_run->status.encoder_count[wheel] =
+                        p_sample->sample[wheel].count;
+                }
+                p_run->status.encoder_timestamp_us =
+                    p_sample->sample[0].timestamp_us;
+                p_run->status.encoder_generation =
+                    p_sample->sample[0].generation;
+                p_run->status.b_encoder_valid = true;
                 p_run->loop.last_tick_us = now_us;
                 motion_run_publish(p_run,now_us);
                 if ((MOTION_RUN_SETTLING == p_run->status.state) ||

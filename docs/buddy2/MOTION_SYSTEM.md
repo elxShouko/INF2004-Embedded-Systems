@@ -116,7 +116,7 @@ request and reports results. This interface is a candidate requiring agreement.
 9. `motion_api_status` copies coherent status; QUEUED here means copy succeeded.
    `timestamp_us` is publication time; `measurement_timestamp_us` is feedback
    observation time. `measurement_max_age_us` defines validity. The status API
-   invalidates stale speed/standstill flags at read time. Position is historical
+   invalidates stale speed/standstill/count flags at read time. Position is historical
    per-wheel micrometres from the enable baseline, not an x/y/heading estimate.
 
 All task APIs use TMO_POL mutex acquisition. Callback contexts must remain alive.
@@ -184,9 +184,10 @@ is visible separately; software never claims an unconfirmed brake is successful.
   claim GP28. I2C0 GP8/GP9 and I2C1 GP6/GP7 conflicts must be resolved. The new
   backend rejects enabled I2C, configured UART conflicts, occupied outputs or
   unsupported mux overrides rather than changing shared configuration.
-- GPIO-bank IRQ13 is shared. Buddy 5's integrated folder is empty; its retained
-  standalone ultrasonic code polls echo. This is not permission to claim the
-  bank permanently. No new handler is installed, replaced or enabled here.
+- GPIO-bank IRQ13 is owned by the Phase 2 shared dispatcher on core 1. Buddy 2
+  supplies reserve/enable/release hooks and never installs a competing handler.
+  Buddy 5 has software-only planning and no live acquisition API. Its future
+  echo client must coordinate with the dispatcher; no pin/IRQ is claimed here.
 - External reserve/enable/release hooks must preserve other users, route BOTH
   edges on all four encoder inputs, acknowledge only owned events, baseline
   before enabling, run on the agreed core, and quiesce callbacks on release.
@@ -268,18 +269,21 @@ producer activity. No other buddy's code was changed.
 Agree dispatcher ownership, GPIO/PWM allocation, task resources and the final
 motion contracts through TEAM.md and the respective owners before integration.
 No shared file is changed by this correction pass. Dispatcher release must
-quiesce callbacks on both cores; its current void hook requires that guarantee.
+quiesce core-1 callbacks before retiring their context; its current void hook
+requires that guarantee. Cross-core dispatcher operations are rejected.
 Both-edge coalescing/loss and maximum edge rate require target measurement.
 Required transition rate is CPR*abs(speed_mm_s)*1000/circumference_um; implement
 with checked arithmetic. The speed quantum is
 1000*circumference_um/(CPR*elapsed_us) mm/s. CPR includes x4/gearing once.
 
 Buddy 1 telemetry conversion must resolve signedness/range and invalidity.
-Week 6 raw encoder-count telemetry is not exposed by current motion status;
-adding it requires an agreed interface. Never relabel rounded distance as counts.
-Buddy 3 cumulative-forward odometry needs an agreed definition and clock mapping.
-Buddy 4 forward-only speed needs age/range checking and revocation during reverse,
-turn or fault states. Different clock origins cannot be reconciled by unit division.
+The motion status now exposes the accepted signed count pair as described below.
+Buddy 1/shared telemetry must agree signed range, validity and generation/reset
+semantics before consuming it. Never relabel rounded distance as counts.
+Phase 2 maps measured forward odometry to Buddy 3 while preserving source age.
+Buddy 4 now reads signed motion feedback independently with explicit traction
+trust. Hardware calibration/trust remains pending. Different clock origins
+cannot be reconciled by unit division.
 Buddy 5 avoidance requests go through the Vehicle Controller, not motor drivers.
 
 ## Calibration and future hardware verification checklist
@@ -352,3 +356,47 @@ working-tree results are preliminary, not clean commit-verified evidence.
 Keep production C/H in app_program/subsystem2, host tools/evidence in testing/
 subsystem2 and technical guidance here. Do not relocate tests used by TEST=1
 without an approved source-discovery change. Do not commit generated artifacts.
+
+
+## Signed encoder feedback (2026-10-15)
+
+`motion_api_status()` retains its existing polling mutex/coherent-copy contract.
+Appended fields are `encoder_count[2]` (left/right signed int64 decoded x4
+transitions), `encoder_timestamp_us`, `encoder_generation` and `b_encoder_valid`.
+Encoder polarity is already applied once; values are not scaled by gearing or
+reconstructed from rounded distance. Counts can reach INT64_MIN/MAX without
+narrowing. Decoder limits latch a fault instead of wrapping.
+
+Only a healthy, matching-time, matching-nonzero-generation pair accepted by both
+wheel estimators replaces the cached count pair. A rejected/partially processed
+sample never mixes old/new wheel counts. The first baseline may have valid
+counts while speed validity remains false. The sample timestamp is kernel
+operating-time us (10 ms resolution here), taken at capture observation; it is
+neither the last edge nor the status publication time. Stationary observations
+are fresh; early command wakes/STOP publications do not re-stamp old counts.
+
+Unconfigured/unobserved status has false validity and generation zero; zero
+counts alone do not establish standstill. Freshness uses measurement_max_age_us:
+exact age limit is accepted, stale/future/clock-error reads invalidate the copy,
+preserving historical counts/time/generation. Re-reading a cached accepted sample
+can recover read-time validity if the consumer clock succeeds again; an actual
+source/owner fault stays latched. BUSY/UNAVAILABLE do not provide a new snapshot;
+check API result before using output. Faults retain history but clear validity.
+There is no live count reset/fault recovery. Reboot starts a new origin; generation
+is acquisition-local, not a globally unique boot/session identity.
+
+ISR feed and capture snapshots retain the existing interrupt-safe spinlock;
+owner status publication and reader copies retain the existing inheritance
+mutex. No new lock, task, allocation, GPIO initialization or actuation path is
+introduced. The shared dispatcher and all other buddies remain unchanged.
+Host fakes check lock balance and release ordering, not real SMP memory ordering
+or latency. Resource sizes and actual evidence are recorded in the existing
+[TEST_LOG.md](../../testing/subsystem2/TEST_LOG.md).
+
+Shared integration must explicitly consume these fields and agree with Buddy 1
+on signed telemetry, validity, units and reboot handling; those contracts and
+controller changes are outside this Buddy 2 pass. Mission movement remains
+interlocked on main's existing provider requirements. Full firmware linking
+still requires the documented toolchain/SDK; object checks are not physical
+validation. Existing motor, PID, estimation, planning and fault-reset policy are
+preserved; malformed zero/mixed generation capture now fails before acceptance.

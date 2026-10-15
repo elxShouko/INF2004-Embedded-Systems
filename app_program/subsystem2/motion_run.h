@@ -35,6 +35,14 @@ typedef struct
     bool b_measurement_valid;
     bool b_standstill;
     bool b_stop_command_confirmed;
+    /* Last accepted paired x4 capture, after encoder polarity, before scaling.
+     * [0] left, [1] right; observation time, NOT last-edge/publication time.
+     * Counts may be valid at the first baseline before speed is available.
+     */
+    motion_types_encoder_count_t encoder_count[2];
+    uint64_t encoder_timestamp_us;
+    uint32_t encoder_generation;
+    bool b_encoder_valid;
 } motion_run_status_t;
 typedef struct
 {

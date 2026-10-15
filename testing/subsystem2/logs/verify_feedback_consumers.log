@@ -1,0 +1,406 @@
+Read-only consumers of updated Buddy 2 headers; shared source unchanged.
+Base f3e77ffb5fc0d1ddeb7b963bed939fa926db89fc
+SHA256 app_program/vehicle.c d50103dc2405f2b4aad1da55adbf3be18151c95657a8c4410965525b596d083c
+SHA256 app_program/vehicle_rt.c a7be3e9d2f5b766a35dbd049cd2d227df7cd7ff67831eaf71bef2337237d4a20
+SHA256 app_program/gpio_bank.c 5bad6d56ad02bc71910222c0f1b5e74f34523af79719f83fb9e54b1a807a995a
+SHA256 app_program/app_main.c 192acd03917135d318ea82be6d508e8e0b8cebe28e08426aedaab45b2bb39629
+SHA256 app_program/subsystem1/s1_codec.c 1fa00c3a2a5feb1bb2236e985a87d399abde2808a72c5f40d101dd3a67d7ed0b
+SHA256 app_program/subsystem2/motion_config.c 1c84230947efeaf835019fddfb1fcafb9015751d2707578097b9ed480c18132f
+SHA256 app_program/subsystem2/motion_quad.c c496f56fcd7cf2cebc1610b9f6f413a27e50b04a949b938906d8b248272f4079
+SHA256 app_program/subsystem2/motion_estimator.c 4669a8c838d3c6f931bbc1fd7589ae68984335e490fc5683c588da129221c307
+SHA256 app_program/subsystem2/motion_pid.c 1780e48412ccdf4ef6ee0d542b4dbf334e96a4dbf8c9d184f2c41a65998ca571
+SHA256 app_program/subsystem2/drv_motor.c 62c68d7f5ed2a1847e43d6a0bc91c64a15ea2c2a03a66b9f4f507f7d51c08405
+SHA256 app_program/subsystem2/enc_capture.c 586878820dee0bf82abc03b716be40727a9acee310ed4e09cbb9b9ba3bbccf87
+SHA256 app_program/subsystem2/wheel_loop.c 7697b40c05693952a7015b7f2757926556b60e3fa95372c8425bf9285df9e141
+SHA256 app_program/subsystem2/move_plan.c 727d78a41c066b142bfd92efeda157271e6da9aaa83289e514f7fd2d32ae7aaa
+SHA256 app_program/subsystem2/motion_run.c 5e5cc24233864d6a95a2405d08a6fda8750d2020f36417a5f099147904827c63
+SHA256 app_program/subsystem3/drv_line_tracking.c 0b807a985c65f44a6d06c6c8c2fe78673b42004ac7171e68d22a8aa7a15ee3a8
+SHA256 app_program/subsystem3/drv_ir_input.c c70cdf312b743b195ec4292799cb6945d92608557848b615af081ef7eebc2dd0
+SHA256 app_program/subsystem3/drv_navigation_map.c f2456d4e15dae3f292409ba692b050c3b97d65afdb0f3ce3c2ee1a00c711eec4
+SHA256 app_program/subsystem4/imu_core.c 98a507d88580975f1bcba984a355a0052f7caddf9ee5ed381d8cdfc6c7fd4a7b
+SHA256 app_program/subsystem4/imu_guard.c d1c02a98abb74720dfb40f080593e397ea1f1db5d69252091c9aa3d3ce7bb614
+SHA256 app_program/subsystem5/s5_obstacle_logic.c a876c472fc3f8b11508b51cfd18c7f757d5b9f956450ca354352cfd2a5962b5c
+SHA256 testing/integration/test_vehicle.c 17d2520cc3100b19162e8bf370f340e6420b7eaf7f48d0558091a8d2e814997a
+SHA256 testing/integration/test_ports.h 5b6e78214f3c084d8d271ef6ec141b8a16d4c36bc6f918382419a18efcc689f2
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\vehicle.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_0.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\vehicle_rt.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_1.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\gpio_bank.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_2.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\app_main.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_3.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -Wno-error=conversion -Wno-error=sign-conversion -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_4.o
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c: In function 'writer_u32':
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c:217:25: warning: conversion from 'uint32_t' {aka 'unsigned int'} to 'char' may change value [-Wconversion]
+  217 |         digits[count] = '0' + (remaining % DECIMAL_BASE);
+      |                         ^~~
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c: In function 'writer_i32':
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c:233:26: warning: conversion to 'uint32_t' {aka 'unsigned int'} from 'int32_t' {aka 'int'} may change the sign of the result [-Wsign-conversion]
+  233 |     uint32_t magnitude = value;
+      |                          ^~~~~
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c: In function 'writer_tenths':
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c:271:21: warning: conversion to 'uint32_t' {aka 'unsigned int'} from 'int32_t' {aka 'int'} may change the sign of the result [-Wsign-conversion]
+  271 |         magnitude = limited;
+      |                     ^~~~~~~
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_config.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_5.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_quad.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_6.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_estimator.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_7.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_pid.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_8.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\drv_motor.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_9.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\enc_capture.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_10.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\wheel_loop.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_11.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\move_plan.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_12.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_run.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_13.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem3\drv_line_tracking.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_14.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem3\drv_ir_input.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_15.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem3\drv_navigation_map.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_16.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem4\imu_core.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_17.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem4\imu_guard.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_18.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_19.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_vehicle.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_20.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_0.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_1.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_2.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_3.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_4.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_5.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_6.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_7.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_8.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_9.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_10.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_11.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_12.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_13.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_14.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_15.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_16.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_17.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_18.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_19.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default_20.o -lm -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 3
+[TEST] INT-03 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 4
+[TEST] INT-04 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 5
+[TEST] INT-05 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 6
+[TEST] INT-06 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 7
+[TEST] INT-07 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 8
+[TEST] INT-08 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 9
+[TEST] INT-09 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 10
+[TEST] INT-10 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 11
+[TEST] INT-11 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 12
+[TEST] INT-12 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 13
+[TEST] INT-13 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 14
+[TEST] INT-14 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 15
+[TEST] INT-15 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 16
+[TEST] INT-16 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 17
+[TEST] INT-17 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 18
+[TEST] INT-18 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 19
+[TEST] INT-19 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 20
+[TEST] INT-20 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 21
+[TEST] INT-21 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 22
+[TEST] INT-22 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 23
+[TEST] INT-23 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 24
+[TEST] INT-24 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 25
+[TEST] INT-25 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 26
+[TEST] INT-26 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 27
+[TEST] INT-27 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 28
+[TEST] INT-28 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 29
+[TEST] INT-29 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 30
+[TEST] INT-30 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 31
+[TEST] INT-31 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 32
+[TEST] INT-32 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 33
+[TEST] INT-33 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 34
+[TEST] INT-34 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 35
+[TEST] INT-35 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 36
+[TEST] INT-36 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 37
+[TEST] INT-37 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 38
+[TEST] INT-38 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 39
+[TEST] INT-39 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 40
+[TEST] INT-40 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 41
+[TEST] INT-41 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 42
+[TEST] INT-42 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 43
+[TEST] INT-43 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 44
+[TEST] INT-44 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 45
+[TEST] INT-45 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 46
+[TEST] INT-46 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\default.exe 47
+[TEST] INT-47 PASS shared production integration
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\vehicle.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_0.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\vehicle_rt.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_1.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\gpio_bank.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_2.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\app_main.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_3.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -Wno-error=conversion -Wno-error=sign-conversion -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_4.o
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c: In function 'writer_u32':
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c:217:25: warning: conversion from 'uint32_t' {aka 'unsigned int'} to 'char' may change value [-Wconversion]
+  217 |         digits[count] = '0' + (remaining % DECIMAL_BASE);
+      |                         ^~~
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c: In function 'writer_i32':
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c:233:26: warning: conversion to 'uint32_t' {aka 'unsigned int'} from 'int32_t' {aka 'int'} may change the sign of the result [-Wsign-conversion]
+  233 |     uint32_t magnitude = value;
+      |                          ^~~~~
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c: In function 'writer_tenths':
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c:271:21: warning: conversion to 'uint32_t' {aka 'unsigned int'} from 'int32_t' {aka 'int'} may change the sign of the result [-Wsign-conversion]
+  271 |         magnitude = limited;
+      |                     ^~~~~~~
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_config.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_5.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_quad.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_6.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_estimator.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_7.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_pid.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_8.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\drv_motor.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_9.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\enc_capture.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_10.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\wheel_loop.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_11.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\move_plan.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_12.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_run.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_13.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem3\drv_line_tracking.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_14.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem3\drv_ir_input.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_15.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem3\drv_navigation_map.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_16.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem4\imu_core.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_17.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem4\imu_guard.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_18.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_19.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_vehicle.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_20.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_0.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_1.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_2.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_3.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_4.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_5.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_6.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_7.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_8.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_9.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_10.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_11.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_12.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_13.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_14.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_15.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_16.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_17.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_18.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_19.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized_20.o -lm -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 3
+[TEST] INT-03 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 4
+[TEST] INT-04 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 5
+[TEST] INT-05 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 6
+[TEST] INT-06 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 7
+[TEST] INT-07 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 8
+[TEST] INT-08 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 9
+[TEST] INT-09 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 10
+[TEST] INT-10 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 11
+[TEST] INT-11 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 12
+[TEST] INT-12 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 13
+[TEST] INT-13 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 14
+[TEST] INT-14 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 15
+[TEST] INT-15 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 16
+[TEST] INT-16 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 17
+[TEST] INT-17 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 18
+[TEST] INT-18 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 19
+[TEST] INT-19 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 20
+[TEST] INT-20 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 21
+[TEST] INT-21 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 22
+[TEST] INT-22 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 23
+[TEST] INT-23 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 24
+[TEST] INT-24 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 25
+[TEST] INT-25 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 26
+[TEST] INT-26 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 27
+[TEST] INT-27 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 28
+[TEST] INT-28 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 29
+[TEST] INT-29 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 30
+[TEST] INT-30 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 31
+[TEST] INT-31 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 32
+[TEST] INT-32 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 33
+[TEST] INT-33 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 34
+[TEST] INT-34 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 35
+[TEST] INT-35 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 36
+[TEST] INT-36 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 37
+[TEST] INT-37 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 38
+[TEST] INT-38 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 39
+[TEST] INT-39 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 40
+[TEST] INT-40 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 41
+[TEST] INT-41 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 42
+[TEST] INT-42 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 43
+[TEST] INT-43 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 44
+[TEST] INT-44 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 45
+[TEST] INT-45 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 46
+[TEST] INT-46 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\feedback_consumer_tacp10hd\optimized.exe 47
+[TEST] INT-47 PASS shared production integration
+EXIT 0

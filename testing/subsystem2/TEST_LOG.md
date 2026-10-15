@@ -2358,3 +2358,111 @@ A	testing/subsystem2/test_rtos.c
 A	testing/subsystem2/test_rtos.h
 A	testing/subsystem2/verify_motion.py
 ```
+
+
+### Signed encoder feedback - definitions before execution
+
+| ID | Definition | Method | Expected result |
+|---|---|---|---|
+| S2-U135 | Full int64 paired count precision and valid first baseline without speed | actual motion_run with existing motor fakes | Exact INT64_MIN/MAX; first baseline counts valid, speed invalid |
+| S2-U136 | Partial estimator failure cannot publish a mixed encoder pair | actual motion_run, invalid right conversion after left accepts | Fault invalidates counts; previous pair/time/generation retained |
+| S2-U137 | Sub-period, STOP and fault publication never re-stamp counts | actual motion_run with motor fakes | No premature pair replacement; emergency invalidates retained history |
+| S2-U138 | Missing/mismatched acquisition generations rejected | actual motion_run | Sensor fault before accepting first pair |
+| S2-U139 | Count-only status freshness, unavailable/BUSY and clock failures | real task/API with kernel/encoder fakes | Boundary accepted; stale/future/clock error invalid; cached snapshot preserved |
+| S2-U140 | Paired signed ISR feedback and quiescent release on emergency | real task/encoder adapter with existing fakes | +1/-1 pair with same timestamp/generation; fault invalidates; one release |
+
+Existing S2-U116/U119 additionally assert count validity/history and live count
+publication. All previous 132 host groups and stable IDs are retained. These
+new cases are host-only; no physical GPIO is initialized by automatic tests.
+
+### Signed encoder feedback results (2026-10-15, uncommitted)
+
+Branch `codex/buddy2-motion-feedback`, based on main
+`f3e77ffb5fc0d1ddeb7b963bed939fa926db89fc`. These are preliminary working-tree
+results, not a new tested commit. No staging, commit, push, merge or hardware use.
+
+Commands from root, using the same installed Python executable as prior runs:
+
+```text
+python -B testing/subsystem2/verify_motion.py --label feedback_reviewed --strict --analyze
+python -B testing/subsystem2/verify_motion.py --label feedback_arm_reviewed --arm --strict
+python -B testing/subsystem2/verify_motion.py --style
+```
+
+| Verification | Actual result | Evidence |
+|---|---|---|
+| Default host | 138/138 PASS: original 132 + 6 feedback cases | [log](logs/verify_feedback_reviewed_default.log) |
+| O2/short-enum host | 138/138 PASS | [log](logs/verify_feedback_reviewed_optimized.log) |
+| Timeout, hardware guards, focused mutations | PASS; 8 mutations detected, including int32 count truncation; expected timeout exit 124 | [checks](logs/verify_feedback_reviewed_checks.log) |
+| Buddy 2 ARM objects | 76/76 PASS: 19 sources x SMP=0/1 x TEST=0/1 | [log](logs/verify_feedback_arm_reviewed_arm.log) |
+| Existing integration consumers | 45/45 PASS per host profile, strict warnings/analyzer | [commands/results/source hashes](logs/verify_feedback_consumers.log) |
+| Unchanged ARM controller and S4 consumer | 20/20 PASS: vehicle/adapter/dispatcher/app_main/imu_link x four profiles | [commands/results](logs/verify_feedback_arm_consumers.log) |
+| Style subset | PASS, 19 existing checked files | Existing runner; no formal Barr-C certification |
+| Full linking, target RTOS, physical calibration | NOT RUN | Required SDK 2.2.0 remains unavailable in the checked environment; no shared build/SDK patch |
+
+No compiler warnings/analyzer findings in changed Buddy 2 code. The consumer
+host build preserves the already documented S1 codec conversion warnings,
+without modifying its source; only that provider object relaxes those two
+warning classes. ARM strict checking retains the existing documented exclusions
+for inherited/template/test objects. Real firmware linking was not attempted.
+
+Both final Buddy 2 metadata files match all 42 current C/H/Python/recipe inputs:
+[host metadata](logs/verify_feedback_reviewed_metadata.json),
+[ARM metadata](logs/verify_feedback_arm_reviewed_metadata.json). Raw SHA-256 values
+refer to compiler input bytes; Git CRLF/LF normalization must be accounted for
+at commit. The sorted path-to-Git-blob-ID mapping of these 42 inputs has SHA-256
+`b11e4f6dab1d585d752f4d82313c29f8a43cf52ce44d9b677d5d4a9a29f4a9d1`. Digest input is UTF-8 JSON, sorted keys and compact comma/colon
+separators; Git IDs use `git hash-object --path=<repository path> <file>`.
+
+ARM `sizeof(motion_run_status_t)` increased from 104 to 136 bytes (+32). The
+existing owner/run and bus status copies each grow by 32 bytes, as do consumer
+stack instances; no task, lock, allocation, hardware operation or PID deadline
+was added. Full stack headroom/ISR latency still requires target verification.
+
+Independent review: counts are copied from the actual accepted capture, never
+from distance. Copy occurs only after both estimators accept; faults invalidate
+without replacing history. First-baseline counts do not authorize speed/motion.
+Malformed zero/mixed generations now fault before acceptance. ISR feed/snapshot
+remain under the same interrupt-safe spinlock; the complete published struct
+remains under the existing inheritance mutex. Fakes assert lock balance and
+quiescent release, not actual multicore memory ordering or timing. All original
+tests remain; U116/U119 and existing fault-path validity assertions were
+strengthened. The shared dispatcher,
+controller, other buddies, Makefiles, kernel, main and Git index are unchanged.
+
+Shared agreement still required: signed telemetry range/encoding, count validity,
+sample timestamps and reboot/session handling. The controller must explicitly
+consume the new fields; neither its telemetry nor Buddy 1's structures changed.
+Physical wiring, polarity, wheel/turn/PID/stop calibration and end-to-end stop
+latency remain outstanding. No live reset manager or recovery was introduced.
+Recommendation: PASS WITH CONDITIONS for review/commit of this source-compatible
+interface extension; all affected firmware objects must be rebuilt together.
+
+Intermediate successful runs are preserved byte-for-byte in
+[development archive](logs/feedback_development_evidence.zip), with its embedded
+SHA-256 manifest. No previous committed test history was removed. Compiler
+objects, executables, size probes and .su files were temporary under ignored
+Buddy 2 build scratch and are removed. No new runner or folder hierarchy.
+
+Changed production/test/document files:
+
+- `app_program/subsystem2/motion_api.h`
+- `app_program/subsystem2/motion_run.c`
+- `app_program/subsystem2/motion_run.h`
+- `app_program/subsystem2/task_motion.c`
+- `docs/buddy2/MOTION_SYSTEM.md`
+- `testing/subsystem2/TEST_LOG.md`
+- `testing/subsystem2/test_rtos.c`
+- `testing/subsystem2/verify_motion.py`
+
+| Evidence | SHA-256 (working bytes) |
+|---|---|
+| `feedback_development_evidence.zip` | `f9c70483d625b51449ebe4a299fa63391f4223ca79e46189ff4eb7f1a7f2161c` |
+| `verify_feedback_arm_consumers.log` | `8e2cb6dd232c1a6985b35153257e3ef14e23aa51be38e0827884a0b7b405cec1` |
+| `verify_feedback_arm_reviewed_arm.log` | `1925b69877f6f869f8748ad675ed7ed78ecacdc81814bfbf4c0f9d3213cf8ff7` |
+| `verify_feedback_arm_reviewed_metadata.json` | `15b54b32a2a63a5402a022fddf732a6f18385f87af826cf041f8fd9abba6d35c` |
+| `verify_feedback_consumers.log` | `29abc35995d291965386d306a06f4226f85a0e5c74ed3824e5ced454574fbe50` |
+| `verify_feedback_reviewed_checks.log` | `d1b548c059128ef1ac617c1af6a7139452eb63bd7d0581adeb47d37488fe57d1` |
+| `verify_feedback_reviewed_default.log` | `c010bf08b1d3c2e2aac9ed231652a40f77d5d6526054a3ad98c90e5bae10a0ff` |
+| `verify_feedback_reviewed_metadata.json` | `d214685a35ac563e03788a45bd276155968681079b3f4d3f79e148b349b11c77` |
+| `verify_feedback_reviewed_optimized.log` | `5f332f63f23ff0e4b39ed0338c366df847f3c1f81aa1d657011d497d60eafc9c` |
