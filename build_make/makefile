@@ -55,6 +55,16 @@ endif
 
 -include mtkernel_3/app_program/subdir.mk
 
+# Keep Buddy 4 test cases in testing/buddy4, shared by host and TEST=1.
+ifeq ($(TEST),1)
+S4_CASES_OBJ := ./mtkernel_3/testing/buddy4/buddy4_cases.o
+OBJS += $(S4_CASES_OBJ)
+C_DEPS += $(S4_CASES_OBJ:.o=.d)
+$(S4_CASES_OBJ): ../testing/buddy4/buddy4_cases.c
+	@mkdir -p "$(@D)"
+	$(GCC) $(CFLAGS) -D$(TARGET) $(INCPATH) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
+endif
+
 # Create every object directory up front.  Git does not store empty
 # directories, so a fresh clone lacks them, and not every compile rule
 # creates its own (make 3.81, shipped with macOS, picks the first matching
@@ -80,7 +90,7 @@ all: $(EXE_FILE).elf
 
 $(EXE_FILE).elf: $(OBJS)
 	@echo 'Linker: $@'
-	$(LINK)  $(LFLAGS) -T $(LNKFILE) -Wl,-Map,"$(EXE_FILE).map" -o "$(EXE_FILE).elf" $(OBJS)
+	$(LINK)  $(LFLAGS) -T $(LNKFILE) -Wl,-Map,"$(EXE_FILE).map" -o "$(EXE_FILE).elf" $(OBJS) -lm
 	@echo 'Finished building target: $@'
 ifneq ($(SIZE),)
 	$(SIZE) $(EXE_FILE).elf

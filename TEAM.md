@@ -22,6 +22,8 @@ subsystem, ask its owner or open a pull request for them to review.
 | 3 | IR line sensing, junction detection and barcode navigation; retained example consumer for compatibility | 2500734 | | `app_program/subsystem3/` | `tests/member3_*.c`, `testing/subsystem3/` |
 | 4 | *example:* Monitor: prints reports, pauses the LED | | | `app_program/subsystem4/` | `testing/subsystem4/` |
 | 5 | Obstacle scan/profile calculations and avoidance planning (software-only; hardware integration pending) | | | `app_program/subsystem5/` | `testing/subsystem5/` |
+| 6 | IMU sensing, calibration, terrain and collision events; retained monitor example | | | `app_program/subsystem4/` | `testing/buddy4/` (current), `testing/subsystem4/` (history) |
+| 7 | | | | `app_program/subsystem5/` | `testing/subsystem5/` |
 
 Shared files (`app_program/app_main.c`, `app_program/app.h`, this file)
 are changed only by agreement of the team. The exception is claiming an empty
@@ -64,8 +66,8 @@ fixed.
 | GP13 | | |
 | GP14 | | |
 | GP15 | | |
-| GP16 | | |
-| GP17 | | |
+| GP16 | S4 | I2C0 SDA, Week 6 design; physical wiring unverified |
+| GP17 | S4 | I2C0 SCL, Week 6 design; physical wiring unverified |
 | GP18 | | |
 | GP19 | *example:* S1 | external LED (LED + 330 Ω to GND) |
 | GP20 | | |
@@ -110,7 +112,7 @@ the drivers have no locking to stop it.
 | Peripheral | Owner subsystem | Owning task | Pins |
 |---|---|---|---|
 | UART1 | | | |
-| I2C0 | | | |
+| I2C0 | S4 | `imu_runtime_task` | GP16/GP17; hardware disabled until verified |
 | I2C1 | | | |
 | SPI0 | | | |
 | SPI1 | | | |
@@ -157,7 +159,7 @@ change it only by team agreement. Write down every task you create.
 | 1 | 12–13 | *example:* led_task – 12 – any |
 | 2 | 14–15 | *example:* producer_task – 14 – core 1 |
 | 3 | 16–17 | retained consumer_task – 16 – core 0; s3_navigation_task – 17 – core 0 |
-| 4 | 18–19 | *example:* monitor_task – 18 – any |
+| 4 | 18–19 | retained monitor_task – 18 – any; imu_runtime_task – 19 – any |
 | 5 | 20–21 | |
 
 Core: `TP_PRC1` = core 0, `TP_PRC2` = core 1, or "any".
@@ -188,6 +190,13 @@ See [Buddy 5 unresolved integration placeholders](docs/buddy5/OBSTACLE_SYSTEM.md
 Each interface is tested by at least one integration test
 (`testing/integration/TEST_LOG.md`).
 
+Buddy 4 additionally provides `imu_runtime.h`: copied status/event reads,
+a latched fault wait, and a proposed calibrated forward-speed input.
+These are **provider proposals**, not agreed cross-subsystem interfaces;
+no Vehicle/Mission Controller exists here. Fault flags do not stop motors.
+Only Buddy 2 may actuate motors. See `testing/buddy4/README.md` for timing,
+validity and the required controller watchdog/stop-path review.
+
 ## 6. Kernel object budget
 
 Limits are set in `config/config.h`. If the team needs more, raise the
@@ -195,12 +204,12 @@ limit there. The numbers below are the example's usage.
 
 | Object | Limit | S1 | S2 | S3 | S4 | S5 |
 |---|---|---|---|---|---|---|
-| Task | 32 | 1 | 1 | 2 | 1 | |
+| Task | 32 | 1 | 1 | 2 | 2 | |
 | Semaphore | 16 | | 1 | | | |
-| Event flag | 16 | | | | 1 | |
+| Event flag | 16 | | | | 2 | |
 | Mailbox | 12 | | | 1 | | |
-| Mutex | 12 | | | 2 | | |
-| Message buffer | 12 | | | 2 | 1 | |
+| Mutex | 12 | | | 2 | 1 | |
+| Message buffer | 12 | | | 2 | 2 | |
 | Fixed memory pool | 12 | | 1 | | | |
 | Variable memory pool | 12 | | | | | |
 | Cyclic handler | 12 | 1 | | | | |

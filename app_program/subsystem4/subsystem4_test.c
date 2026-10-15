@@ -1,14 +1,23 @@
 /*
  *	subsystem4_test.c
  *	On-target tests for subsystem 4.  Built only with: make TEST=1
- *	Record unit results in testing/subsystem4/TEST_LOG.md and the
- *	INT- result in testing/integration/TEST_LOG.md.
+ *	Record new IMU results in testing/buddy4/TEST_LOG.md and the
+ *	INT- result in testing/integration/TEST_LOG.md. Legacy records remain
+ *	in testing/subsystem4/TEST_LOG.md.
  */
 
 #include "subsystem4.h"
 #include "../test_report.h"
+#include "../../testing/buddy4/buddy4_cases.h"
 
 #if APP_TEST
+
+static void report_imu_case (const char *p_id, bool b_pass,
+                             const char *p_text)
+{
+    tm_printf((UB *)"[TEST] %s %s %s\n", p_id,
+              b_pass ? "PASS" : "FAIL", p_text);
+}
 
 EXPORT void subsystem4_test(void)
 {
@@ -31,6 +40,11 @@ EXPORT void subsystem4_test(void)
 		   "summary lines flow from subsystem 3 to subsystem 4");
 
 	TEST_SUMMARY("subsystem4");
+    /* Pure cases use local contexts and a fake bus, not the live IMU. */
+    {
+        const uint32_t failures = buddy4_cases_run(report_imu_case);
+        tm_printf((UB *)"[TEST] buddy4 SUMMARY %u failures\n", failures);
+    }
 }
 
 #endif /* APP_TEST */

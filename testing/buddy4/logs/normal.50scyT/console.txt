@@ -1,0 +1,138 @@
+CURRENT Buddy 4 sources; mode=normal; artifacts=/var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT
+UTC run time: 2026-10-15T09:31:09Z
+a405c5aa2752e39bdcd3d4e0b415d2126158ea15
+ M TEAM.md
+ M app_program/subsystem4/subsystem4.c
+ M app_program/subsystem4/subsystem4.h
+ M app_program/subsystem4/subsystem4_test.c
+ M build_make/makefile
+ M build_make/pico_rp2040.mk
+ M testing/subsystem4/TEST_LOG.md
+?? app_program/subsystem4/drv_imu.c
+?? app_program/subsystem4/drv_imu.h
+?? app_program/subsystem4/drv_lsm.c
+?? app_program/subsystem4/drv_lsm.h
+?? app_program/subsystem4/imu_config.h
+?? app_program/subsystem4/imu_core.c
+?? app_program/subsystem4/imu_core.h
+?? app_program/subsystem4/imu_runtime.c
+?? app_program/subsystem4/imu_runtime.h
+?? reference_docs/project/~$ek_6_Design_Review.docx
+?? testing/buddy4/
+?? testing/subsystem4/CASES.md
+?? testing/subsystem4/README.md
+?? testing/subsystem4/REFERENCE_REVIEW.md
+?? testing/subsystem4/host/
+?? testing/subsystem4/logs/normal.fsXov0/
+?? testing/subsystem4/logs/replay.5koR9p/
+?? testing/subsystem4/logs/sanitize.FqCkMD/
+?? testing/subsystem4/run_host_tests.sh
+Apple clang version 21.0.0 (clang-2100.3.34.2)
+Target: arm64-apple-darwin25.6.0
+Thread model: posix
+InstalledDir: /Library/Developer/CommandLineTools/usr/bin
+68699d40b6fc5bb072a89934cf73b15c28a0f83e1cd4c42fd1677deee5c19108  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_config.h
+5857a3e3ab487cf8611213cbc75e6d638d7976b8408a7a4d292b50ea8213beaa  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_lsm.c
+02f3136d3a3a750ad6d396b7af60c1df3a23c1574d643bbb490eda034be2b17f  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.h
+16d2206a76f8a6b8a5a9e5b66e3e158b066bae09cca8916e55d34eeac2ad1347  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/subsystem4.c
+19206004f3bb7aeae6d0d9fa8ef311d05e18bb37d9c945958075df5b78f3bea3  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_runtime.c
+7885024f95a5ceaa1b1b0246c96c9091316385b7645184ebcc4ac1ff468baf0e  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_imu.h
+3e1626f1282818d73db084bfdeed42fb00b5de79c135c9307f94be3d8540f510  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/task_monitor.c
+e50258251f8998c3c51beb1a642033372c0a766f185c727ce2069ae60a687053  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.c
+93912ba4b8fffd788113584ab2491a415e3057f67d3d62806bc13ca1b5833d1f  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/subsystem4_test.c
+d621889734e53726c0f04ca07c3152b0ed40cc8c3acd07fe6ac4278c26cd1759  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_lsm.h
+378a135d747503f788a3e7906e2e0a3f6b8ae4f71982fa00dcdbe6cc416fc9b7  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/subsystem4.h
+06bae18eac5213fe0d1282cf429f5c1bb2ce620d18b93ef52b836f4871f9aed5  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_imu.c
+1b4dac0fa36cb06ff5c5edb9b2e35ff16b460a5a98ce95896ebbe543508fd4fe  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_runtime.h
+87f2b4f5a6f93ba38bcaa80d95ecbea2766726e394c0795a3752e404cc0619ca  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/runtime_main.c
+e2752f7b00a09ed55f1cf9678395a4d20599cc554f61d6d921ae41f93589fe05  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/buddy4_cases.h
+9511cdcfa80b40868284d1e5d2148c0c0aaa6cd597f98bbec52e7a1d4810b3fb  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/runtime_fake.c
+848e923a732956324046f54a029ecb66fa8e789df47d21fe797a7d2a68da09d3  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/host_main.c
+5d0af192b295d7182e89ffa46958c8fc426db24080b5f566d52c628894a59c74  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/buddy4_cases.c
+7291360183f861fee677c5b97e8ef0c069096d87a3fb7df45390959495f8ad71  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/runtime_fake.h
+336112789429ad7334f8e7cb077b8a82043480f7260a12ea35170b596cf35a2d  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/fake/tk/tkernel.h
+1b4c6c715dfa5f68fac47d7cbe1c9511e28a8609716fd18dbafb350139290824  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/fake/tm/tmonitor.h
+049c4da6e921932c8eed50bdc0ea858f9bd9fd1e59c9cb801402ccb872db4cbd  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/fake/bsp/libbsp.h
++ cc -std=c99 -Wall -Wextra -Werror -Wconversion -Wshadow -pedantic -O2 '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_lsm.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/buddy4_cases.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/host_main.c' -lm -o /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_tests
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_tests
+[TEST] S4-U116 PASS invalid config rejected
+[TEST] S4-U117 PASS stationary calibration completes
+[TEST] S4-U118 PASS motion resets calibration window
+[TEST] S4-U119 PASS body-axis pitch is degrees
+[TEST] S4-U120 PASS body-axis roll is degrees
+[TEST] S4-U162 PASS Week 6 highest estimate is published at peak
+[TEST] S4-U121 PASS ascent/peak/descent and distance-integrated height
+[TEST] S4-U122 PASS smaller completed hump retains session maximum
+[TEST] S4-U123 PASS larger completed hump updates session maximum
+[TEST] S4-U124 PASS pitch alone is not reported as measured height
+[TEST] S4-U125 PASS missing distance invalidates entire current hump
+[TEST] S4-U126 PASS unfinished hump times out to a latched fault
+[TEST] S4-U127 PASS impact latches fault
+[TEST] S4-U128 PASS good data cannot silently clear fault
+[TEST] S4-U129 PASS duplicate timestamp rejected
+[TEST] S4-U130 PASS monotonic timestamp wraps correctly
+[TEST] S4-U131 PASS stale samples rejected
+[TEST] S4-U132 PASS NaN cannot enter processing
+[TEST] S4-U133 PASS unsupported reverse distance rejected
+[TEST] S4-U134 PASS gravity alone does not prove vehicle is stationary
+[TEST] S4-U135 PASS uncalibrated magnetometer does not claim valid heading
+[TEST] S4-U136 PASS heading wrap uses shortest turn, no fictitious gyro
+[TEST] S4-U137 PASS missing magnetic sample clears heading validity
+[TEST] S4-U138 PASS datasheet register profile and readback
+[TEST] S4-U139 PASS signed little-endian acceleration in g
+[TEST] S4-U140 PASS magnetic X,Z,Y ordering and unequal axis gains
+[TEST] S4-U141 PASS no stale magnetic sample reuse
+[TEST] S4-U142 PASS no stale acceleration sample reuse
+[TEST] S4-U143 PASS wrong sensor identity rejected
+[TEST] S4-U144 PASS configuration readback mismatch rejected
+[TEST] S4-U145 PASS bus failure propagates without partial sample commit
+[TEST] S4-U146 PASS magnetic overflow invalidates yaw
+[TEST] S4-U147 PASS acceleration saturation cannot look like normal tilt
+[TEST] S4-U148 PASS invalid driver arguments rejected
+[TEST] S4-U163 PASS dynamic acceleration at ascent entry invalidates height
+[TEST] S4-U164 PASS maximum allowed sample gap is inclusive
+[TEST] S4-U165 PASS null processing arguments fail safely
+[TEST] S4-U166 PASS all 4096 signed HR encodings and saturation boundaries
+[TEST] buddy4 SUMMARY 0 failures
++ cc -std=c99 -Wall -Wextra -Werror -Wconversion -Wshadow -pedantic -O2 -DS4_IMU_ENABLE=1 '-I/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/fake' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_runtime.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/runtime_fake.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/runtime_main.c' -lm -o /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 149
+[TEST] S4-U149 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 150
+[TEST] S4-U150 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 151
+[TEST] S4-U151 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 152
+[TEST] S4-U152 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 153
+[TEST] S4-U153 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 154
+[TEST] S4-U154 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 155
+[TEST] S4-U155 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 156
+[TEST] S4-U156 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 157
+[TEST] S4-U157 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 158
+[TEST] S4-U158 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 159
+[TEST] S4-U159 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 160
+[TEST] S4-U160 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//buddy4-current.mi57NT/buddy4_runtime_tests 161
+[TEST] S4-U161 PASS runtime fault injection
++ set +x
+Saved evidence: /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/logs/normal.50scyT/console.txt

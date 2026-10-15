@@ -1,0 +1,1556 @@
+UTC run time: 2026-10-15T09:31:12Z
+a405c5aa2752e39bdcd3d4e0b415d2126158ea15
+ M TEAM.md
+ M app_program/subsystem4/subsystem4.c
+ M app_program/subsystem4/subsystem4.h
+ M app_program/subsystem4/subsystem4_test.c
+ M build_make/makefile
+ M build_make/pico_rp2040.mk
+ M testing/subsystem4/TEST_LOG.md
+?? app_program/subsystem4/drv_imu.c
+?? app_program/subsystem4/drv_imu.h
+?? app_program/subsystem4/drv_lsm.c
+?? app_program/subsystem4/drv_lsm.h
+?? app_program/subsystem4/imu_config.h
+?? app_program/subsystem4/imu_core.c
+?? app_program/subsystem4/imu_core.h
+?? app_program/subsystem4/imu_runtime.c
+?? app_program/subsystem4/imu_runtime.h
+?? reference_docs/project/~$ek_6_Design_Review.docx
+?? testing/buddy4/
+?? testing/subsystem4/CASES.md
+?? testing/subsystem4/README.md
+?? testing/subsystem4/REFERENCE_REVIEW.md
+?? testing/subsystem4/host/
+?? testing/subsystem4/logs/normal.fsXov0/
+?? testing/subsystem4/logs/replay.5koR9p/
+?? testing/subsystem4/logs/sanitize.FqCkMD/
+?? testing/subsystem4/run_host_tests.sh
+arm-none-eabi-gcc (Arm GNU Toolchain 15.3.Rel1 (Build arm-15.149)) 15.3.1 20260627
+Copyright (C) 2025 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+PICO_SDK_PATH=/Users/eddy/pico/pico-sdk
+68699d40b6fc5bb072a89934cf73b15c28a0f83e1cd4c42fd1677deee5c19108  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_config.h
+5857a3e3ab487cf8611213cbc75e6d638d7976b8408a7a4d292b50ea8213beaa  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_lsm.c
+02f3136d3a3a750ad6d396b7af60c1df3a23c1574d643bbb490eda034be2b17f  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.h
+16d2206a76f8a6b8a5a9e5b66e3e158b066bae09cca8916e55d34eeac2ad1347  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/subsystem4.c
+19206004f3bb7aeae6d0d9fa8ef311d05e18bb37d9c945958075df5b78f3bea3  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_runtime.c
+7885024f95a5ceaa1b1b0246c96c9091316385b7645184ebcc4ac1ff468baf0e  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_imu.h
+3e1626f1282818d73db084bfdeed42fb00b5de79c135c9307f94be3d8540f510  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/task_monitor.c
+e50258251f8998c3c51beb1a642033372c0a766f185c727ce2069ae60a687053  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.c
+93912ba4b8fffd788113584ab2491a415e3057f67d3d62806bc13ca1b5833d1f  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/subsystem4_test.c
+d621889734e53726c0f04ca07c3152b0ed40cc8c3acd07fe6ac4278c26cd1759  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_lsm.h
+378a135d747503f788a3e7906e2e0a3f6b8ae4f71982fa00dcdbe6cc416fc9b7  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/subsystem4.h
+06bae18eac5213fe0d1282cf429f5c1bb2ce620d18b93ef52b836f4871f9aed5  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_imu.c
+1b4dac0fa36cb06ff5c5edb9b2e35ff16b460a5a98ce95896ebbe543508fd4fe  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_runtime.h
+87f2b4f5a6f93ba38bcaa80d95ecbea2766726e394c0795a3752e404cc0619ca  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/runtime_main.c
+e2752f7b00a09ed55f1cf9678395a4d20599cc554f61d6d921ae41f93589fe05  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/buddy4_cases.h
+9511cdcfa80b40868284d1e5d2148c0c0aaa6cd597f98bbec52e7a1d4810b3fb  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/runtime_fake.c
+848e923a732956324046f54a029ecb66fa8e789df47d21fe797a7d2a68da09d3  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/host_main.c
+5d0af192b295d7182e89ffa46958c8fc426db24080b5f566d52c628894a59c74  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/buddy4_cases.c
+7291360183f861fee677c5b97e8ef0c069096d87a3fb7df45390959495f8ad71  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/runtime_fake.h
+336112789429ad7334f8e7cb077b8a82043480f7260a12ea35170b596cf35a2d  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/fake/tk/tkernel.h
+1b4c6c715dfa5f68fac47d7cbe1c9511e28a8609716fd18dbafb350139290824  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/fake/tm/tmonitor.h
+049c4da6e921932c8eed50bdc0ea858f9bd9fd1e59c9cb801402ccb872db4cbd  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/fake/bsp/libbsp.h
+73d4753fe899e180165d44a1fe4f23eb2763379f7d189de6483b3feb308665a0  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/build_make/makefile
+79175e01c2aeced45febbb6bd4c42e1ec0caa958141d664c664f346ab55fbe05  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/build_make/pico_rp2040.mk
++ make -s -j8
+Build profile is now smp1-usb_cdc-wificyw43-netnone-mqtt0-crash0-test0-s4imu0; discarding objects built for another profile.
+Building file: ../lib/libtm/libtm.c
+Building file: ../lib/libtm/libtm_printf.c
+Building file: ../lib/libtk/fastlock.c
+Building file: ../lib/libtk/fastmlock.c
+Building file: ../lib/libtk/kmalloc.c
+Building file: ../kernel/usermain/usermain.c
+Building file: ../kernel/tstdlib/bitop.c
+Building file: ../kernel/tstdlib/string.c
+Finished building: ../kernel/tstdlib/bitop.c
+ 
+Building file: ../kernel/tkernel/cpuctl.c
+Finished building: ../kernel/usermain/usermain.c
+Finished building: ../lib/libtk/kmalloc.c
+ 
+ 
+Building file: ../kernel/tkernel/device.c
+Finished building: ../lib/libtk/fastlock.c
+Building file: ../kernel/tkernel/deviceio.c
+ 
+Finished building: ../lib/libtk/fastmlock.c
+Finished building: ../lib/libtm/libtm.c
+Building file: ../kernel/tkernel/eventflag.c
+ 
+ 
+Finished building: ../kernel/tstdlib/string.c
+Building file: ../kernel/tkernel/int.c
+Building file: ../kernel/tkernel/klock.c
+ 
+Building file: ../kernel/tkernel/mailbox.c
+Finished building: ../kernel/tkernel/int.c
+ 
+Finished building: ../kernel/tkernel/cpuctl.c
+Building file: ../kernel/tkernel/memory.c
+ 
+Building file: ../kernel/tkernel/mempfix.c
+Finished building: ../kernel/tkernel/klock.c
+ 
+Building file: ../kernel/tkernel/mempool.c
+Finished building: ../lib/libtm/libtm_printf.c
+Finished building: ../kernel/tkernel/mailbox.c
+ 
+ 
+Building file: ../kernel/tkernel/misc_calls.c
+Building file: ../kernel/tkernel/messagebuf.c
+Finished building: ../kernel/tkernel/eventflag.c
+Finished building: ../kernel/tkernel/device.c
+ 
+ 
+Building file: ../kernel/tkernel/mutex.c
+Building file: ../kernel/tkernel/objname.c
+Finished building: ../kernel/tkernel/misc_calls.c
+ 
+Building file: ../kernel/tkernel/power.c
+Finished building: ../kernel/tkernel/memory.c
+Finished building: ../kernel/tkernel/mempfix.c
+ 
+ 
+Building file: ../kernel/tkernel/rendezvous.c
+Building file: ../kernel/tkernel/semaphore.c
+Finished building: ../kernel/tkernel/objname.c
+ 
+Building file: ../kernel/tkernel/smp_lock.c
+Finished building: ../kernel/tkernel/deviceio.c
+Finished building: ../kernel/tkernel/power.c
+ 
+ 
+Building file: ../kernel/tkernel/smp_dispatch.c
+Building file: ../kernel/tkernel/ready_queue_smp.c
+Finished building: ../kernel/tkernel/mempool.c
+Finished building: ../kernel/tkernel/rendezvous.c
+ 
+ 
+Building file: ../kernel/tkernel/task.c
+Building file: ../kernel/tkernel/task_manage.c
+Finished building: ../kernel/tkernel/messagebuf.c
+ 
+Building file: ../kernel/tkernel/task_sync.c
+Finished building: ../kernel/tkernel/smp_lock.c
+ 
+Finished building: ../kernel/tkernel/mutex.c
+Building file: ../kernel/tkernel/time_calls.c
+ 
+Building file: ../kernel/tkernel/timer.c
+Finished building: ../kernel/tkernel/semaphore.c
+ 
+Building file: ../kernel/tkernel/tkinit.c
+Finished building: ../kernel/tkernel/smp_dispatch.c
+ 
+Building file: ../kernel/tkernel/wait.c
+Finished building: ../kernel/tkernel/tkinit.c
+ 
+Finished building: ../kernel/tkernel/timer.c
+Building file: ../kernel/sysinit/sysinit.c
+ 
+Building file: ../kernel/inittask/inittask.c
+Finished building: ../kernel/tkernel/ready_queue_smp.c
+ 
+Building file: ../device/common/drvif/msdrvif.c
+Finished building: ../kernel/tkernel/task.c
+Finished building: ../kernel/tkernel/task_sync.c
+ 
+ 
+Building file: ../device/adc/sysdepend/rp2040/adc_rp2040.c
+Building file: ../device/adc/adc.c
+Finished building: ../kernel/tkernel/task_manage.c
+ 
+Finished building: ../kernel/inittask/inittask.c
+Finished building: ../kernel/sysinit/sysinit.c
+ 
+ 
+Finished building: ../device/adc/adc.c
+Finished building: ../device/common/drvif/msdrvif.c
+ 
+ 
+Finished building: ../device/adc/sysdepend/rp2040/adc_rp2040.c
+Finished building: ../kernel/tkernel/wait.c
+Building file: ../device/i2c/i2c.c
+ 
+ 
+Building file: ../device/i2c/sysdepend/rp2040/i2c_rp2040.c
+Building file: ../device/ser/ser.c
+Building file: ../device/ser/sysdepend/rp2040/ser_rp2040.c
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_console.c
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_descriptors.c
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_sdk_compat.c
+Finished building: ../device/i2c/i2c.c
+ 
+Finished building: ../kernel/tkernel/time_calls.c
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_tinyusb_glue.c
+ 
+Finished building: ../device/i2c/sysdepend/rp2040/i2c_rp2040.c
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/tusb.c
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c
+Finished building: ../device/ser/sysdepend/rp2040/ser_rp2040.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_descriptors.c
+ 
+ 
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_console.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_sdk_compat.c
+Finished building: ../device/ser/ser.c
+ 
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd.c
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd_control.c
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_tinyusb_glue.c
+ 
+Building Wi-Fi port file: ../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/tusb.c
+ 
+Building Wi-Fi port file: ../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk_kernel.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd_control.c
+ 
+Building Wi-Fi port file: ../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk_compat.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd.c
+ 
+Building file: ../lib/libtm/sysdepend/pico_rp2040/tm_com.c
+Building file: ../lib/libtm/sysdepend/no_device/tm_com.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/tm_com.c
+ 
+Building file: ../lib/libtk/sysdepend/cpu/rp2040/int_rp2040.c
+Building file: ../lib/libtk/sysdepend/cpu/rp2040/ptimer_rp2040.c
+Finished building: ../lib/libtm/sysdepend/no_device/tm_com.c
+ 
+Building file: ../lib/libtk/sysdepend/cpu/core/armv6m/int_armv6m.c
+Finished building: ../lib/libtk/sysdepend/cpu/rp2040/ptimer_rp2040.c
+Finished building: ../lib/libtk/sysdepend/cpu/rp2040/int_rp2040.c
+ 
+ 
+Building file: ../lib/libtk/sysdepend/cpu/core/armv6m/wusec_armv6m.c
+Building file: ../lib/libbsp/sysdepend/cpu/rp2040/libbsp_pwm.c
+Building file: ../kernel/sysdepend/pico_rp2040/cpu_clock.c
+Finished building: ../lib/libtk/sysdepend/cpu/core/armv6m/int_armv6m.c
+Building file: ../kernel/sysdepend/pico_rp2040/devinit.c
+ 
+Building file: ../kernel/sysdepend/pico_rp2040/hw_setting.c
+Building file: ../kernel/sysdepend/pico_rp2040/power_save.c
+Finished building: ../lib/libtk/sysdepend/cpu/core/armv6m/wusec_armv6m.c
+ 
+Building file: ../kernel/sysdepend/cpu/rp2040/boot_2nd.c
+Finished building: ../kernel/sysdepend/pico_rp2040/cpu_clock.c
+Finished building: ../lib/libbsp/sysdepend/cpu/rp2040/libbsp_pwm.c
+ 
+ 
+Building file: ../kernel/sysdepend/cpu/rp2040/vector_tbl.c
+Building file: ../kernel/sysdepend/cpu/rp2040/smp_rp2040.c
+Building file: ../kernel/sysdepend/cpu/rp2040/smp_atomic.c
+Finished building: ../kernel/sysdepend/pico_rp2040/devinit.c
+ 
+Building file: ../kernel/sysdepend/cpu/core/armv6m/cpu_cntl.c
+Finished building: ../kernel/sysdepend/cpu/rp2040/boot_2nd.c
+Finished building: ../kernel/sysdepend/pico_rp2040/hw_setting.c
+ 
+ 
+Finished building: ../kernel/sysdepend/pico_rp2040/power_save.c
+Building file: ../kernel/sysdepend/cpu/core/armv6m/dispatch.S
+Building file: ../kernel/sysdepend/cpu/core/armv6m/exc_hdr.c
+ 
+Building file: ../kernel/sysdepend/cpu/core/armv6m/interrupt.c
+Finished building: ../kernel/sysdepend/cpu/rp2040/vector_tbl.c
+ 
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/dispatch.S
+Building file: ../kernel/sysdepend/cpu/core/armv6m/reset_hdl.c
+ 
+Building file: ../app_program/app_main.c
+Finished building: ../kernel/sysdepend/cpu/rp2040/smp_atomic.c
+ 
+Building file: ../app_program/subsystem1/s1_codec.c
+Building file: ../app_program/subsystem1/s1_led_legacy.c
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/cpu_cntl.c
+Finished building: ../kernel/sysdepend/cpu/rp2040/smp_rp2040.c
+ 
+ 
+Building file: ../app_program/subsystem1/s1_net.c
+Building file: ../app_program/subsystem1/s1_sim.c
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/exc_hdr.c
+ 
+Building file: ../app_program/subsystem1/subsystem1.c
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/interrupt.c
+ 
+Building file: ../app_program/subsystem1/subsystem1_test.c
+Finished building: ../app_program/app_main.c
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/reset_hdl.c
+ 
+ 
+Building file: ../app_program/subsystem1/task_led.c
+Building file: ../app_program/subsystem2/drv_encoder.c
+Finished building: ../app_program/subsystem1/s1_led_legacy.c
+ 
+Building file: ../app_program/subsystem2/drv_motor.c
+Finished building: ../app_program/subsystem1/subsystem1.c
+Finished building: ../app_program/subsystem1/subsystem1_test.c
+ 
+ 
+Finished building: ../app_program/subsystem1/s1_sim.c
+Building file: ../app_program/subsystem2/drv_rp2040.c
+Building file: ../app_program/subsystem2/enc_capture.c
+ 
+Building file: ../app_program/subsystem2/motion_bus.c
+Finished building: ../app_program/subsystem1/s1_net.c
+ 
+Building file: ../app_program/subsystem2/motion_config.c
+Finished building: ../app_program/subsystem1/task_led.c
+ 
+Building file: ../app_program/subsystem2/motion_estimator.c
+Finished building: ../app_program/subsystem2/drv_encoder.c
+ 
+Building file: ../app_program/subsystem2/motion_foundation_test.c
+Finished building: ../app_program/subsystem2/motion_bus.c
+Finished building: ../app_program/subsystem2/enc_capture.c
+ 
+ 
+Building file: ../app_program/subsystem2/motion_pid.c
+Finished building: ../app_program/subsystem2/motion_config.c
+Finished building: ../app_program/subsystem1/s1_codec.c
+Building file: ../app_program/subsystem2/motion_quad.c
+ 
+Finished building: ../app_program/subsystem2/motion_foundation_test.c
+ 
+ 
+Building file: ../app_program/subsystem2/motion_run.c
+Building file: ../app_program/subsystem2/move_plan.c
+Building file: ../app_program/subsystem2/subsystem2.c
+Finished building: ../app_program/subsystem2/drv_motor.c
+Finished building: ../app_program/subsystem2/drv_rp2040.c
+ 
+ 
+Building file: ../app_program/subsystem2/subsystem2_test.c
+Building file: ../app_program/subsystem2/task_motion.c
+Finished building: ../app_program/subsystem2/motion_quad.c
+ 
+Building file: ../app_program/subsystem2/task_producer.c
+Finished building: ../app_program/subsystem2/subsystem2.c
+ 
+Building file: ../app_program/subsystem2/test_drive.c
+Finished building: ../app_program/subsystem2/subsystem2_test.c
+Finished building: ../app_program/subsystem2/motion_estimator.c
+ 
+Building file: ../app_program/subsystem2/test_motor.c
+ 
+Building file: ../app_program/subsystem2/wheel_loop.c
+Finished building: ../app_program/subsystem2/test_drive.c
+Finished building: ../app_program/subsystem2/motion_pid.c
+ 
+ 
+Building file: ../app_program/subsystem3/drv_barcode.c
+Finished building: ../app_program/subsystem2/motion_run.c
+Building file: ../app_program/subsystem3/drv_ir_input.c
+ 
+Finished building: ../app_program/subsystem2/task_producer.c
+Finished building: ../app_program/subsystem2/test_motor.c
+Building file: ../app_program/subsystem3/drv_ir_rtos.c
+ 
+ 
+Building file: ../app_program/subsystem3/drv_junction.c
+Building file: ../app_program/subsystem3/drv_line_tracking.c
+Finished building: ../app_program/subsystem2/move_plan.c
+ 
+Building file: ../app_program/subsystem3/drv_navigation_map.c
+Finished building: ../app_program/subsystem3/drv_line_tracking.c
+ 
+Building file: ../app_program/subsystem3/member3_navigation.c
+Finished building: ../app_program/subsystem3/drv_ir_rtos.c
+ 
+Building file: ../app_program/subsystem3/subsystem3.c
+Finished building: ../app_program/subsystem3/drv_ir_input.c
+ 
+Finished building: ../app_program/subsystem3/drv_junction.c
+Building file: ../app_program/subsystem3/subsystem3_test.c
+ 
+Building file: ../app_program/subsystem3/task_consumer.c
+Finished building: ../app_program/subsystem3/drv_barcode.c
+ 
+Building file: ../app_program/subsystem4/drv_imu.c
+Finished building: ../app_program/subsystem3/drv_navigation_map.c
+ 
+Finished building: ../app_program/subsystem2/task_motion.c
+Building file: ../app_program/subsystem4/drv_lsm.c
+ 
+Finished building: ../app_program/subsystem3/subsystem3.c
+ 
+Building file: ../app_program/subsystem4/imu_core.c
+Building file: ../app_program/subsystem4/imu_runtime.c
+Finished building: ../app_program/subsystem2/wheel_loop.c
+ 
+Finished building: ../app_program/subsystem3/subsystem3_test.c
+ 
+Building file: ../app_program/subsystem4/subsystem4.c
+Building file: ../app_program/subsystem4/subsystem4_test.c
+Finished building: ../app_program/subsystem3/task_consumer.c
+ 
+Building file: ../app_program/subsystem4/task_monitor.c
+Finished building: ../app_program/subsystem4/subsystem4_test.c
+Finished building: ../app_program/subsystem4/drv_lsm.c
+ 
+ 
+Building file: ../app_program/subsystem5/subsystem5.c
+Building file: ../app_program/subsystem5/subsystem5_test.c
+Finished building: ../app_program/subsystem4/subsystem4.c
+ 
+Finished building: ../app_program/subsystem4/imu_runtime.c
+ 
+Finished building: ../app_program/subsystem4/drv_imu.c
+ 
+Finished building: ../app_program/subsystem5/subsystem5_test.c
+ 
+Finished building: ../app_program/subsystem4/task_monitor.c
+Finished building: ../app_program/subsystem5/subsystem5.c
+ 
+ 
+Finished building: ../app_program/subsystem3/member3_navigation.c
+ 
+Finished building: ../app_program/subsystem4/imu_core.c
+ 
+Linker: mtk3pico_smp1_usb_cdc_wifi.elf
+Finished building target: mtk3pico_smp1_usb_cdc_wifi.elf
+   text	   data	    bss	    dec	    hex	filename
+ 322756	     92	  30252	 353100	  5634c	mtk3pico_smp1_usb_cdc_wifi.elf
+ 
++ make -s TEST=1 -j8
+Build profile is now smp1-usb_cdc-wificyw43-netnone-mqtt0-crash0-test1-s4imu0; discarding objects built for another profile.
+Building file: ../lib/libtm/libtm.c
+Building file: ../lib/libtm/libtm_printf.c
+Building file: ../lib/libtk/fastlock.c
+Building file: ../lib/libtk/fastmlock.c
+Building file: ../lib/libtk/kmalloc.c
+Building file: ../kernel/usermain/usermain.c
+Building file: ../kernel/tstdlib/bitop.c
+Building file: ../kernel/tstdlib/string.c
+Finished building: ../lib/libtk/kmalloc.c
+ 
+Building file: ../kernel/tkernel/cpuctl.c
+Finished building: ../kernel/usermain/usermain.c
+Finished building: ../lib/libtk/fastlock.c
+Finished building: ../kernel/tstdlib/bitop.c
+ 
+ 
+Finished building: ../lib/libtk/fastmlock.c
+ 
+Building file: ../kernel/tkernel/device.c
+ 
+Finished building: ../lib/libtm/libtm.c
+Building file: ../kernel/tkernel/deviceio.c
+Building file: ../kernel/tkernel/eventflag.c
+Building file: ../kernel/tkernel/int.c
+ 
+Building file: ../kernel/tkernel/klock.c
+Finished building: ../kernel/tstdlib/string.c
+ 
+Building file: ../kernel/tkernel/mailbox.c
+Finished building: ../kernel/tkernel/int.c
+ 
+Building file: ../kernel/tkernel/memory.c
+Finished building: ../kernel/tkernel/cpuctl.c
+ 
+Building file: ../kernel/tkernel/mempfix.c
+Finished building: ../kernel/tkernel/klock.c
+ 
+Building file: ../kernel/tkernel/mempool.c
+Finished building: ../kernel/tkernel/device.c
+ 
+Finished building: ../kernel/tkernel/eventflag.c
+Building file: ../kernel/tkernel/messagebuf.c
+ 
+Finished building: ../lib/libtm/libtm_printf.c
+Building file: ../kernel/tkernel/misc_calls.c
+ 
+Building file: ../kernel/tkernel/mutex.c
+Finished building: ../kernel/tkernel/mailbox.c
+ 
+Building file: ../kernel/tkernel/objname.c
+Finished building: ../kernel/tkernel/memory.c
+ 
+Building file: ../kernel/tkernel/power.c
+Finished building: ../kernel/tkernel/misc_calls.c
+Finished building: ../kernel/tkernel/objname.c
+ 
+ 
+Building file: ../kernel/tkernel/semaphore.c
+Building file: ../kernel/tkernel/rendezvous.c
+Finished building: ../kernel/tkernel/mempfix.c
+ 
+Building file: ../kernel/tkernel/smp_lock.c
+Finished building: ../kernel/tkernel/mempool.c
+Finished building: ../kernel/tkernel/power.c
+ 
+ 
+Finished building: ../kernel/tkernel/rendezvous.c
+Building file: ../kernel/tkernel/smp_dispatch.c
+Building file: ../kernel/tkernel/ready_queue_smp.c
+ 
+Building file: ../kernel/tkernel/task.c
+Finished building: ../kernel/tkernel/deviceio.c
+ 
+Building file: ../kernel/tkernel/task_manage.c
+Finished building: ../kernel/tkernel/messagebuf.c
+ 
+Building file: ../kernel/tkernel/task_sync.c
+Finished building: ../kernel/tkernel/mutex.c
+ 
+Building file: ../kernel/tkernel/time_calls.c
+Finished building: ../kernel/tkernel/semaphore.c
+Finished building: ../kernel/tkernel/smp_dispatch.c
+ 
+ 
+Building file: ../kernel/tkernel/timer.c
+Building file: ../kernel/tkernel/tkinit.c
+Finished building: ../kernel/tkernel/smp_lock.c
+ 
+Building file: ../kernel/tkernel/wait.c
+Finished building: ../kernel/tkernel/tkinit.c
+ 
+Finished building: ../kernel/tkernel/task.c
+Finished building: ../kernel/tkernel/ready_queue_smp.c
+ 
+Building file: ../kernel/sysinit/sysinit.c
+Finished building: ../kernel/tkernel/task_sync.c
+ 
+ 
+Building file: ../kernel/inittask/inittask.c
+Building file: ../device/common/drvif/msdrvif.c
+Finished building: ../kernel/tkernel/timer.c
+Building file: ../device/adc/adc.c
+ 
+Building file: ../device/adc/sysdepend/rp2040/adc_rp2040.c
+Finished building: ../kernel/tkernel/task_manage.c
+Finished building: ../kernel/tkernel/wait.c
+ 
+ 
+Building file: ../device/i2c/i2c.c
+Building file: ../device/i2c/sysdepend/rp2040/i2c_rp2040.c
+Finished building: ../kernel/inittask/inittask.c
+ 
+Finished building: ../kernel/sysinit/sysinit.c
+Building file: ../device/ser/ser.c
+ 
+Building file: ../device/ser/sysdepend/rp2040/ser_rp2040.c
+Finished building: ../device/adc/sysdepend/rp2040/adc_rp2040.c
+ 
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_console.c
+Finished building: ../device/adc/adc.c
+Finished building: ../device/common/drvif/msdrvif.c
+ 
+ 
+Finished building: ../device/i2c/i2c.c
+Finished building: ../device/i2c/sysdepend/rp2040/i2c_rp2040.c
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_sdk_compat.c
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_descriptors.c
+ 
+ 
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_tinyusb_glue.c
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/tusb.c
+Finished building: ../device/ser/sysdepend/rp2040/ser_rp2040.c
+Finished building: ../kernel/tkernel/time_calls.c
+ 
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd.c
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_console.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_sdk_compat.c
+ 
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd_control.c
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_descriptors.c
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_tinyusb_glue.c
+Finished building: ../device/ser/ser.c
+ 
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c
+Building Wi-Fi port file: ../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd_control.c
+ 
+Building Wi-Fi port file: ../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk_kernel.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/tusb.c
+ 
+Building Wi-Fi port file: ../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk_compat.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd.c
+ 
+Building file: ../lib/libtm/sysdepend/pico_rp2040/tm_com.c
+Building file: ../lib/libtm/sysdepend/no_device/tm_com.c
+Building file: ../lib/libtk/sysdepend/cpu/rp2040/int_rp2040.c
+Finished building: ../lib/libtm/sysdepend/no_device/tm_com.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/tm_com.c
+ 
+ 
+Building file: ../lib/libtk/sysdepend/cpu/rp2040/ptimer_rp2040.c
+Building file: ../lib/libtk/sysdepend/cpu/core/armv6m/int_armv6m.c
+Finished building: ../lib/libtk/sysdepend/cpu/rp2040/int_rp2040.c
+ 
+Building file: ../lib/libtk/sysdepend/cpu/core/armv6m/wusec_armv6m.c
+Finished building: ../lib/libtk/sysdepend/cpu/rp2040/ptimer_rp2040.c
+ 
+Building file: ../kernel/sysdepend/pico_rp2040/cpu_clock.c
+Building file: ../lib/libbsp/sysdepend/cpu/rp2040/libbsp_pwm.c
+Finished building: ../lib/libtk/sysdepend/cpu/core/armv6m/int_armv6m.c
+Building file: ../kernel/sysdepend/pico_rp2040/devinit.c
+ 
+Building file: ../kernel/sysdepend/pico_rp2040/hw_setting.c
+Building file: ../kernel/sysdepend/pico_rp2040/power_save.c
+Building file: ../kernel/sysdepend/cpu/rp2040/boot_2nd.c
+Finished building: ../kernel/sysdepend/pico_rp2040/devinit.c
+ 
+Building file: ../kernel/sysdepend/cpu/rp2040/vector_tbl.c
+Finished building: ../lib/libtk/sysdepend/cpu/core/armv6m/wusec_armv6m.c
+Finished building: ../kernel/sysdepend/pico_rp2040/cpu_clock.c
+ 
+ 
+Finished building: ../lib/libbsp/sysdepend/cpu/rp2040/libbsp_pwm.c
+Building file: ../kernel/sysdepend/cpu/rp2040/smp_rp2040.c
+ 
+Finished building: ../kernel/sysdepend/pico_rp2040/hw_setting.c
+Building file: ../kernel/sysdepend/cpu/rp2040/smp_atomic.c
+Building file: ../kernel/sysdepend/cpu/core/armv6m/cpu_cntl.c
+ 
+Building file: ../kernel/sysdepend/cpu/core/armv6m/dispatch.S
+Finished building: ../kernel/sysdepend/cpu/rp2040/boot_2nd.c
+ 
+Building file: ../kernel/sysdepend/cpu/core/armv6m/exc_hdr.c
+Finished building: ../kernel/sysdepend/pico_rp2040/power_save.c
+ 
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/dispatch.S
+Finished building: ../kernel/sysdepend/cpu/rp2040/vector_tbl.c
+Building file: ../kernel/sysdepend/cpu/core/armv6m/interrupt.c
+ 
+ 
+Building file: ../kernel/sysdepend/cpu/core/armv6m/reset_hdl.c
+Building file: ../app_program/app_main.c
+Finished building: ../kernel/sysdepend/cpu/rp2040/smp_atomic.c
+ 
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/cpu_cntl.c
+ 
+Building file: ../app_program/subsystem1/s1_codec.c
+Building file: ../app_program/subsystem1/s1_led_legacy.c
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/exc_hdr.c
+ 
+Building file: ../app_program/subsystem1/s1_net.c
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/interrupt.c
+ 
+Building file: ../app_program/subsystem1/s1_sim.c
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/reset_hdl.c
+Finished building: ../kernel/sysdepend/cpu/rp2040/smp_rp2040.c
+ 
+ 
+Finished building: ../app_program/app_main.c
+Building file: ../app_program/subsystem1/subsystem1.c
+Building file: ../app_program/subsystem1/subsystem1_test.c
+ 
+Building file: ../app_program/subsystem1/task_led.c
+Finished building: ../app_program/subsystem1/s1_led_legacy.c
+ 
+Building file: ../app_program/subsystem2/drv_encoder.c
+Finished building: ../app_program/subsystem1/subsystem1.c
+ 
+Building file: ../app_program/subsystem2/drv_motor.c
+Finished building: ../app_program/subsystem1/s1_sim.c
+ 
+Building file: ../app_program/subsystem2/drv_rp2040.c
+Finished building: ../app_program/subsystem1/s1_net.c
+Finished building: ../app_program/subsystem1/task_led.c
+ 
+ 
+Building file: ../app_program/subsystem2/enc_capture.c
+Building file: ../app_program/subsystem2/motion_bus.c
+Building file: ../app_program/subsystem2/motion_config.c
+Finished building: ../app_program/subsystem2/drv_encoder.c
+ 
+Building file: ../app_program/subsystem2/motion_estimator.c
+Finished building: ../app_program/subsystem1/s1_codec.c
+ 
+Building file: ../app_program/subsystem2/motion_foundation_test.c
+Finished building: ../app_program/subsystem2/motion_config.c
+ 
+Finished building: ../app_program/subsystem2/motion_bus.c
+Building file: ../app_program/subsystem2/motion_pid.c
+Finished building: ../app_program/subsystem1/subsystem1_test.c
+ 
+ 
+Finished building: ../app_program/subsystem2/enc_capture.c
+Building file: ../app_program/subsystem2/motion_quad.c
+Building file: ../app_program/subsystem2/motion_run.c
+ 
+Building file: ../app_program/subsystem2/move_plan.c
+Finished building: ../app_program/subsystem2/drv_rp2040.c
+ 
+Building file: ../app_program/subsystem2/subsystem2.c
+Finished building: ../app_program/subsystem2/drv_motor.c
+ 
+Building file: ../app_program/subsystem2/subsystem2_test.c
+Finished building: ../app_program/subsystem2/motion_quad.c
+ 
+Building file: ../app_program/subsystem2/task_motion.c
+Finished building: ../app_program/subsystem2/subsystem2.c
+ 
+Building file: ../app_program/subsystem2/task_producer.c
+Finished building: ../app_program/subsystem2/motion_estimator.c
+ 
+Building file: ../app_program/subsystem2/test_drive.c
+Finished building: ../app_program/subsystem2/motion_pid.c
+ 
+Building file: ../app_program/subsystem2/test_motor.c
+Finished building: ../app_program/subsystem2/motion_run.c
+ 
+Building file: ../app_program/subsystem2/wheel_loop.c
+Finished building: ../app_program/subsystem2/move_plan.c
+Finished building: ../app_program/subsystem2/task_producer.c
+ 
+ 
+Building file: ../app_program/subsystem3/drv_barcode.c
+Building file: ../app_program/subsystem3/drv_ir_input.c
+Finished building: ../app_program/subsystem2/subsystem2_test.c
+ 
+Building file: ../app_program/subsystem3/drv_ir_rtos.c
+Finished building: ../app_program/subsystem3/drv_ir_input.c
+ 
+Building file: ../app_program/subsystem3/drv_junction.c
+Finished building: ../app_program/subsystem3/drv_ir_rtos.c
+ 
+Building file: ../app_program/subsystem3/drv_line_tracking.c
+Finished building: ../app_program/subsystem3/drv_barcode.c
+ 
+Building file: ../app_program/subsystem3/drv_navigation_map.c
+Finished building: ../app_program/subsystem2/task_motion.c
+ 
+Building file: ../app_program/subsystem3/member3_navigation.c
+Finished building: ../app_program/subsystem3/drv_line_tracking.c
+Finished building: ../app_program/subsystem3/drv_junction.c
+ 
+ 
+Building file: ../app_program/subsystem3/subsystem3.c
+Building file: ../app_program/subsystem3/subsystem3_test.c
+Finished building: ../app_program/subsystem2/wheel_loop.c
+ 
+Finished building: ../app_program/subsystem3/drv_navigation_map.c
+Building file: ../app_program/subsystem3/task_consumer.c
+ 
+Building file: ../app_program/subsystem4/drv_imu.c
+Finished building: ../app_program/subsystem3/subsystem3_test.c
+ 
+Finished building: ../app_program/subsystem3/subsystem3.c
+Building file: ../app_program/subsystem4/drv_lsm.c
+ 
+Building file: ../app_program/subsystem4/imu_core.c
+Finished building: ../app_program/subsystem3/task_consumer.c
+ 
+Building file: ../app_program/subsystem4/imu_runtime.c
+Finished building: ../app_program/subsystem2/test_motor.c
+Finished building: ../app_program/subsystem4/drv_lsm.c
+ 
+ 
+Building file: ../app_program/subsystem4/subsystem4.c
+Building file: ../app_program/subsystem4/subsystem4_test.c
+Finished building: ../app_program/subsystem4/drv_imu.c
+Finished building: ../app_program/subsystem3/member3_navigation.c
+ 
+Building file: ../app_program/subsystem4/task_monitor.c
+ 
+Building file: ../app_program/subsystem5/subsystem5.c
+Finished building: ../app_program/subsystem4/imu_runtime.c
+Finished building: ../app_program/subsystem4/subsystem4_test.c
+ 
+ 
+Building file: ../app_program/subsystem5/subsystem5_test.c
+Finished building: ../app_program/subsystem4/subsystem4.c
+ 
+Finished building: ../app_program/subsystem5/subsystem5.c
+ 
+Finished building: ../app_program/subsystem4/imu_core.c
+ 
+Finished building: ../app_program/subsystem4/task_monitor.c
+ 
+Finished building: ../app_program/subsystem5/subsystem5_test.c
+ 
+Finished building: ../app_program/subsystem2/test_drive.c
+ 
+Finished building: ../app_program/subsystem2/motion_foundation_test.c
+ 
+Linker: mtk3pico_smp1_usb_cdc_wifi_test.elf
+Finished building target: mtk3pico_smp1_usb_cdc_wifi_test.elf
+   text	   data	    bss	    dec	    hex	filename
+ 392236	    608	  39300	 432144	  69810	mtk3pico_smp1_usb_cdc_wifi_test.elf
+ 
++ make -s S4_IMU=1 -j8
+Build profile is now smp1-usb_cdc-wificyw43-netnone-mqtt0-crash0-test0-s4imu1; discarding objects built for another profile.
+Building file: ../lib/libtm/libtm.c
+Building file: ../lib/libtm/libtm_printf.c
+Building file: ../lib/libtk/fastlock.c
+Building file: ../lib/libtk/fastmlock.c
+Building file: ../kernel/usermain/usermain.c
+Building file: ../lib/libtk/kmalloc.c
+Building file: ../kernel/tstdlib/bitop.c
+Building file: ../kernel/tstdlib/string.c
+Finished building: ../kernel/tstdlib/bitop.c
+Finished building: ../lib/libtk/kmalloc.c
+ 
+ 
+Building file: ../kernel/tkernel/cpuctl.c
+Building file: ../kernel/tkernel/device.c
+Finished building: ../kernel/usermain/usermain.c
+ 
+Building file: ../kernel/tkernel/deviceio.c
+Finished building: ../lib/libtk/fastlock.c
+ 
+Finished building: ../lib/libtm/libtm.c
+Finished building: ../lib/libtk/fastmlock.c
+Building file: ../kernel/tkernel/eventflag.c
+ 
+ 
+Building file: ../kernel/tkernel/klock.c
+Building file: ../kernel/tkernel/int.c
+Finished building: ../kernel/tstdlib/string.c
+ 
+Building file: ../kernel/tkernel/mailbox.c
+Finished building: ../kernel/tkernel/int.c
+ 
+Building file: ../kernel/tkernel/memory.c
+Finished building: ../kernel/tkernel/cpuctl.c
+ 
+Building file: ../kernel/tkernel/mempfix.c
+Finished building: ../kernel/tkernel/klock.c
+ 
+Building file: ../kernel/tkernel/mempool.c
+Finished building: ../kernel/tkernel/eventflag.c
+ 
+Finished building: ../lib/libtm/libtm_printf.c
+Building file: ../kernel/tkernel/messagebuf.c
+ 
+Building file: ../kernel/tkernel/misc_calls.c
+Finished building: ../kernel/tkernel/mailbox.c
+Finished building: ../kernel/tkernel/device.c
+ 
+ 
+Building file: ../kernel/tkernel/mutex.c
+Building file: ../kernel/tkernel/objname.c
+Finished building: ../kernel/tkernel/memory.c
+ 
+Building file: ../kernel/tkernel/power.c
+Finished building: ../kernel/tkernel/objname.c
+ 
+Building file: ../kernel/tkernel/rendezvous.c
+Finished building: ../kernel/tkernel/misc_calls.c
+ 
+Building file: ../kernel/tkernel/semaphore.c
+Finished building: ../kernel/tkernel/mempfix.c
+ 
+Building file: ../kernel/tkernel/smp_lock.c
+Finished building: ../kernel/tkernel/power.c
+ 
+Building file: ../kernel/tkernel/smp_dispatch.c
+Finished building: ../kernel/tkernel/deviceio.c
+ 
+Building file: ../kernel/tkernel/ready_queue_smp.c
+Finished building: ../kernel/tkernel/rendezvous.c
+ 
+Building file: ../kernel/tkernel/task.c
+Finished building: ../kernel/tkernel/mempool.c
+ 
+Building file: ../kernel/tkernel/task_manage.c
+Finished building: ../kernel/tkernel/messagebuf.c
+ 
+Building file: ../kernel/tkernel/task_sync.c
+Finished building: ../kernel/tkernel/mutex.c
+ 
+Finished building: ../kernel/tkernel/semaphore.c
+Finished building: ../kernel/tkernel/smp_dispatch.c
+ 
+Building file: ../kernel/tkernel/time_calls.c
+ 
+Finished building: ../kernel/tkernel/smp_lock.c
+Building file: ../kernel/tkernel/timer.c
+Building file: ../kernel/tkernel/tkinit.c
+ 
+Building file: ../kernel/tkernel/wait.c
+Finished building: ../kernel/tkernel/ready_queue_smp.c
+Finished building: ../kernel/tkernel/task.c
+ 
+ 
+Building file: ../kernel/sysinit/sysinit.c
+Finished building: ../kernel/tkernel/tkinit.c
+ 
+Building file: ../kernel/inittask/inittask.c
+Building file: ../device/common/drvif/msdrvif.c
+Finished building: ../kernel/tkernel/timer.c
+ 
+Finished building: ../kernel/tkernel/task_sync.c
+Building file: ../device/adc/adc.c
+ 
+Building file: ../device/adc/sysdepend/rp2040/adc_rp2040.c
+Finished building: ../kernel/tkernel/wait.c
+ 
+Finished building: ../kernel/inittask/inittask.c
+Finished building: ../kernel/tkernel/task_manage.c
+Building file: ../device/i2c/i2c.c
+ 
+Finished building: ../kernel/sysinit/sysinit.c
+ 
+Building file: ../device/i2c/sysdepend/rp2040/i2c_rp2040.c
+ 
+Building file: ../device/ser/ser.c
+Building file: ../device/ser/sysdepend/rp2040/ser_rp2040.c
+Finished building: ../device/common/drvif/msdrvif.c
+ 
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_console.c
+Finished building: ../device/i2c/i2c.c
+Finished building: ../device/i2c/sysdepend/rp2040/i2c_rp2040.c
+ 
+ 
+Finished building: ../device/adc/sysdepend/rp2040/adc_rp2040.c
+Finished building: ../device/adc/adc.c
+ 
+ 
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_descriptors.c
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_tinyusb_glue.c
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_sdk_compat.c
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/tusb.c
+Finished building: ../device/ser/sysdepend/rp2040/ser_rp2040.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_console.c
+ 
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd.c
+Finished building: ../device/ser/ser.c
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd_control.c
+Finished building: ../kernel/tkernel/time_calls.c
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_sdk_compat.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_descriptors.c
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_tinyusb_glue.c
+ 
+Building Wi-Fi port file: ../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd_control.c
+ 
+Building Wi-Fi port file: ../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk_kernel.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/tusb.c
+ 
+Building Wi-Fi port file: ../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk_compat.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c
+ 
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd.c
+ 
+Building file: ../lib/libtm/sysdepend/pico_rp2040/tm_com.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/tm_com.c
+ 
+Building file: ../lib/libtm/sysdepend/no_device/tm_com.c
+Building file: ../lib/libtk/sysdepend/cpu/rp2040/int_rp2040.c
+Building file: ../lib/libtk/sysdepend/cpu/rp2040/ptimer_rp2040.c
+Finished building: ../lib/libtk/sysdepend/cpu/rp2040/ptimer_rp2040.c
+Finished building: ../lib/libtm/sysdepend/no_device/tm_com.c
+ 
+Finished building: ../lib/libtk/sysdepend/cpu/rp2040/int_rp2040.c
+ 
+Building file: ../lib/libtk/sysdepend/cpu/core/armv6m/int_armv6m.c
+ 
+Building file: ../lib/libtk/sysdepend/cpu/core/armv6m/wusec_armv6m.c
+Building file: ../lib/libbsp/sysdepend/cpu/rp2040/libbsp_pwm.c
+Building file: ../kernel/sysdepend/pico_rp2040/cpu_clock.c
+Building file: ../kernel/sysdepend/pico_rp2040/devinit.c
+Finished building: ../lib/libtk/sysdepend/cpu/core/armv6m/int_armv6m.c
+ 
+Building file: ../kernel/sysdepend/pico_rp2040/hw_setting.c
+Finished building: ../lib/libbsp/sysdepend/cpu/rp2040/libbsp_pwm.c
+Building file: ../kernel/sysdepend/pico_rp2040/power_save.c
+ 
+Building file: ../kernel/sysdepend/cpu/rp2040/boot_2nd.c
+Finished building: ../lib/libtk/sysdepend/cpu/core/armv6m/wusec_armv6m.c
+ 
+Building file: ../kernel/sysdepend/cpu/rp2040/vector_tbl.c
+Building file: ../kernel/sysdepend/cpu/rp2040/smp_rp2040.c
+Finished building: ../kernel/sysdepend/pico_rp2040/devinit.c
+Finished building: ../kernel/sysdepend/pico_rp2040/cpu_clock.c
+ 
+ 
+Building file: ../kernel/sysdepend/cpu/rp2040/smp_atomic.c
+Building file: ../kernel/sysdepend/cpu/core/armv6m/cpu_cntl.c
+Finished building: ../kernel/sysdepend/cpu/rp2040/boot_2nd.c
+ 
+Building file: ../kernel/sysdepend/cpu/core/armv6m/dispatch.S
+Finished building: ../kernel/sysdepend/pico_rp2040/hw_setting.c
+ 
+Finished building: ../kernel/sysdepend/pico_rp2040/power_save.c
+ 
+Building file: ../kernel/sysdepend/cpu/core/armv6m/exc_hdr.c
+Building file: ../kernel/sysdepend/cpu/core/armv6m/interrupt.c
+Finished building: ../kernel/sysdepend/cpu/rp2040/vector_tbl.c
+ 
+Building file: ../kernel/sysdepend/cpu/core/armv6m/reset_hdl.c
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/dispatch.S
+ 
+Building file: ../app_program/app_main.c
+Finished building: ../kernel/sysdepend/cpu/rp2040/smp_atomic.c
+ 
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/cpu_cntl.c
+ 
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/exc_hdr.c
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/interrupt.c
+ 
+Finished building: ../kernel/sysdepend/cpu/rp2040/smp_rp2040.c
+Building file: ../app_program/subsystem1/s1_codec.c
+ 
+ 
+Building file: ../app_program/subsystem1/s1_led_legacy.c
+Building file: ../app_program/subsystem1/s1_net.c
+Building file: ../app_program/subsystem1/s1_sim.c
+Building file: ../app_program/subsystem1/subsystem1.c
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/reset_hdl.c
+ 
+Building file: ../app_program/subsystem1/subsystem1_test.c
+Finished building: ../app_program/app_main.c
+ 
+Building file: ../app_program/subsystem1/task_led.c
+Building file: ../app_program/subsystem2/drv_encoder.c
+Finished building: ../app_program/subsystem1/s1_led_legacy.c
+ 
+Finished building: ../app_program/subsystem1/subsystem1.c
+Building file: ../app_program/subsystem2/drv_motor.c
+ 
+Building file: ../app_program/subsystem2/drv_rp2040.c
+Finished building: ../app_program/subsystem1/s1_sim.c
+ 
+Finished building: ../app_program/subsystem1/subsystem1_test.c
+Building file: ../app_program/subsystem2/enc_capture.c
+ 
+Finished building: ../app_program/subsystem1/s1_net.c
+ 
+Building file: ../app_program/subsystem2/motion_bus.c
+Building file: ../app_program/subsystem2/motion_config.c
+Finished building: ../app_program/subsystem1/task_led.c
+ 
+Building file: ../app_program/subsystem2/motion_estimator.c
+Finished building: ../app_program/subsystem2/drv_encoder.c
+ 
+Building file: ../app_program/subsystem2/motion_foundation_test.c
+Finished building: ../app_program/subsystem2/motion_config.c
+ 
+Finished building: ../app_program/subsystem1/s1_codec.c
+ 
+Building file: ../app_program/subsystem2/motion_pid.c
+Finished building: ../app_program/subsystem2/enc_capture.c
+Building file: ../app_program/subsystem2/motion_quad.c
+ 
+Finished building: ../app_program/subsystem2/motion_bus.c
+ 
+Building file: ../app_program/subsystem2/motion_run.c
+Building file: ../app_program/subsystem2/move_plan.c
+Finished building: ../app_program/subsystem2/motion_foundation_test.c
+ 
+Building file: ../app_program/subsystem2/subsystem2.c
+Finished building: ../app_program/subsystem2/drv_rp2040.c
+ 
+Building file: ../app_program/subsystem2/subsystem2_test.c
+Finished building: ../app_program/subsystem2/drv_motor.c
+ 
+Building file: ../app_program/subsystem2/task_motion.c
+Finished building: ../app_program/subsystem2/motion_quad.c
+ 
+Building file: ../app_program/subsystem2/task_producer.c
+Finished building: ../app_program/subsystem2/subsystem2.c
+ 
+Building file: ../app_program/subsystem2/test_drive.c
+Finished building: ../app_program/subsystem2/motion_estimator.c
+Finished building: ../app_program/subsystem2/subsystem2_test.c
+ 
+ 
+Building file: ../app_program/subsystem2/test_motor.c
+Finished building: ../app_program/subsystem2/motion_pid.c
+Building file: ../app_program/subsystem2/wheel_loop.c
+ 
+Building file: ../app_program/subsystem3/drv_barcode.c
+Finished building: ../app_program/subsystem2/test_drive.c
+ 
+Building file: ../app_program/subsystem3/drv_ir_input.c
+Finished building: ../app_program/subsystem2/task_producer.c
+Finished building: ../app_program/subsystem2/test_motor.c
+ 
+ 
+Building file: ../app_program/subsystem3/drv_ir_rtos.c
+Building file: ../app_program/subsystem3/drv_junction.c
+Finished building: ../app_program/subsystem2/move_plan.c
+Finished building: ../app_program/subsystem2/motion_run.c
+ 
+ 
+Building file: ../app_program/subsystem3/drv_line_tracking.c
+Building file: ../app_program/subsystem3/drv_navigation_map.c
+Finished building: ../app_program/subsystem3/drv_ir_rtos.c
+ 
+Building file: ../app_program/subsystem3/member3_navigation.c
+Finished building: ../app_program/subsystem3/drv_junction.c
+ 
+Finished building: ../app_program/subsystem3/drv_ir_input.c
+ 
+Building file: ../app_program/subsystem3/subsystem3.c
+Finished building: ../app_program/subsystem3/drv_line_tracking.c
+Building file: ../app_program/subsystem3/subsystem3_test.c
+ 
+Finished building: ../app_program/subsystem3/drv_barcode.c
+ 
+Building file: ../app_program/subsystem3/task_consumer.c
+Building file: ../app_program/subsystem4/drv_imu.c
+Finished building: ../app_program/subsystem3/drv_navigation_map.c
+ 
+Building file: ../app_program/subsystem4/drv_lsm.c
+Finished building: ../app_program/subsystem2/task_motion.c
+ 
+Building file: ../app_program/subsystem4/imu_core.c
+Finished building: ../app_program/subsystem3/subsystem3.c
+Finished building: ../app_program/subsystem3/subsystem3_test.c
+ 
+ 
+Building file: ../app_program/subsystem4/imu_runtime.c
+Building file: ../app_program/subsystem4/subsystem4.c
+Finished building: ../app_program/subsystem2/wheel_loop.c
+ 
+Building file: ../app_program/subsystem4/subsystem4_test.c
+Finished building: ../app_program/subsystem3/task_consumer.c
+ 
+Building file: ../app_program/subsystem4/task_monitor.c
+Finished building: ../app_program/subsystem4/subsystem4_test.c
+ 
+Building file: ../app_program/subsystem5/subsystem5.c
+Finished building: ../app_program/subsystem4/subsystem4.c
+ 
+Finished building: ../app_program/subsystem4/drv_lsm.c
+Building file: ../app_program/subsystem5/subsystem5_test.c
+ 
+Finished building: ../app_program/subsystem4/drv_imu.c
+ 
+Finished building: ../app_program/subsystem5/subsystem5.c
+ 
+Finished building: ../app_program/subsystem4/task_monitor.c
+ 
+Finished building: ../app_program/subsystem5/subsystem5_test.c
+Finished building: ../app_program/subsystem4/imu_runtime.c
+ 
+ 
+Finished building: ../app_program/subsystem4/imu_core.c
+Finished building: ../app_program/subsystem3/member3_navigation.c
+ 
+ 
+Linker: mtk3pico_smp1_usb_cdc_wifi_imu.elf
+Finished building target: mtk3pico_smp1_usb_cdc_wifi_imu.elf
+   text	   data	    bss	    dec	    hex	filename
+ 334796	    624	  30580	 366000	  595b0	mtk3pico_smp1_usb_cdc_wifi_imu.elf
+ 
++ make -s TEST=1 S4_IMU=1 -j8
+Build profile is now smp1-usb_cdc-wificyw43-netnone-mqtt0-crash0-test1-s4imu1; discarding objects built for another profile.
+Building file: ../lib/libtm/libtm.c
+Building file: ../lib/libtm/libtm_printf.c
+Building file: ../lib/libtk/fastlock.c
+Building file: ../lib/libtk/fastmlock.c
+Building file: ../lib/libtk/kmalloc.c
+Building file: ../kernel/usermain/usermain.c
+Building file: ../kernel/tstdlib/bitop.c
+Building file: ../kernel/tstdlib/string.c
+Finished building: ../lib/libtk/kmalloc.c
+Finished building: ../kernel/usermain/usermain.c
+ 
+Finished building: ../lib/libtk/fastmlock.c
+ 
+ 
+Building file: ../kernel/tkernel/cpuctl.c
+Building file: ../kernel/tkernel/device.c
+Building file: ../kernel/tkernel/deviceio.c
+Finished building: ../kernel/tstdlib/bitop.c
+ 
+Finished building: ../lib/libtm/libtm.c
+Building file: ../kernel/tkernel/eventflag.c
+Finished building: ../lib/libtk/fastlock.c
+ 
+ 
+Building file: ../kernel/tkernel/int.c
+Building file: ../kernel/tkernel/klock.c
+Finished building: ../kernel/tstdlib/string.c
+ 
+Building file: ../kernel/tkernel/mailbox.c
+Finished building: ../kernel/tkernel/int.c
+ 
+Building file: ../kernel/tkernel/memory.c
+Finished building: ../kernel/tkernel/klock.c
+Finished building: ../kernel/tkernel/cpuctl.c
+ 
+ 
+Building file: ../kernel/tkernel/mempfix.c
+Building file: ../kernel/tkernel/mempool.c
+Finished building: ../lib/libtm/libtm_printf.c
+Finished building: ../kernel/tkernel/device.c
+ 
+Finished building: ../kernel/tkernel/eventflag.c
+ 
+Building file: ../kernel/tkernel/messagebuf.c
+ 
+Finished building: ../kernel/tkernel/mailbox.c
+Building file: ../kernel/tkernel/misc_calls.c
+ 
+Building file: ../kernel/tkernel/mutex.c
+Building file: ../kernel/tkernel/objname.c
+Finished building: ../kernel/tkernel/misc_calls.c
+ 
+Building file: ../kernel/tkernel/power.c
+Finished building: ../kernel/tkernel/objname.c
+Finished building: ../kernel/tkernel/memory.c
+ 
+ 
+Building file: ../kernel/tkernel/rendezvous.c
+Building file: ../kernel/tkernel/semaphore.c
+Finished building: ../kernel/tkernel/mempfix.c
+ 
+Building file: ../kernel/tkernel/smp_lock.c
+Finished building: ../kernel/tkernel/deviceio.c
+Finished building: ../kernel/tkernel/power.c
+ 
+ 
+Finished building: ../kernel/tkernel/rendezvous.c
+Building file: ../kernel/tkernel/smp_dispatch.c
+ 
+Building file: ../kernel/tkernel/ready_queue_smp.c
+Building file: ../kernel/tkernel/task.c
+Finished building: ../kernel/tkernel/mempool.c
+ 
+Building file: ../kernel/tkernel/task_manage.c
+Finished building: ../kernel/tkernel/mutex.c
+ 
+Finished building: ../kernel/tkernel/messagebuf.c
+Building file: ../kernel/tkernel/task_sync.c
+ 
+Building file: ../kernel/tkernel/time_calls.c
+Finished building: ../kernel/tkernel/semaphore.c
+ 
+Building file: ../kernel/tkernel/timer.c
+Finished building: ../kernel/tkernel/smp_dispatch.c
+Finished building: ../kernel/tkernel/smp_lock.c
+ 
+ 
+Building file: ../kernel/tkernel/tkinit.c
+Building file: ../kernel/tkernel/wait.c
+Finished building: ../kernel/tkernel/ready_queue_smp.c
+Finished building: ../kernel/tkernel/tkinit.c
+ 
+Building file: ../kernel/sysinit/sysinit.c
+ 
+Building file: ../kernel/inittask/inittask.c
+Finished building: ../kernel/tkernel/task.c
+ 
+Building file: ../device/common/drvif/msdrvif.c
+Finished building: ../kernel/tkernel/timer.c
+ 
+Building file: ../device/adc/adc.c
+Finished building: ../kernel/tkernel/task_sync.c
+Finished building: ../kernel/tkernel/task_manage.c
+ 
+ 
+Building file: ../device/adc/sysdepend/rp2040/adc_rp2040.c
+Building file: ../device/i2c/i2c.c
+Finished building: ../kernel/inittask/inittask.c
+Finished building: ../kernel/sysinit/sysinit.c
+ 
+ 
+Building file: ../device/i2c/sysdepend/rp2040/i2c_rp2040.c
+Building file: ../device/ser/ser.c
+Finished building: ../kernel/tkernel/wait.c
+ 
+Building file: ../device/ser/sysdepend/rp2040/ser_rp2040.c
+Finished building: ../device/common/drvif/msdrvif.c
+ 
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_console.c
+Finished building: ../device/i2c/i2c.c
+Finished building: ../device/i2c/sysdepend/rp2040/i2c_rp2040.c
+ 
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_descriptors.c
+ 
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_sdk_compat.c
+Finished building: ../device/adc/sysdepend/rp2040/adc_rp2040.c
+Finished building: ../device/adc/adc.c
+ 
+ 
+Building file: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_tinyusb_glue.c
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/tusb.c
+Finished building: ../kernel/tkernel/time_calls.c
+ 
+Finished building: ../device/ser/sysdepend/rp2040/ser_rp2040.c
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_descriptors.c
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd_control.c
+Finished building: ../device/ser/ser.c
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_console.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_sdk_compat.c
+ 
+ 
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c
+Building TinyUSB file: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/usb/usb_tinyusb_glue.c
+ 
+Building Wi-Fi port file: ../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd_control.c
+ 
+Building Wi-Fi port file: ../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk_kernel.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/tusb.c
+ 
+Building Wi-Fi port file: ../lib/libwifi/sysdepend/pico_rp2040/cyw43_utk_compat.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c
+ 
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c
+ 
+Finished building: /Users/eddy/pico/pico-sdk/lib/tinyusb/src/device/usbd.c
+ 
+Building file: ../lib/libtm/sysdepend/pico_rp2040/tm_com.c
+Building file: ../lib/libtm/sysdepend/no_device/tm_com.c
+Building file: ../lib/libtk/sysdepend/cpu/rp2040/int_rp2040.c
+Finished building: ../lib/libtm/sysdepend/pico_rp2040/tm_com.c
+ 
+Building file: ../lib/libtk/sysdepend/cpu/rp2040/ptimer_rp2040.c
+Finished building: ../lib/libtm/sysdepend/no_device/tm_com.c
+Finished building: ../lib/libtk/sysdepend/cpu/rp2040/int_rp2040.c
+ 
+ 
+Building file: ../lib/libtk/sysdepend/cpu/core/armv6m/wusec_armv6m.c
+Building file: ../lib/libtk/sysdepend/cpu/core/armv6m/int_armv6m.c
+Building file: ../lib/libbsp/sysdepend/cpu/rp2040/libbsp_pwm.c
+Finished building: ../lib/libtk/sysdepend/cpu/rp2040/ptimer_rp2040.c
+ 
+Finished building: ../lib/libtk/sysdepend/cpu/core/armv6m/int_armv6m.c
+Building file: ../kernel/sysdepend/pico_rp2040/cpu_clock.c
+Building file: ../kernel/sysdepend/pico_rp2040/devinit.c
+ 
+Building file: ../kernel/sysdepend/pico_rp2040/hw_setting.c
+Building file: ../kernel/sysdepend/pico_rp2040/power_save.c
+Building file: ../kernel/sysdepend/cpu/rp2040/boot_2nd.c
+Finished building: ../lib/libbsp/sysdepend/cpu/rp2040/libbsp_pwm.c
+ 
+Finished building: ../lib/libtk/sysdepend/cpu/core/armv6m/wusec_armv6m.c
+Building file: ../kernel/sysdepend/cpu/rp2040/vector_tbl.c
+ 
+Finished building: ../kernel/sysdepend/cpu/rp2040/boot_2nd.c
+Building file: ../kernel/sysdepend/cpu/rp2040/smp_rp2040.c
+Finished building: ../kernel/sysdepend/pico_rp2040/devinit.c
+ 
+ 
+Building file: ../kernel/sysdepend/cpu/rp2040/smp_atomic.c
+Building file: ../kernel/sysdepend/cpu/core/armv6m/cpu_cntl.c
+Finished building: ../kernel/sysdepend/pico_rp2040/hw_setting.c
+ 
+Finished building: ../kernel/sysdepend/pico_rp2040/power_save.c
+Building file: ../kernel/sysdepend/cpu/core/armv6m/dispatch.S
+ 
+Building file: ../kernel/sysdepend/cpu/core/armv6m/exc_hdr.c
+Finished building: ../kernel/sysdepend/pico_rp2040/cpu_clock.c
+ 
+Finished building: ../kernel/sysdepend/cpu/rp2040/vector_tbl.c
+ 
+Building file: ../kernel/sysdepend/cpu/core/armv6m/interrupt.c
+Building file: ../kernel/sysdepend/cpu/core/armv6m/reset_hdl.c
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/dispatch.S
+ 
+Building file: ../app_program/app_main.c
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/exc_hdr.c
+ 
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/cpu_cntl.c
+Building file: ../app_program/subsystem1/s1_codec.c
+ 
+Building file: ../app_program/subsystem1/s1_led_legacy.c
+Finished building: ../kernel/sysdepend/cpu/rp2040/smp_atomic.c
+ 
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/reset_hdl.c
+Building file: ../app_program/subsystem1/s1_net.c
+ 
+Finished building: ../kernel/sysdepend/cpu/core/armv6m/interrupt.c
+Building file: ../app_program/subsystem1/s1_sim.c
+Finished building: ../kernel/sysdepend/cpu/rp2040/smp_rp2040.c
+ 
+ 
+Building file: ../app_program/subsystem1/subsystem1.c
+Finished building: ../app_program/app_main.c
+Building file: ../app_program/subsystem1/subsystem1_test.c
+ 
+Building file: ../app_program/subsystem1/task_led.c
+Building file: ../app_program/subsystem2/drv_encoder.c
+Finished building: ../app_program/subsystem1/s1_led_legacy.c
+ 
+Building file: ../app_program/subsystem2/drv_motor.c
+Finished building: ../app_program/subsystem1/subsystem1.c
+ 
+Finished building: ../app_program/subsystem1/s1_sim.c
+Building file: ../app_program/subsystem2/drv_rp2040.c
+ 
+Finished building: ../app_program/subsystem1/task_led.c
+Building file: ../app_program/subsystem2/enc_capture.c
+ 
+Building file: ../app_program/subsystem2/motion_bus.c
+Finished building: ../app_program/subsystem2/drv_encoder.c
+ 
+Building file: ../app_program/subsystem2/motion_config.c
+Finished building: ../app_program/subsystem1/s1_net.c
+ 
+Building file: ../app_program/subsystem2/motion_estimator.c
+Finished building: ../app_program/subsystem1/s1_codec.c
+ 
+Building file: ../app_program/subsystem2/motion_foundation_test.c
+Finished building: ../app_program/subsystem2/enc_capture.c
+Finished building: ../app_program/subsystem2/motion_bus.c
+ 
+ 
+Building file: ../app_program/subsystem2/motion_pid.c
+Building file: ../app_program/subsystem2/motion_quad.c
+Finished building: ../app_program/subsystem2/motion_config.c
+ 
+Building file: ../app_program/subsystem2/motion_run.c
+Finished building: ../app_program/subsystem1/subsystem1_test.c
+ 
+Building file: ../app_program/subsystem2/move_plan.c
+Finished building: ../app_program/subsystem2/drv_motor.c
+ 
+Building file: ../app_program/subsystem2/subsystem2.c
+Finished building: ../app_program/subsystem2/drv_rp2040.c
+ 
+Building file: ../app_program/subsystem2/subsystem2_test.c
+Finished building: ../app_program/subsystem2/motion_quad.c
+ 
+Building file: ../app_program/subsystem2/task_motion.c
+Finished building: ../app_program/subsystem2/motion_estimator.c
+Finished building: ../app_program/subsystem2/motion_pid.c
+ 
+Finished building: ../app_program/subsystem2/subsystem2.c
+ 
+ 
+Building file: ../app_program/subsystem2/task_producer.c
+Building file: ../app_program/subsystem2/test_drive.c
+Building file: ../app_program/subsystem2/test_motor.c
+Finished building: ../app_program/subsystem2/motion_run.c
+ 
+Building file: ../app_program/subsystem2/wheel_loop.c
+Finished building: ../app_program/subsystem2/move_plan.c
+Finished building: ../app_program/subsystem2/task_producer.c
+ 
+Finished building: ../app_program/subsystem2/subsystem2_test.c
+ 
+Building file: ../app_program/subsystem3/drv_barcode.c
+ 
+Building file: ../app_program/subsystem3/drv_ir_rtos.c
+Building file: ../app_program/subsystem3/drv_ir_input.c
+Finished building: ../app_program/subsystem3/drv_ir_rtos.c
+ 
+Building file: ../app_program/subsystem3/drv_junction.c
+Finished building: ../app_program/subsystem3/drv_ir_input.c
+ 
+Building file: ../app_program/subsystem3/drv_line_tracking.c
+Finished building: ../app_program/subsystem3/drv_barcode.c
+ 
+Building file: ../app_program/subsystem3/drv_navigation_map.c
+Finished building: ../app_program/subsystem2/task_motion.c
+ 
+Building file: ../app_program/subsystem3/member3_navigation.c
+Finished building: ../app_program/subsystem2/wheel_loop.c
+Finished building: ../app_program/subsystem3/drv_line_tracking.c
+ 
+ 
+Building file: ../app_program/subsystem3/subsystem3.c
+Building file: ../app_program/subsystem3/subsystem3_test.c
+Finished building: ../app_program/subsystem3/drv_junction.c
+ 
+Building file: ../app_program/subsystem3/task_consumer.c
+Finished building: ../app_program/subsystem3/drv_navigation_map.c
+ 
+Building file: ../app_program/subsystem4/drv_imu.c
+Finished building: ../app_program/subsystem3/subsystem3.c
+Finished building: ../app_program/subsystem2/test_motor.c
+ 
+ 
+Building file: ../app_program/subsystem4/drv_lsm.c
+Finished building: ../app_program/subsystem3/subsystem3_test.c
+ 
+Building file: ../app_program/subsystem4/imu_core.c
+Finished building: ../app_program/subsystem3/task_consumer.c
+Building file: ../app_program/subsystem4/imu_runtime.c
+ 
+Building file: ../app_program/subsystem4/subsystem4.c
+Finished building: ../app_program/subsystem4/drv_lsm.c
+ 
+Finished building: ../app_program/subsystem4/subsystem4.c
+Building file: ../app_program/subsystem4/subsystem4_test.c
+ 
+Building file: ../app_program/subsystem4/task_monitor.c
+Finished building: ../app_program/subsystem3/member3_navigation.c
+ 
+Building file: ../app_program/subsystem5/subsystem5.c
+Finished building: ../app_program/subsystem4/imu_runtime.c
+ 
+Building file: ../app_program/subsystem5/subsystem5_test.c
+Finished building: ../app_program/subsystem4/subsystem4_test.c
+ 
+Finished building: ../app_program/subsystem5/subsystem5.c
+Finished building: ../app_program/subsystem4/drv_imu.c
+ 
+ 
+Finished building: ../app_program/subsystem4/task_monitor.c
+ 
+Finished building: ../app_program/subsystem5/subsystem5_test.c
+ 
+Finished building: ../app_program/subsystem4/imu_core.c
+ 
+Finished building: ../app_program/subsystem2/test_drive.c
+ 
+Finished building: ../app_program/subsystem2/motion_foundation_test.c
+ 
+Linker: mtk3pico_smp1_usb_cdc_wifi_test_imu.elf
+Finished building target: mtk3pico_smp1_usb_cdc_wifi_test_imu.elf
+   text	   data	    bss	    dec	    hex	filename
+ 394244	    624	  39312	 434180	  6a004	mtk3pico_smp1_usb_cdc_wifi_test_imu.elf
+ 
++ set +x
+88d72672cb5a8425e4ea05b0f97923b844c568a1e13ce1938cb8770f793dbefd  mtk3pico_smp1_usb_cdc_wifi.uf2
+3e0b00721132c386ce251a2d42e417c1fefaa206c474c72b85ff1501e5175125  mtk3pico_smp1_usb_cdc_wifi_imu.uf2
+1dd5bd6e8da37e62de10c960c961d610e8ef9ca0a878c8c77ee8200f2ac94acc  mtk3pico_smp1_usb_cdc_wifi_test.uf2
+bacb95a012c5dc096dfc2c59c3fff42b6ac56e2332fae60dd6982ae37dfacf73  mtk3pico_smp1_usb_cdc_wifi_test_imu.uf2
+Saved build evidence: /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/buddy4/logs/build.FCBUK8/console.txt
