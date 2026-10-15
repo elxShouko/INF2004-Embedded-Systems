@@ -1,52 +1,66 @@
-/*
- *	subsystem4.c
- *	Subsystem 4 -- Monitor: creates its objects and starts its task.
- *
- *	APIs shown: tk_cre_flg, tk_cre_mbf, tk_cre_alm
+/** @file subsystem4.c
+ * Template entry points: preserve monitor objects used by S3, then create
+ * Buddy 4 IMU objects. No subsystem task starts during initialization.
  */
-
 #include "subsystem4.h"
 
-EXPORT ID	mbf_summary;	/* IF-03 */
-EXPORT ID	flg_events;	/* IF-03 */
-EXPORT ID	alm_monitor;
+/* Published legacy object names are retained for interface compatibility. */
+EXPORT ID mbf_summary;
+EXPORT ID flg_events;
+EXPORT ID alm_monitor;
 
-EXPORT ER subsystem4_init(void)
+static ER g_init_result = E_OBJ;
+
+EXPORT ER subsystem4_init (void)
 {
-	T_CFLG	cflg = {0};
-	T_CMBF	cmbf = {0};
-	T_CALM	calm = {0};
+    T_CFLG flag = {0};
+    T_CMBF buffer = {0};
+    T_CALM alarm = {0};
 
-	/* Event flag: a 32-bit pattern of bits.  Tasks wait for a bit (or a
-	   combination of bits) to be set. */
-	cflg.flgatr  = TA_TFIFO | TA_WMUL;	/* allow several waiters */
-	cflg.iflgptn = 0;			/* all bits clear to begin with */
-	flg_events = tk_cre_flg(&cflg);
-	if (flg_events < E_OK) {
-		return flg_events;
-	}
-
-	/* Message buffer: COPIES variable-length data into a kernel ring
-	   buffer.  Here it carries short text lines from subsystem 3. */
-	cmbf.mbfatr = TA_TFIFO;
-	cmbf.bufsz  = 4 * S4_SUMMARY_MAX;	/* total buffer size, bytes */
-	cmbf.maxmsz = S4_SUMMARY_MAX;		/* largest single message */
-	mbf_summary = tk_cre_mbf(&cmbf);
-	if (mbf_summary < E_OK) {
-		return mbf_summary;
-	}
-
-	/* Alarm handler: called ONCE, a given time after tk_sta_alm().
-	   The monitor task re-arms it each time round its loop. */
-	calm.almatr = TA_HLNG;
-	calm.almhdr = (FP)monitor_alarm_handler;
-	alm_monitor = tk_cre_alm(&calm);
-	return (alm_monitor < E_OK) ? alm_monitor : E_OK;
+    flag.flgatr = TA_TFIFO | TA_WMUL;
+    flg_events = tk_cre_flg(&flag);
+    if (flg_events < E_OK)
+    {
+        return flg_events;
+    }
+    buffer.mbfatr = TA_TFIFO;
+    buffer.bufsz = 4 * S4_SUMMARY_MAX;
+    buffer.maxmsz = S4_SUMMARY_MAX;
+    mbf_summary = tk_cre_mbf(&buffer);
+    if (mbf_summary < E_OK)
+    {
+        return mbf_summary;
+    }
+    alarm.almatr = TA_HLNG;
+    /* The kernel represents all handler signatures with FP. */
+    alarm.almhdr = (FP)monitor_alarm_handler;
+    alm_monitor = tk_cre_alm(&alarm);
+    if (alm_monitor < E_OK)
+    {
+        return alm_monitor;
+    }
+    g_init_result = imu_runtime_init();
+    return g_init_result;
 }
 
-EXPORT ER subsystem4_start(void)
+EXPORT ER subsystem4_start (void)
 {
-	/* No affinity: the scheduler may run it on either core */
-	ID tid = app_start_task(monitor_task, S4_PRI_MONITOR, 0, "monitor_task");
-	return (tid < E_OK) ? tid : E_OK;
+    ER result = g_init_result;
+    ID task = 0;
+
+    if (E_OK != result)
+    {
+        return result;
+    }
+    result = imu_runtime_start();
+    if (E_OK != result)
+    {
+        return result;
+    }
+    /* Existing IF-03/04/05 demonstration remains separate from sensing. */
+    task = app_start_task(monitor_task, S4_PRI_MONITOR, 0, "monitor_task");
+    return (task < E_OK) ? task : E_OK;
 }
+
+/* End of file. */
+

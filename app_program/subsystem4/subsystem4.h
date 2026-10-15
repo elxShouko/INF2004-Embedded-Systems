@@ -1,6 +1,6 @@
 /*
  *	subsystem4.h
- *	Subsystem 4 -- Monitor (reporting).  Student ID: <student ID>.
+ *	Subsystem 4 -- IMU sensing and retained template monitor.
  *
  *	Public interface of subsystem 4.  Other subsystems include it as
  *	"../subsystem4/subsystem4.h".
@@ -10,6 +10,7 @@
 #define SUBSYSTEM4_H
 
 #include "../app.h"
+#include "imu_runtime.h"
 
 #define S4_PRI_MONITOR		18	/* priority band 18-19 (TEAM.md) */
 #define S4_ALARM_MS		2000	/* report anyway if nothing for 2 s */

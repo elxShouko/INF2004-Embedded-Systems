@@ -110,13 +110,25 @@ ifeq ($(CONSOLE)$(CRASH_REPORT),usb_cdc1)
 CRASH_SUFFIX := _crash
 endif
 
+# Opt-in Buddy 4 hardware profile; enabling is not wiring verification.
+S4_IMU ?= 0
+ifneq ($(filter $(S4_IMU),0 1),$(S4_IMU))
+$(error S4_IMU must be 0 or 1)
+endif
+ifeq ($(S4_IMU),1)
+ifneq ($(WIFI),cyw43)
+$(error S4_IMU=1 requires WIFI=cyw43 SDK compatibility hooks)
+endif
+S4_SUFFIX := _imu
+endif
+
 #
 # Images are named after the profile they were built with.  Every image is
 # flashed by hand from a downloads folder, so identically-named artifacts are
 # a live hazard: an SMP=1 build was once flashed in place of an SMP=0 one and
 # only the banner in the log revealed it.
 #
-EXE_FILE := mtk3pico_smp$(SMP)_$(CONSOLE)$(WIFI_SUFFIX)$(NET_SUFFIX)$(MQTT_SUFFIX)$(CRASH_SUFFIX)$(TEST_SUFFIX)
+EXE_FILE := mtk3pico_smp$(SMP)_$(CONSOLE)$(WIFI_SUFFIX)$(NET_SUFFIX)$(MQTT_SUFFIX)$(CRASH_SUFFIX)$(TEST_SUFFIX)$(S4_SUFFIX)
 
 GCC := arm-none-eabi-gcc
 AS := arm-none-eabi-gcc
@@ -209,7 +221,8 @@ endif
 # before any recipe executes.
 ################################################################################
 
-PROFILE_ID := smp$(SMP)-$(CONSOLE)-wifi$(WIFI)-net$(NET)-mqtt$(MQTT)-crash$(CRASH_REPORT)-test$(TEST)
+CFLAGS += -DS4_IMU_ENABLE=$(S4_IMU)
+PROFILE_ID := smp$(SMP)-$(CONSOLE)-wifi$(WIFI)-net$(NET)-mqtt$(MQTT)-crash$(CRASH_REPORT)-test$(TEST)-s4imu$(S4_IMU)
 PROFILE_FILE := .build_profile
 
 ifneq ($(strip $(shell cat $(PROFILE_FILE) 2>/dev/null)),$(PROFILE_ID))
@@ -353,6 +366,23 @@ LFLAGS += -Wl,--gc-sections
 
 OBJS += $(WIFI_LOCAL_OBJS) $(CYW43_OBJS)
 C_DEPS += $(WIFI_LOCAL_OBJS:.o=.d) $(CYW43_OBJS:.o=.d)
+
+# Buddy 4 application-owned I2C0; do not enable the kernel's GP8/GP9 I2C.
+# Uses the existing template clock/time SDK compatibility hooks.
+CFLAGS += -I"$(PICO_SDK_PATH)/src/rp2_common/hardware_i2c/include" \
+          -I"$(PICO_SDK_PATH)/src/common/pico_time/include"
+S4_SDK_OBJS := ./mtkernel_3/s4_sdk/i2c.o \
+               ./mtkernel_3/s4_sdk/timeout_helper.o
+OBJS += $(S4_SDK_OBJS)
+C_DEPS += $(S4_SDK_OBJS:.o=.d)
+
+mtkernel_3/s4_sdk/i2c.o: $(PICO_SDK_PATH)/src/rp2_common/hardware_i2c/i2c.c
+	@mkdir -p "$(@D)"
+	$(GCC) $(CFLAGS) -D$(TARGET) $(INCPATH) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
+
+mtkernel_3/s4_sdk/timeout_helper.o: $(PICO_SDK_PATH)/src/common/pico_time/timeout_helper.c
+	@mkdir -p "$(@D)"
+	$(GCC) $(CFLAGS) -D$(TARGET) $(INCPATH) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
 
 mtkernel_3/lib/libwifi/sysdepend/pico_rp2040/%.o: $(WIFIDIR)/%.c
 	@echo 'Building Wi-Fi port file: $<'
