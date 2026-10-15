@@ -1,0 +1,10 @@
+[TEST] S5-U02 PASS  coarse and fine angles are bounded and edge-clamped
+[TEST] S5-U03 PASS  profile reports nearest point, geometry, width and side ranges
+[TEST] S5-U04 PASS  normal plan uses the larger validated side range
+[TEST] S5-U05 PASS  close obstacle adds a reverse request before turning
+[TEST] S5-U06 PASS  no side meets the development range threshold
+[TEST] S5-U07 PASS  malformed scan is rejected and output is cleared
+[TEST] S5-U08 PASS  right-side bypass selects the corresponding turn sequence
+[TEST] S5-U09 PASS  too few valid fine readings cannot produce a profile
+[TEST] S5-U10 PASS  a profile that was not successfully built cannot create a plan
+[TEST] subsystem5 host failures: 0

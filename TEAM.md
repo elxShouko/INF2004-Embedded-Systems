@@ -21,7 +21,7 @@ subsystem, ask its owner or open a pull request for them to review.
 | 2 | *example:* Producer: makes a sample every 300 ms | | | `app_program/subsystem2/` | `testing/subsystem2/` |
 | 3 | IR line sensing, junction detection and barcode navigation; retained example consumer for compatibility | 2500734 | | `app_program/subsystem3/` | `tests/member3_*.c`, `testing/subsystem3/` |
 | 4 | *example:* Monitor: prints reports, pauses the LED | | | `app_program/subsystem4/` | `testing/subsystem4/` |
-| 5 | | | | `app_program/subsystem5/` | `testing/subsystem5/` |
+| 5 | Obstacle scan/profile calculations and avoidance planning (software-only; hardware integration pending) | | | `app_program/subsystem5/` | `testing/subsystem5/` |
 
 Shared files (`app_program/app_main.c`, `app_program/app.h`, this file)
 are changed only by agreement of the team. The exception is claiming an empty
@@ -75,6 +75,10 @@ fixed.
 | GP27 | S3 | Side IR barcode/junction sensor, digital DOUT |
 | GP28 | | (ADC2 capable) |
 
+**Buddy 5 pin placeholder:** no Buddy 5 GPIOs are currently claimed. Servo,
+TRIG, and ECHO assignments remain `TBD`; verify wiring and ECHO voltage, check
+pin ownership, and fill this table before connecting or enabling hardware.
+
 ## 3. Peripherals
 
 **Subsystems, tasks and peripherals are three different things:**
@@ -113,6 +117,10 @@ the drivers have no locking to stop it.
 | ADC | | | GP26–GP28 |
 | PWM slices (list) | | | |
 | WiFi radio, TCP/IP, MQTT | *kernel* | `cyw43_utk_task` (built in) | GP23–25, GP29 |
+
+Buddy 5 has no peripheral or owning task reserved yet. In particular, servo
+PWM ownership/slice and the ultrasonic GPIO owner remain `TBD`; resolve them
+with the pin claims before adding drivers.
 
 ### WiFi and MQTT are special
 
@@ -153,6 +161,8 @@ change it only by team agreement. Write down every task you create.
 | 5 | 20–21 | |
 
 Core: `TP_PRC1` = core 0, `TP_PRC2` = core 1, or "any".
+The Buddy 5 priority band is available, not an assignment of task names,
+periods, affinity, or startup behavior; these remain `TBD`.
 
 ## 5. Interfaces between subsystems
 
@@ -168,6 +178,12 @@ sends to it or waits on it. Agree on the data format before coding.
 | IF-04 | S4 → S3 | shared data under a mutex (owned by S3) | `app_stats`, `mtx_stats` | `APP_STATS`, read only while locked | *example* |
 | IF-05 | S4 → S1 | task control | `tid_led` | `tk_sus_tsk` / `tk_rsm_tsk` / `tk_chg_pri` | *example* |
 | IF-06 | | | | | |
+
+No Buddy 5 interface is agreed or registered yet. Stop/fault, motion,
+line-reacquisition, and optional telemetry contracts are placeholders only;
+record agreed provider, consumer, mechanism, object, data/lifetime, errors,
+and acknowledgement semantics here before implementing cross-subsystem calls.
+See [Buddy 5 unresolved integration placeholders](docs/buddy5/OBSTACLE_SYSTEM.md#unresolved-integration-placeholders).
 
 Each interface is tested by at least one integration test
 (`testing/integration/TEST_LOG.md`).
@@ -189,5 +205,8 @@ limit there. The numbers below are the example's usage.
 | Variable memory pool | 12 | | | | | |
 | Cyclic handler | 12 | 1 | | | | |
 | Alarm handler | 12 | | | | 1 | |
+
+Buddy 5 currently allocates no kernel objects; its future demand remains
+`TBD` and must be reviewed before task or interface implementation.
 
 (The kernel's USB and WiFi service tasks also use a few of these.)

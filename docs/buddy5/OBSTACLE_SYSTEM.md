@@ -1,31 +1,67 @@
-# INF2004 Embedded Systems
+# Buddy 5 obstacle subsystem — status and design notes
 
 ## Buddy 5 - Adaptive Ultrasonic Scanning and Obstacle Profiling
 
-This branch contains the current implementation of the Buddy 5 obstacle detection, profiling, avoidance-planning and recovery subsystem.
-
-Current development branch:
-
-`buddy5-obstacle`
+This file describes the earlier standalone Pico SDK Buddy 5 demo. It is
+separate from the integrated micro T-Kernel firmware under
+`app_program/subsystem5/`; the root Make build does not compile the standalone
+files in `src/` and `include/`.
 
 ---
 
 ## Current Status
 
-**Buddy 5 core software implementation is completed and compiling successfully.**
+**Buddy 5 is not yet operational in the integrated firmware.** The integrated
+folder currently contains a host-testable scan/profile/planning calculation
+module only. Its RTOS task startup reports `E_NOSPT` until hardware and team
+interfaces are confirmed and implemented.
 
-The subsystem is ready for:
+The standalone demo remains unverified: its servo GPIO is intentionally set
+to 255, its callbacks simulate stop/bypass/line-found notifications, and it
+does not execute actual vehicle motion. Neither that demo nor the current
+host-only logic proves physical sensing, safe bypass, or line reacquisition.
 
-- hardware validation
-- calibration
-- µT-Kernel task integration
-- integration with the Mission Controller and other buddies
+The integrated `subsystem5_start()` currently returns `E_NOSPT`. The current
+`usermain()` reports subsystem start errors and then continues startup, so
+this placeholder is not a system-wide fail-safe or a vehicle stop mechanism.
 
-The remaining work depends mainly on hardware confirmation and team integration.
+The sections below describe the legacy standalone design unless explicitly
+identified as integrated status. State names, callbacks, task names, and
+telemetry listed there are not implemented public interfaces in the current
+µT-Kernel subsystem.
+
+## Unresolved integration placeholders
+
+These placeholders make missing information visible without assigning
+unverified hardware or inventing team agreements. `TBD` means unresolved and
+must not be interpreted as a default, pin reservation, calibration value, or
+approved interface.
+
+| Item | Placeholder / current status | Required before implementation or vehicle use |
+|---|---|---|
+| Sensor and servo models | `TBD — exact part numbers not confirmed` | Record manufacturer and model; check datasheets and operating limits |
+| Servo signal pin | `TBD — no GPIO claimed` | Confirm physical wiring, check TEAM.md pin ownership, claim before coding |
+| Ultrasonic TRIG pin | `TBD — no GPIO claimed` | Confirm module wiring and claim an unowned pin |
+| Ultrasonic ECHO pin and voltage | `TBD — no GPIO claimed; output level not verified` | Verify worst-case ECHO voltage and required level shifting before RP2040 connection |
+| Sensor/servo power and ground | `TBD — not verified` | Confirm supply voltage/current, common ground, and Robo Pico power constraints |
+| PWM resource / owner task | `TBD — no slice, channel, or task reserved` | Check pin-to-slice mapping and team PWM ownership; assign exactly one owning task |
+| Servo angle, pulse mapping, direction, settling time | `TBD — uncalibrated` | Measure on the assembled vehicle; define bounds and command-failure behavior |
+| Sensor filtering, detection and range limits | `TBD — development values only` | Calibrate against repeatable measurements; document invalid, timeout, and overflow handling |
+| Bypass clearance, reverse distance, turn targets | `TBD — heuristic values only` | Agree with Buddy 2/controller and validate against vehicle geometry and stopping tests |
+| Mission Controller stop/fault contract | `TBD — interface not agreed` | Define bounded, prioritized stop/fault delivery, acknowledgement, expiry, timeout, and recovery |
+| Buddy 2 motion contract | `TBD — interface not agreed` | Define request/status types, ownership, arbitration, cancellation, completion, and failure results |
+| Buddy 3 line-reacquisition contract | `TBD — interface not agreed` | Define request/event data, line-found/failure semantics, timeout, and ownership |
+| Buddy 1 telemetry contract | `TBD — optional interface not agreed` | Specify payload and provider/consumer; use only the approved kernel network-service path |
+| RTOS task structure and timing | `TBD — no Buddy 5 tasks implemented` | Agree task count, owners, priority/affinity, period/deadline, timeout, and overload behavior |
+| Kernel object budget | `TBD — currently no Buddy 5 objects allocated` | Reserve required objects in TEAM.md/config review before creating them |
+| Startup/error policy | `TBD — subsystem start returns E_NOSPT; usermain logs errors and continues` | Agree how the integrated vehicle is kept stopped or prevented from entering motion when any required subsystem fails |
+| Integrated target build | `TBD — not run` | Run documented `make TEST=1 -j8` profile with configured WSL, Arm toolchain, and Pico SDK |
+| On-target tests | `TBD — not run` | Build/flash only with authorization; record exact revision and test output |
+| Physical calibration and system validation | `TBD — not run` | Obtain wiring authorization; record conditions, measurements/errors, results, and evidence |
 
 ---
 
-## Implemented Features
+## Features in the legacy standalone code (not integrated or hardware-validated)
 
 ### Ultrasonic Distance Measurement
 
@@ -314,19 +350,18 @@ The actual µT-Kernel task wrappers are still pending because the project-specif
 
 ---
 
-## Current Hardware Configuration
+## Hardware assignments in the legacy source (unverified)
 
-Confirmed HC-SR04 connections:
+The legacy configuration contains provisional HC-SR04 pin values:
 
 - TRIG: GP26
 - ECHO: GP6
-- VCC: currently connected to 3V3
-- GND: GND
 
-Servo GPIO:
+The current wiring and ECHO voltage have not been confirmed. Do not connect
+the sensor to RP2040 GPIO until its output voltage is verified as safe.
 
-- Not yet confirmed
-- Currently intentionally configured as an invalid placeholder value to prevent accidental PWM output to the wrong GPIO
+Servo GPIO remains unconfirmed and is intentionally configured as the invalid
+placeholder value 255 in the legacy source.
 
 ---
 
@@ -382,21 +417,15 @@ Servo GPIO:
 
 ## Current Progress Summary
 
-The following Buddy 5 core software has been implemented:
+The integrated Buddy 5 calculation module generates bounded development scan
+angles, estimates an obstacle profile from supplied samples, and creates
+high-level bypass/recovery action plans. Host tests cover off-axis profiles
+centered on every coarse scan direction. Its scan orientation, thresholds,
+and range-based bypass heuristic are development assumptions, not calibrated
+safety limits. The off-axis projection regression is S5-U11.
 
-Detection  
-→ validation  
-→ vehicle stop request  
-→ coarse scan  
-→ fine scan  
-→ obstacle profiling  
-→ location/width/clearance estimation  
-→ bypass-side selection  
-→ STOP/REVERSE/TURN/BYPASS action planning  
-→ recovery planning  
-→ line reacquisition coordination  
-→ resume normal monitoring
-
-The latest implementation compiles successfully using the Raspberry Pi Pico SDK.
-
-The remaining work primarily requires hardware testing, calibration, µT-Kernel integration and integration with the other team subsystems.
+The sensor drivers, µT-Kernel tasks, communication with the Mission Controller,
+motion execution by Buddy 2, and line-found coordination with Buddy 3 are not
+implemented. The subsystem therefore does not yet perform obstacle avoidance
+on the vehicle. Hardware wiring/voltage confirmation, interface agreement,
+target build/test, calibration, and physical validation remain required.
