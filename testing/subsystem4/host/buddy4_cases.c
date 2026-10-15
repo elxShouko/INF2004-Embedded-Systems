@@ -26,6 +26,8 @@ static void test_driver_failures (void);
 static void test_boundaries (void);
 static void test_motion_validity (void);
 static void test_braking_regression (void);
+static void test_flat_cycle_after_hump (void);
+static void test_height_enable_gate (void);
 static void bus_reset (void);
 static bool fake_read (uint8_t address, uint8_t reg, uint8_t *p_data,
                        uint32_t length);
@@ -52,6 +54,8 @@ uint32_t buddy4_cases_run (buddy4_cases_report_t p_report)
     test_boundaries();
     test_motion_validity();
     test_braking_regression();
+    test_flat_cycle_after_hump();
+    test_height_enable_gate();
     return g_failures;
 }
 
@@ -705,6 +709,106 @@ static void test_motion_validity (void)
     report_case("S4-U189", (!core.status.b_highest_valid) &&
                  (0u != (core.status.height_reasons & IMU_HEIGHT_DYNAMIC)),
                  "speed drift outside measured band rejects peak");
+}
+
+/** Existing valid maximum survives a false flat-ground braking candidate. */
+static void test_flat_cycle_after_hump (void)
+{
+    imu_core_t core = {0};
+    imu_core_sample_t sample = {0};
+    float32_t speed = 200.0f;
+    const float32_t delta = 0.2f * 9806.65f * 0.020f;
+    bool b_prior_valid = false;
+    bool b_false_ascent = false;
+    bool b_peak_invalid = false;
+
+    ready_core(&core, &sample);
+    sample.b_distance_valid = true;
+    sample.distance_mm = 10.0f;
+    complete_hump(&core, &sample);
+    b_prior_valid = core.status.b_highest_valid &&
+                    near_value(core.status.highest_hump_mm, 10.0f);
+    sample.distance_mm = 4.0f;
+    for (uint32_t count = 0u; count < 3u; ++count)
+    {
+        step_pitch(&core, &sample, 0.0f);
+    }
+    for (uint32_t count = 0u; count < 8u; ++count)
+    {
+        const float32_t next = speed + delta;
+
+        sample.time_ms += 20u;
+        sample.motion_time_ms = sample.time_ms;
+        sample.speed_mm_s = next;
+        sample.distance_mm = (speed + next) * 0.5f * 0.020f;
+        sample.accel_g[0] = 0.2f;
+        sample.accel_g[2] = 1.0f;
+        (void)imu_core_update(&core, &sample);
+        speed = next;
+    }
+    for (uint32_t count = 0u; count < 8u; ++count)
+    {
+        const float32_t next = speed - delta;
+
+        sample.time_ms += 20u;
+        sample.motion_time_ms = sample.time_ms;
+        sample.speed_mm_s = next;
+        sample.distance_mm = (speed + next) * 0.5f * 0.020f;
+        sample.accel_g[0] = -0.2f;
+        (void)imu_core_update(&core, &sample);
+        b_false_ascent = b_false_ascent ||
+                         (IMU_ASCENDING == core.status.phase);
+        speed = next;
+    }
+    sample.accel_g[0] = 0.0f;
+    sample.speed_mm_s = speed;
+    sample.distance_mm = speed * 0.020f;
+    sample.time_ms += 20u;
+    sample.motion_time_ms = sample.time_ms;
+    (void)imu_core_update(&core, &sample);
+    b_peak_invalid = (IMU_PEAK == core.status.phase) &&
+                     (!core.status.b_height_valid) &&
+                     core.status.b_highest_valid &&
+                     near_value(core.status.highest_hump_mm, 10.0f);
+    sample.time_ms += 20u;
+    sample.motion_time_ms = sample.time_ms;
+    (void)imu_core_update(&core, &sample);
+    report_case("S4-U205", b_prior_valid && b_false_ascent &&
+                 b_peak_invalid && (IMU_MONITORING == core.status.phase) &&
+                 core.status.b_highest_valid &&
+                 near_value(core.status.highest_hump_mm, 10.0f),
+                 "flat accel/brake preserves prior valid maximum");
+}
+
+/** Height calibration is an independent opt-in, even with trusted motion. */
+static void test_height_enable_gate (void)
+{
+    imu_core_t core = {0};
+    imu_core_sample_t sample = {0};
+    imu_core_config_t config = imu_core_defaults();
+
+    config.calibration_samples = 2u;
+    (void)imu_core_init(&core, &config);
+    sample.accel_g[2] = 1.0f;
+    sample.time_ms = 20u;
+    (void)imu_core_update(&core, &sample);
+    sample.time_ms = 40u;
+    (void)imu_core_update(&core, &sample);
+    sample.b_motion_valid = true;
+    sample.b_straight = true;
+    sample.b_traction_trusted = true;
+    sample.b_distance_valid = true;
+    sample.distance_mm = 10.0f;
+    step_pitch(&core, &sample, 0.0f);
+    step_pitch(&core, &sample, 0.0f);
+    step_pitch(&core, &sample, 30.0f);
+    step_pitch(&core, &sample, 30.0f);
+    step_pitch(&core, &sample, 0.0f);
+    report_case("S4-U206", (IMU_PEAK == core.status.phase) &&
+                 (!core.status.b_highest_valid) &&
+                 (0u != (core.status.height_reasons &
+                         IMU_HEIGHT_UNCALIBRATED)),
+                 "uncalibrated height gate remains closed");
 }
 
 /* End of file. */

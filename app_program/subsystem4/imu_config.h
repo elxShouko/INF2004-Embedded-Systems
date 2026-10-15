@@ -29,7 +29,8 @@
 #define S4_MAG_SCALE_Y 1.0f
 #define S4_MAG_SCALE_Z 1.0f
 
-/* Set only from recorded hardware calibration. Disabled by default. */
+/* Separate from magnetic heading calibration. Set only from recorded hump,
+ * flat accel/brake and wheel-feedback trials. Disabled by default. */
 #define S4_HEIGHT_CALIBRATED false
 #define S4_HEIGHT_MAX_ACCEL_MM_S2 0.0f
 #define S4_HEIGHT_SPEED_BAND_MM_S 0.0f
