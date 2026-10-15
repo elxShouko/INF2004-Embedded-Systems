@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One entry point for the 75 current-firmware core/driver/runtime cases.
+# One entry point for the 79 current-firmware core/driver/runtime cases.
 # No downloads, hardware access, checkout, or integrated Make invocation.
 set -euo pipefail
 
@@ -28,7 +28,8 @@ run_current()
         flags+=(-O1 -g -fsanitize=address,undefined
                 -fno-sanitize-recover=all -fno-omit-frame-pointer)
     fi
-    printf '\nCURRENT firmware: 75 cases (S4-U116-S4-U166, U176-U199)\n'
+    printf '\nCURRENT firmware: 79 cases '
+    printf '(U116-U166, U176-U199, U202-U203, U205-U206)\n'
     set -x
     "$compiler" "${flags[@]}" \
         "$repo_dir/app_program/subsystem4/imu_core.c" \
@@ -49,6 +50,14 @@ run_current()
     done
     for case_id in {190..199}; do
         "$build_dir/runtime_tests" "$case_id"
+    done
+    "$compiler" "${flags[@]}" -DS4_IMU_ENABLE=1 \
+        -DTM_WIFI_CYW43=1 -I"$host_dir/fake" \
+        "$repo_dir/app_program/subsystem4/drv_imu.c" \
+        "$repo_dir/app_program/subsystem4/drv_lsm.c" \
+        "$host_dir/transport_main.c" -o "$build_dir/transport_tests"
+    for case_id in {202..203}; do
+        "$build_dir/transport_tests" "$case_id"
     done
     set +x
 }

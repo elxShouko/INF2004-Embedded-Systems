@@ -1,0 +1,4 @@
+#ifndef S4_FAKE_CONFIG_DEVICE_H
+#define S4_FAKE_CONFIG_DEVICE_H
+#define DEVCNF_USE_IIC 0
+#endif

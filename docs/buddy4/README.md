@@ -3,7 +3,7 @@
 Production code: [`app_program/subsystem4/`](../../app_program/subsystem4/).
 Current tests and results: [`testing/subsystem4/`](../../testing/subsystem4/TEST_LOG.md).
 The [older standalone guide](HISTORICAL_STANDALONE.md) documents a different
-implementation and 113 archived tests. The current host suite has 75 cases.
+implementation and 113 archived tests. The current host suite has 79 cases.
 
 ## Implementation
 
@@ -36,8 +36,9 @@ If evidence fails before persistent level closure, an
 completed valid maximum. Consumers must honor validity, provisional status,
 retraction and `height_reasons` bits.
 
-`imu_config.h` disables calibrated height by default and leaves the envelope
-at zero. Physical trials in [`VALIDATION.md`](VALIDATION.md) must determine
+`imu_config.h` disables heading and calibrated height separately. It leaves
+the height envelope at zero. Physical trials in
+[`VALIDATION.md`](VALIDATION.md) must determine
 allowable acceleration, speed drift, wheel mismatch, minimum speed and dwell
 times. The host suite uses a labelled synthetic envelope only. Until measured
 settings are entered, `b_highest_valid` remains false. Existing 6° ascent,
@@ -56,16 +57,20 @@ it is never compared directly with the Pico hardware-timer timestamp. The
 distance increment approximates mean wheel speed over the IMU interval, not
 encoder position difference. Its slip and accuracy limits need hardware data.
 
-The Vehicle Controller does not yet exist in this repository. Its owner must
-call `imu_runtime_set_motion_trust(true)` only with justified traction and
-revoke with `false` on slip, unavailable feedback or mode change. Trust
-defaults false. Revocation advances an epoch, so even a revoke and reassert
+The shared Vehicle Controller now reads the S4 fault latch and status and
+requests Buddy 2 emergency stop on a detected fault. It does not assert
+traction trust or consume ordinary hump events. Its owner should call
+`imu_runtime_set_motion_trust(true)` only after agreeing an independent
+traction-confidence policy, then revoke with `false` on slip, unavailable
+feedback or mode change. Equal wheel speeds cannot rule out common slip.
+Trust defaults false. Revocation advances an epoch, so even a revoke and reassert
 between IMU samples invalidates the candidate. A concurrent revoke can take
 up to the next 20 ms sample to retract a provisional peak. The former scalar
 `imu_runtime_set_speed()` cannot establish straight, nonslip motion: a valid
 call returns `E_PAR` and revokes trust; `b_valid=false` revokes explicitly.
-Buddy 4 sends no motor command. Fault consumers and system stop handling need
-joint integration and physical verification with Buddy 2/controller owners.
+Buddy 4 sends no motor command. The proposed trust policy and hardware
+acceptance gates are in [`VALIDATION.md`](VALIDATION.md). Fault-to-motor-stop
+latency and ordinary hump-event consumption still need integration validation.
 
 ## Build and evidence
 
