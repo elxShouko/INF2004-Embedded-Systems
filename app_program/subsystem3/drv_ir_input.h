@@ -1,6 +1,6 @@
 /** @file drv_ir_input.h
  * @brief Member 3 drv ir input module.
- * @note See BARR_COMPLIANCE.md for compatibility exceptions under review.
+ * @note See docs/buddy3/BARR_COMPLIANCE.md for approved exceptions.
  */
 
 #ifndef IR_INPUT_H

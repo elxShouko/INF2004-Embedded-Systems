@@ -22,6 +22,10 @@
 
 ## Bench build and use
 
+The standalone diagnostic source is
+`testing/subsystem3/diagnostics/member3_ir_diagnostic.c`. See that folder's
+`README.md` for its scope and the distinction from integrated firmware.
+
 With Pico SDK/toolchain configured, configure CMake with
 `-DBUILD_MEMBER3_IR_DIAGNOSTIC=ON`, then build target `member3_ir_diagnostic`.
 The UF2 is `build/member3_ir_diagnostic.uf2` when using build directory `build`.

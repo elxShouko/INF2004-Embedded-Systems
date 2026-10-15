@@ -18,6 +18,7 @@ Define a test here before running it. Test IDs never change.
 | S3-U06 | Default integrated build | Professor Make foundation | compile only | `cd build_make; make -j8` | Default SMP/USB/Wi-Fi-driver ELF and UF2 produced |
 | S3-U07 | Integrated test-profile build | Template test discovery | compile only | `cd build_make; make TEST=1 -j8` | Test ELF and UF2 produced; no claim of execution |
 | S3-U08 | State-transition differential trace | Behaviour preservation | host simulation | Compare 40,000 deterministic sample transitions before/after cleanup | Identical trace hash |
+| S3-U09 | Standalone diagnostic relocation | Optional CMake diagnostic target | compile only | Compare moved source with HEAD, then build `member3_ir_diagnostic` | Source identical; target produces UF2 from `diagnostics/` |
 
 *Method:* **auto** = `TEST_CHECK` in code, result printed on the console;
 **manual** = a person observes the result (LED, scope, meter, phone app…).
@@ -72,3 +73,45 @@ recorded above; it does not change the historical test results or authorize
 unrelated shared changes. Only this approval record and the compliance report
 were updated after approval; the tested C/header/format-config fingerprint
 remains unchanged. No additional build or hardware test is claimed.
+
+### 2026-10-15 standalone diagnostic relocation
+
+| Date | Test ID | Commit / working tree | Tester | Result | Log / evidence | Notes |
+|---|---|---|---|---|---|---|
+| 2026-10-15 | S3-U09 | `a405c5aa2752e39bdcd3d4e0b415d2126158ea15` + uncommitted relocation, CMake path and documentation changes | Codex | PASS, compilation only | `logs/2026-10-15_diagnostic-relocation-build.txt` | Source bytes preserved; optional diagnostic rebuilt from `diagnostics/`; UF2 produced; not flashed |
+
+Moved `examples/member3_ir_diagnostic.c` to
+`testing/subsystem3/diagnostics/member3_ir_diagnostic.c`. Both source SHA256
+values were `cc3f6a8055bcbaf086e0d9d5733b867951c39f04e3dd73c50e32b8b7e7b94192`.
+The integrated Make application and other subsystem implementations were not
+changed. Used the existing Ninja build directory, Pico SDK 2.3.1, Arm GNU
+15.2.Rel1 and installed picotool, with dependency fetching disabled.
+
+Exact commands from the repository root (PowerShell; both exited zero):
+
+```powershell
+$env:PICO_SDK_PATH = "$env:USERPROFILE/.pico-sdk/sdk/2.3.1"
+$env:PICO_TOOLCHAIN_PATH = "$env:USERPROFILE/.pico-sdk/toolchain/15_2_Rel1"
+& "$env:USERPROFILE/.pico-sdk/cmake/v4.3.4/bin/cmake.exe" -S . -B build/member3-pico -DFETCHCONTENT_FULLY_DISCONNECTED=ON -DPICO_SDK_FETCH_FROM_GIT=OFF -DBUILD_MEMBER3_IR_DIAGNOSTIC=ON
+& "$env:USERPROFILE/.pico-sdk/cmake/v4.3.4/bin/cmake.exe" --build build/member3-pico --target member3_ir_diagnostic -j 4
+```
+
+Output: `build/member3-pico/member3_ir_diagnostic.uf2`. No hardware test was run.
+
+### 2026-10-15 documentation organisation
+
+Buddy 3's main guide, integration guide and Barr-C review are now grouped under
+`docs/buddy3/`, indexed by `docs/buddy3/README.md`. Earlier paths in this log and
+archived evidence are preserved as historical records. In particular, the
+Barr-C report moved from `app_program/subsystem3/BARR_COMPLIANCE.md` to
+`docs/buddy3/BARR_COMPLIANCE.md`. Source changes for this organisation update
+only documentation comments; no executable statements or interfaces changed.
+No new firmware build or hardware result is claimed for the documentation move.
+
+Static checks passed on HEAD `a405c5aa2752e39bdcd3d4e0b415d2126158ea15` plus
+the uncommitted diagnostic/documentation relocations: all 10 local Markdown
+link destinations in the affected guides/indexes exist; stripping comments from
+the 20 modified tracked C/header files matches HEAD; and
+`python testing/subsystem3/check_barr_style.py` passed its declared subset for
+26 files (longest function 88 lines). The whitespace check
+`git -c core.whitespace=-blank-at-eof diff --check` also passed.

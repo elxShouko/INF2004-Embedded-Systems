@@ -1,0 +1,26 @@
+PICO_SDK_PATH is C:/Users/linco/.pico-sdk/sdk/2.3.1
+Target board (PICO_BOARD) is 'pico_w'.
+Using board configuration from C:/Users/linco/.pico-sdk/sdk/2.3.1/src/boards/include/boards/pico_w.h
+Pico Platform (PICO_PLATFORM) is 'rp2040'.
+Build type is Release
+TinyUSB available at C:/Users/linco/.pico-sdk/sdk/2.3.1/lib/tinyusb/hw/bsp/rp2040; enabling build support for USB.
+BTstack available at C:/Users/linco/.pico-sdk/sdk/2.3.1/lib/btstack
+cyw43-driver available at C:/Users/linco/.pico-sdk/sdk/2.3.1/lib/cyw43-driver
+Pico W Bluetooth build support available.
+mbedtls available at C:/Users/linco/.pico-sdk/sdk/2.3.1/lib/mbedtls
+lwIP available at C:/Users/linco/.pico-sdk/sdk/2.3.1/lib/lwip
+Pico W Wi-Fi build support available.
+C library type is newlib
+Using picotool from C:/Users/linco/.pico-sdk/picotool/2.3.1/picotool/picotool.exe
+-- Configuring done (5.8s)
+-- Generating done (0.9s)
+-- Build files have been written to: C:/Users/linco/OneDrive/Documents/GitHub/Embedded-System/INF2004-Embedded-Systems/build/member3-pico
+[1/9] Building C object CMakeFiles/member3_navigation.dir/src/line/line_tracking.c.obj
+[2/9] Building C object CMakeFiles/member3_navigation.dir/src/line/junction.c.obj
+[3/9] Building C object CMakeFiles/member3_navigation.dir/src/line/barcode.c.obj
+[4/9] Building C object CMakeFiles/member3_navigation.dir/src/line/navigation_map.c.obj
+[5/9] Building C object CMakeFiles/member3_ir_diagnostic.dir/testing/subsystem3/diagnostics/member3_ir_diagnostic.c.obj
+[6/9] Building C object CMakeFiles/member3_navigation.dir/src/line/ir_input.c.obj
+[7/9] Building C object CMakeFiles/member3_ir_diagnostic.dir/src/line/ir_gpio.c.obj
+[8/9] Linking C static library libmember3_navigation.a
+[9/9] Linking CXX executable member3_ir_diagnostic.elf

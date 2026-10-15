@@ -1,6 +1,6 @@
 /** @file drv_barcode.h
  * @brief Member 3 drv barcode module.
- * @note See BARR_COMPLIANCE.md for compatibility exceptions under review.
+ * @note See docs/buddy3/BARR_COMPLIANCE.md for approved exceptions.
  */
 
 #ifndef BARCODE_H

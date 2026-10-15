@@ -1,6 +1,6 @@
 /** @file member3_navigation.h
  * @brief Member 3 member3 navigation module.
- * @note See BARR_COMPLIANCE.md for compatibility exceptions under review.
+ * @note See docs/buddy3/BARR_COMPLIANCE.md for approved exceptions.
  */
 
 #ifndef MEMBER3_NAVIGATION_H

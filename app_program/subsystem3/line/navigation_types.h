@@ -1,6 +1,6 @@
 /** @file navigation_types.h
  * @brief Member 3 navigation types module.
- * @note See BARR_COMPLIANCE.md for compatibility exceptions under review.
+ * @note See docs/buddy3/BARR_COMPLIANCE.md for approved exceptions.
  */
 
 #ifndef NAVIGATION_TYPES_H

@@ -1,6 +1,6 @@
 /** @file drv_barcode.c
  * @brief Member 3 drv barcode module.
- * @note See BARR_COMPLIANCE.md for compatibility exceptions under review.
+ * @note See docs/buddy3/BARR_COMPLIANCE.md for approved exceptions.
  */
 
 #include "drv_barcode.h"
@@ -8,7 +8,7 @@
 #include <string.h>
 
 /* Code 39 Table 2: bits 8..0 are the nine alternating bar/space elements.
- * 1 denotes wide. Source: USS-39, docs/member3.md.
+ * 1 denotes wide. Source: USS-39, docs/buddy3/member3.md.
  */
 #define BARCODE_ALPHABET_COUNT 26U
 #define BARCODE_ELEMENTS_PER_SYMBOL 9U

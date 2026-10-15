@@ -1,7 +1,7 @@
 """Check the repeatable subset of the Member 3 Barr-C review.
 
 This is a guard against regression, not a complete C parser or certification.
-Public compatibility exceptions and manual rules live in BARR_COMPLIANCE.md.
+Public compatibility exceptions and manual rules live in docs/buddy3/BARR_COMPLIANCE.md.
 """
 
 from pathlib import Path
