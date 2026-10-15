@@ -1,10 +1,9 @@
 /*
  *	subsystem5.h
- *	Subsystem 5 -- <name>.  Student ID: <student ID>.
+ *	Buddy 5 -- obstacle scanning and recovery planning.
  *
- *	EMPTY TEMPLATE.  Subsystems 1-4 show a complete example; copy their
- *	pattern.  Put here only what OTHER subsystems may use (object IDs,
- *	message formats, priorities); keep everything else LOCAL in the .c.
+ *	Only declarations shared with other subsystems belong here. The
+ *	software-only profile and planning model is private to subsystem5.
  */
 
 #ifndef SUBSYSTEM5_H

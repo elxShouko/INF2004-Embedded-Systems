@@ -5,14 +5,14 @@ Build the integrated firmware from **build_make/** using **make**, as described 
 
 - Each team member owns **app_program/subsystemN/**.
 - Member 3's IR/line/barcode task is integrated in **app_program/subsystem3/**.
-- Subsystems 1, 2, 4 and 5 currently contain the unchanged professor's examples;
-  their owners still need to integrate their actual robot modules.
+- Subsystems 1, 2 and 4 currently contain the professor's examples.
+- Subsystem 5 has host-testable obstacle calculations, but its RTOS and
+  hardware integration remains pending.
 - Existing **src/**, **include/line/** and **CMakeLists.txt** are preserved for
   the earlier standalone Pico SDK programs. They are not the integrated RTOS build.
 
 See [Member 3 integration and API](docs/member3-template-integration.md).
-The previous Member 5 standalone README is preserved in
-[Member 5 standalone notes](docs/member5-standalone.md).
+See [Buddy 5 obstacle subsystem notes](docs/buddy5/OBSTACLE_SYSTEM.md).
 
 The following build/setup instructions are from the imported professor's template.
 
@@ -156,8 +156,9 @@ subfolders, is compiled automatically.
 - **One folder per student:** `app_program/subsystem1/` … `subsystem5/`.
   Subsystems 1–4 hold a working example, one task each (LED, producer,
   consumer, monitor). Together they use the main micro T-Kernel APIs and
-  pass data between subsystems. Subsystem 5 is an empty template.
-  Replace the examples with your own subsystems.
+  pass data between subsystems.
+  Subsystem 5 contains isolated host-testable obstacle scan, profile and
+  planning logic; its RTOS and hardware integration is not yet implemented.
 - `subsystemN.h` is that subsystem's public interface: the object IDs and
   data formats the other subsystems may use.
 - `app.h` holds the definitions shared by the whole team.

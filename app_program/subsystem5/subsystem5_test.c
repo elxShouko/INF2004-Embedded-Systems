@@ -13,8 +13,7 @@ EXPORT void subsystem5_test(void)
 {
 	TEST_INIT();
 
-	/* Replace with real checks of this subsystem's behaviour */
-	TEST_CHECK("S5-U01", tk_get_tid() > 0, "example: running in a task context");
+	TEST_CHECK("S5-U01", tk_get_tid() > 0, "test hook runs in task context");
 
 	TEST_SUMMARY("subsystem5");
 }
