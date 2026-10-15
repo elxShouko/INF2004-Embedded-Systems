@@ -186,6 +186,24 @@ static int32_t wifi_try_join(void)
     }
     return err;
 }
+
+/* Arm the next join attempt and lengthen the delay after it (FR19). The
+ * clock is read here, so a request that fails immediately is retried after
+ * the same 1, 2, 4, 8, 8 ... s sequence as a failed association. */
+static void arm_rejoin(uint64_t *rejoin_at, uint32_t *rejoin_delay_ms)
+{
+    *rejoin_at = time_us_64() + (uint64_t)(*rejoin_delay_ms) * 1000ull;
+    tm_printf((UB*)"wifi: next join attempt in %d ms\n",
+              (int)(*rejoin_delay_ms));
+    *rejoin_delay_ms = net_backoff_next_ms(*rejoin_delay_ms);
+}
+
+/* The station interface lost its bring-up state: the bus or firmware is gone
+ * and retrying a join cannot help. Caller must hold cyw43_thread_enter(). */
+static bool radio_interface_lost(void)
+{
+    return (cyw43_state.itf_state & (1u << CYW43_ITF_STA)) == 0;
+}
 #endif
 
 #if !TM_NET_LWIP
@@ -209,6 +227,9 @@ void cyw43_utk_task(int32_t stacd, void *exinf)
     bool was_scanning;
 #endif
     int32_t result;
+#if TM_NET_LWIP
+    int32_t first_join_err = 0;
+#endif
 
     (void)stacd;
     (void)exinf;
@@ -247,10 +268,11 @@ void cyw43_utk_task(int32_t stacd, void *exinf)
         run_diagnostic_scan();
 #endif
 
-        /* Only the *request* outcome. The AP's verdict shows up later as
-         * radio_status.link_status, polled below, which is also where a
-         * failed association gets retried. */
-        result = wifi_try_join();
+        /* Radio and interface are up. A rejected join *request* is not a
+         * radio failure: it is recoverable and goes through the same bounded
+         * backoff as a failed association (see the loop below). */
+        result = 0;
+        first_join_err = wifi_try_join();
 #else
         result = cyw43_wifi_scan(&cyw43_state, &options, &radio_status,
                                  scan_result);
@@ -268,9 +290,9 @@ void cyw43_utk_task(int32_t stacd, void *exinf)
     mp_memory_barrir();
     radio_status.init_complete = 1;
 
-    /* A failed bus has nothing useful to poll.  More importantly, repeatedly
-     * waking a failed high-rate service must not interfere with USB or the
-     * rest of the kernel qualification. */
+    /* Radio or bus bring-up failed: nothing useful to poll, and there is no
+     * recovery without a reset. Repeatedly waking a failed high-rate service
+     * must not interfere with USB or the rest of the kernel qualification. */
     if(result != 0) {
         for(;;) (void)tk_dly_tsk(1000);
     }
@@ -279,6 +301,11 @@ void cyw43_utk_task(int32_t stacd, void *exinf)
     int32_t  prev_link_status = radio_status.link_status;
     uint64_t rejoin_at = 0;
     uint32_t rejoin_delay_ms = NET_BACKOFF_INITIAL_MS;
+
+    if(first_join_err != 0) {
+        /* The very first request was refused: schedule the first retry. */
+        arm_rejoin(&rejoin_at, &rejoin_delay_ms);
+    }
 #endif
 
     for(;;) {
@@ -315,8 +342,7 @@ void cyw43_utk_task(int32_t stacd, void *exinf)
                 rejoin_delay_ms = NET_BACKOFF_INITIAL_MS;
             }
             if(radio_status.link_status < 0 || link_lost) {
-                rejoin_at = time_us_64() + rejoin_delay_ms * 1000ull;
-                rejoin_delay_ms = net_backoff_next_ms(rejoin_delay_ms);
+                arm_rejoin(&rejoin_at, &rejoin_delay_ms);
             } else {
                 rejoin_at = 0;
             }
@@ -325,12 +351,28 @@ void cyw43_utk_task(int32_t stacd, void *exinf)
         if(rejoin_at != 0 && time_us_64() >= rejoin_at) {
             rejoin_at = 0;
             if(radio_status.link_status <= CYW43_LINK_DOWN) {
-                (void)wifi_try_join();
-                /* Force the next iteration to treat whatever comes back as a
-                 * change, so the new outcome is always reported. Must be a
-                 * value cyw43_tcpip_link_status() can never return (it yields
-                 * -3..3), or a genuine repeat failure would be swallowed. */
-                prev_link_status = 0x7fffffff;
+                if(wifi_try_join() != 0) {
+                    /* The request itself was refused, so no link status
+                     * change will ever follow. Either the interface is gone
+                     * (unrecoverable) or this is one more failed attempt in
+                     * the backoff sequence. */
+                    if(radio_interface_lost()) {
+                        tm_printf((UB*)"wifi: FAILED -- interface lost, "
+                                  "no further join attempts\n");
+                        radio_status.ready = 0;
+                        radio_status.init_result = -CYW43_EIO;
+                        cyw43_thread_exit();
+                        for(;;) (void)tk_dly_tsk(1000);
+                    }
+                    arm_rejoin(&rejoin_at, &rejoin_delay_ms);
+                } else {
+                    /* Force the next iteration to treat whatever comes back
+                     * as a change, so the new outcome is always reported.
+                     * Must be a value cyw43_tcpip_link_status() can never
+                     * return (it yields -3..3), or a genuine repeat failure
+                     * would be swallowed. */
+                    prev_link_status = 0x7fffffff;
+                }
             }
         }
 #else

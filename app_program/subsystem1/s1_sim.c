@@ -4,6 +4,10 @@
  *
  * A cyclic handler wakes the task every 100 ms. The kernel keeps the period
  * exact, so the simulator does not drift (a delay in the task would not).
+ *
+ * The enable switch is set by one task and read by the simulator task, which
+ * may run on the other core, so it is guarded by a brief mutex. Nothing waits
+ * or calls the network while the mutex is held.
  */
 
 #include "s1_sim.h"
@@ -21,6 +25,7 @@ typedef struct
 {
     ID       task_id;
     ID       cyclic_id;
+    ID       mutex_id;
     bool     b_enabled;
     uint32_t encoder_count;
 } s1_sim_module_t;
@@ -29,6 +34,7 @@ static s1_sim_module_t g_s1_sim = {0};
 
 static void s1_sim_task (INT stacd, void * p_exinf);
 static void s1_sim_cyclic_handler (void * p_exinf);
+static bool s1_sim_is_enabled (void);
 
 /* ---------------------------------------------------------------------- */
 /* Public functions                                                       */
@@ -39,10 +45,17 @@ ER
 s1_sim_init (void)
 {
     T_CCYC cyclic_info = {0};
+    T_CMTX mutex_info  = {0};
     ER     result      = E_OK;
 
     g_s1_sim.b_enabled = true;
-    if (0u != S1_SIMULATE_TELEMETRY)
+    mutex_info.mtxatr  = TA_INHERIT;
+    g_s1_sim.mutex_id  = tk_cre_mtx(&mutex_info);
+    if (g_s1_sim.mutex_id < E_OK)
+    {
+        result = g_s1_sim.mutex_id;
+    }
+    else if (0u != S1_SIMULATE_TELEMETRY)
     {
         cyclic_info.cycatr = TA_HLNG;
         cyclic_info.cychdr = s1_sim_cyclic_handler;
@@ -83,7 +96,11 @@ s1_sim_start (void)
 void
 s1_sim_set_enabled (bool b_enabled)
 {
-    g_s1_sim.b_enabled = b_enabled;
+    if (E_OK == tk_loc_mtx(g_s1_sim.mutex_id, TMO_FEVR))
+    {
+        g_s1_sim.b_enabled = b_enabled;
+        tk_unl_mtx(g_s1_sim.mutex_id);
+    }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -103,7 +120,7 @@ s1_sim_task (INT stacd, void * p_exinf)
     for (;;)
     {
         tk_slp_tsk(TMO_FEVR);
-        if (g_s1_sim.b_enabled)
+        if (s1_sim_is_enabled())
         {
             tk_get_otm(&time);
             g_s1_sim.encoder_count += S1_SIM_ENCODER_STEP;
@@ -119,6 +136,20 @@ s1_sim_task (INT stacd, void * p_exinf)
             s1_net_telemetry_send(&frame);
         }
     }
+}
+
+/* Read the enable switch under the mutex. Off if the mutex is unavailable. */
+static bool
+s1_sim_is_enabled (void)
+{
+    bool b_enabled = false;
+
+    if (E_OK == tk_loc_mtx(g_s1_sim.mutex_id, TMO_FEVR))
+    {
+        b_enabled = g_s1_sim.b_enabled;
+        tk_unl_mtx(g_s1_sim.mutex_id);
+    }
+    return b_enabled;
 }
 
 /* Wake the task. A handler may only use calls that never wait. */

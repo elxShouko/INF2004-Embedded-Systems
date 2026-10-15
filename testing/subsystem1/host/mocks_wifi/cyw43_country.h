@@ -1,0 +1,4 @@
+#ifndef MOCK_CYW43_COUNTRY_H
+#define MOCK_CYW43_COUNTRY_H
+#define CYW43_COUNTRY_WORLDWIDE 0u
+#endif

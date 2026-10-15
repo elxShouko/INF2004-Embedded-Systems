@@ -29,6 +29,33 @@
 #define SIM_FRAMES_MIN 9u
 #define SIM_FRAMES_MAX 11u
 #define KEY_COUNT 9u
+#define BACKOFF_FIRST_MS 1000u
+#define BACKOFF_SECOND_MS 2000u
+#define STATUS_ROUNDS 20000u
+#define STATUS_VALUE_STEP 10u
+#define STATUS_READ_LIMIT 4000000u
+#define STATUS_WAIT_MS 20000
+#define STORM_ROUNDS 5000u
+#define TOGGLE_PERIOD 2u
+#define SETTLE_MS 300
+#define SIM_PROBE_MS 350
+#define SIM_PROBE_MIN 2u
+#define FLAG_WRITER_DONE 0x01u
+#define FLAG_READER_DONE 0x02u
+#define FLAG_STORM_DONE 0x04u
+#define FLAG_READER_READY 0x08u
+
+/* On the Pico both default to the real two-core test. The PC runner sets
+ * S1_TEST_SERIAL_HOST=1 and S1_TEST_REQUIRE_OVERLAP=0 when it has no threads.
+ */
+#ifndef S1_TEST_SERIAL_HOST
+#define S1_TEST_SERIAL_HOST 0
+#endif
+#ifndef S1_TEST_REQUIRE_OVERLAP
+#define S1_TEST_REQUIRE_OVERLAP 1
+#endif
+#define READER_START_WAIT_MS 5000
+#define STATUS_READS_MIN 100u
 
 static bool
 contains (const char * p_text, const char * p_part)
@@ -291,6 +318,285 @@ test_link_events (void)
     TEST_SUMMARY("subsystem1 link events");
 }
 
+
+static void
+test_backoff_notification (void)
+{
+    s1_net_stats_t before = {0};
+    s1_net_stats_t after  = {0};
+    UINT           flags  = 0u;
+    ER             result = E_OK;
+    TEST_INIT();
+
+    /* S1-U13: entering BACKOFF from a connected state is a change of the
+     * connected state, so it raises LINK_CHANGED exactly once. */
+    s1_net_hook_on_event(S1_NET_EVENT_CONNECTED, 0u);
+    result = s1_net_events_wait(S1_NET_FLG_LINK_CHANGED, &flags, TMO_POL);
+    TEST_CHECK("S1-U13a",
+               (E_OK == result) && s1_net_is_connected() &&
+                   (E_TMOUT == s1_net_events_wait(S1_NET_FLG_LINK_CHANGED,
+                                                  &flags, TMO_POL)),
+               "start connected; initial notification consumed");
+
+    s1_net_get_stats(&before);
+    s1_net_hook_on_event(S1_NET_EVENT_BACKOFF, BACKOFF_FIRST_MS);
+    s1_net_get_stats(&after);
+    result = s1_net_events_wait(S1_NET_FLG_LINK_CHANGED, &flags, TMO_POL);
+    TEST_CHECK("S1-U13b",
+               (!after.b_connected) && (!s1_net_is_connected()) &&
+                   (E_OK == result) &&
+                   (0u != (flags & S1_NET_FLG_LINK_CHANGED)),
+               "BACKOFF clears connected and raises link-changed");
+    TEST_CHECK("S1-U13c",
+               (after.backoff_count == (before.backoff_count + 1u)) &&
+                   (BACKOFF_FIRST_MS == after.backoff_last_ms) &&
+                   (after.disconnects == (before.disconnects + 1u)),
+               "BACKOFF is counted and the disconnect is counted once");
+
+    s1_net_hook_on_event(S1_NET_EVENT_BACKOFF, BACKOFF_SECOND_MS);
+    s1_net_hook_on_event(S1_NET_EVENT_DISCONNECTED, 0u);
+    s1_net_get_stats(&after);
+    TEST_CHECK("S1-U13d",
+               (E_TMOUT ==
+                s1_net_events_wait(S1_NET_FLG_LINK_CHANGED, &flags, TMO_POL)) &&
+                   (BACKOFF_SECOND_MS == after.backoff_last_ms) &&
+                   (after.disconnects == (before.disconnects + 1u)),
+               "repeat BACKOFF / DISCONNECTED while down: no new notification");
+
+    s1_net_hook_on_event(S1_NET_EVENT_CONNECTED, 0u);
+    s1_net_events_wait(S1_NET_FLG_LINK_CHANGED, &flags, TMO_POL);
+    s1_net_hook_on_event(S1_NET_EVENT_DISCONNECTED, 0u);
+    result = s1_net_events_wait(S1_NET_FLG_LINK_CHANGED, &flags, TMO_POL);
+    TEST_CHECK("S1-U13e", (E_OK == result) && !s1_net_is_connected(),
+               "DISCONNECTED (without BACKOFF first) still notifies once");
+    TEST_SUMMARY("subsystem1 backoff notification");
+}
+
+/* ---- Concurrent status access (S1-U14, S1-U15) ----------------------- */
+
+typedef struct
+{
+    ID       flag_id;
+    uint32_t reads;
+    uint32_t violations;
+    uint32_t seen_connected;
+    uint32_t seen_disconnected;
+    bool     b_reader_gave_up;
+} status_test_t;
+
+static status_test_t  g_status_test = {0};
+static s1_net_stats_t g_status_base = {0};
+
+/* One snapshot must be internally consistent: every CONNECTED is followed
+ * by a BACKOFF that the writer reports with value = 10 x its own count. */
+static bool
+snapshot_is_coherent (const s1_net_stats_t * p_snap)
+{
+    uint32_t connects    = p_snap->connects - g_status_base.connects;
+    uint32_t disconnects = p_snap->disconnects - g_status_base.disconnects;
+    uint32_t backoffs    = p_snap->backoff_count - g_status_base.backoff_count;
+    uint32_t expected    = (connects - disconnects);
+    bool     b_ok        = (backoffs == disconnects) &&
+                (expected == (p_snap->b_connected ? 1u : 0u));
+
+    if (backoffs > 0u)
+    {
+        b_ok =
+            b_ok && (p_snap->backoff_last_ms == (backoffs * STATUS_VALUE_STEP));
+    }
+    return b_ok;
+}
+
+/* Writer: stands in for the Wi-Fi service task (pinned to the other core). */
+static void
+status_writer_task (INT stacd, void * p_exinf)
+{
+    uint32_t round   = 0u;
+    UINT     pattern = 0u;
+
+    (void) stacd;   /* Cast is safe: discards an unused task parameter. */
+    (void) p_exinf; /* Cast is safe: discards an unused task parameter. */
+
+    /* Start only once the reader is running, so the two really overlap. */
+    tk_wai_flg(g_status_test.flag_id, FLAG_READER_READY, TWF_ORW, &pattern,
+               READER_START_WAIT_MS);
+    for (round = 1u; round <= STATUS_ROUNDS; round++)
+    {
+        s1_net_hook_on_event(S1_NET_EVENT_CONNECTED, 0u);
+        s1_net_hook_on_event(S1_NET_EVENT_BACKOFF, round * STATUS_VALUE_STEP);
+    }
+    tk_set_flg(g_status_test.flag_id, FLAG_WRITER_DONE);
+    tk_ext_tsk();
+}
+
+/* Reader: an application task reading the status as fast as it can. */
+static void
+status_reader_task (INT stacd, void * p_exinf)
+{
+    s1_net_stats_t snap    = {0};
+    UINT           pattern = 0u;
+    uint32_t       count   = 0u;
+    bool           b_done  = false;
+
+    (void) stacd;   /* Cast is safe: discards an unused task parameter. */
+    (void) p_exinf; /* Cast is safe: discards an unused task parameter. */
+
+    tk_set_flg(g_status_test.flag_id, FLAG_READER_READY);
+    while ((count < STATUS_READS_MIN) ||
+           ((!b_done) && (count < STATUS_READ_LIMIT)))
+    {
+        s1_net_get_stats(&snap);
+        g_status_test.reads++;
+        if (!snapshot_is_coherent(&snap))
+        {
+            g_status_test.violations++;
+        }
+        if (snap.b_connected)
+        {
+            g_status_test.seen_connected++;
+        }
+        else
+        {
+            g_status_test.seen_disconnected++;
+        }
+        (void) s1_net_is_connected();
+        b_done = (E_OK == tk_wai_flg(g_status_test.flag_id, FLAG_WRITER_DONE,
+                                     TWF_ORW, &pattern, TMO_POL));
+        count++;
+    }
+    g_status_test.b_reader_gave_up = !b_done;
+    tk_set_flg(g_status_test.flag_id, FLAG_READER_DONE);
+    tk_ext_tsk();
+}
+
+static void
+test_concurrent_status (void)
+{
+    T_CFLG         flag_info = {0};
+    s1_net_stats_t final     = {0};
+    UINT           pattern   = 0u;
+    ER             result    = E_OK;
+    TEST_INIT();
+
+    /* S1-U14: a writer on one core and a reader on the other, thousands of
+     * times. Every snapshot must be coherent (no half-updated block). */
+    s1_net_hook_on_event(S1_NET_EVENT_DISCONNECTED, 0u);
+    s1_net_get_stats(&g_status_base);
+    flag_info.flgatr      = TA_TFIFO | TA_WMUL;
+    g_status_test         = (status_test_t){0};
+    g_status_test.flag_id = tk_cre_flg(&flag_info);
+
+#if S1_TEST_SERIAL_HOST
+    /* No threads on this PC: the writer must finish before the reader runs. */
+    app_start_task(status_writer_task, S1_PRI_SIM, TP_PRC2, "s1_t_writer");
+    app_start_task(status_reader_task, S1_PRI_SIM, TP_PRC1, "s1_t_reader");
+#else
+    app_start_task(status_reader_task, S1_PRI_SIM, TP_PRC1, "s1_t_reader");
+    app_start_task(status_writer_task, S1_PRI_SIM, TP_PRC2, "s1_t_writer");
+#endif
+    result =
+        tk_wai_flg(g_status_test.flag_id, FLAG_WRITER_DONE | FLAG_READER_DONE,
+                   TWF_ANDW, &pattern, STATUS_WAIT_MS);
+    s1_net_get_stats(&final);
+
+    TEST_CHECK("S1-U14a", E_OK == result,
+               "writer and reader tasks finished (no deadlock)");
+    TEST_CHECK("S1-U14b",
+               (0u == g_status_test.violations) &&
+                   (g_status_test.reads >= STATUS_READS_MIN) &&
+                   !g_status_test.b_reader_gave_up,
+               "every concurrent snapshot was coherent");
+    /* Proof that the two tasks really overlapped: the reader saw the state
+     * change while the writer was running. (The PC runner without pthreads
+     * runs the tasks one after the other and switches this check off.) */
+    TEST_CHECK("S1-U14c",
+               (0u == S1_TEST_REQUIRE_OVERLAP) ||
+                   ((g_status_test.seen_connected > 0u) &&
+                    (g_status_test.seen_disconnected > 0u)),
+               "reader saw both states while the writer ran");
+    TEST_CHECK("S1-U14d",
+               ((final.connects - g_status_base.connects) == STATUS_ROUNDS) &&
+                   ((final.disconnects - g_status_base.disconnects) ==
+                    STATUS_ROUNDS) &&
+                   !final.b_connected,
+               "no update was lost under contention");
+    tm_printf(
+        (UB *) "s1: S1-U14 reads=%d violations=%d seen_up=%d seen_down=%d\n",
+        (int) g_status_test.reads, (int) g_status_test.violations,
+        (int) g_status_test.seen_connected,
+        (int) g_status_test.seen_disconnected);
+    TEST_SUMMARY("subsystem1 concurrent status");
+}
+
+static void
+sim_toggle_task (INT stacd, void * p_exinf)
+{
+    uint32_t round = 0u;
+
+    (void) stacd;   /* Cast is safe: discards an unused task parameter. */
+    (void) p_exinf; /* Cast is safe: discards an unused task parameter. */
+
+    for (round = 0u; round < STORM_ROUNDS; round++)
+    {
+        s1_sim_set_enabled(0u == (round % TOGGLE_PERIOD));
+    }
+    s1_sim_set_enabled(false);
+    tk_set_flg(g_status_test.flag_id, FLAG_STORM_DONE);
+    tk_ext_tsk();
+}
+
+static uint32_t
+count_frames (void)
+{
+    char     text[TEXT_CAPACITY] = {0};
+    uint32_t frames              = 0u;
+
+    while (s1_net_hook_pull_telemetry(text, sizeof(text)) > 0u)
+    {
+        frames++;
+    }
+    return frames;
+}
+
+static void
+test_sim_switch (void)
+{
+    T_CFLG   flag_info  = {0};
+    UINT     pattern    = 0u;
+    ER       result     = E_OK;
+    uint32_t frames_off = 0u;
+    uint32_t frames_on  = 0u;
+    TEST_INIT();
+
+    if (0u != S1_SIMULATE_TELEMETRY)
+    {
+        /* S1-U15: the enable switch set on one core is seen by the
+         * simulator task on the other, also after a storm of changes. */
+        flag_info.flgatr      = TA_TFIFO | TA_WMUL;
+        g_status_test.flag_id = tk_cre_flg(&flag_info);
+        app_start_task(sim_toggle_task, S1_PRI_SIM, TP_PRC2, "s1_t_toggle");
+        result = tk_wai_flg(g_status_test.flag_id, FLAG_STORM_DONE, TWF_ORW,
+                            &pattern, STATUS_WAIT_MS);
+        TEST_CHECK("S1-U15a", E_OK == result,
+                   "5000 enable/disable changes finished (no deadlock)");
+
+        tk_dly_tsk(SETTLE_MS);
+        (void) count_frames();
+        tk_dly_tsk(SIM_PROBE_MS);
+        frames_off = count_frames();
+        TEST_CHECK("S1-U15b", 0u == frames_off,
+                   "simulator stays silent after the switch was turned off");
+
+        s1_sim_set_enabled(true);
+        tk_dly_tsk(SIM_PROBE_MS);
+        frames_on = count_frames();
+        TEST_CHECK("S1-U15c", frames_on >= SIM_PROBE_MIN,
+                   "simulator resumes after the switch was turned on");
+        s1_sim_set_enabled(true);
+    }
+    TEST_SUMMARY("subsystem1 simulator switch");
+}
+
 static void
 test_simulator (void)
 {
@@ -327,7 +633,10 @@ subsystem1_test (void)
     test_telemetry_buffer();
     test_command_path();
     test_link_events();
+    test_backoff_notification();
+    test_concurrent_status();
     test_simulator();
+    test_sim_switch();
 }
 
 #endif /* APP_TEST */
