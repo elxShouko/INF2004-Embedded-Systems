@@ -1,0 +1,1 @@
+pico_rp2040.mk:130: *** arm-none-eabi-gcc not found. Add your Arm GNU Toolchain 'bin' folder to PATH, e.g. export PATH="/path/to/arm-gnu-toolchain/bin:$PATH".  Stop.

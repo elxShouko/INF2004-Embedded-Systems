@@ -1,0 +1,95 @@
+C:\msys64\ucrt64\bin\gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -DMOTION_CONFIG_HOST_TEST C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\drv_encoder.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\drv_motor.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\drv_rp2040.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\enc_capture.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_bus.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_config.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_estimator.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_foundation_test.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_pid.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_quad.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_run.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\move_plan.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\subsystem2_test.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\task_motion.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\test_motion.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\test_motor.c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\wheel_loop.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\verify_generated_default.exe
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\verify_generated_default.exe
+[TEST] S2-U03 PASS  reset and zero configuration remain unconfigured
+[TEST] S2-U04 PASS  null arguments are rejected
+[TEST] S2-U05 PASS  both wheels require nonzero resolution and circumference
+[TEST] S2-U06 PASS  unknown and invalid polarities are rejected
+[TEST] S2-U07 PASS  zero track and nonpositive speed limits are rejected
+[TEST] S2-U08 PASS  calibration evidence and enum states are checked
+[TEST] S2-U09 PASS  asymmetric wheels and independent polarities are supported
+[TEST] S2-U10 PASS  representation boundaries impose no invented calibration
+[TEST] S2-U11 PASS  validation preserves every field on all nonnull paths
+[TEST] S2-U12 PASS  unusual invalid enum values are rejected in every field
+[TEST] subsystem2 M1A SUMMARY 10 passed, 0 failed
+[TEST] S2-U13 PASS  quadrature directions, reversal and repeated states
+[TEST] S2-U14 PASS  invalid jumps resync; diagnostics saturate
+[TEST] S2-U15 PASS  decoder init, null, polarity and state validation
+[TEST] S2-U16 PASS  signed count limits latch until explicit reset
+[TEST] S2-U17 PASS  independent decoders apply polarity exactly once
+[TEST] S2-U18 PASS  all sixteen state transitions match the convention
+[TEST] S2-U19 PASS  distance, signed speed and actual variable elapsed time
+[TEST] S2-U20 PASS  independent left/right wheel scales
+[TEST] S2-U21 PASS  fractional distance, reversal and repeatability
+[TEST] S2-U22 PASS  zero/backward/future/stale timing and fresh zero speed
+[TEST] S2-U23 PASS  count, product, position and speed overflow rejection
+[TEST] S2-U24 PASS  source generation and explicit odometry baseline reset
+[TEST] S2-U25 PASS  invalid/unverified calibration and null estimation
+[TEST] S2-U26 PASS  zero error and signed proportional response
+[TEST] S2-U27 PASS  integral limits, variable elapsed time and reversal
+[TEST] S2-U28 PASS  output saturation, anti-windup and recovery
+[TEST] S2-U29 PASS  derivative on measurement avoids target kick
+[TEST] S2-U30 PASS  reset, idle, stop and invalid timing clear dynamics
+[TEST] S2-U31 PASS  invalid gains, bounds, confirmation and null arguments
+[TEST] S2-U32 PASS  nonfinite arithmetic disables output safely
+[TEST] S2-U33 PASS  independent PID state for both wheels
+[TEST] S2-U34 PASS  caller edits do not alter copied calibration
+[TEST] S2-U35 PASS  decoder to estimator to PID preserves vehicle sign
+[TEST] S2-U36 PASS  pure-I large steps reach both output limits repeatedly
+[TEST] S2-U37 PASS  integral crosses saturation and recovers from overspeed
+[TEST] S2-U38 PASS  null updates invalidate cached speed and retain baseline
+[TEST] S2-U39 PASS  nonzero fractional speeds and exact timing boundaries
+[TEST] S2-U40 PASS  all PID bounds reject nonfinite and invalid values
+[TEST] S2-U41 PASS  derivative, integral and output overflow disable PID
+[TEST] S2-U42 PASS  asymmetric output headroom includes P/D and I bounds
+[TEST] subsystem2 M1B-M1D SUMMARY 30 passed, 0 failed
+[TEST] S2-U43 PASS  fake motor backend
+[TEST] S2-U44 PASS  fake motor backend
+[TEST] S2-U45 PASS  fake motor backend
+[TEST] S2-U46 PASS  fake motor backend
+[TEST] S2-U47 PASS  fake motor backend
+[TEST] S2-U48 PASS  fake motor backend
+[TEST] S2-U49 PASS  fake motor backend
+[TEST] S2-U50 PASS  fake motor backend
+[TEST] S2-U51 PASS  fake motor backend
+[TEST] S2-U52 PASS  fake motor backend
+[TEST] S2-U53 PASS  fake motor backend
+[TEST] S2-U54 PASS  fake motor backend
+[TEST] S2-U55 PASS  fake motor backend
+[TEST] S2-U56 PASS  fake motor backend
+[TEST] subsystem2 M2 SUMMARY 14 passed, 0 failed
+[TEST] S2-U57 PASS motion integration
+[TEST] S2-U58 PASS motion integration
+[TEST] S2-U59 PASS motion integration
+[TEST] S2-U60 PASS motion integration
+[TEST] S2-U61 PASS motion integration
+[TEST] S2-U62 PASS motion integration
+[TEST] S2-U63 PASS motion integration
+[TEST] S2-U64 PASS motion integration
+[TEST] S2-U65 PASS motion integration
+[TEST] S2-U66 PASS motion integration
+[TEST] S2-U67 PASS motion integration
+[TEST] S2-U68 PASS motion integration
+[TEST] S2-U69 PASS motion integration
+[TEST] S2-U70 PASS motion integration
+[TEST] S2-U71 PASS motion integration
+[TEST] S2-U72 PASS motion integration
+[TEST] S2-U73 PASS motion integration
+[TEST] S2-U74 PASS motion integration
+[TEST] S2-U75 PASS motion integration
+[TEST] S2-U76 PASS motion integration
+[TEST] S2-U77 PASS motion integration
+[TEST] S2-U78 PASS motion integration
+[TEST] S2-U79 PASS motion integration
+[TEST] S2-U80 PASS motion integration
+[TEST] S2-U81 PASS motion integration
+[TEST] S2-U82 PASS motion integration
+[TEST] S2-U83 PASS motion integration
+[TEST] S2-U84 PASS motion integration
+[TEST] S2-U85 PASS motion integration
+[TEST] S2-U86 PASS motion integration
+[TEST] S2-U87 PASS motion integration
+[TEST] S2-U88 PASS motion integration
+[TEST] S2-U89 PASS motion integration
+[TEST] S2-U90 PASS motion integration
+EXIT 0

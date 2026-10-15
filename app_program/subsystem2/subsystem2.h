@@ -10,6 +10,7 @@
 #define SUBSYSTEM2_H
 
 #include "../app.h"
+#include "motion_api.h"
 
 #define S2_PRI_PRODUCER		14	/* priority band 14-15 (TEAM.md) */
 #define S2_PERIOD_MS		300	/* one sample every 300 ms */
