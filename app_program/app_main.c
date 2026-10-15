@@ -53,7 +53,14 @@
  *	Output appears on the USB serial port (115200 8N1 in any terminal).
  */
 
+#include <stddef.h>
+#define PROHIBIT_DEF_SIZE_T 1
 #include "app.h"
+#include "vehicle_rt.h"
+#include "subsystem2/motion_api.h"
+#include "subsystem1/s1_sim.h"
+
+EXPORT INT usermain (void); /* Kernel initial-task entry. */
 
 /*
  * Create and start one task (declared in app.h for every subsystem).
@@ -89,6 +96,11 @@ EXPORT ID app_start_task(FP entry, PRI pri, UW prc, const char *name)
 	/* tk_sta_tsk: DORMANT -> READY.  The int is passed as stacd. */
 	er = tk_sta_tsk(tid, 0);
 	CHECK(er, name);
+    if (er < E_OK)
+    {
+        CHECK(tk_del_tsk(tid), "failed-start task cleanup");
+        return er; /* Never report the dormant task ID as start success. */
+    }
 	return tid;
 }
 
@@ -107,21 +119,57 @@ EXPORT INT usermain(void)
 	tm_printf((UB*)"single-core build\n");
 #endif
 
-	/* Phase 1: every subsystem creates its kernel objects */
-	CHECK(subsystem1_init(), "subsystem1_init");
-	CHECK(subsystem2_init(), "subsystem2_init");
-	CHECK(subsystem3_init(), "subsystem3_init");
-	CHECK(subsystem4_init(), "subsystem4_init");
-	CHECK(subsystem5_init(), "subsystem5_init");
+    /* Every object is created before any subsystem task can run on SMP. */
+    ER (* const init[])(void) = {subsystem1_init, subsystem2_init,
+        subsystem3_init, subsystem4_init, subsystem5_init};
+    ER (* const start[])(void) = {subsystem1_start, subsystem2_start,
+        subsystem3_start, subsystem4_start, subsystem5_start};
+    uint32_t started_mask = 0U;
+    bool b_ready = true;
 
-	/* Phase 2: every subsystem starts its tasks */
-	CHECK(subsystem1_start(), "subsystem1_start");
-	CHECK(subsystem2_start(), "subsystem2_start");
-	CHECK(subsystem3_start(), "subsystem3_start");
-	CHECK(subsystem4_start(), "subsystem4_start");
-	CHECK(subsystem5_start(), "subsystem5_start");
+    for (uint32_t i = 0U; i < 5U; ++i)
+    {
+        ER error = init[i]();
 
-	tm_printf((UB*)"all subsystems started\n\n");
+        CHECK(error, "subsystem init");
+        b_ready = (E_OK == error) && b_ready;
+    }
+    ER controller_error = vehicle_runtime_init();
+
+    CHECK(controller_error, "vehicle init");
+    b_ready = (E_OK == controller_error) && b_ready;
+    if (!b_ready)
+    {
+        tm_printf((UB*)"startup blocked: no subsystem tasks started\n");
+        tk_slp_tsk(TMO_FEVR);
+        return 0;
+    }
+#if !APP_TEST
+    /* Existing API, uncontended pre-start mutex. Preserve simulator tests;
+     * normal robot firmware must never publish synthetic provider readings.
+     */
+    s1_sim_set_enabled(false);
+#endif
+    for (uint32_t i = 0U; i < 5U; ++i)
+    {
+        ER error = start[i]();
+
+        CHECK(error, "subsystem start");
+        if (E_OK == error) { started_mask |= 1UL << i; }
+        else if (!((4U == i) && (E_NOSPT == error)))
+        {
+            (void)motion_api_estop();
+            break;
+        }
+        /* Buddy 5's explicit unsupported runtime is a readiness blocker,
+         * not a reason to pretend that obstacle sensing started.
+         */
+    }
+    controller_error = vehicle_runtime_start(started_mask);
+    CHECK(controller_error, "vehicle start");
+    if (E_OK != controller_error) { (void)motion_api_estop(); }
+    tm_printf((UB*)"startup mask 0x%02x; mission remains interlocked\n",
+        started_mask);
 
 #if APP_TEST
 	/* Test build (make TEST=1): run every subsystem's tests in turn,

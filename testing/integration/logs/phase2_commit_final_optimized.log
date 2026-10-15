@@ -1,0 +1,198 @@
+C:/msys64/ucrt64/bin/gcc.exe --version
+gcc.exe (Rev2, Built by MSYS2 project) 14.2.0
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\vehicle.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_0.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\vehicle_rt.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_1.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\gpio_bank.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_2.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\app_main.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_3.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -Wno-error=conversion -Wno-error=sign-conversion -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_4.o
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c: In function 'writer_u32':
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c:217:25: warning: conversion from 'uint32_t' {aka 'unsigned int'} to 'char' may change value [-Wconversion]
+  217 |         digits[count] = '0' + (remaining % DECIMAL_BASE);
+      |                         ^~~
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c: In function 'writer_i32':
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c:233:26: warning: conversion to 'uint32_t' {aka 'unsigned int'} from 'int32_t' {aka 'int'} may change the sign of the result [-Wsign-conversion]
+  233 |     uint32_t magnitude = value;
+      |                          ^~~~~
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c: In function 'writer_tenths':
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c:271:21: warning: conversion to 'uint32_t' {aka 'unsigned int'} from 'int32_t' {aka 'int'} may change the sign of the result [-Wsign-conversion]
+  271 |         magnitude = limited;
+      |                     ^~~~~~~
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_config.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_5.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_quad.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_6.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_estimator.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_7.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_pid.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_8.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\drv_motor.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_9.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\enc_capture.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_10.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\wheel_loop.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_11.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\move_plan.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_12.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem2\motion_run.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_13.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem3\drv_line_tracking.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_14.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem3\drv_ir_input.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_15.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem3\drv_navigation_map.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_16.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem4\imu_core.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_17.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem4\imu_guard.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_18.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_19.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration -include C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\test_vehicle.c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_20.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_0.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_1.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_2.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_3.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_4.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_5.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_6.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_7.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_8.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_9.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_10.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_11.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_12.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_13.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_14.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_15.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_16.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_17.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_18.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_19.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized_20.o -lm -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 3
+[TEST] INT-03 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 4
+[TEST] INT-04 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 5
+[TEST] INT-05 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 6
+[TEST] INT-06 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 7
+[TEST] INT-07 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 8
+[TEST] INT-08 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 9
+[TEST] INT-09 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 10
+[TEST] INT-10 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 11
+[TEST] INT-11 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 12
+[TEST] INT-12 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 13
+[TEST] INT-13 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 14
+[TEST] INT-14 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 15
+[TEST] INT-15 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 16
+[TEST] INT-16 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 17
+[TEST] INT-17 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 18
+[TEST] INT-18 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 19
+[TEST] INT-19 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 20
+[TEST] INT-20 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 21
+[TEST] INT-21 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 22
+[TEST] INT-22 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 23
+[TEST] INT-23 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 24
+[TEST] INT-24 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 25
+[TEST] INT-25 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 26
+[TEST] INT-26 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 27
+[TEST] INT-27 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 28
+[TEST] INT-28 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 29
+[TEST] INT-29 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 30
+[TEST] INT-30 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 31
+[TEST] INT-31 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 32
+[TEST] INT-32 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 33
+[TEST] INT-33 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 34
+[TEST] INT-34 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 35
+[TEST] INT-35 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 36
+[TEST] INT-36 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 37
+[TEST] INT-37 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 38
+[TEST] INT-38 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 39
+[TEST] INT-39 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 40
+[TEST] INT-40 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 41
+[TEST] INT-41 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 42
+[TEST] INT-42 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 43
+[TEST] INT-43 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 44
+[TEST] INT-44 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 45
+[TEST] INT-45 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 46
+[TEST] INT-46 PASS shared production integration
+EXIT 0
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\integration\build\integration_v5mfwfih\optimized.exe 47
+[TEST] INT-47 PASS shared production integration
+EXIT 0
