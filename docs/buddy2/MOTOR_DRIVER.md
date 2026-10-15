@@ -243,7 +243,7 @@ Saved evidence (byte-preserved relocation during the approved folder cleanup):
 [default host output](../../testing/subsystem2/logs/2026-10-14_m2_host_default.txt),
 [optimized host output](../../testing/subsystem2/logs/2026-10-14_m2_host_optimized.txt),
 [ARM compiler history](../../testing/subsystem2/logs/2026-10-14_m2_arm_compile.txt)
-and [original Make recipe](../../app_program/subsystem2/m2_make_recipes.txt) (exact compiler invocations/results).
+and [original Make recipe](../../testing/subsystem2/m2_make_recipes.txt) (exact compiler invocations/results).
 The [archive manifest](../../testing/subsystem2/logs/2026-10-14_evidence_manifest.md)
 records original names/hashes; [official results](../../testing/subsystem2/TEST_LOG.md)
 retain the uncommitted runs as preliminary evidence. Historical outcomes above

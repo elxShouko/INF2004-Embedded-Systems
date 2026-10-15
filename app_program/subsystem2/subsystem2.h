@@ -9,7 +9,11 @@
 #ifndef SUBSYSTEM2_H
 #define SUBSYSTEM2_H
 
+#if defined(MOTION_RTOS_HOST_TEST)
+#include "test_rtos.h"
+#else
 #include "../app.h"
+#endif
 #include "motion_api.h"
 
 #define S2_PRI_PRODUCER		14	/* priority band 14-15 (TEAM.md) */

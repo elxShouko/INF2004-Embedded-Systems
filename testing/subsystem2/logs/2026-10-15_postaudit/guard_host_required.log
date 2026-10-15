@@ -1,0 +1,7 @@
+COMMAND C:/msys64/ucrt64/bin/gcc.exe -std=c99 -fsyntax-only -DMOTION_RTOS_HOST_TEST app_program\subsystem2\test_rtos.c
+In file included from app_program\subsystem2\test_rtos.c:5:
+app_program\subsystem2\test_rtos.h:8:2: error: #error "RTOS doubles require host mode and must never target physical hardware"
+    8 | #error "RTOS doubles require host mode and must never target physical hardware"
+      |  ^~~~~
+EXIT 1
+EXPECTED REJECTION PASS

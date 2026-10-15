@@ -1,15 +1,17 @@
 /** @file task_motion.c
  * @brief One motor owner, copied mailbox, dedicated latched emergency path.
  */
-#if !defined(MOTION_CONFIG_HOST_TEST)
+#if !defined(MOTION_CONFIG_HOST_TEST) || defined(MOTION_RTOS_HOST_TEST)
 #include <stddef.h>
 #define PROHIBIT_DEF_SIZE_T 1
 #include "task_motion.h"
 #include "motion_api.h"
 #include "drv_rp2040.h"
+#if !defined(MOTION_RTOS_HOST_TEST)
 #include <tk/syslib.h>
 #if TK_SUPPORT_SMP
 #include <tk/smp.h>
+#endif
 #endif
 
 #define TASK_MOTION_WAKE (1U)
@@ -63,20 +65,25 @@ ER task_motion_init (void)
     T_CTSK task = {0};
     ER error = E_OBJ;
 
-    if (!g_task_motion_ready)
+    if (!g_task_motion_ready && (g_task_motion_id <= 0) &&
+        (g_task_motion_mutex <= 0) && (g_task_motion_wake <= 0) &&
+        (g_task_motion_safety <= 0))
     {
         mutex.mtxatr = TA_INHERIT;
         g_task_motion_mutex = tk_cre_mtx(&mutex);
+        error = (g_task_motion_mutex > 0) ? E_OK : g_task_motion_mutex;
         flag.flgatr = TA_TFIFO;
-        if (g_task_motion_mutex > 0)
+        if (E_OK == error)
         {
             g_task_motion_wake = tk_cre_flg(&flag);
+            error = (g_task_motion_wake > 0) ? E_OK : g_task_motion_wake;
         }
-        if (g_task_motion_wake > 0)
+        if (E_OK == error)
         {
             g_task_motion_safety = tk_cre_flg(&flag);
+            error = (g_task_motion_safety > 0) ? E_OK : g_task_motion_safety;
         }
-        if (g_task_motion_safety > 0)
+        if (E_OK == error)
         {
 #if TK_SUPPORT_SMP
             error = InitSpinLock(&g_task_motion_capture_lock);
@@ -97,10 +104,6 @@ ER task_motion_init (void)
                 g_task_motion_id = tk_cre_tsk(&task);
                 error = (g_task_motion_id > 0) ? E_OK : g_task_motion_id;
             }
-        }
-        else
-        {
-            error = E_LIMIT;
         }
         if (E_OK != error)
         {
@@ -582,22 +585,32 @@ static void task_motion_cleanup (void)
 {
     if (g_task_motion_id > 0)
     {
-        (void)tk_del_tsk(g_task_motion_id);
+        if (E_OK == tk_del_tsk(g_task_motion_id))
+        {
+            g_task_motion_id = 0;
+        }
     }
     if (g_task_motion_safety > 0)
     {
-        (void)tk_del_flg(g_task_motion_safety);
+        if (E_OK == tk_del_flg(g_task_motion_safety))
+        {
+            g_task_motion_safety = 0;
+        }
     }
     if (g_task_motion_wake > 0)
     {
-        (void)tk_del_flg(g_task_motion_wake);
+        if (E_OK == tk_del_flg(g_task_motion_wake))
+        {
+            g_task_motion_wake = 0;
+        }
     }
     if (g_task_motion_mutex > 0)
     {
-        (void)tk_del_mtx(g_task_motion_mutex);
+        if (E_OK == tk_del_mtx(g_task_motion_mutex))
+        {
+            g_task_motion_mutex = 0;
+        }
     }
-    g_task_motion_id=0;g_task_motion_safety=0;
-    g_task_motion_wake=0;g_task_motion_mutex=0;
 }
 
 static motion_api_result_t task_motion_lock (void)

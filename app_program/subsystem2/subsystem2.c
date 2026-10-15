@@ -11,10 +11,20 @@
 EXPORT ID	sem_slots;	/* IF-02, see subsystem2.h */
 EXPORT ID	mpf_samples;
 
+static bool g_subsystem2_b_ready;
+static bool g_subsystem2_b_start_attempted;
+
 EXPORT ER subsystem2_init(void)
 {
 	T_CSEM	csem = {0};
 	T_CMPF	cmpf = {0};
+    ER error;
+
+    /* Only retry before publication, after complete owned-object rollback. */
+    if (g_subsystem2_b_ready || (sem_slots > 0) || (mpf_samples > 0))
+    {
+        return (E_OBJ);
+    }
 
 	/* Semaphore: a counter of free "slots".  The producer takes one
 	   (tk_wai_sem) before each sample; the consumer gives one back
@@ -34,11 +44,37 @@ EXPORT ER subsystem2_init(void)
 	cmpf.mpfcnt = S2_POOL_COUNT;		/* number of blocks */
 	cmpf.blfsz  = sizeof(SAMPLE_MSG);	/* size of one block */
 	mpf_samples = tk_cre_mpf(&cmpf);
-	return (mpf_samples < E_OK) ? mpf_samples : task_motion_init();
+    error = (mpf_samples < E_OK) ? mpf_samples : task_motion_init();
+    if (E_OK == error)
+    {
+        g_subsystem2_b_ready = true;
+    }
+    else
+    {
+        /* No subsystem task has started, so these objects are still ours. */
+        if ((mpf_samples > 0) && (E_OK == tk_del_mpf(mpf_samples)))
+        {
+            mpf_samples = 0;
+        }
+        if ((sem_slots > 0) && (E_OK == tk_del_sem(sem_slots)))
+        {
+            sem_slots = 0;
+        }
+        /* Preserve the first failure; retained positive IDs block retry. */
+    }
+    return (error);
 }
 
 EXPORT ER subsystem2_start(void)
 {
+    if (!g_subsystem2_b_ready || g_subsystem2_b_start_attempted)
+    {
+        return (E_OBJ);
+    }
+    /* A failed start can already leave the producer running. Never duplicate
+     * it or delete objects another buddy may now use. Reboot recovery only.
+     */
+    g_subsystem2_b_start_attempted = true;
 	/* Pinned to core 1 (TP_PRC2): samples cross to subsystem 3 on core 0 */
 	ID tid = app_start_task(producer_task, S2_PRI_PRODUCER, TP_PRC2,
 				"producer_task");

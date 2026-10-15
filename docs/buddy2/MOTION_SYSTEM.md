@@ -1,20 +1,15 @@
-> Current location: normal repository `C:/Users/Hp/Documents/GitHub/INF2004-Embedded-Systems`,
-> branch `buddy2-Motor-and-encoder-control`. The 2026-10-14 development report
-> below is historical; see the current handoff at the end and the official
-> test record for subsequent runs. Source C/H files remain in subsystem2.
+# Buddy 2 Motion Control — Technical Guide
 
-# Buddy 2 M3–M7 software and integration handoff
+This is the authoritative current Buddy 2 guide. Production algorithms and
+motor ownership are implemented in the professor's micro T-Kernel project.
+Host verification and ARM object compilation are distinct from full linking,
+on-target execution and physical validation. No startup path enables motors.
+The Vehicle Controller owns mission decisions; shared interfaces remain provisional.
 
-Implemented and verified on 2026-10-14 on branch
-`buddy2-Motor-and-encoder-control`, starting HEAD
-`9e40a56d55955291c54957c459e02af1480bc31e`.
-Local main at inspection: `2886fa8a0118185674f59964ab832d7c4e3ceabb`.
-The verification covers the uncommitted working tree, including new files.
-No branch, index, commit, push, merge, firmware flashing or powered test occurred.
-
-Software is ready for team integration review. It is **not a fully linked,
-hardware-validated integrated release**. The shared GPIO dispatcher, Vehicle
-Controller connection, calibration and target timing remain prerequisites.
+Historical implementation/verification details remain in MOTOR_DRIVER.md,
+MOTION_FOUNDATION_VERIFICATION.md and the evidence indexed by TEST_LOG.md.
+The superseded combined guide was preserved byte-for-byte as a historical
+artifact before consolidating its repeated handoffs; it is not current guidance.
 
 ## Implementation and ownership
 
@@ -32,24 +27,16 @@ this document and the other technical narratives are in `docs/buddy2/`.
 | `motion_run.c/.h` | Command lifecycle, freshness, deadlines, stopping and durable results |
 | `motion_api.h` | Provisional Vehicle Controller entry points |
 | `test_drive.c/.h` | S2-U57 through S2-U97; entirely injected encoder/fake-output fixtures |
-| `verify_motion.py` | Local host, analyzer, style-subset and ARM object verification |
-| `MOTION_SYSTEM.md` | This handoff, test mapping, limits and proposed integration |
+| `testing/subsystem2/verify_motion.py` | Local host, analyzer, style-subset and ARM object verification |
+| `MOTION_SYSTEM.md` | Authoritative current technical guide |
 | [Archived ownership report](../../testing/subsystem2/logs/2026-10-14_motion_ownership.txt) | Byte-preserved historical source/ownership/Git audit |
 | [Evidence manifest](../../testing/subsystem2/logs/2026-10-14_evidence_manifest.md) | Exact archive paths and hashes for the relocated verification logs |
 
-Original verification logs now reside in `testing/subsystem2/logs/`, using the
-manifest's date-prefixed `.txt` names. The [official test record](../../testing/subsystem2/TEST_LOG.md)
-contains S2-U01–U97 definitions and imported preliminary working-tree outcomes.
-The unchanged verification script still writes future outputs in subsystem2;
-its recipe input `m2_make_recipes.txt` remains here. This relocation changes no
-historical result and does not execute tests or establish commit-verified passes.
-
-Existing files changed: `subsystem2.c` adds motion init/start hooks after the
-retained demonstration objects/task; `subsystem2.h` includes `motion_api.h`;
-`subsystem2_test.c` adds the new runner and moves all existing pure groups onto
-its native test worker without changing their assertions. Producer implementation,
-pool, semaphore, messages and inherited tests are preserved. Accepted M1/M2
-implementation files have not been changed.
+Host-only tests, the single verification runner and its saved recipe live in
+`testing/subsystem2/`. Firmware-discovered tests remain flat beside source to
+preserve the professor's unchanged TEST=1 discovery. They are the authoritative
+implementations, not copies under testing/. Test definitions/results have one
+index: [TEST_LOG.md](../../testing/subsystem2/TEST_LOG.md).
 
 The actual Make wildcard in `build_make/mtkernel_3/app_program/subdir.mk`
 discovers `app_program/*.c` and `app_program/*/*.c`. All new C files are flat in
@@ -226,136 +213,74 @@ is visible separately; software never claims an unconfirmed brake is successful.
   two event flags and static storage. Kernel-object allocation failures prevent
   readiness; task start returns the actual micro T-Kernel start error.
 
-## Executed verification and limits
+## Initialization, rollback and recovery contract
 
-Python used:
-`C:/Users/Hp/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe`.
-From repository root, exact final arguments were:
+All subsystem init calls must finish before any start call. Initialization is
+single-threaded and pre-publication. The existing semaphore/pool declarations,
+SAMPLE_MSG layout, producer code and cross-buddy demonstration dependencies
+are preserved. No ownership transfer or runtime teardown has been introduced.
 
-```
-python -B app_program/subsystem2/verify_motion.py --style
-python -B app_program/subsystem2/verify_motion.py --label final --analyze
-python -B app_program/subsystem2/verify_motion.py --label final --arm --strict
-git diff --check
-```
+- subsystem2_init creates its demonstration semaphore/pool, then motion objects.
+  On failure it deletes only successfully created, still-private objects and
+  returns the original error. Motion initialization follows the same rule.
+- After complete rollback, initialization may be retried. Repeated successful
+  initialization returns E_OBJ without changing IDs or allocating objects.
+- A failed deletion retains its positive ID and blocks another initialization
+  attempt with E_OBJ. The original creation error is retained for the failed
+  call. Recovery from incomplete rollback is reboot only; no resource ID is lost.
+- subsystem2_start rejects calls before successful initialization and repeated
+  attempts. The first attempt preserves professor ordering: producer, then motion.
+  If motion startup fails, the producer may already be running. Published
+  demonstration objects are retained; never delete them beneath other buddies.
+  Start retry/runtime restart is unsupported and requires reboot recovery.
+- The shared app_start_task helper only reports its existing return value;
+  Buddy 2 cannot certify producer scheduling when that helper masks a start
+  error. Correcting that shared helper is a separately approved team change.
+- Failed owner wait/clock operations brake, release the encoder subscription,
+  publish fault status where possible and exit the owner. Fault recovery is
+  reviewed, unpowered/reboot only. A successful event post is not physical proof.
 
-The script contains the exact compiler locations and saves expanded commands.
-Host GCC 14.2.0: C99 default and O2 + fshort-enums, both with `-fanalyzer`,
-Wall/Wextra/Werror/pedantic/conversion/sign-conversion/shadow/strict-prototypes/
-missing-prototypes/format=2/double-promotion/undef checks. **95/95 groups PASS
-in EACH profile: all original 54 plus 41 new groups.** No existing assertion or
-test group was removed/weakened. Milestone gates: M3 59, M4 61, M5 68, M6 80,
-M7 initial 88; final safety regressions bring the total to 95.
+U99–U103 exercise motion retry and repeated init; U121–U134 exercise subsystem
+rollback, one-shot startup, retained IDs and fake-resource validation. All fakes
+are host-only; they do not emulate real scheduling, SMP visibility or IRQ latency.
 
-ARM GNU 10.3.1: all 19 subsystem2 translation units compiled in each combination
-of SMP=0/1 and APP_TEST=0/1 (76 compilations). The script reuses the professor's
-saved Make recipe and changes only input, profile defines and output/dependency
-paths, all within Buddy 2. Strict application warning checks passed with zero
-diagnostics; supplied headers are system includes for that check. Existing
-inherited test/demo translation units retain normal template compiler options.
-These are **object compilations, not a full Make build or link**.
+### Demonstration retirement — coordinated integration task
 
-SDK 2.2.0 was not found in the configured environment/tool installation; the
-installed Pico SDK is 1.5.1. The accepted prior integrated build remains blocked
-by the template's SDK 2.2.0 versus installed 1.5.1 USB compatibility mismatch.
-Make was not invoked in this run because its outputs/parse-time writes can leave
-Buddy 2. No UF2/ELF or complete firmware size is claimed. No dependency installed.
+`subsystem2_start()` already starts the real motion task, alongside the retained
+producer. Removing only producer startup would strand Buddy 3's consumer in
+`tk_rcv_mbx(...,TMO_FEVR)` (`app_program/subsystem3/task_consumer.c:25`).
+Removing SAMPLE_MSG, sem_slots or mpf_samples would also break that consumer's
+compiled references and Buddy 4's monitor (`task_monitor.c:92–93`), plus S2-U01/02.
+The pool, semaphore, declarations and producer are therefore the minimum
+unchanged compatibility chain for the currently started examples.
 
-Compiler stack estimates in the final SMP/TEST profile: motion_run_init 976 B,
-wheel_loop_init 776 B, task_motion_cycle 384 B, task_motion_entry 64 B; largest
-new test frame 1384 B. Existing pure test call chains also leave insufficient
-initial-task margin. These are individual frames, not complete call-chain or
-interrupt bounds. All Buddy 2 pure TEST=1 groups therefore use a static 8 KiB
-worker, not the template initial task's 1024+128 B stack. It is one-shot with a
-30-second test-only timeout; it uses fake outputs, self-deletes on completion,
-and avoids forcibly terminating a worker that could hold logging/kernel locks.
-On timeout it reports failure and leaves its completion object alive. Target
-test execution, stack watermarks and timeout sufficiency have not been tested.
+Buddy 3 must retire its consumer startup and mailbox/pool return dependencies
+while retaining the real navigation task. Buddy 4 must retire synthetic batch,
+statistics, semaphore/pool monitoring and related tests. Shared startup/tests
+and TEAM.md then require coordinated updates. Only afterwards can Buddy 2
+remove producer_task, s2_make_value, sample types and compatibility objects.
+This is not a pre-merge code blocker for a non-actuating compatibility-preserving
+merge; it is required before the final robot configuration claims no synthetic
+producer activity. No other buddy's code was changed.
 
-Style subset passed on 17 new C/header files: ≤80 columns, spaces, no trailing
-whitespace, EOF markers and distinct first-eight module filename characters.
-Production public bodies precede private definitions; synchronization and checked
-signed arithmetic were manually reviewed. This is not certified Barr-C compliance.
-Necessary conventions retained: binary32 `motion_pid_value_t` (no standard C99
-float32_t), vendor INT/UINT/ER/ID types and MMIO interfaces, the task entry exit
-return after tk_ext_tsk, function-pointer callbacks and synthetic test fixtures.
-Existing professor/demo style is deliberately unchanged. clang-format,
-clang-tidy and cppcheck were not available on PATH; no results are claimed.
+## Shared integration gates
 
-No known unresolved high-severity portable-code defect was identified in the
-final review. Shared interrupt integration, full linking and unmeasured target
-timing/electrical/calibration behavior remain release blockers. Host tests do
-not demonstrate SMP scheduling, physical current, motion accuracy or safety.
+Agree dispatcher ownership, GPIO/PWM allocation, task resources and the final
+motion contracts through TEAM.md and the respective owners before integration.
+No shared file is changed by this correction pass. Dispatcher release must
+quiesce callbacks on both cores; its current void hook requires that guarantee.
+Both-edge coalescing/loss and maximum edge rate require target measurement.
+Required transition rate is CPR*abs(speed_mm_s)*1000/circumference_um; implement
+with checked arithmetic. The speed quantum is
+1000*circumference_um/(CPR*elapsed_us) mm/s. CPR includes x4/gearing once.
 
-## New test mapping (all synthetic)
-
-| ID | Expected property |
-|---|---|
-| S2-U57 | Baseline and complete positive quadrature cycle |
-| S2-U58 | Independent polarity and stationary observation timestamps |
-| S2-U59 | Invalid transition latches unhealthy |
-| S2-U60 | Null, generation and calibration rejection |
-| S2-U61 | Count overflow latches without wrapping |
-| S2-U62 | Copied mailbox, capacity and terminal acknowledgement gate |
-| S2-U63 | Pending-command cancellation despite occupied slot |
-| S2-U64 | Signed speed/distance, independent loop and explicit brake |
-| S2-U65 | Stale feedback disarms both outputs |
-| S2-U66 | Generation reset and null-path rejection |
-| S2-U67 | Negative overspeed fails closed |
-| S2-U68 | Motor polarity, timing, PID and nonfinite-config consistency |
-| S2-U69 | Failed output stops both; failed brake remains unconfirmed |
-| S2-U70 | Zero crossing, reversal guard and count-stable dwell |
-| S2-U71 | Relative forward targets and independent wheel arrival |
-| S2-U72 | Reverse targets and wrong-way rejection |
-| S2-U73 | Leading-wheel reduction, integer deceleration cap, overshoot |
-| S2-U74 | Uninitialised planner, enum, range, future and zero-life rejection |
-| S2-U75 | Position/timestamp overflow and INT32_MIN distance |
-| S2-U76 | Delayed DONE, durable result, exact acknowledgement and next ID |
-| S2-U77 | Reverse executive completion |
-| S2-U78 | Cancellation brake/result and replay rejection |
-| S2-U79 | Continuous refresh, replayed refresh rejection and exact expiry |
-| S2-U80 | Finite exact timeout disarms |
-| S2-U81 | Emergency latches, acknowledgement cannot re-enable |
-| S2-U82 | Repeated stops cannot extend stopping deadline |
-| S2-U83 | Left/right 90/180-degree target signs and arc values |
-| S2-U84 | Unequal calibrated turn arcs and normalized leading-wheel correction |
-| S2-U85 | Turn overflow, zero scale and unrepresentably small arc rejection |
-| S2-U86 | Both turn wheel targets and standstill required |
-| S2-U87 | Post-braking turn drift becomes OVERSHOOT |
-| S2-U88 | Unhealthy capture becomes SENSOR fault |
-| S2-U89 | Failed status publication cannot reopen admission prematurely |
-| S2-U90 | Early/duplicate wakes skip PID; backward time faults |
-| S2-U91 | No-progress timeout brakes despite repeated nonzero requests |
-| S2-U92 | Caller edits cannot change copied control calibration |
-| S2-U93 | New publication cannot refresh stale feedback |
-| S2-U94 | Request acceptance/rejection metadata and brake confirmation |
-| S2-U95 | Emergency cause and earlier durable terminal coexist |
-| S2-U96 | Moving wheel cannot hold reversal indefinitely |
-| S2-U97 | Injected GPIO→decoder→estimator→executive→PID→fake PWM and fault stop |
-
-## Proposed shared changes — not applied
-
-1. Team-owned candidate `app_program/gpio_dispatch.c` and `.h`: register IRQ13
-   once through the professor's interrupt mechanism, preserve other pin users,
-   implement drv_encoder_port_t reserve/enable/release, route both encoder edges,
-   handle cross-core ownership, lost-event faults and bounded callback release.
-   Agree this with Buddy 5 and all GPIO IRQ consumers before implementation.
-2. `TEAM.md`: agree encoder/motor pins, VBAT jumper, I2C/UART restrictions, PWM
-   slices 4/5, GPIO IRQ/core ownership, object budget, task priority/affinity,
-   calibration owner, emergency path and provisional motion contracts.
-3. Vehicle Controller location is not implemented/agreed. Candidate
-   `app_program/vehicle_controller.c/.h`, with separately approved `app_main.c`
-   init/start calls, would own arbitration and call motion_api_* after startup.
-   No app_main.c/app.h change is needed for the already implemented S2 hooks.
-   Buddy 1/3/4/5 interface updates need their respective owners' agreement.
-4. [Buddy 2 test records](../../testing/subsystem2/TEST_LOG.md) and
-   [archived evidence](../../testing/subsystem2/logs/2026-10-14_evidence_manifest.md)
-   were organised under the professor's convention during the separately approved
-   folder cleanup. Uncommitted historical runs remain preliminary; formal
-   commit-verified reruns and on-target/hardware execution are still outstanding.
-5. SDK/tool environment: provision the required SDK 2.2.0 and dependencies with
-   approval; then run the unchanged documented Make workflow. No Makefile,
-   kernel or device change is proposed to bypass the current SDK mismatch.
+Buddy 1 telemetry conversion must resolve signedness/range and invalidity.
+Week 6 raw encoder-count telemetry is not exposed by current motion status;
+adding it requires an agreed interface. Never relabel rounded distance as counts.
+Buddy 3 cumulative-forward odometry needs an agreed definition and clock mapping.
+Buddy 4 forward-only speed needs age/range checking and revocation during reverse,
+turn or fault states. Different clock origins cannot be reconciled by unit division.
+Buddy 5 avoidance requests go through the Vehicle Controller, not motor drivers.
 
 ## Calibration and future hardware verification checklist
 
@@ -383,90 +308,47 @@ Exercise controller TTLs, arbitration, rejection, busy retry, cancellation,
 acknowledgement and emergency events from all relevant buddies. Preserve videos
 and official test records only in separately approved locations.
 
-## Normal-repository handoff — 2026-10-15
+## Verification and repository organisation
 
-Final organisation is performed in the original repository and branch, starting
-at HEAD `0482b352c4d30e8e95831ae8ff931c8952dbfeb9`. No branch/worktree is
-created or switched. The previous worktree was already archived at the user's
-request; its snapshot `7215e6055c9539535e19c434433c398a7750ba5e` is inspected
-read-only to preserve documentation and later genuine test records. All 38 C/H
-files, script and recipe match its implementation apart from line endings.
+Run from repository root:
 
-### Requirement coverage and release boundary
+```text
+python -B testing/subsystem2/verify_motion.py --style
+python -B testing/subsystem2/verify_motion.py --analyze --label UNIQUE_HOST
+python -B testing/subsystem2/verify_motion.py --arm --strict --label UNIQUE_ARM
+```
 
-| Responsibility | Actual implementation | Remaining verification/integration |
-|---|---|---|
-| Two motors, signed effort, PWM, brake/coast, guarded reversal | drv_motor and drv_rp2040; synthetic U43–U56 | Electrical sequencing/current, polarity and guard measurements |
-| Two encoders, x4 polarity/count/invalid/overflow handling | motion_quad and enc_capture; U13–U18/U57–U61 | Real dispatcher hooks, edge rate/loss and SMP target tests |
-| Signed wheel speed and distance | motion_estimator; U19–U25/U38–U39 | Loaded circumference, decoded counts/rev and physical error |
-| Two PIDs, saturation and anti-windup | motion_pid and wheel_loop; U26–U42/U64–U70 | Gains, timing, plant stability and target WCET |
-| Continuous differential speeds | MOVE_PLAN_SPEED, same-ID TTL refresh, acceleration/deceleration | Controller arbitration and line-following integration |
-| Forward/reverse travel and straight correction | Relative wheel goals, leading-wheel reduction, both-wheel completion | Distance/stopping/slip calibration |
-| Left/right and U-turns | Opposite wheel arcs and separate compensation; U83–U87 | Effective track width and angle accuracy |
-| Stop/cancel/deadlines/latched emergency faults | motion_run, motion_bus, dedicated safety flag | Actual scheduling/stop latency and independent power-removal policy |
-| Lifecycle and status | Real task init/start, copied status and immutable configuration | Team API agreement; no automatic configuration/enable caller |
+The runner defaults to testing/subsystem2/logs and refuses evidence overwrite.
+It hashes production/test/runner/recipe files by repository-relative path and
+records base HEAD, dirty status, compiler commands and UTC start. Host execution
+has a bounded timeout (default 5 s; --host-timeout range >0 to 60 s), returning
+nonzero 124 with a TIMEOUT diagnostic. Compiler invocations are bounded at 120 s.
+The timeout self-check intentionally records EXIT 124; guards and mutation checks
+intentionally record rejection. These are not acceptance-suite failures.
 
-Portable logic is implemented. Kernel/hardware paths are not proven by host
-tests. Priority 15, TP_PRC2 affinity, 4 KiB motion stack and 8 KiB TEST worker
-remain provisional until team scheduling review and measured stack margins.
-Emergency work avoids ordinary queues, but no hard response bound has been
-measured. Fault acknowledgement does not clear the latch; recovery requires an
-unpowered reviewed restart, not automatic re-enable.
+Generated executables, objects, dependency and stack-usage files use a temporary
+directory under testing/subsystem2/build, covered by the existing 'build' ignore
+rule. Each private subdirectory is removed on success/failure; the empty ignored
+parent can remain for later/concurrent runs. No shared ignore rule changed.
+Host-only test_rtos uses actual task_motion, drv_encoder and subsystem2 sources
+with kernel/GPIO/motor fakes. Kernel ABI names and host main/setjmp/longjmp follow
+the external test conventions; compact fake types and the scenario dispatcher
+are test-only Barr exceptions. The style check is a subset, not certification.
+Existing 95 pure groups remain; 37 host adapter/lifecycle groups extend coverage.
+Seven temporary mutations check selected regression assertions; they do not
+constitute exhaustive mutation testing or physical safety proof.
 
-### Demonstration retirement — coordinated integration task
+Compiler paths remain explicit local prerequisites in the runner. ARM checks
+reuse the saved unchanged Make compiler recipe and compile 19 source files for
+SMP=0/1 and TEST=0/1. They are object checks, not a full Make build or link.
+The installed SDK 1.5.1 does not establish compatibility with the required 2.2.0.
+After separate tool provisioning, use the professor's documented build_make
+workflow: make -j8 and make TEST=1 -j8. No workaround to shared rules is applied.
 
-`subsystem2_start()` already starts the real motion task, alongside the retained
-producer. Removing only producer startup would strand Buddy 3's consumer in
-`tk_rcv_mbx(...,TMO_FEVR)` (`app_program/subsystem3/task_consumer.c:25`).
-Removing SAMPLE_MSG, sem_slots or mpf_samples would also break that consumer's
-compiled references and Buddy 4's monitor (`task_monitor.c:92–93`), plus S2-U01/02.
-The pool, semaphore, declarations and producer are therefore the minimum
-unchanged compatibility chain for the currently started examples.
-
-Buddy 3 must retire its consumer startup and mailbox/pool return dependencies
-while retaining the real navigation task. Buddy 4 must retire synthetic batch,
-statistics, semaphore/pool monitoring and related tests. Shared startup/tests
-and TEAM.md then require coordinated updates. Only afterwards can Buddy 2
-remove producer_task, s2_make_value, sample types and compatibility objects.
-This is not a pre-merge code blocker for a non-actuating compatibility-preserving
-merge; it is required before the final robot configuration claims no synthetic
-producer activity. No other buddy's code was changed.
-
-### Unresolved shared contracts
-
-The Vehicle/Mission Controller must arbitrate Buddy 1 remote requests, Buddy 3
-line/turn intent, Buddy 4 motion/terrain events and Buddy 5 stop/avoidance intent.
-Buddy 2 alone owns motor outputs. motion_api_* remains provisional. Agree IDs,
-TTL/refresh, BUSY retry, cancellation/acknowledgement, emergency callers and
-configuration lifetime. Week 6 FR17 requests raw left/right encoder counts;
-current motion_run_status_t exposes speed and historical wheel position, not
-raw counts. Adding raw count telemetry is a team-reviewed interface decision,
-not an implemented capability. No public contract was silently changed.
-
-The external GPIO-bank dispatcher must supply reserve/enable/release, both
-edge directions on GP7/GP28/GP0/GP1, one simultaneous input sample, owned-bit
-acknowledgement, agreed core affinity and quiescent release. Pin/PWM reservations
-need TEAM.md agreement. GP0/GP1 cannot use UART/crash reporting; GP28 requires
-checking the VBAT jumper and ADC ownership; GP8/GP9 conflict with I2C0, and GP7
-with I2C1. Current disabled I2C/ADC-pin setup is not permanent ownership proof.
-
-### Manual Git readiness
-
-The user explicitly approves retaining root AGENTS.md and reference_docs.
-Those files are unchanged. Six historical integrated ARM/Make verification
-logs have been moved from build_make into testing/subsystem2/logs, with original
-bytes and hashes preserved. See the [relocation index and integrity record](../../testing/subsystem2/logs/2026-10-15_final_verification.md#integrated-arm-log-relocation--2026-10-15).
-
-The final working-tree diff against locally available main
-`2886fa8a0118185674f59964ab832d7c4e3ceabb` contains no build_make changes.
-The committed-only diff still contains the old log additions until the user
-commits the relocation. The previous scope-only merge blocker is resolved by
-this approval and file move; full linking and shared integration limitations
-remain. No remote freshness or conflict-free merge is asserted. Review and
-commit the final file changes manually; no staging, commit, push, merge, fetch
-or history rewrite is performed by this organisation task.
-
-The installed SDK remains 1.5.1; the documented build requires SDK 2.2.0
-(or the README's separately tested 2.3.0). Full firmware linking remains
-unverified. Provision a compatible SDK/tool environment separately; do not
-patch the professor's Makefiles. No firmware was flashed or motor energised.
+All results, current source hashes, historical logs and archive hashes are
+indexed only in [TEST_LOG.md](../../testing/subsystem2/TEST_LOG.md). S2-U01/U02
+remain target tests; host results do not establish those outcomes. Historical
+working-tree results are preliminary, not clean commit-verified evidence.
+Keep production C/H in app_program/subsystem2, host tools/evidence in testing/
+subsystem2 and technical guidance here. Do not relocate tests used by TEST=1
+without an approved source-discovery change. Do not commit generated artifacts.

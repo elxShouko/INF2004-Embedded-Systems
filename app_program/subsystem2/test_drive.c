@@ -1095,6 +1095,27 @@ static bool test_motion_sample_time (void)
             30000U == run.loop.last_tick_us) && b_pass;
     b_pass = !test_motion_tick(&run,0,0,29999U) &&
         (MOTION_RUN_FAULT == run.status.state) && b_pass;
+    /* ACTIVE refreshes must neither run PID early nor move its deadline. */
+    fake = (test_motion_io_t){0};
+    b_pass = test_motion_run_ready(&run,&fake) && b_pass;
+    move_plan_command_t command = test_motion_command(MOVE_PLAN_SPEED);
+
+    b_pass = motion_run_command(&run,&command,20000U) && b_pass;
+    calls = fake.applies;
+    for (uint64_t now = 21000U; now < 30000U; now += 1000U)
+    {
+        command.issued_us = now;
+        b_pass = motion_run_command(&run,&command,now) &&
+            test_motion_tick(&run,0,0,now) &&
+            (20000U == run.loop.last_tick_us) &&
+            (calls == fake.applies) && b_pass;
+    }
+    b_pass = test_motion_tick(&run,0,0,30000U) &&
+        (30000U == run.loop.last_tick_us) &&
+        (fake.applies == calls + 2U) && b_pass;
+    calls = fake.applies;
+    b_pass = test_motion_tick(&run,0,0,30000U) &&
+        (fake.applies == calls) && b_pass;
     return (b_pass);
 }
 

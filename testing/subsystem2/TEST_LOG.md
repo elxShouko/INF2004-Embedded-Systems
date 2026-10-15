@@ -2011,3 +2011,350 @@ Current approval retains root AGENTS.md and reference_docs unchanged. The final
 working-tree build_make diff against local main is empty; committed HEAD still
 contains the old paths until the user commits the relocation. No Git history
 was rewritten. Full linking/target/hardware limitations remain unchanged.
+
+## Post-merge Buddy 2 adapter verification — 2026-10-15
+
+New stable definitions below extend the registry; S2-U01–U97 are unchanged.
+U90 additionally checks ACTIVE refreshes, duplicate wakes and the next PID
+deadline. Existing READY/backward-time assertions remain. All new cases are
+host-only: actual task_motion.c and drv_encoder.c use test_rtos doubles.
+Each adapter case runs in a fresh process. No physical GPIO, PWM or IRQ access,
+real scheduler, priority inheritance or SMP execution is simulated as proven.
+These definitions follow an initial investigative console run, not a claim
+that they were registered before that development experiment. That run found
+U99/U100/U101 failing because the original init returned E_LIMIT instead of the
+injected E_SYS. No separate raw log was captured for that initial experiment.
+
+| ID | Definition / method | Expected result |
+|---|---|---|
+| S2-U98 | Run actual unconfigured owner entry | Infinite event wait; no GPIO or motor preparation |
+| S2-U99 | Inject mutex creation E_SYS | Preserve error, clean only owned objects, API unavailable |
+| S2-U100 | Inject wake flag creation E_SYS | Preserve error and delete created mutex |
+| S2-U101 | Inject safety flag creation E_SYS | Preserve error and delete created wake/mutex |
+| S2-U102 | Inject spinlock initialization failure | Preserve error; delete all created objects |
+| S2-U103 | Inject task creation failure | Preserve error; delete flags/mutex |
+| S2-U104 | Inject task start failure | Return start error; no motor preparation |
+| S2-U105 | ACTIVE refresh wakes at 40/50 ms with 30 ms fixture period | No early PID; first drive at 60 ms, paired output exactly once |
+| S2-U106 | Hold command/status mutex, then emergency stop | Ordinary stop returns BUSY; safety post succeeds; braking precedes mutex release |
+| S2-U107 | Inject safety flag post error | Emergency API returns ERROR; wake still attempted |
+| S2-U108 | Inject wake flag post error | Emergency API returns ERROR; safety latch still posted |
+| S2-U109 | Reject encoder reservation | Fault before GPIO setup/motor preparation; no release of foreign reservation |
+| S2-U110 | Reject encoder IRQ enable | Release granted reservation once; no motor preparation |
+| S2-U111 | Fail GP28 input setup | Release reservation once; never enable motors |
+| S2-U112 | Deliver invalid left quadrature jump during ACTIVE | Sensor fault; both outputs braked; encoder released |
+| S2-U113 | Fail SMP capture try-lock during callback | Sensor fault; both outputs braked; encoder released |
+| S2-U114 | Fail operating-time read during ACTIVE | Owner exits faulted; outputs braked and encoder released |
+| S2-U115 | Fail event wait during ACTIVE | Owner exits faulted; outputs braked and encoder released |
+| S2-U116 | Query measurement older than allowed age | Speed validity/standstill false; publication does not refresh sample |
+| S2-U117 | Omit reserve hook | Configure/open rejected without GPIO operations |
+| S2-U118 | GP7 has foreign PWM mux | Refuse acquisition before reserve/GPIO/motor setup |
+| S2-U119 | Deliver one left encoder edge through registered sink | Left +100 um/+10 mm/s; right unchanged; fixture units only |
+| S2-U120 | Fail safety flag reference during ACTIVE | Fail closed to output fault, brake and release |
+
+All numerical values above are fixtures, not measured robot calibration.
+S2-U01/U02 still require target evidence.
+
+### Correction acceptance results
+
+Tested base HEAD: `4240895a455679ad0a3996057e03723cf2e9daea` on `main`,
+with uncommitted Buddy 2 corrections. These are preliminary working-tree
+results, not evidence of a clean tested commit. The metadata records Git
+status, UTC start, options and SHA256 for all 42 Buddy 2 C/H/Python/recipe
+files. Final host and ARM metadata hashes were checked against current source.
+
+| Activity | Actual result | Evidence |
+|---|---|---|
+| Final default host: GCC 14.2.0, strict C99 and `-fanalyzer` | S2-U03–U120: 118 unique PASS groups; no warning/error diagnostics | [Raw output](logs/2026-10-15_postaudit/verify_postaudit20261015b_default.log) |
+| Final optimized host: same, `-O2 -fshort-enums` | S2-U03–U120: 118 unique PASS groups; no warning/error diagnostics | [Raw output](logs/2026-10-15_postaudit/verify_postaudit20261015b_optimized.log) |
+| Exact host source/revision metadata | 42 source hashes match final implementation | [Metadata](logs/2026-10-15_postaudit/verify_postaudit20261015b_metadata.json) |
+| ARM GCC 10.3.1 object compilation using saved professor Make recipe, strict application warnings | 20 C files x SMP=0/1 x TEST=0/1 = 80 successful compiles; no warning/error diagnostics | [Raw compiler output](logs/2026-10-15_postaudit/verify_postauditarm20261015a_arm.log), [metadata](logs/2026-10-15_postaudit/verify_postauditarm20261015a_metadata.json) |
+| Host-only guard without host mode | Expected compiler rejection PASS | [Raw output](logs/2026-10-15_postaudit/guard_host_required.log) |
+| Host-only guard with physical target macro | Expected compiler rejection PASS | [Raw output](logs/2026-10-15_postaudit/guard_hardware_rejection.log) |
+| Style subset: EOF, width, tabs, trailing whitespace, module filename prefix | PASS: 19 checked files; console result, no separate raw log | `python -B app_program/subsystem2/verify_motion.py --style` |
+| Python syntax | AST parse PASS; console result, no separate raw log | `ast.parse` of verification script |
+| Full integrated firmware link, on-target/SMP timing, physical movement | NOT RUN | Compatible SDK and integration/hardware gates remain unresolved |
+
+Final host command from repository root:
+
+```text
+python -B app_program/subsystem2/verify_motion.py --label postaudit20261015b --analyze --output-dir testing/subsystem2/logs/2026-10-15_postaudit
+```
+
+ARM command (object compilation only; no Make invocation or link):
+
+```text
+python -B app_program/subsystem2/verify_motion.py --arm --strict --label postauditarm20261015a --output-dir testing/subsystem2/logs/2026-10-15_postaudit
+```
+
+The earlier `postaudit20261015a` host logs are preserved as intermediate
+working-tree evidence: both profiles passed 95 pure and 23 adapter groups,
+before the final startup/fault assertions and unique-ID checks were strengthened.
+Their metadata describes that earlier source, not the final implementation.
+Existing test groups and inherited demonstration tests were not removed;
+S2-U01/U02 were not executed by either host profile. Fake kernel tests are
+sequential and cannot establish real SMP ordering or physical emergency latency.
+The Barr style subset and compiler checks are not a full Barr-C certification.
+External kernel ABI names and test-only `main`/`setjmp`/`longjmp`, plus the
+long scenario dispatcher in test_rtos.c, remain documented test-only exceptions.
+
+Tracked-file hashes were compared with the clean starting HEAD snapshot:
+all 933 tracked paths were checked; only the eight listed Buddy 2 paths
+changed. Two new host-test C/H files and this run's evidence are Buddy 2-owned.
+No teammate, shared startup/interface, Makefile, kernel, root AGENTS.md or
+reference_docs file changed. Generated verification binaries/objects are
+disposable and excluded from evidence; raw logs and metadata are retained.
+
+### Post-merge evidence integrity manifest
+
+SHA256 covers complete original bytes. Intermediate `a` and final `b` host
+runs are distinct; no historical evidence was overwritten.
+
+| Evidence | Bytes | SHA256 |
+|---|---:|---|
+| [guard_hardware_rejection.log](logs/2026-10-15_postaudit/guard_hardware_rejection.log) | 489 | `a040cd2790b4bf81e19185088741f1000f7ae152922a5fe48d2a5660be70390f` |
+| [guard_host_required.log](logs/2026-10-15_postaudit/guard_host_required.log) | 447 | `bb7a2aef330cdc0b938063e977930c077ad789e4643aaf6f95bd2fd5461b24e6` |
+| [verify_postaudit20261015a_default.log](logs/2026-10-15_postaudit/verify_postaudit20261015a_default.log) | 13779 | `59546a04c4e21dc16449159ae8e6338f41d176c7c736da2d61baa02a1577c664` |
+| [verify_postaudit20261015a_metadata.json](logs/2026-10-15_postaudit/verify_postaudit20261015a_metadata.json) | 4659 | `c49c6873c16d3ed091408e76a1f1af23296cd416ef5cca2b497f088a05b66e49` |
+| [verify_postaudit20261015a_optimized.log](logs/2026-10-15_postaudit/verify_postaudit20261015a_optimized.log) | 13867 | `9b5acb796ebcfb31e22b7dbd22ba9726017c426458e4e25eb355d2cc1b2ccbeb` |
+| [verify_postaudit20261015b_default.log](logs/2026-10-15_postaudit/verify_postaudit20261015b_default.log) | 13779 | `59546a04c4e21dc16449159ae8e6338f41d176c7c736da2d61baa02a1577c664` |
+| [verify_postaudit20261015b_metadata.json](logs/2026-10-15_postaudit/verify_postaudit20261015b_metadata.json) | 4729 | `5ce927f6879447c91ec557b11d93e98d8affb6f5eef82166d477375c24e5d03b` |
+| [verify_postaudit20261015b_optimized.log](logs/2026-10-15_postaudit/verify_postaudit20261015b_optimized.log) | 13867 | `9b5acb796ebcfb31e22b7dbd22ba9726017c426458e4e25eb355d2cc1b2ccbeb` |
+| [verify_postauditarm20261015a_arm.log](logs/2026-10-15_postaudit/verify_postauditarm20261015a_arm.log) | 403668 | `9066890d4d06c8ecce164fecdcacbacebc8e63400716161f0a860aa254adb8b6` |
+| [verify_postauditarm20261015a_metadata.json](logs/2026-10-15_postaudit/verify_postauditarm20261015a_metadata.json) | 4731 | `d20576e7e03b77662d9c71796ef4c820f621063d25a646a529f7a3f8aa1540aa` |
+
+## Final lifecycle and hygiene correction — test definitions
+
+S2-U98–U120 retain their IDs and behaviours. Cleanup now checks object identity,
+type, liveness and lock state; U99–U103 also retry after complete rollback and
+reject repeated successful initialization. U108 asserts the retained safety bit;
+U114/U115 assert task exit; U116 establishes fresh validity/standstill before
+aging and checks unchanged publication and measurement timestamps. Encoder
+failure cases assert the acquisition stage, and release requires live ownership.
+The same host-only harness now compiles the actual subsystem2.c wrapper.
+
+| ID | Definition / method | Expected result |
+|---|---|---|
+| S2-U121 | Fail demonstration semaphore creation, then retry | No live objects/start; retry succeeds; repeated init preserves IDs |
+| S2-U122 | Fail demonstration pool creation, then retry | Owned semaphore released; retry succeeds; no duplicates |
+| S2-U123 | Fail motion mutex creation inside subsystem init | Both demonstration objects rolled back; retry succeeds |
+| S2-U124 | Fail motion wake creation inside subsystem init | Exact motion/demo resources released; retry succeeds |
+| S2-U125 | Fail motion safety creation inside subsystem init | Exact motion/demo resources released; retry succeeds |
+| S2-U126 | Inject motion spin initialization error inside subsystem init | Exact resources released; retry succeeds; synthetic defensive failure |
+| S2-U127 | Fail motion task creation inside subsystem init | All five created objects released; retry succeeds |
+| S2-U128 | Successful init/start then repeat | Repeated calls reject; IDs/live objects preserved; one producer and one motion start |
+| S2-U129 | Start before initialization | E_OBJ; no producer, motion start or object creation |
+| S2-U130 | Motion start fails after producer starts | Original error; published objects retained; repeated start cannot duplicate producer |
+| S2-U131 | Producer helper fails before motion start | Original error; motion not started; repeated start rejected |
+| S2-U132 | Demonstration rollback deletion fails | First init error retained; live ID retained; retry quarantined with E_OBJ |
+| S2-U133 | Motion rollback deletion fails | First init error retained; live ID retained; retry quarantined with E_OBJ |
+| S2-U134 | Probe wrong-type, duplicate and invalid fake deletions | Each rejected without changing remaining live objects; legitimate delete succeeds |
+
+Runner checks additionally exercise the actual timeout handler, both host-only
+compile guards and seven temporary production mutations. Mutation cases must
+compile successfully and fail the designated test; a compiler failure is not
+counted as detection. No mutation is applied to repository production source.
+Executed results are recorded below. These remain non-actuating host tests.
+
+Superseded combined technical/handoff guide preserved before consolidation: [original bytes in archive](logs/2026-10-15_hygiene_intermediate_evidence.zip) (entry `2026-10-15_superseded_motion_system.txt`), 39867 bytes, SHA256 `c8e0ac72dfed986d4abcb0b8f91b0fe55f3e75c9a8c3aeb232b1cbc4ab631351`. Relative links in this raw historical artifact describe its original location.
+
+### Final correction acceptance — 2026-10-15
+
+Base HEAD: `923f6ce56854ef9281584b43fd85e92888eb81cf`, branch `main`, plus
+uncommitted Buddy 2 corrections. The earlier new files were already staged by
+the user at entry; this pass did not alter the index. These are preliminary
+working-tree results, not a clean commit-verified implementation.
+
+| Date / executor | Test IDs / activity | Actual result | Evidence |
+|---|---|---|---|
+| 2026-10-15 / Codex host automation | S2-U03–U134, default GCC 14.2.0 strict C99, -fanalyzer | 132 unique PASS groups: 95 existing pure + 37 adapter/lifecycle; no warnings/errors | [Final default](logs/verify_hygiene20261015e_default.log) |
+| 2026-10-15 / Codex host automation | Same IDs, -O2 -fshort-enums | 132 unique PASS groups; no warnings/errors | [Final optimized](logs/verify_hygiene20261015e_optimized.log) |
+| 2026-10-15 / Codex runner checks | Timeout handler, physical-target/host-mode guards, seven temporary mutations | Expected timeout EXIT 124; guard rejections; all seven compiled mutations detected through eight designated FAIL results | [Check output](logs/verify_hygiene20261015e_checks.log) |
+| 2026-10-15 / Codex ARM compiler | ARM GCC 10.3.1; 19 firmware C files x SMP=0/1 x TEST=0/1 | 76 successful object compiles; no warning/error diagnostics; no linking/execution | [Final ARM](logs/verify_hygienearm20261015d_arm.log) |
+| 2026-10-15 / Codex static checks | Style subset, Python AST, test-ID registry, documentation file links, archive integrity | PASS: 19 style files; 134 unique definition IDs U01–U134; all current file links resolve; archive bytes/hashes match | Console checks; source/evidence manifests below |
+| Not executed | S2-U01/U02, integrated Make link, real SMP/IRQ/timing, physical hardware | NOT VERIFIED by these runs | Compatible SDK, shared integration and separately authorised target/hardware procedures required |
+
+Final commands from repository root:
+
+```text
+python -B testing/subsystem2/verify_motion.py --label hygiene20261015e --analyze
+python -B testing/subsystem2/verify_motion.py --arm --strict --label hygienearm20261015d
+python -B testing/subsystem2/verify_motion.py --style
+```
+
+[Host metadata](logs/verify_hygiene20261015e_metadata.json) and
+[ARM metadata](logs/verify_hygienearm20261015d_metadata.json) each identify all
+42 production/test/runner/recipe source files using repository-relative paths.
+Every final source hash was compared with the actual working tree and matched.
+Host suite/check commands use bounded subprocess execution. Compile failures
+are not counted as mutation detection. The mutation list is specific regression
+coverage, not exhaustive proof that every possible defect will be detected.
+
+The first hygiene attempt (`hygiene20261015a`) failed before executing tests:
+the sandbox temporary directory was inaccessible to GCC, and its cleanup also
+reported access denied. No test PASS is attributed to that attempt. The runner
+now uses the existing ignored testing/subsystem2/build location, private temporary
+subdirectories and no shared configuration changes. Parent deletion was removed
+during self-review to avoid races between concurrent host/ARM invocations.
+The final execution left no executables, objects, dependencies, stack-usage,
+firmware images, cache files or temporary subdirectories in Buddy 2 paths.
+
+Intermediate runs a–d and ARM a–c, including the failed attempt, plus the
+superseded guide are consolidated in
+[one historical archive](logs/2026-10-15_hygiene_intermediate_evidence.zip).
+Its MANIFEST.json records original names, lengths and SHA256 for 21 entries.
+Every original byte was compared with the archived entry before removing the
+untracked loose copies. No unique contents or committed/staged evidence were
+deleted. Prior 2026-10-14/15 evidence, including the staged postaudit directory,
+remains unchanged. Historical numerical results/commands remain historical.
+
+Independent self-review: original creation errors are preserved; cleanup checks
+positive owned IDs and retains IDs when deletion fails; pre-start complete
+rollback allows retry; successful/repeated init and repeated starts cannot
+duplicate published resources/tasks. Failed starts retain demonstration objects
+because other buddies can already be using them. Only the actual wrapper's side
+of app_start_task is tested; the shared helper masks some kernel start errors
+and requires separate team review. No production motion-control algorithms or
+original test assertions were removed/weakened. The producer implementation,
+SAMPLE_MSG layout and demonstration semaphore/pool settings are preserved.
+
+Barr-C review covers new lifecycle braces, boolean names, explicit error flow,
+module visibility, source ordering and unchanged bounds/units. Supplied wrapper
+signatures and existing demonstration statements retain their template style;
+host-only ABI doubles, main/setjmp/longjmp and the scenario dispatcher retain
+the documented test-only exceptions. Neither style subset nor warnings certify
+complete Barr-C compliance or target timing/safety.
+
+All 958 tracked paths at entry were hash-compared for ownership. Only Buddy 2
+source/test/document paths changed or moved. Root AGENTS.md, reference_docs,
+.gitignore, Makefiles, kernel/RTOS, shared startup/interfaces, other buddies and
+integration/system test folders were not changed. HEAD and index hashes matched
+entry. The user's staged snapshot remains older than the final working tree:
+its staged source-folder test additions now have working-tree deletions, and
+relocated files/final changes remain unstaged. Do not confuse that snapshot with
+the reviewed final layout. No staging, commit, push, merge or branch operation
+was performed.
+
+Current organisation has one guide (docs/buddy2/MOTION_SYSTEM.md), one runner,
+one host-only harness, and one test/evidence index here. Existing firmware tests
+remain in the Make-discovered source folder without duplicate copies. The runner
+and recipe live together in testing/subsystem2. The existing 'build' ignore rule
+covers all runner-generated artifacts; optional scoped Python-cache exclusions
+may be proposed separately if running Python without -B. No Make/ignore change
+is needed for the verified layout. Unsupported runtime restart and incomplete
+rollback recovery deliberately require reboot, not a new lifecycle manager.
+
+### Final evidence integrity manifest
+
+| Evidence | Bytes | SHA256 |
+|---|---:|---|
+| [verify_hygiene20261015e_default.log](logs/verify_hygiene20261015e_default.log) | 16044 | `120d78ab55dcea6f181da1c576c54823476d63f6ef48279386345bf6097e03c2` |
+| [verify_hygiene20261015e_optimized.log](logs/verify_hygiene20261015e_optimized.log) | 16160 | `059f79a9b8808b7ea70b63e4bcfbc298aaae66ee4030b60b098f4e44052fef67` |
+| [verify_hygiene20261015e_checks.log](logs/verify_hygiene20261015e_checks.log) | 17416 | `8d5565bc354bc50e8dda1421084ecd39fcc3c07d408b64ad7928662b8d0b6b41` |
+| [verify_hygiene20261015e_metadata.json](logs/verify_hygiene20261015e_metadata.json) | 8120 | `bfb5515e6e6bfbea73be6739ffb432bdfe698c01373b91f3e0f249bff857449f` |
+| [verify_hygienearm20261015d_arm.log](logs/verify_hygienearm20261015d_arm.log) | 378324 | `1457751957fef813aa5b1f8990e551a6bf688407947e5369e292f3b49debc1ce` |
+| [verify_hygienearm20261015d_metadata.json](logs/verify_hygienearm20261015d_metadata.json) | 8381 | `bebcaa012be4fa927e73349bb4e8ff8dae6dfa2ea775db7867d88bcdbc7e5648` |
+| [2026-10-15_hygiene_intermediate_evidence.zip](logs/2026-10-15_hygiene_intermediate_evidence.zip) | 76721 | `b6c7a7425926547d6e9ec77aee5033a02917aaa2716784a29f2e3dba57dd5541` |
+
+### Final working-tree file inventory against HEAD
+
+This inventory includes prior staged evidence carried into this pass. It is
+not an instruction to stage/commit. Four host tools moved from app_program/
+subsystem2 to testing/subsystem2: test_rtos.c/.h, verify_motion.py and the
+byte-preserved m2_make_recipes.txt. Git rename classification is deferred until
+the user updates the index; no source/test copy remains at its former location.
+
+```text
+M	app_program/subsystem2/README.md
+M	app_program/subsystem2/drv_encoder.c
+D	app_program/subsystem2/m2_make_recipes.txt
+M	app_program/subsystem2/subsystem2.c
+M	app_program/subsystem2/subsystem2.h
+M	app_program/subsystem2/task_motion.c
+M	app_program/subsystem2/task_motion.h
+M	app_program/subsystem2/test_drive.c
+D	app_program/subsystem2/verify_motion.py
+M	docs/buddy2/MOTION_SYSTEM.md
+M	docs/buddy2/MOTOR_DRIVER.md
+M	testing/subsystem2/TEST_LOG.md
+A	testing/subsystem2/logs/2026-10-15_postaudit/guard_hardware_rejection.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/guard_host_required.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postaudit20261015a_default.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postaudit20261015a_metadata.json
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postaudit20261015a_optimized.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postaudit20261015b_default.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postaudit20261015b_metadata.json
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postaudit20261015b_optimized.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postauditarm20261015a_arm.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postauditarm20261015a_metadata.json
+```
+
+Additional final files (untracked; not included in the diff above):
+
+```text
+testing/subsystem2/logs/2026-10-15_hygiene_intermediate_evidence.zip
+testing/subsystem2/logs/verify_hygiene20261015e_checks.log
+testing/subsystem2/logs/verify_hygiene20261015e_default.log
+testing/subsystem2/logs/verify_hygiene20261015e_metadata.json
+testing/subsystem2/logs/verify_hygiene20261015e_optimized.log
+testing/subsystem2/logs/verify_hygienearm20261015d_arm.log
+testing/subsystem2/logs/verify_hygienearm20261015d_metadata.json
+testing/subsystem2/m2_make_recipes.txt
+testing/subsystem2/test_rtos.c
+testing/subsystem2/test_rtos.h
+testing/subsystem2/verify_motion.py
+```
+
+### Approved Git preparation — 2026-10-15
+
+Preparation runs on buddy2-Motor-and-encoder-control at base HEAD
+923f6ce56854ef9281584b43fd85e92888eb81cf. The user authorised reconciling the
+older index with the final working tree and creating one Buddy 2 commit.
+Final host/ARM evidence above was rechecked against all 42 current source
+files. These remain pre-commit executions; no post-commit rerun is claimed.
+Git normalises CRLF to LF in text blobs. The sorted repository-path to SHA256
+map of those 42 sources, with only CRLF-to-LF normalisation, has aggregate
+SHA256 `cfc7e06f307e71e795c4d9239c6e1689fbf03ff1be769f41225a6f73cdb85636`. The digest is SHA256 of UTF-8 JSON, sorted keys,
+compact comma/colon separators. Staged and committed blobs must reproduce
+that digest; historical raw-file hashes remain unchanged. The resulting
+commit hash is reported separately to avoid a self-referential commit record.
+
+### Reconciled commit inventory
+
+The approved single commit contains exactly these 32 changed entries.
+Rename source/destination are shown together; obsolete source-folder host-test
+additions are absent. This list was checked against the reconciled index.
+
+```text
+M	app_program/subsystem2/README.md
+M	app_program/subsystem2/drv_encoder.c
+M	app_program/subsystem2/subsystem2.c
+M	app_program/subsystem2/subsystem2.h
+M	app_program/subsystem2/task_motion.c
+M	app_program/subsystem2/task_motion.h
+M	app_program/subsystem2/test_drive.c
+D	app_program/subsystem2/verify_motion.py
+M	docs/buddy2/MOTION_SYSTEM.md
+M	docs/buddy2/MOTOR_DRIVER.md
+M	testing/subsystem2/TEST_LOG.md
+A	testing/subsystem2/logs/2026-10-15_hygiene_intermediate_evidence.zip
+A	testing/subsystem2/logs/2026-10-15_postaudit/guard_hardware_rejection.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/guard_host_required.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postaudit20261015a_default.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postaudit20261015a_metadata.json
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postaudit20261015a_optimized.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postaudit20261015b_default.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postaudit20261015b_metadata.json
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postaudit20261015b_optimized.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postauditarm20261015a_arm.log
+A	testing/subsystem2/logs/2026-10-15_postaudit/verify_postauditarm20261015a_metadata.json
+A	testing/subsystem2/logs/verify_hygiene20261015e_checks.log
+A	testing/subsystem2/logs/verify_hygiene20261015e_default.log
+A	testing/subsystem2/logs/verify_hygiene20261015e_metadata.json
+A	testing/subsystem2/logs/verify_hygiene20261015e_optimized.log
+A	testing/subsystem2/logs/verify_hygienearm20261015d_arm.log
+A	testing/subsystem2/logs/verify_hygienearm20261015d_metadata.json
+R100	app_program/subsystem2/m2_make_recipes.txt	testing/subsystem2/m2_make_recipes.txt
+A	testing/subsystem2/test_rtos.c
+A	testing/subsystem2/test_rtos.h
+A	testing/subsystem2/verify_motion.py
+```

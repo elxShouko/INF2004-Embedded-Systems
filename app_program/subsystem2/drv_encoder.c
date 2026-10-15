@@ -2,14 +2,19 @@
  * @brief Encoder-only GPIO setup; shared interrupt ownership stays external.
  */
 #include "drv_encoder.h"
-#if defined(_PICO_RP2040_) && !defined(MOTION_CONFIG_HOST_TEST)
+#if (defined(_PICO_RP2040_) && !defined(MOTION_CONFIG_HOST_TEST)) || \
+    defined(MOTION_RTOS_HOST_TEST)
 #include <stddef.h>
+#if defined(MOTION_RTOS_HOST_TEST)
+#include "test_rtos.h"
+#else
 #define PROHIBIT_DEF_SIZE_T 1
 #include <tk/tkernel.h>
 #include <tk/syslib.h>
 #include <bsp/libbsp.h>
 #include <config_device.h>
 #include "../../device/adc/sysdepend/rp2040/adc_cnf_sysdep.h"
+#endif
 
 bool drv_encoder_open (drv_encoder_port_t const * p_port,
     drv_encoder_sink_t p_sink, void * p_context)
