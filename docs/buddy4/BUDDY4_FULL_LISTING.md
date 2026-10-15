@@ -1,4 +1,9 @@
 # Buddy 4 — Full Source Listing (Part 4)
+
+Historical snapshot, preserved verbatim below, including obsolete `tests/imu/`
+paths. Use [the current test registry](../../testing/subsystem4/TEST_LOG.md)
+for the consolidated test layout and commands. This lists the older standalone
+implementation, not integrated production code in `app_program/subsystem4/`.
 Every Buddy 4 source file, header, test and tool in branch `buddy4-imu`, in dependency order. The CMake additions are shown first.
 
 ## `CMakeLists.txt` (appended block only)

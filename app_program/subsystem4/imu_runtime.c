@@ -7,25 +7,23 @@
 #include "imu_runtime.h"
 #include "imu_config.h"
 #include "drv_imu.h"
+#include "imu_link.h"
 
 #include <math.h>
 
 #define IMU_FAULT_BIT 0x01u
 #define IMU_LOCK_TIMEOUT_MS 10
-#define IMU_SPEED_AGE_MS 40u
-
 typedef struct
 {
-    float32_t speed_mm_s;
-    uint32_t  time_ms;
-    bool      b_valid;
-} imu_runtime_speed_t;
+    uint32_t epoch;
+    bool     b_trusted;
+} imu_runtime_trust_t;
 
 static void imu_runtime_task (INT start_code, void *p_context);
 static ER publish_status (const imu_core_t *p_core);
 static void signal_fault (void);
 static bool read_distance (imu_core_sample_t *p_sample,
-                           uint32_t previous_ms);
+                           uint32_t previous_ms, float32_t wheel_limit_mm_s);
 static void sample_loop (imu_core_t *p_core);
 
 static ID g_mutex = 0;
@@ -33,7 +31,7 @@ static ID g_events = 0;
 static ID g_fault = 0;
 static ID g_task = 0;
 static imu_runtime_status_t g_status;
-static imu_runtime_speed_t g_speed;
+static imu_runtime_trust_t g_trust;
 
 ER imu_runtime_init (void)
 {
@@ -139,20 +137,44 @@ ER imu_runtime_wait_fault (TMO timeout)
 ER imu_runtime_set_speed (float32_t speed_mm_s, uint32_t time_ms,
                           bool b_valid)
 {
-    ER result = E_PAR;
+    (void)speed_mm_s;
+    (void)time_ms;
+    const ER result = imu_runtime_set_motion_trust(false);
 
-    if (b_valid && ((!isfinite(speed_mm_s)) || (speed_mm_s < 0.0f) ||
-                    (speed_mm_s > 1000.0f)))
+    return ((E_OK == result) && b_valid) ? E_PAR : result;
+}
+
+ER imu_runtime_set_motion_trust (bool b_trusted)
+{
+    ER result = E_OBJ;
+
+    if (g_mutex <= 0)
     {
         return result;
     }
     result = tk_loc_mtx(g_mutex, IMU_LOCK_TIMEOUT_MS);
     if (E_OK == result)
     {
-        g_speed.speed_mm_s = b_valid ? speed_mm_s : 0.0f;
-        g_speed.time_ms = time_ms;
-        g_speed.b_valid = b_valid;
-        result = tk_unl_mtx(g_mutex);
+        if (!b_trusted)
+        {
+            if (UINT32_MAX == g_trust.epoch)
+            {
+                g_trust.b_trusted = false;
+                result = E_OBJ;
+            }
+            else
+            {
+                ++g_trust.epoch;
+            }
+        }
+        if (E_OK == result)
+        {
+            g_trust.b_trusted = b_trusted;
+        }
+        if (E_OK != tk_unl_mtx(g_mutex))
+        {
+            result = E_SYS;
+        }
     }
     return result;
 }
@@ -171,6 +193,14 @@ static void imu_runtime_task (INT start_code, void *p_context)
     config.mag_scale[0] = S4_MAG_SCALE_X;
     config.mag_scale[1] = S4_MAG_SCALE_Y;
     config.mag_scale[2] = S4_MAG_SCALE_Z;
+    config.b_height_calibrated = S4_HEIGHT_CALIBRATED;
+    config.maximum_accel_mm_s2 = S4_HEIGHT_MAX_ACCEL_MM_S2;
+    config.speed_band_mm_s = S4_HEIGHT_SPEED_BAND_MM_S;
+    config.wheel_delta_mm_s = S4_HEIGHT_WHEEL_DELTA_MM_S;
+    config.minimum_speed_mm_s = S4_HEIGHT_MIN_SPEED_MM_S;
+    config.settle_ms = S4_HEIGHT_SETTLE_MS;
+    config.ascent_ms = S4_HEIGHT_ASCENT_MS;
+    config.level_ms = S4_HEIGHT_LEVEL_MS;
     if (0 == S4_IMU_ENABLE)
     {
         tk_ext_tsk();
@@ -208,7 +238,8 @@ static void sample_loop (imu_core_t *p_core)
         sample.time_ms = drv_imu_time_ms();
         if (DRV_LSM_OK == result)
         {
-            if (read_distance(&sample, last_sample_ms))
+            if (read_distance(&sample, last_sample_ms,
+                              p_core->config.wheel_delta_mm_s))
             {
                 (void)imu_core_update(p_core, &sample);
                 last_sample_ms = sample.time_ms;
@@ -306,30 +337,24 @@ static void signal_fault (void)
 }
 
 static bool read_distance (imu_core_sample_t *p_sample,
-                           uint32_t previous_ms)
+                           uint32_t previous_ms, float32_t wheel_limit_mm_s)
 {
-    imu_runtime_speed_t speed = {0};
+    imu_runtime_trust_t trust = {0};
     ER result = tk_loc_mtx(g_mutex, IMU_LOCK_TIMEOUT_MS);
 
     if (E_OK != result)
     {
         return false;
     }
-    speed = g_speed;
+    trust = g_trust;
     result = tk_unl_mtx(g_mutex);
     if (E_OK != result)
     {
         return false;
     }
-    p_sample->b_distance_valid = speed.b_valid &&
-        ((p_sample->time_ms - speed.time_ms) <= IMU_SPEED_AGE_MS) &&
-        ((p_sample->time_ms - previous_ms) <= 100u);
-    if (p_sample->b_distance_valid)
-    {
-        /* Elapsed <=100 ms fits float32_t exactly. */
-        p_sample->distance_mm = speed.speed_mm_s *
-            (float32_t)(p_sample->time_ms - previous_ms) * 0.001f;
-    }
+    p_sample->motion_epoch = trust.epoch;
+    p_sample->b_traction_trusted = trust.b_trusted;
+    imu_link_read(p_sample, previous_ms, wheel_limit_mm_s);
     return true;
 }
 

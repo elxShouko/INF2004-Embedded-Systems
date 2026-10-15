@@ -4,6 +4,7 @@
  * It needs calibrated distance from the motion owner. See README caveats.
  */
 #include "imu_core.h"
+#include "imu_guard.h"
 
 #include <math.h>
 #include <stddef.h>
@@ -20,7 +21,9 @@ static void heading_update (imu_core_t *p_core,
                             float32_t pitch, float32_t roll);
 static void hump_update (imu_core_t *p_core,
                          const imu_core_sample_t *p_sample,
-                         float32_t sine, bool b_tilt_valid);
+                         float32_t sine, uint32_t reasons);
+static void reject_height (imu_core_t * p_core);
+static void finish_level (imu_core_t * p_core);
 static void classify_motion (imu_core_t *p_core,
                              const imu_core_sample_t *p_sample,
                              float32_t magnitude);
@@ -71,6 +74,8 @@ bool imu_core_init (imu_core_t *p_core,
               (p_config->maximum_gap_ms <= 1000u) &&
               (p_config->maximum_hump_ms > p_config->maximum_gap_ms) &&
               (p_config->maximum_hump_ms <= 60000u);
+    b_valid = b_valid && ((!p_config->b_height_calibrated) ||
+                         imu_guard_config(p_config));
     for (uint32_t axis = 0u; axis < IMU_AXIS_COUNT; ++axis)
     {
         b_valid = b_valid && isfinite(p_config->mag_offset[axis]) &&
@@ -91,6 +96,7 @@ void imu_core_fault (imu_core_t *p_core)
 {
     if (NULL != p_core)
     {
+        reject_height(p_core);
         p_core->status.phase = IMU_FAULT;
         p_core->status.events |= IMU_EVENT_FAULT;
         p_core->status.b_height_valid = false;
@@ -150,10 +156,11 @@ uint32_t imu_core_update (imu_core_t *p_core,
     p_core->status.pitch_deg = pitch * IMU_DEG_PER_RAD;
     p_core->status.roll_deg = roll * IMU_DEG_PER_RAD;
     heading_update(p_core, p_sample, pitch, roll);
-    /* Dynamic acceleration corrupts gravity-based tilt. */
+    /* Magnitude is only a veto, never sufficient evidence of gravity tilt. */
     hump_update(p_core, p_sample, sinf(pitch),
-                 (fabsf(magnitude - 1.0f) <= 0.15f) &&
-                 (fabsf(roll) <= 0.35f));
+        imu_guard_check(p_core, p_sample,
+            (fabsf(magnitude - 1.0f) <= 0.15f) &&
+            (fabsf(roll) <= 0.35f)));
     classify_motion(p_core, p_sample, magnitude);
     return p_core->status.events;
 }
@@ -291,28 +298,44 @@ static void heading_update (imu_core_t *p_core,
     p_core->b_previous_heading = true;
 }
 
+/** Track candidate state independently of whether its height is trustworthy. */
 static void hump_update (imu_core_t *p_core,
                          const imu_core_sample_t *p_sample,
-                         float32_t sine, bool b_tilt_valid)
+                         float32_t sine, uint32_t reasons)
 {
-    imu_core_status_t *p_status = &p_core->status;
+    imu_core_status_t * p_status = &p_core->status;
 
-    if ((IMU_MONITORING == p_status->phase) &&
-        (p_status->pitch_deg >= p_core->config.ascend_deg))
+    if (IMU_MONITORING == p_status->phase)
     {
-        p_status->phase = IMU_ASCENDING;
-        p_status->events |= IMU_EVENT_ASCENT;
-        p_status->hump_peak_mm = 0.0f;
-        p_status->b_height_valid = false;
-        p_core->height_mm = 0.0f;
-        p_core->hump_start_ms = p_sample->time_ms;
-        p_core->b_hump_height_valid = p_sample->b_distance_valid;
+        p_status->height_reasons = reasons;
+        if (p_status->pitch_deg >= p_core->config.ascend_deg)
+        {
+            p_core->saved_highest_mm = p_status->highest_hump_mm;
+            p_core->b_saved_highest_valid = p_status->b_highest_valid;
+            p_core->b_peak_recorded = false;
+            p_core->b_level_pending = false;
+            p_status->phase = IMU_ASCENDING;
+            p_status->events |= IMU_EVENT_ASCENT;
+            p_status->hump_peak_mm = 0.0f;
+            p_status->b_height_valid = false;
+            p_core->height_mm = 0.0f;
+            p_core->hump_start_ms = p_sample->time_ms;
+            p_core->b_hump_height_valid = p_core->b_motion_stable;
+            if (!p_core->b_motion_stable)
+            {
+                p_status->height_reasons |= IMU_HEIGHT_PERSISTENCE;
+            }
+        }
     }
     if (IMU_MONITORING != p_status->phase)
     {
+        p_status->height_reasons |= reasons;
         p_core->b_hump_height_valid = p_core->b_hump_height_valid &&
-                                      p_sample->b_distance_valid &&
-                                      b_tilt_valid;
+                                     (0u == reasons);
+        if (!p_core->b_hump_height_valid)
+        {
+            reject_height(p_core);
+        }
         if ((p_sample->time_ms - p_core->hump_start_ms) >
             p_core->config.maximum_hump_ms)
         {
@@ -320,7 +343,7 @@ static void hump_update (imu_core_t *p_core,
             return;
         }
         if (p_core->b_hump_height_valid &&
-            (IMU_DESCENDING != p_status->phase))
+            (IMU_ASCENDING == p_status->phase))
         {
             p_core->height_mm += p_sample->distance_mm *
                                  (sine + p_core->previous_sine) * 0.5f;
@@ -333,30 +356,32 @@ static void hump_update (imu_core_t *p_core,
     {
         p_status->phase = IMU_PEAK;
         p_status->events |= IMU_EVENT_PEAK;
-    }
-    if (IMU_PEAK == p_status->phase)
-    {
-        /* Week 6 section 6.4: compare/update maximum at the peak. */
+        if ((p_sample->time_ms - p_core->hump_start_ms) <
+            p_core->config.ascent_ms)
+        {
+            p_status->height_reasons |= IMU_HEIGHT_PERSISTENCE;
+            reject_height(p_core);
+        }
         record_peak(p_core);
     }
     if ((IMU_PEAK == p_status->phase) &&
-        (p_status->pitch_deg <= -p_core->config.ascend_deg))
+        (p_status->pitch_deg < -p_core->config.level_deg))
     {
         p_status->phase = IMU_DESCENDING;
         p_status->events |= IMU_EVENT_DESCENT;
     }
-    if ((IMU_DESCENDING == p_status->phase) &&
-        (fabsf(p_status->pitch_deg) <= p_core->config.level_deg))
+    if ((IMU_PEAK == p_status->phase) ||
+        (IMU_DESCENDING == p_status->phase))
     {
-        p_status->phase = IMU_MONITORING;
-        p_status->events |= IMU_EVENT_COMPLETE;
+        finish_level(p_core);
     }
     p_core->previous_sine = sine;
 }
 
+/** Week 6 peak-time output is provisional until candidate closure. */
 static void record_peak (imu_core_t *p_core)
 {
-    imu_core_status_t *p_status = &p_core->status;
+    imu_core_status_t * p_status = &p_core->status;
 
     p_status->b_height_valid = p_core->b_hump_height_valid;
     if (p_status->b_height_valid)
@@ -364,6 +389,51 @@ static void record_peak (imu_core_t *p_core)
         p_status->highest_hump_mm = fmaxf(p_status->highest_hump_mm,
                                          p_status->hump_peak_mm);
         p_status->b_highest_valid = true;
+        p_status->b_peak_provisional = true;
+        p_core->b_peak_recorded = true;
+    }
+}
+
+/** Roll back a provisional peak without discarding earlier trusted humps. */
+static void reject_height (imu_core_t * p_core)
+{
+    if (p_core->b_peak_recorded)
+    {
+        p_core->status.highest_hump_mm = p_core->saved_highest_mm;
+        p_core->status.b_highest_valid = p_core->b_saved_highest_valid;
+        p_core->status.events |= IMU_EVENT_HEIGHT_INVALID;
+    }
+    p_core->b_peak_recorded = false;
+    p_core->b_hump_height_valid = false;
+    p_core->status.b_height_valid = false;
+    p_core->status.b_peak_provisional = false;
+}
+
+/** Recover after persistent level travel, including shallow/asymmetric exit. */
+static void finish_level (imu_core_t * p_core)
+{
+    imu_core_status_t * p_status = &p_core->status;
+    const uint32_t dwell = (0u == p_core->config.level_ms) ?
+                           20u : p_core->config.level_ms;
+
+    if (fabsf(p_status->pitch_deg) > p_core->config.level_deg)
+    {
+        p_core->b_level_pending = false;
+    }
+    else if (!p_core->b_level_pending)
+    {
+        p_core->b_level_pending = true;
+        p_core->level_since_ms = p_status->time_ms;
+    }
+    else if ((p_status->time_ms - p_core->level_since_ms) >= dwell)
+    {
+        p_status->phase = IMU_MONITORING;
+        p_status->events |= IMU_EVENT_COMPLETE;
+        p_status->b_peak_provisional = false;
+        p_core->b_peak_recorded = false;
+        p_core->b_motion_stable = false;
+        p_core->stable_since_ms = p_status->time_ms;
+        p_core->stable_speed = p_core->previous_speed;
     }
 }
 
@@ -380,6 +450,10 @@ static void classify_motion (imu_core_t *p_core,
     else if (0u != (p_status->events & IMU_EVENT_TURN))
     {
         p_status->motion = IMU_TURNING;
+    }
+    else if (0u != (p_status->height_reasons & IMU_HEIGHT_DYNAMIC))
+    {
+        p_status->motion = IMU_ACCELERATING;
     }
     else if (IMU_ASCENDING == p_status->phase)
     {

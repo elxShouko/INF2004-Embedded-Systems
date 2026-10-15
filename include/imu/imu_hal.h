@@ -3,9 +3,9 @@
  * @brief   Buddy 4 hardware-abstraction interface (I2C bus + time base).
  *
  * The LSM303DLHC driver only talks to the hardware through these functions.
- * Two implementations exist:
+ * Historical implementations:
  *   - src/imu/imu_hal_pico.c : Raspberry Pi Pico SDK (hardware_i2c), target
- *   - tests/imu/sim_lsm303.c : register-level LSM303DLHC simulator, host
+ *   - former tests/imu/sim_lsm303.c : host simulator (retired; see Git history)
  * The implementation is selected at link time (no function pointers in the
  * hot path, no RTOS dependency).
  *

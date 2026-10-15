@@ -29,5 +29,15 @@
 #define S4_MAG_SCALE_Y 1.0f
 #define S4_MAG_SCALE_Z 1.0f
 
+/* Set only from recorded hardware calibration. Disabled by default. */
+#define S4_HEIGHT_CALIBRATED false
+#define S4_HEIGHT_MAX_ACCEL_MM_S2 0.0f
+#define S4_HEIGHT_SPEED_BAND_MM_S 0.0f
+#define S4_HEIGHT_WHEEL_DELTA_MM_S 0.0f
+#define S4_HEIGHT_MIN_SPEED_MM_S 0.0f
+#define S4_HEIGHT_SETTLE_MS 0u
+#define S4_HEIGHT_ASCENT_MS 0u
+#define S4_HEIGHT_LEVEL_MS 0u
+
 #endif /* IMU_CONFIG_H */
 
