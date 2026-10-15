@@ -5,7 +5,8 @@
 # metadata, raw output) is saved to ../logs/host_run_<revision>.txt.
 #
 #   Optional:  CC=gcc   compiler to use   |   S1_NO_LOG=1   do not save a log
-cd "$(dirname "$0")" || exit 2
+SELF=$(cd "$(dirname "$0")" && pwd)/$(basename "$0")
+cd "$(dirname "$SELF")" || exit 2
 HERE=$(pwd)
 ROOT=$HERE/../../..
 LOGDIR=$HERE/../logs
@@ -15,7 +16,7 @@ if [ -z "$S1_LOGGING" ] && [ -z "$S1_NO_LOG" ]; then
     mkdir -p "$LOGDIR"
     REV=$(git -C "$ROOT" rev-parse --short HEAD 2>/dev/null || echo unknown)
     LOG=$LOGDIR/host_run_$REV.txt
-    S1_LOGGING=1 bash "$0" "$@" > "$LOG" 2>&1
+    S1_LOGGING=1 bash "$SELF" "$@" > "$LOG" 2>&1
     STATUS=$?
     cat "$LOG"
     echo "log saved: $LOG (exit status $STATUS)"
