@@ -18,8 +18,15 @@ Only the Wi-Fi service task touches the radio and lwIP. Other Buddies never call
 
 ## Contract for the other Buddies
 * Send ONE aggregated `s1_codec_frame_t` every 100 ms with `s1_net_telemetry_send()` (never blocks).
-* Receive commands: `s1_net_events_wait()` then `s1_net_command_receive()`.
-  `S1_NET_FLG_ESTOP` is set the moment EMERGENCY_STOP arrives.
+* Receive commands: `s1_net_events_wait()` then `s1_net_command_receive()`. It returns `E_SYS`
+  for a malformed message (wrong size or unknown id, output zeroed) and the kernel's own error
+  otherwise; a non-emergency command older than 1 s is dropped and counted.
+* Emergency stop: Buddy 1 only DELIVERS the signal. It is published first (before any queue or
+  mutex work) as a latch, read with `s1_net_estop_latched()`, plus the pulse `S1_NET_FLG_ESTOP`.
+  The latch stays set until `s1_net_estop_clear()`; no ordinary command or reconnect clears it.
+  The shared vehicle controller owns the decision to stop or inhibit motion and WHEN to clear.
+* `s1_net_get_stats()` waits at most 5 ms (`E_TMOUT` if busy); `s1_net_is_connected()` and
+  `s1_net_estop_latched()` never block.
 * When the real sensors feed the frame, set `S1_SIMULATE_TELEMETRY` to 0.
 * The real units, signed encoder counts, line encoding, validity, command consumer and
   emergency-stop path are NOT agreed yet: see

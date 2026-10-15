@@ -82,7 +82,7 @@ else
 fi
 # PROHIBIT_DEF_SIZE_T: the kernel headers must not define size_t themselves,
 # because a hosted libc (MinGW on Windows) already does, with another type.
-KFLAGS="-std=gnu11 -Wall -Wextra -Wno-int-to-pointer-cast -DPROHIBIT_DEF_SIZE_T -include stddef.h -DAPP_TEST=1 -D_PICO_RP2040_ -DS1_SIMULATE_TELEMETRY=0 -DTM_MQTT=0"
+KFLAGS="-std=gnu11 -Wall -Wextra -Wno-int-to-pointer-cast -DPROHIBIT_DEF_SIZE_T -include stddef.h -DAPP_TEST=1 -D_PICO_RP2040_ -DS1_SIMULATE_TELEMETRY=0 -DTM_MQTT=0 -DS1_TEST_HOST_FAULTS=1"
 run $CC -std=gnu11 -Wall -Wextra $THREADS -c -o "$OUT/host_sync.o" host_sync.c
 run $CC $KFLAGS -I$ROOT/include -I$ROOT/config -I$ROOT/app_program \
     -o "$OUT/target$EXE" kernel_emulation.c "$OUT/host_sync.o" target_main.c \
@@ -103,7 +103,7 @@ echo
 echo "--- 5. optional: the same harness built for Windows (MinGW cross compiler, run under wine if present)"
 WCC=x86_64-w64-mingw32-gcc
 if command -v $WCC >/dev/null 2>&1 && [ "$CC" != "$WCC" ]; then
-    WKFLAGS="-std=gnu11 -Wall -Wextra -Wno-int-to-pointer-cast -DPROHIBIT_DEF_SIZE_T -include stddef.h -DAPP_TEST=1 -D_PICO_RP2040_ -DS1_SIMULATE_TELEMETRY=0 -DTM_MQTT=0 -DS1_TEST_SERIAL_HOST=1 -DS1_TEST_REQUIRE_OVERLAP=0"
+    WKFLAGS="-std=gnu11 -Wall -Wextra -Wno-int-to-pointer-cast -DPROHIBIT_DEF_SIZE_T -include stddef.h -DAPP_TEST=1 -D_PICO_RP2040_ -DS1_SIMULATE_TELEMETRY=0 -DTM_MQTT=0 -DS1_TEST_HOST_FAULTS=1 -DS1_TEST_SERIAL_HOST=1 -DS1_TEST_REQUIRE_OVERLAP=0"
     run $WCC -std=gnu11 -Wall -Wextra -c -o "$OUT/host_sync_win.o" host_sync.c
     run $WCC $WKFLAGS -I$ROOT/include -I$ROOT/config -I$ROOT/app_program \
         -o "$OUT/target_win.exe" kernel_emulation.c "$OUT/host_sync_win.o" target_main.c \

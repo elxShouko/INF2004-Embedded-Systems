@@ -10,7 +10,8 @@ extern int  host_test_fail_count (void);
 extern int  host_has_threads (void);
 
 /* A run that skips tests must not pass: update when tests are added. */
-#define S1_HOST_MIN_CHECKS 24
+#define S1_HOST_MIN_CHECKS_THREADS 43
+#define S1_HOST_MIN_CHECKS_SERIAL 40
 
 int
 main (void)
@@ -18,6 +19,8 @@ main (void)
     int passed = 0;
     int failed = 0;
     int status = 0;
+    int min_checks = host_has_threads() ? S1_HOST_MIN_CHECKS_THREADS
+                                        : S1_HOST_MIN_CHECKS_SERIAL;
 
     if ((s1_net_init() < 0) || (s1_sim_init() < 0))
     {
@@ -31,10 +34,10 @@ main (void)
         failed = host_test_fail_count();
         tm_printf((UB *) "HOST-RUN: %d passed, %d failed, threads=%d\n", passed,
                  failed, host_has_threads());
-        if ((failed > 0) || (passed < S1_HOST_MIN_CHECKS))
+        if ((failed > 0) || (passed < min_checks))
         {
             tm_printf((UB *) "HOST-RUN: FAILED (need 0 failed and >= %d passed)\n",
-                     S1_HOST_MIN_CHECKS);
+                     min_checks);
             status = 1;
         }
     }
