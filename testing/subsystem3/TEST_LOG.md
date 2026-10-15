@@ -32,6 +32,13 @@ Define a test here before running it. Test IDs never change.
 | S3-U18 | Stable reacquisition interruption | Recovery evidence | host simulation | Interrupt centred run with raw white before filter settles | No LINE_FOUND until a new uninterrupted centred interval |
 | S3-U19 | Actual barcode operating envelope | NFR4 / physical sensing | manual, pending | Follow docs/buddy3/production-timing-and-handoff.md | Measured reliable speed range and both-direction recognition evidence |
 
+| S3-U20 | Bounded copied-status getter | Controller feedback | host simulation | Inject polling contention, lock/unlock errors, repeated reads | One polling attempt; errors preserve output; coherent fields; timestamps never renewed |
+| S3-U21 | Raw versus filtered validity | Navigation readiness | host simulation | Fresh unchanged samples, transition during filter settling, excessive gap | Time advances without change events; disagreement remains visible; stale-gap fault |
+| S3-U22 | Contended status publication | Sampling fairness | host simulation | Hold fake status mutex busy for 50 owner cycles, then release | Sampling continues; old timestamp retained until publication succeeds |
+| S3-U23 | Failed/cancelled manoeuvre handoff | Completion correlation | host simulation | Withhold DONE, pause pending manoeuvre, submit late matching DONE | No recovery on missing completion; paused completion rejected; pending ID retained |
+| S3-U24 | Barcode noise | Decoder owner gating | host simulation | Inject incomplete side-sensor burst with stable front pair | Invalid event; no motion command/pending ID; front sensing remains valid |
+| S3-U25 | Configuration/map delivery | Owner-task validation | host simulation | Send config/map/mode with request IDs, invalid map, active config | Correlated replies; map revision stable on rejection; active config rejected |
+
 *Method:* **auto** = `TEST_CHECK` in code, result printed on the console;
 **manual** = a person observes the result (LED, scope, meter, phone app…).
 
@@ -172,3 +179,57 @@ The controller handoff guide explicitly distinguishes existing provider
 behaviour from proposed policy, clock conversion and unvalidated parameters.
 Shared interfaces/configuration, other subsystem implementations, motor
 outputs and retained demonstration dependencies were not changed.
+
+### 2026-10-15 bounded navigation feedback
+
+Tested current checkout `main`, HEAD
+`c9b018cb3a108589de0d3f469c85544072f6c5db` plus uncommitted Buddy 3 changes.
+No branch was switched and no commit/push/flash was performed. The existing
+getter signature and status structure layout are preserved. Status reading
+and owner publication now use TMO_POL; completion requires active
+TRACKING/AWAITING_MANOEUVRE, matching ID and no fault.
+
+| Date | Test ID | Commit / working tree | Tester | Result | Log / evidence | Notes |
+|---|---|---|---|---|---|---|
+| 2026-10-15 | S3-U02, S3-U03, S3-U04, S3-U10 through S3-U18 | `c9b018c` + source manifest below | Codex | PASS, host simulation / checked style subset | `logs/2026-10-15_bounded-feedback-final-host-results.json` | Existing algorithm, 1 ms logical and 10 ms production suites retained; 26 application C/header files pass checked style subset |
+| 2026-10-15 | S3-U20 | Same working tree | Codex | PASS, host simulation | Same final host report | Single polling attempt; timeout/lock/unlock error outputs unchanged; coherent snapshot includes required fields; reads preserve acquisition time |
+| 2026-10-15 | S3-U21 | Same working tree | Codex | PASS, host simulation | Same final host report | Fresh unchanged line, visible raw/filtered disagreement and excessive-gap fault |
+| 2026-10-15 | S3-U22 | Same working tree | Codex | PASS, host simulation | Same final host report | 50 owner cycles with contended publication still perform 50 reads; old snapshot ages; publication resumes when mutex available |
+| 2026-10-15 | S3-U23 | Same working tree | Codex | PASS, host simulation | Same final host report | Withheld completion keeps waiting; paused late matching completion rejected; pending ID preserved |
+| 2026-10-15 | S3-U24 | Same working tree | Codex | PASS, host simulation | Same final host report | Noisy incomplete barcode rejected without interrupting front feedback |
+| 2026-10-15 | S3-U25 | Same working tree | Codex | PASS, host simulation | Same final host report | Config/map/mode request-ID replies, transactional map rejection, config rejected while active |
+| 2026-10-15 | S3-U06 | Same application working tree | Codex | PASS, compilation only | `logs/2026-10-15_bounded-feedback-normal-build.txt` | `cd build_make; make -j8`; normal UF2 produced |
+| 2026-10-15 | S3-U07 | Same application working tree | Codex | PASS, compilation only | `logs/2026-10-15_bounded-feedback-test-build.txt` | `cd build_make; make TEST=1 -j8`; test UF2 produced, not executed on board |
+
+Exact commands, source/test hashes and stdout/stderr are in the final host
+report. An earlier passing development run is retained separately in
+`logs/2026-10-15_bounded-feedback-host-results.json`; it predates the final
+configuration-delivery test. Build commands, installed environment, profiles
+and artifact hashes are in `logs/2026-10-15_bounded-feedback-run.json`.
+Profiles: SMP=1 CONSOLE=usb_cdc WIFI=cyw43 NET=none MQTT=0 CRASH_REPORT=0
+S4_IMU=0, with TEST=0 and TEST=1 respectively. Used installed MSYS2, Arm GNU
+15.2.Rel1 and Pico SDK 2.3.1; no dependency installation or network fetch.
+
+Host command from repository root:
+
+```powershell
+& 'C:/Users/linco/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-15_bounded-feedback-final-host-results.json
+```
+
+The mutex fake verifies the requested polling timeout, return handling and
+copy semantics. It does not establish actual kernel mutex latency or SMP
+scheduling bounds. Successful copying is not readiness: stale/future raw time,
+faults, invalid calibration/filter state, raw/filtered disagreement and pending
+manoeuvres still require controller checks. Published timestamps are never
+renewed by reads or failed publication. A broken mutex may prevent publication
+of a new kernel fault; independent age/error handling remains necessary.
+
+User confirmed A=straight, B=left, C=right, D=U-turn and controller-owned
+completion. End-of-line was suggested as a finish cue, but absent sensing alone
+cannot distinguish course end from leaving the track. The expected final-region
+predicate and calibrated absence/stop limits remain unverified. The proposal
+and explicit CONFIG/MAPPING/reply workflow are documented in
+`docs/buddy3/production-timing-and-handoff.md`. No new completion event or
+controller implementation was invented. On-target contention, connected motor
+refresh/stop, physical sensor placement, thresholds and reliability remain
+pending. Other subsystems and shared startup/kernel/build files are unchanged.

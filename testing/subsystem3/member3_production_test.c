@@ -272,7 +272,11 @@ ER tk_dly_tsk (uint32_t delay)
     assert(g_config.period_ms == delay);
     assert(S3_INPUTS_PER_CYCLE == g_received);
     assert(g_reads == g_cycles + 1U);
+#ifdef S3_HOST_PUBLICATION_CHECK
+    S3_HOST_PUBLICATION_CHECK();
+#else
     assert(g_status.raw.timestamp_us == g_clock_us);
+#endif
     if (g_b_flood_replies)
     {
         assert(g_count <= S3_OUTPUT_CAPACITY);
@@ -425,7 +429,10 @@ static void test_found_interruption (void)
 }
 
 /** @brief Run production-timing simulations separately from the 1 ms suite. */
-int main (void)
+#ifndef S3_PRODUCTION_MAIN
+#define S3_PRODUCTION_MAIN main
+#endif
+int S3_PRODUCTION_MAIN (void)
 {
     test_periods();
     test_capture();

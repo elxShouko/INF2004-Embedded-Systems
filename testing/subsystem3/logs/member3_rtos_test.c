@@ -72,8 +72,10 @@ ER tk_snd_mbf(ID id, const void *message, INT size, TMO timeout)
 INT tk_rcv_mbf(ID id, void *message, TMO timeout)
 { (void)id; (void)message; (void)timeout; return E_TMOUT; }
 #endif
+#ifndef S3_HOST_MUTEX
 ER tk_loc_mtx(ID id, TMO timeout) { (void)id; (void)timeout; return E_OK; }
 ER tk_unl_mtx(ID id) { (void)id; return E_OK; }
+#endif
 ID tk_cre_mtx(const T_CMTX *p_create) { (void)p_create; return g_next_id++; }
 ID tk_cre_mbf(const T_CMBF *p_create) { assert(p_create->bufsz > 0U); return g_next_id++; }
 ID tk_cre_tsk(const T_CTSK *p_create) { assert(p_create->itskpri == 17); return g_next_id++; }
