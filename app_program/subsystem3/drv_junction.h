@@ -1,6 +1,6 @@
 /** @file drv_junction.h
  * @brief Member 3 drv junction module.
- * @note See BARR_COMPLIANCE.md for compatibility exceptions under review.
+ * @note See docs/buddy3/BARR_COMPLIANCE.md for approved exceptions.
  */
 
 #ifndef JUNCTION_H

@@ -1,6 +1,6 @@
 /** @file subsystem3.h
  * @brief Member 3 subsystem3 module.
- * @note See BARR_COMPLIANCE.md for compatibility exceptions under review.
+ * @note See docs/buddy3/BARR_COMPLIANCE.md for approved exceptions.
  */
 
 /*

@@ -10,7 +10,8 @@ Build the integrated firmware from **build_make/** using **make**, as described 
 - Existing **src/**, **include/line/** and **CMakeLists.txt** are preserved for
   the earlier standalone Pico SDK programs. They are not the integrated RTOS build.
 
-See [Member 3 integration and API](docs/member3-template-integration.md).
+See [Buddy 3 documentation](docs/buddy3/README.md) and
+[Member 3 integration and API](docs/buddy3/member3-template-integration.md).
 The previous Member 5 standalone README is preserved in
 [Member 5 standalone notes](docs/member5-standalone.md).
 

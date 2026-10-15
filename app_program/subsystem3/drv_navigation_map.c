@@ -1,6 +1,6 @@
 /** @file drv_navigation_map.c
  * @brief Member 3 drv navigation map module.
- * @note See BARR_COMPLIANCE.md for compatibility exceptions under review.
+ * @note See docs/buddy3/BARR_COMPLIANCE.md for approved exceptions.
  */
 
 #include "drv_navigation_map.h"

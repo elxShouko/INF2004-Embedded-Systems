@@ -1,6 +1,6 @@
 /** @file drv_ir_rtos.h
  * @brief Member 3 drv ir rtos module.
- * @note See BARR_COMPLIANCE.md for compatibility exceptions under review.
+ * @note See docs/buddy3/BARR_COMPLIANCE.md for approved exceptions.
  */
 
 #ifndef DRV_IR_RTOS_H

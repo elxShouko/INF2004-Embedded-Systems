@@ -1,6 +1,6 @@
 /** @file task_consumer.c
  * @brief Member 3 task consumer module.
- * @note See BARR_COMPLIANCE.md for compatibility exceptions under review.
+ * @note See docs/buddy3/BARR_COMPLIANCE.md for approved exceptions.
  */
 
 /*

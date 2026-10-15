@@ -1,6 +1,6 @@
 /** @file drv_line_tracking.h
  * @brief Member 3 drv line tracking module.
- * @note See BARR_COMPLIANCE.md for compatibility exceptions under review.
+ * @note See docs/buddy3/BARR_COMPLIANCE.md for approved exceptions.
  */
 
 #ifndef LINE_TRACKING_H

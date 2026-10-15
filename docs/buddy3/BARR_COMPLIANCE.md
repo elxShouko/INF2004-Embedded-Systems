@@ -79,6 +79,12 @@ it must not be presented as compliant with production rule 4.3.f.
 
 ## Verification and limitations
 
+Documentation was grouped under `docs/buddy3/` on 2026-10-15. The review was
+previously at `app_program/subsystem3/BARR_COMPLIANCE.md`. Source comment paths
+were updated to the new locations; executable statements were unchanged.
+Historical test fingerprints below identify the pre-relocation source comments,
+not the current documentation-only working tree.
+
 Stable test IDs S3-U02 through S3-U08 and exact run evidence are recorded in
 `testing/subsystem3/TEST_LOG.md` and its logs. Each run identifies the baseline
 and the uncommitted source fingerprint instead of claiming an uncreated commit.

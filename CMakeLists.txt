@@ -61,7 +61,7 @@ target_compile_options(member3_navigation PRIVATE -Wall -Wextra -Werror)
 option(BUILD_MEMBER3_IR_DIAGNOSTIC "Build Member 3 IR bench diagnostic" OFF)
 if(BUILD_MEMBER3_IR_DIAGNOSTIC)
     add_executable(member3_ir_diagnostic
-        examples/member3_ir_diagnostic.c
+        testing/subsystem3/diagnostics/member3_ir_diagnostic.c
         src/line/ir_gpio.c
     )
     target_include_directories(member3_ir_diagnostic PRIVATE

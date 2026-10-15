@@ -3,7 +3,7 @@
 #include <string.h>
 
 /* Code 39 Table 2: bits 8..0 are the nine alternating bar/space elements.
- * 1 denotes wide. Source: USS-39, docs/member3.md.
+ * 1 denotes wide. Source: USS-39, docs/buddy3/member3.md.
  */
 static const uint16_t g_letter_patterns[26] =
 {
