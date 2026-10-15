@@ -16,6 +16,7 @@
 #include "lwip/timeouts.h"
 #include "lwip/netif.h"
 #include "wifi_secrets.h"
+#include "net_backoff.h"
 #if TM_MQTT
 #include "mqtt_utk.h"
 #endif
@@ -34,9 +35,10 @@
 
 /* An association can fail transiently -- a busy channel, a weak beacon, an AP
  * that drops the handshake under load. Without a retry the radio would sit in
- * CYW43_LINK_FAIL until the next power cycle, so re-issue the join on a fixed
- * backoff for as long as the link is down. */
-#define WIFI_REJOIN_DELAY_US (5 * 1000 * 1000ull)
+ * CYW43_LINK_FAIL until the next power cycle, so re-issue the join for as long
+ * as the link is down. Each consecutive retry waits twice as long as the last
+ * (1, 2, 4, 8, 8 ... s, see net_backoff.h: requirement FR19); reaching
+ * CYW43_LINK_UP starts the sequence over. */
 
 /* Overridable from the makefile if an AP needs something else. MIXED accepts
  * both TKIP and AES; the driver treats it the same as WPA2_AES_PSK for a
@@ -276,6 +278,7 @@ void cyw43_utk_task(int32_t stacd, void *exinf)
 #if TM_NET_LWIP
     int32_t  prev_link_status = radio_status.link_status;
     uint64_t rejoin_at = 0;
+    uint32_t rejoin_delay_ms = NET_BACKOFF_INITIAL_MS;
 #endif
 
     for(;;) {
@@ -288,6 +291,11 @@ void cyw43_utk_task(int32_t stacd, void *exinf)
             radio_status.ip_addr = ip4_addr_get_u32(netif_ip4_addr(&cyw43_state.netif[CYW43_ITF_STA]));
         }
         if(radio_status.link_status != prev_link_status) {
+            /* An established link that simply went away reports DOWN, not a
+             * negative failure code, so it needs a retry too. */
+            bool link_lost = (prev_link_status == CYW43_LINK_UP) &&
+                             (radio_status.link_status <= CYW43_LINK_DOWN);
+
             prev_link_status = radio_status.link_status;
             if(radio_status.link_status == CYW43_LINK_UP) {
                 uint32_t ip = radio_status.ip_addr;
@@ -303,13 +311,20 @@ void cyw43_utk_task(int32_t stacd, void *exinf)
             /* Negative == the association attempt is over and lost. Arm a
              * retry; a positive-but-not-UP status (JOIN/NOIP) is still making
              * progress, so leave it alone and let DHCP finish. */
-            rejoin_at = (radio_status.link_status < 0)?
-                        time_us_64() + WIFI_REJOIN_DELAY_US: 0;
+            if(radio_status.link_status == CYW43_LINK_UP) {
+                rejoin_delay_ms = NET_BACKOFF_INITIAL_MS;
+            }
+            if(radio_status.link_status < 0 || link_lost) {
+                rejoin_at = time_us_64() + rejoin_delay_ms * 1000ull;
+                rejoin_delay_ms = net_backoff_next_ms(rejoin_delay_ms);
+            } else {
+                rejoin_at = 0;
+            }
         }
 
         if(rejoin_at != 0 && time_us_64() >= rejoin_at) {
             rejoin_at = 0;
-            if(radio_status.link_status < 0) {
+            if(radio_status.link_status <= CYW43_LINK_DOWN) {
                 (void)wifi_try_join();
                 /* Force the next iteration to treat whatever comes back as a
                  * change, so the new outcome is always reported. Must be a
@@ -334,13 +349,9 @@ void cyw43_utk_task(int32_t stacd, void *exinf)
 #if TM_NET_LWIP
         sys_check_timeouts();
 #if TM_MQTT
-        /* mqtt_utk_start() is idempotent (see its own connecting/is_connected
-         * guard), so calling it on every poll iteration once the link is up
-         * is fine -- it only actually does anything on the first call, or
-         * again after connection_cb() schedules a retry. */
-        if(radio_status.link_status == CYW43_LINK_UP) {
-            mqtt_utk_start();
-        }
+        /* One step of the MQTT state machine per iteration: connect, backoff,
+         * and the telemetry/heartbeat schedules. It never blocks. */
+        mqtt_utk_poll(radio_status.link_status == CYW43_LINK_UP);
 #endif
 #endif
         (void)tk_dly_tsk(CYW43_POLL_MS);

@@ -91,4 +91,12 @@
 
 #define LWIP_DEBUG                  0
 
+/* MQTT client buffers (used by mqtt_utk.c).
+ * The default output ring buffer (256 B) cannot hold a 256 B telemetry payload
+ * plus its MQTT header (requirement NFR10), so mqtt_publish() would return
+ * ERR_MEM. The default of 4 requests in flight is also too few for 10 Hz QoS 0
+ * publishing once the Wi-Fi round-trip time rises. */
+#define MQTT_OUTPUT_RINGBUF_SIZE    512
+#define MQTT_REQ_MAX_IN_FLIGHT      8
+
 #endif /* LWIP_LWIPOPTS_H */
