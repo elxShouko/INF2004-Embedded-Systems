@@ -1,3 +1,8 @@
+/** @file navigation_types.h
+ * @brief Member 3 navigation types module.
+ * @note See BARR_COMPLIANCE.md for compatibility exceptions under review.
+ */
+
 #ifndef NAVIGATION_TYPES_H
 #define NAVIGATION_TYPES_H
 
@@ -45,12 +50,15 @@ typedef enum
 /* Position/correction units and junction classifications remain deferred. */
 typedef struct
 {
-    uint64_t timestamp_us;
+    uint64_t         timestamp_us;
     nav_event_kind_t kind;
-    nav_command_t command;
-    line_state_t state;
-    uint8_t black_mask;
-    char barcode_character;
+    nav_command_t    command;
+    line_state_t     state;
+    uint8_t          black_mask;
+    char             barcode_character;
 } nav_event_t;
 
 #endif
+
+/*** End of file. ***/
+

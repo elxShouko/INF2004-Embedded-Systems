@@ -1,23 +1,13 @@
-#ifndef NAVIGATION_MAP_H
-#define NAVIGATION_MAP_H
-
-#include <stdbool.h>
-#include "navigation_types.h"
-
-#define NAV_ALPHABET_SIZE 26U
-
-typedef struct
-{
-    nav_command_t actions[NAV_ALPHABET_SIZE];
-    uint32_t revision;
-} nav_map_t;
-
-void nav_map_init(nav_map_t *p_map);
-nav_command_t nav_map_lookup(const nav_map_t *p_map, char letter);
-/* Exact grammar: MAP A=FORWARD B=LEFT ...; updates commit all or none.
- * Supported actions: FORWARD, LEFT, RIGHT, UTURN, NONE.
- * Owner task must serialize updates/lookups; this is not an ISR API.
+/** @file navigation_map.h
+ * @brief Preserve the existing Member 3 include path.
+ * @note Compatibility exception S3-DEV-02 is pending team review.
  */
-bool nav_map_apply(nav_map_t *p_map, const char *p_text);
+#ifndef S3_COMPAT_NAVIGATION_MAP_H
+#define S3_COMPAT_NAVIGATION_MAP_H
+
+#include "../drv_navigation_map.h"
 
 #endif
+
+/*** End of file. ***/
+

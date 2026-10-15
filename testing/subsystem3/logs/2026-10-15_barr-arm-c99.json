@@ -1,0 +1,31 @@
+{
+  "command": [
+    "C:\\Users\\linco\\.pico-sdk\\toolchain\\15_2_Rel1\\bin\\arm-none-eabi-gcc.exe",
+    "-std=c99",
+    "-mcpu=cortex-m0plus",
+    "-mthumb",
+    "-D_PICO_RP2040_",
+    "-DCNF_SMP=1",
+    "-DAPP_TEST=1",
+    "-Iinclude",
+    "-Iconfig",
+    "-Ikernel/knlinc",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fsyntax-only",
+    "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+    "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+    "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_rtos.c",
+    "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+    "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+    "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+    "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\member3_navigation.c",
+    "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\subsystem3.c",
+    "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\subsystem3_test.c",
+    "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\task_consumer.c"
+  ],
+  "exit": 0,
+  "stdout": "",
+  "stderr": ""
+}

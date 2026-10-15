@@ -1,0 +1,349 @@
+{
+  "baseline": "a508994331acf0adaa9acff1927cdaeb9f232abe",
+  "tested_head": "a508994331acf0adaa9acff1927cdaeb9f232abe",
+  "working_tree_source_sha256": "de1f2c9e45f63c67bacdbc7c4ae76e039b8803fb9660a89d6192cb9030e038a3",
+  "status": " M app_program/subsystem3/drv_barcode.c\n M app_program/subsystem3/drv_ir_input.c\n M app_program/subsystem3/drv_ir_rtos.c\n M app_program/subsystem3/drv_ir_rtos.h\n M app_program/subsystem3/drv_junction.c\n M app_program/subsystem3/drv_line_tracking.c\n M app_program/subsystem3/drv_navigation_map.c\n M app_program/subsystem3/line/barcode.h\n M app_program/subsystem3/line/ir_input.h\n M app_program/subsystem3/line/junction.h\n M app_program/subsystem3/line/line_tracking.h\n M app_program/subsystem3/line/navigation_map.h\n M app_program/subsystem3/line/navigation_types.h\n M app_program/subsystem3/member3_navigation.c\n M app_program/subsystem3/member3_navigation.h\n M app_program/subsystem3/subsystem3.c\n M app_program/subsystem3/subsystem3.h\n M app_program/subsystem3/subsystem3_test.c\n M app_program/subsystem3/task_consumer.c\n M testing/subsystem3/TEST_LOG.md\n?? app_program/subsystem3/.clang-format\n?? app_program/subsystem3/BARR_COMPLIANCE.md\n?? app_program/subsystem3/drv_barcode.h\n?? app_program/subsystem3/drv_ir_input.h\n?? app_program/subsystem3/drv_junction.h\n?? app_program/subsystem3/drv_line_tracking.h\n?? app_program/subsystem3/drv_navigation_map.h\n?? app_program/subsystem3/subsystem3_test.h\n?? app_program/subsystem3/task_consumer.h\n?? testing/subsystem3/check_barr_style.py\n?? testing/subsystem3/verify_barr_refactor.py\n",
+  "checks": [
+    {
+      "command": [
+        "C:\\Users\\linco\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\check_barr_style.py"
+      ],
+      "exit": 0,
+      "stdout": "Checked 26 Member 3 C/header files; longest function: 88 lines.\nPASS: checked rules\nFull conformance remains conditional on manual review and exception approval.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\logs\\member3_ir_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_ir_input.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\before-ir.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\before-ir.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 IR tests passed.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\logs\\member3_navigation_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_line_tracking.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\before-navigation.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\before-navigation.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 navigation tests passed: A-Z both directions, capture, mapping, line rules.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\logs\\member3_junction_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_junction.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\before-junction.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\before-junction.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 junction tests passed: crossing geometry, barcodes, noise, timing and line filtering.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\logs\\member3_rtos_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_junction.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\before-rtos.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\before-rtos.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 RTOS owner tests passed: mapping, barcode-to-command, recovery, modes, faults.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\logs\\member3_ir_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\after-ir.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\after-ir.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 IR tests passed.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\logs\\member3_navigation_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\after-navigation.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\after-navigation.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 navigation tests passed: A-Z both directions, capture, mapping, line rules.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\logs\\member3_junction_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\after-junction.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\after-junction.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 junction tests passed: crossing geometry, barcodes, noise, timing and line filtering.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\logs\\member3_rtos_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\after-rtos.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\after-rtos.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 RTOS owner tests passed: mapping, barcode-to-command, recovery, modes, faults.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\abi.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\before-abi.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\before-abi.exe"
+      ],
+      "exit": 0,
+      "stdout": "ir_sample_t=16\nir_calibration_t=2\nir_filter_t=24\nbarcode_capture_t=160\njunction_config_t=36\njunction_sample_t=24\njunction_detector_t=104\ns3_config_t=84\ns3_input_t=392\ns3_output_t=56\ns3_status_t=152\ns3_input_t.value=8\ns3_output_t.navigation=8\ns3_status_t.mapping=48\nenums=4,4,6\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\abi.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\after-abi.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\after-abi.exe"
+      ],
+      "exit": 0,
+      "stdout": "ir_sample_t=16\nir_calibration_t=2\nir_filter_t=24\nbarcode_capture_t=160\njunction_config_t=36\njunction_sample_t=24\njunction_detector_t=104\ns3_config_t=84\ns3_input_t=392\ns3_output_t=56\ns3_status_t=152\ns3_input_t.value=8\ns3_output_t.navigation=8\ns3_status_t.mapping=48\nenums=4,4,6\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\trace.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\baseline\\app_program\\subsystem3\\drv_junction.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\before-trace.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\before-trace.exe"
+      ],
+      "exit": 0,
+      "stdout": "40000 samples; trace=749edf30d9302f8f\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\trace.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\after-trace.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\barr-verification\\after-trace.exe"
+      ],
+      "exit": 0,
+      "stdout": "40000 samples; trace=749edf30d9302f8f\n",
+      "stderr": ""
+    }
+  ],
+  "abi_comparison": {
+    "equal": true,
+    "output": "ir_sample_t=16\nir_calibration_t=2\nir_filter_t=24\nbarcode_capture_t=160\njunction_config_t=36\njunction_sample_t=24\njunction_detector_t=104\ns3_config_t=84\ns3_input_t=392\ns3_output_t=56\ns3_status_t=152\ns3_input_t.value=8\ns3_output_t.navigation=8\ns3_status_t.mapping=48\nenums=4,4,6\n"
+  },
+  "trace_comparison": {
+    "equal": true,
+    "output": "40000 samples; trace=749edf30d9302f8f\n"
+  }
+}
