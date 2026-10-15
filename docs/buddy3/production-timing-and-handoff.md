@@ -23,8 +23,9 @@ layout as the implementation finding; confirm actual mounting before driving.
 
 The professor's write-up page 3 gives an **example** A=LEFT, B=RIGHT, C=STRAIGHT,
 D=UTURN. Existing startup code uses A=FORWARD, B=LEFT, C=RIGHT, D=UTURN; other
-letters are NONE. This update preserves that existing mapping. Integration must
-confirm the course mapping and submit an explicit `MAP ...` before movement.
+letters are NONE. The requesting user confirmed the existing mapping on
+2026-10-15. Integration should submit `MAP A=FORWARD B=LEFT C=RIGHT D=UTURN`
+and validate its reply/revision before movement.
 The sample mapping is not an instruction to silently change the startup table.
 
 ## Production-tick verification
@@ -160,8 +161,22 @@ Stop/restrict on failed reads, stale/future sensing, fault, invalid sensing,
 unexpected modes or controller overload. Do not allow ordinary queued steering
 to override a stop. Review and hardware-validate a prioritised bounded stop path
 that preserves Buddy 2 motor ownership and does not depend on telemetry or a
-full S3 output queue. The existing status mutex/API can block; this update does
-not claim a bounded controller stop path merely because fault status exists.
+full S3 output queue. Status reads now poll once (`TMO_POL`): `E_TMOUT` means
+contention, `E_PAR` means NULL output, `E_OBJ` means unavailable objects, and
+other kernel errors pass through. Every error preserves the caller's buffer,
+including an unlock error. Never treat that old buffer as a new successful
+read. E_OK means a coherent copy, not permission to move. No timeout parameter
+or public structure layout changed. A controller can use the existing getter
+without requesting a wait; there is no internal retry loop.
+
+Owner publication also polls once. A busy mutex skips publication and leaves
+the last published acquisition timestamp untouched; sampling continues and
+the consumer must age out that snapshot. Unexpected lock/unlock errors latch
+a kernel fault. With an unusable mutex, a new fault snapshot might not be
+publishable, so the controller's independent age/error policy remains essential.
+Neither polling nor a coherent copy establishes a target response-time bound:
+kernel critical sections, SMP preemption and the physical stop path still
+need measurement. No motor-stop behavior is implemented by this getter.
 
 ## Existing manoeuvre and bypass sequence to connect
 
@@ -176,6 +191,11 @@ not claim a bounded controller stop path merely because fault status exists.
    Send MANOEUVRE_DONE only for successful completion of that manoeuvre;
    wrong/duplicate IDs are rejected. A failed/aborted motion needs controller
    stop/fault policy, not a false completion acknowledgement.
+   DONE additionally requires TRACKING/AWAITING_MANOEUVRE and no latched fault.
+   Pausing a pending manoeuvre preserves its ID but rejects a late matching
+   DONE; it cannot enter recovery or resume navigation. Reconcile/cancel the
+   motion first, then deliberately reconfigure S3 while paused if abandoning
+   that pending operation. There is no separate S3 cancellation transport yet.
 4. Matching completion enters RECOVERY. Before an intentional bypass request
    MODE=BYPASS and wait for acceptance; sensing continues without line events.
    Coordinate any outstanding barcode manoeuvre first: switching mode does not
@@ -215,3 +235,83 @@ IDs with their owners and record exact tested revisions/configurations:
 Hardware execution, firmware flashing and cross-subsystem implementation are
 pending authorised team integration. This document specifies the remaining work;
 it is not evidence that these tests passed.
+
+## Configuration and mapping delivery proposal
+
+These steps use existing provider interfaces; integration must implement and
+approve the sender. No connected controller or configuration sender was found
+in this checkout. Do not send bytes directly from MQTT into an S3 structure.
+
+1. Keep motion disabled/stopped. Obtain polarity using the existing black/white
+   calibration procedure at the measured sensor placement. Supply the complete
+   `s3_config_t` from an explicitly selected, version-controlled calibration
+   record; no universal default thresholds, timing or speed are supplied.
+2. One controller owns delivery. Submit PAUSED using a unique `request_id` and
+   `s3_submit(..., TMO_POL)`; wait for its matching accepted reply while draining
+   unrelated outputs. Handle queue-full/timeouts/errors without enabling motion.
+   Use a finite controller deadline, chosen with the motion-refresh budget;
+   S3 cannot choose that deadline on the team's behalf.
+3. Submit CONFIG in another zero-initialized request. Require its matching
+   accepted reply. Rejection leaves the previous configuration intact; deliberate
+   successful reconfiguration clears faults and pending manoeuvre ownership.
+   Account for that reset before using it to recover a fault/cancelled turn.
+4. Submit the agreed full mission mapping using MAPPING and another request ID;
+   omitted letters retain their existing mappings, so explicitly set unused
+   letters to NONE when applying a complete mission map. Require the accepted
+   reply and record `map_revision`. Parse FORWARD as the straight action.
+   Invalid mapping updates are transactional and leave the old map/revision.
+5. Confirm the published map/revision, calibration, intended mode and fault.
+   CONFIG/MODE acknowledgements are not proof that a new sensor sample exists.
+   After the accepted reply record `s3_clock_us()`; require a subsequently
+   acquired/published sample newer than that checkpoint (allow the 10 ms tick
+   and measured scheduling jitter). Then request TRACKING, require its accepted
+   reply and again wait for fresh `line_valid` with raw/filtered agreement.
+   Filter reset intentionally invalidates old steering evidence.
+6. Only the controller may use that validated feedback to submit motion to
+   Buddy 2. On a failed/expired operation, reconcile its actual terminal result;
+   enqueue/admission success does not justify MANOEUVRE_DONE.
+
+The requesting user confirmed A=FORWARD, B=LEFT, C=RIGHT, D=UTURN on 2026-10-15.
+This matches the retained startup map; the professor's differing map is an
+example. Deliver the confirmed map explicitly as above. The provider can accept
+other maps through its existing validated interface; an alternate-map test
+checks delivery/transaction semantics and does not change the mission choice.
+
+## Controller-owned mission completion: proposed end-of-line cue
+
+No S3 event currently means MISSION_COMPLETE. LINE_FOUND, an unmapped letter
+(NONE), a junction or line absence must not be interpreted as finishing. A
+telemetry robot-state enum elsewhere is not a navigation completion source.
+The requesting user selected controller route completion, then suggested
+"until there is no black line anymore?" on 2026-10-15. Record end-of-line as
+the proposed cue, not a verified detector or permission to finish on every
+LINE_LOST event. Both-white sensing cannot distinguish a track endpoint from
+accidentally leaving the line, a gap, poor contrast or invalid sensing.
+
+Proposed controller acceptance rule: route context first establishes the
+expected final segment/finish region; fresh, calibrated, fault-free raw and
+filtered absent observations then persist for a measured finish interval.
+The controller stops through Buddy 2 and confirms successful stopped motion
+before publishing mission completion once. Invalid/stale sensing, failed stop
+or an unexpected line loss must not count as finishing. Outside that expected
+finish context, keep the existing recovery/timeout policy.
+
+The route predicate that identifies the finish region and the calibrated
+absence/stop limits remain unspecified. Do not invent them, relabel S3's
+line-loss timeout as finish time, or add a local MISSION_COMPLETE event.
+Integration must coordinate final-region arming with the existing transition
+from LINE_LOST to RECOVERY. No finish barcode is assigned; DONE, NONE, UTURN
+and LINE_FOUND keep their existing meanings. The finish trigger remains
+unimplemented until these course facts and controller policies are confirmed.
+
+## Added bounded-feedback verification
+
+The existing runner now also builds `member3_feedback_test.c`: S3-U20..U25
+cover polling contention/timeout, lock/unlock errors with unchanged output,
+coherent fields, read-without-sampling staleness, continuously fresh unchanged
+line, raw/filtered disagreement, sampling during contended publication,
+withheld and paused completion, barcode noise and configuration/map replies.
+S3-U16/U18 continue checking wrong/duplicate/matched completion, explicit resume
+and actual sampled line-reacquisition evidence. All mutex outcomes and execution
+cycles here are host fakes; on-target timing and physical calibration remain
+pending. No real controller/motor connection is claimed by these tests.

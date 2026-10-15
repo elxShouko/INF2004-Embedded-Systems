@@ -115,7 +115,7 @@ ER s3_receive (s3_output_t * p_output, TMO timeout)
 }
 
 /**
- * @brief Copy the shared status while holding its inheritance mutex.
+ * @brief Poll for a coherent status copy without waiting for the mutex.
  */
 ER s3_get_status (s3_status_t * p_status)
 {
@@ -129,16 +129,22 @@ ER s3_get_status (s3_status_t * p_status)
         return E_OBJ;
     }
 
-    ER result = tk_loc_mtx(mtx_s3_status, TMO_FEVR);
+    ER result = tk_loc_mtx(mtx_s3_status, TMO_POL);
 
     if (result < E_OK)
     {
         return result;
     }
 
-    *p_status = g_status;
+    const s3_status_t snapshot = g_status;
+    result = tk_unl_mtx(mtx_s3_status);
 
-    return tk_unl_mtx(mtx_s3_status);
+    if (E_OK == result)
+    {
+        *p_status = snapshot;
+    }
+
+    return result;
 }
 
 /**
@@ -287,16 +293,25 @@ void s3_navigation_task (INT stacd, void * p_exinf)
         context.status.map_revision = context.map.revision;
         memcpy(context.status.mapping, context.map.actions,
                sizeof(context.status.mapping));
-        ER lock = tk_loc_mtx(mtx_s3_status, TMO_FEVR);
+        ER lock = tk_loc_mtx(mtx_s3_status, TMO_POL);
 
         if (E_OK == lock)
         {
             g_status = context.status;
-            tk_unl_mtx(mtx_s3_status);
+            if (tk_unl_mtx(mtx_s3_status) != E_OK)
+            {
+                fault(&context, S3_FAULT_KERNEL);
+            }
+        }
+        else if (lock != E_TMOUT)
+        {
+            fault(&context, S3_FAULT_KERNEL);
         }
         else
         {
-            fault(&context, S3_FAULT_KERNEL);
+            /* Skip this publication; old acquisition time exposes staleness.
+             * Sensing must continue even if another task holds the mutex.
+             */
         }
 
         tk_dly_tsk(context.config.period_ms);
@@ -507,7 +522,10 @@ static void input (s3_context_t * p_context, const s3_input_t * p_input,
 
         break;
         case S3_INPUT_MANOEUVRE_DONE:
-            b_accepted = (p_context->status.pending_manoeuvre_event_id != 0U) &&
+            b_accepted = (LINE_MODE_TRACKING == p_context->status.mode) &&
+                         (LINE_STATE_AWAITING_MANOEUVRE ==
+                          p_context->status.state) &&
+                         (p_context->status.pending_manoeuvre_event_id != 0U) &&
                          (p_input->value.manoeuvre_event_id ==
                           p_context->status.pending_manoeuvre_event_id) &&
                          (S3_FAULT_NONE == p_context->status.fault);

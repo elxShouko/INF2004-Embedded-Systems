@@ -10,6 +10,14 @@
  * lock covers only memory copies and counter updates. No kernel waiting call,
  * lwIP call, MQTT call or print is made while it is held, and a reader gets
  * a coherent snapshot taken at a single moment.
+ *
+ * SAFETY PATH: The emergency-stop signal and the connected state do NOT use
+ * that mutex. They live in a separate kernel event flag (state flag), which
+ * is atomic across cores and never blocks. When an EMERGENCY_STOP arrives,
+ * the hook parses it and posts the latch and the pulse flag first; only then
+ * does it queue the command and update the counters. A full command queue or
+ * a stuck diagnostic reader therefore cannot hide an emergency. Application
+ * tasks never wait unboundedly on the status mutex.
  */
 
 #include "s1_net.h"
@@ -23,6 +31,11 @@
 #define S1_NET_MESSAGE_OVERHEAD 8u /* Kernel bookkeeping per message. */
 #define S1_NET_FLUSH_LIMIT 32u
 #define S1_NET_SCRATCH_BYTES 8u
+#define S1_NET_ESTOP_POST_TRIES 3u
+#define S1_NET_CLOCK_HALF_RANGE                                                \
+    0x80000000u                      /* Ages beyond this are future times. */
+#define S1_NET_STATE_ESTOP 0x01u     /* Latched until s1_net_estop_clear(). */
+#define S1_NET_STATE_CONNECTED 0x02u /* Mirrors the connected state. */
 
 typedef struct
 {
@@ -30,6 +43,7 @@ typedef struct
     ID             telemetry_buffer_id;
     ID             command_buffer_id;
     ID             event_flag_id;
+    ID             state_flag_id;
     uint32_t       telemetry_sequence;
     s1_net_stats_t stats;
 } s1_net_module_t;
@@ -47,8 +61,12 @@ static const mqtt_utk_app_t g_s1_net_app = {
 #endif
 
 static bool     status_lock (void);
+static ER       status_lock_bounded (TMO timeout);
 static void     status_unlock (void);
 static void     status_count (uint32_t * p_counter);
+static void     status_count_nowait (uint32_t * p_counter);
+static void     post_estop (void);
+static void     set_state (UINT bits, bool b_on);
 static void     queue_command (const s1_codec_command_t * p_command);
 static void     flush_telemetry (void);
 static uint32_t now_ms (void);
@@ -64,6 +82,7 @@ s1_net_init (void)
     T_CMBF telemetry_info = {0};
     T_CMBF command_info   = {0};
     T_CFLG flag_info      = {0};
+    T_CFLG state_info     = {0};
     T_CMTX mutex_info     = {0};
     ER     result         = E_OK;
 
@@ -85,6 +104,9 @@ s1_net_init (void)
     flag_info.flgatr       = TA_TFIFO | TA_WMUL;
     g_s1_net.event_flag_id = tk_cre_flg(&flag_info);
 
+    state_info.flgatr      = TA_TFIFO | TA_WMUL;
+    g_s1_net.state_flag_id = tk_cre_flg(&state_info);
+
     if (g_s1_net.status_mutex_id < E_OK)
     {
         result = g_s1_net.status_mutex_id;
@@ -100,6 +122,10 @@ s1_net_init (void)
     else if (g_s1_net.event_flag_id < E_OK)
     {
         result = g_s1_net.event_flag_id;
+    }
+    else if (g_s1_net.state_flag_id < E_OK)
+    {
+        result = g_s1_net.state_flag_id;
     }
     else
     {
@@ -133,16 +159,53 @@ s1_net_telemetry_send (const s1_codec_frame_t * p_frame)
                       sizeof(s1_codec_frame_t), TMO_POL);
 }
 
-/* Take the oldest remote command. */
+/* Take the oldest valid remote command (see s1_net.h). */
 ER
 s1_net_command_receive (s1_codec_command_t * p_command, TMO timeout)
 {
-    INT size   = tk_rcv_mbf(g_s1_net.command_buffer_id, p_command, timeout);
-    ER  result = E_OK;
+    s1_codec_command_t message = {S1_CMD_NONE, 0u};
+    TMO                wait    = timeout;
+    ER                 result  = E_TMOUT;
+    bool               b_done  = false;
+    uint32_t           tries   = 0u;
+    uint32_t           age_ms  = 0u;
+    INT                size    = 0;
 
-    if (size < E_OK)
+    *p_command = message;
+    while ((!b_done) && (tries <= S1_NET_COMMAND_DEPTH))
     {
-        result = size;
+        tries++;
+        size   = tk_rcv_mbf(g_s1_net.command_buffer_id, &message, wait);
+        wait   = TMO_POL; /* After a discarded message, do not wait again. */
+        age_ms = now_ms() - message.rx_timestamp_ms; /* Wrap-safe. */
+        if (size < E_OK)
+        {
+            result = size; /* Kernel error, for example E_TMOUT, unchanged. */
+            b_done = true;
+        }
+        else if ((sizeof(message) != (uint32_t) size) ||
+                 (message.command_id <= S1_CMD_NONE) ||
+                 (message.command_id > S1_CMD_RESUME))
+        {
+            status_count_nowait(&g_s1_net.stats.commands_bad_size);
+            message = (s1_codec_command_t){S1_CMD_NONE, 0u};
+            result  = E_SYS; /* Never hand out a partly filled command. */
+            b_done  = true;
+        }
+        else if ((S1_CMD_EMERGENCY_STOP != message.command_id) &&
+                 (age_ms > S1_NET_COMMAND_MAX_AGE_MS) &&
+                 (age_ms < S1_NET_CLOCK_HALF_RANGE))
+        {
+            status_count_nowait(&g_s1_net.stats.commands_stale);
+            message = (s1_codec_command_t){S1_CMD_NONE, 0u};
+            result  = E_TMOUT; /* Stale: look at the next one, if any. */
+        }
+        else
+        {
+            *p_command = message;
+            result     = E_OK;
+            b_done     = true;
+        }
     }
     return result;
 }
@@ -155,27 +218,62 @@ s1_net_events_wait (UINT pattern, UINT * p_flags, TMO timeout)
                       p_flags, timeout);
 }
 
-/* True while the MQTT session is open. False if the status is unavailable. */
+/* True while the MQTT session is open. Lock-free; false if unreadable. */
 bool
 s1_net_is_connected (void)
 {
-    bool b_connected = false;
+    T_RFLG state       = {0};
+    bool   b_connected = false;
 
-    if (status_lock())
+    if (E_OK == tk_ref_flg(g_s1_net.state_flag_id, &state))
     {
-        b_connected = g_s1_net.stats.b_connected;
-        status_unlock();
+        b_connected = (0u != (state.flgptn & S1_NET_STATE_CONNECTED));
     }
     return b_connected;
 }
 
-/* Copy the whole status block at one moment. On error the copy is zeroed. */
+/* True while an emergency is latched. Lock-free; true if unreadable. */
+bool
+s1_net_estop_latched (void)
+{
+    T_RFLG state     = {0};
+    bool   b_latched = true; /* Fail safe. */
+
+    if (E_OK == tk_ref_flg(g_s1_net.state_flag_id, &state))
+    {
+        b_latched = (0u != (state.flgptn & S1_NET_STATE_ESTOP));
+    }
+    return b_latched;
+}
+
+/* Deliberate clear by the safety-policy owner. Touches nothing else. */
+ER
+s1_net_estop_clear (void)
+{
+    return tk_clr_flg(g_s1_net.state_flag_id, ~S1_NET_STATE_ESTOP);
+}
+
+#if APP_TEST
+ID
+s1_net_test_status_mutex (void)
+{
+    return g_s1_net.status_mutex_id;
+}
+
+ID
+s1_net_test_command_buffer (void)
+{
+    return g_s1_net.command_buffer_id;
+}
+#endif
+
+/* Copy the whole status block at one moment. Bounded wait; zeroed on error. */
 ER
 s1_net_get_stats (s1_net_stats_t * p_stats)
 {
-    ER result = E_OK;
+    ER result = status_lock_bounded(S1_NET_STATUS_LOCK_MS);
 
-    if (status_lock())
+    if (E_OK == result)
     {
         *p_stats = g_s1_net.stats;
         status_unlock();
@@ -183,7 +281,6 @@ s1_net_get_stats (s1_net_stats_t * p_stats)
     else
     {
         *p_stats = (s1_net_stats_t){0};
-        result   = E_SYS;
     }
     return result;
 }
@@ -200,7 +297,11 @@ s1_net_hook_pull_telemetry (char * p_buffer, uint32_t capacity)
     uint32_t         length = 0u;
     INT size = tk_rcv_mbf(g_s1_net.telemetry_buffer_id, &frame, TMO_POL);
 
-    if (size > 0)
+    if ((size > 0) && (sizeof(frame) != (uint32_t) size))
+    {
+        status_count(&g_s1_net.stats.telemetry_bad_size);
+    }
+    else if (size > 0)
     {
         status_count(&g_s1_net.stats.telemetry_pulled);
         /* The sequence counts every frame that leaves the buffer, so a drop
@@ -224,16 +325,22 @@ s1_net_hook_make_heartbeat (char * p_buffer, uint32_t capacity,
     return s1_codec_encode_heartbeat(uptime_ms, p_buffer, capacity);
 }
 
-/* Validate one complete command message and forward it (FR18). */
+/* Validate one complete command message and forward it (FR18). Order
+ * matters: parse (pure), publish an emergency, and only then queue and count.
+ * Nothing before the emergency is posted can wait on a lock or a full queue. */
 void
 s1_net_hook_on_command (const char * p_payload, uint32_t length, uint32_t rx_ms)
 {
     s1_codec_command_t command = {S1_CMD_NONE, 0u};
 
-    status_count(&g_s1_net.stats.commands_received);
     command.command_id      = s1_codec_parse_command(p_payload, length);
     command.rx_timestamp_ms = rx_ms;
 
+    if (S1_CMD_EMERGENCY_STOP == command.command_id)
+    {
+        post_estop();
+    }
+    status_count(&g_s1_net.stats.commands_received);
     if (S1_CMD_NONE == command.command_id)
     {
         status_count(&g_s1_net.stats.commands_rejected);
@@ -257,6 +364,7 @@ s1_net_hook_on_event (uint32_t event, uint32_t value)
         {
             g_s1_net.stats.connects++;
             g_s1_net.stats.b_connected = true;
+            set_state(S1_NET_STATE_CONNECTED, true);
             status_unlock();
         }
         flush_telemetry();
@@ -279,7 +387,8 @@ s1_net_hook_on_event (uint32_t event, uint32_t value)
             {
                 g_s1_net.stats.disconnects++;
                 g_s1_net.stats.b_connected = false;
-                b_changed                  = true;
+                set_state(S1_NET_STATE_CONNECTED, false);
+                b_changed = true;
             }
             status_unlock();
         }
@@ -327,6 +436,13 @@ status_lock (void)
     return (E_OK == tk_loc_mtx(g_s1_net.status_mutex_id, TMO_FEVR));
 }
 
+/* Take the status mutex for at most timeout ms (application tasks). */
+static ER
+status_lock_bounded (TMO timeout)
+{
+    return tk_loc_mtx(g_s1_net.status_mutex_id, timeout);
+}
+
 /* Release the status mutex. */
 static void
 status_unlock (void)
@@ -343,6 +459,64 @@ status_count (uint32_t * p_counter)
         (*p_counter)++;
         status_unlock();
     }
+}
+
+/* Add one to a counter without ever waiting: for tasks other than the Wi-Fi
+ * task. A busy mutex loses the count; diagnostics never delay a caller. */
+static void
+status_count_nowait (uint32_t * p_counter)
+{
+    if (E_OK == status_lock_bounded(TMO_POL))
+    {
+        (*p_counter)++;
+        status_unlock();
+    }
+}
+
+/* Set or clear bits of the state flag. Kernel calls only, so it is also safe
+ * under the status mutex. */
+static void
+set_state (UINT bits, bool b_on)
+{
+    if (b_on)
+    {
+        tk_set_flg(g_s1_net.state_flag_id, bits);
+    }
+    else
+    {
+        tk_clr_flg(g_s1_net.state_flag_id, ~bits);
+    }
+}
+
+/* Publish an emergency through the dedicated safety path: the latch first,
+ * then the pulse. Each is retried; a persistent failure is counted (without
+ * waiting) and the queued command remains a second path to the consumer. */
+static void
+post_estop (void)
+{
+    bool     b_latched = false;
+    bool     b_pulsed  = false;
+    uint32_t tries     = 0u;
+
+    for (tries = 0u; tries < S1_NET_ESTOP_POST_TRIES; tries++)
+    {
+        if (!b_latched)
+        {
+            b_latched = (E_OK == tk_set_flg(g_s1_net.state_flag_id,
+                                            S1_NET_STATE_ESTOP));
+        }
+        if (!b_pulsed)
+        {
+            b_pulsed =
+                (E_OK == tk_set_flg(g_s1_net.event_flag_id,
+                                    S1_NET_FLG_COMMAND | S1_NET_FLG_ESTOP));
+        }
+    }
+    if (!(b_latched && b_pulsed))
+    {
+        status_count_nowait(&g_s1_net.stats.estop_post_failures);
+    }
+    status_count(&g_s1_net.stats.estop_received);
 }
 
 /* Put a command in the buffer and wake the Vehicle Controller. An

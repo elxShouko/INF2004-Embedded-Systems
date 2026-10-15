@@ -15,6 +15,7 @@ extern void host_puts (const char * p_text);
 extern void host_mutex_create (int id);
 extern void host_mutex_lock (int id);
 extern void host_mutex_unlock (int id);
+extern int  host_mutex_trylock (int id);
 extern void host_global_lock (void);
 extern void host_global_unlock (void);
 extern void host_sleep_ms (int ms);
@@ -57,7 +58,18 @@ INT tk_rcv_mbf (ID id, void * msg, TMO tmout)
 }
 
 ID tk_cre_flg (const T_CFLG * p) { (void) p; g_flag_pattern[g_flag_count] = 0u; g_flag_count++; return g_flag_count; }
-ER tk_set_flg (ID id, UINT p) { host_global_lock (); g_flag_pattern[id - 1] |= p; host_global_unlock (); return E_OK; }
+/* Fault injection for the tests: the next N tk_set_flg calls fail. */
+static int g_fail_set_flg = 0;
+void kernel_emulation_fail_set_flg (int count) { g_fail_set_flg = count; }
+
+ER tk_set_flg (ID id, UINT p)
+{
+    host_global_lock ();
+    if (g_fail_set_flg > 0) { g_fail_set_flg--; host_global_unlock (); return E_SYS; }
+    g_flag_pattern[id - 1] |= p; host_global_unlock (); return E_OK;
+}
+ER tk_clr_flg (ID id, UINT p) { host_global_lock (); g_flag_pattern[id - 1] &= p; host_global_unlock (); return E_OK; }
+ER tk_ref_flg (ID id, T_RFLG * r) { host_global_lock (); r->flgptn = g_flag_pattern[id - 1]; r->wtsk = 0; host_global_unlock (); return E_OK; }
 
 /* Honours TWF_ANDW / TWF_ORW, TWF_CLR / TWF_BITCLR, and a timeout in ms. */
 ER tk_wai_flg (ID id, UINT wai, UINT mode, UINT * flg, TMO tmout)
@@ -84,7 +96,18 @@ ER tk_wai_flg (ID id, UINT wai, UINT mode, UINT * flg, TMO tmout)
 }
 
 ID tk_cre_mtx (const T_CMTX * p) { (void) p; host_mutex_create (g_mutex_count); g_mutex_count++; return g_mutex_count; }
-ER tk_loc_mtx (ID id, TMO tmout) { (void) tmout; host_mutex_lock (id - 1); return E_OK; }
+/* TMO_FEVR waits; TMO_POL and a timeout in ms try, then give up with E_TMOUT. */
+ER tk_loc_mtx (ID id, TMO tmout)
+{
+    long waited = 0;
+    if (TMO_FEVR == tmout) { host_mutex_lock (id - 1); return E_OK; }
+    for (;;)
+    {
+        if (host_mutex_trylock (id - 1)) { return E_OK; }
+        if ((TMO_POL == tmout) || (waited >= tmout)) { return E_TMOUT; }
+        host_sleep_ms (WAIT_STEP_MS); waited += WAIT_STEP_MS;
+    }
+}
 ER tk_unl_mtx (ID id) { host_mutex_unlock (id - 1); return E_OK; }
 
 ER tk_get_otm (SYSTIM * t) { t->lo = g_time_ms; t->hi = 0; return E_OK; }

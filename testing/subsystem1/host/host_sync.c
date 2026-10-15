@@ -64,6 +64,7 @@ int host_has_threads (void) { return 1; }
 void host_mutex_create (int id) { pthread_mutex_init(&g_mutex[id % MAX_MUTEXES], NULL); }
 void host_mutex_lock (int id) { pthread_mutex_lock(&g_mutex[id % MAX_MUTEXES]); }
 void host_mutex_unlock (int id) { pthread_mutex_unlock(&g_mutex[id % MAX_MUTEXES]); }
+int host_mutex_trylock (int id) { return (0 == pthread_mutex_trylock(&g_mutex[id % MAX_MUTEXES])); }
 void host_global_lock (void) { pthread_mutex_lock(&g_global); }
 void host_global_unlock (void) { pthread_mutex_unlock(&g_global); }
 void host_sleep_ms (int ms) { struct timespec t = {0, ms * 1000000L}; nanosleep(&t, NULL); }
@@ -83,6 +84,7 @@ int host_has_threads (void) { return 0; }
 void host_mutex_create (int id) { (void) id; }
 void host_mutex_lock (int id) { (void) id; }
 void host_mutex_unlock (int id) { (void) id; }
+int host_mutex_trylock (int id) { (void) id; return 1; }
 void host_global_lock (void) {}
 void host_global_unlock (void) {}
 void host_sleep_ms (int ms) { (void) ms; }

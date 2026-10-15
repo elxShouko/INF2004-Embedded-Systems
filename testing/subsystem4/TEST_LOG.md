@@ -3,7 +3,7 @@
 **Subsystem:** Buddy 4 · **Code:** `app_program/subsystem4/`
 
 See `testing/README.md` for the shared convention. This is the single registry
-for the 75 current-firmware host cases, retained monitor checks and pending
+for the 79 current-firmware host cases, retained monitor checks and pending
 hardware checks. Historical IDs S4-U003–S4-U115 are retired/reserved and are
 not reused. S4-U167–S4-U169 remain unassigned.
 
@@ -24,8 +24,9 @@ bash testing/subsystem4/host/run_host_tests.sh sanitize
 bash testing/subsystem4/host/run_builds.sh
 ```
 
-Both host commands run all **75 current-firmware cases**: 52 core/driver
-checks plus 23 runtime/bridge checks. No legacy sources or cases
+Both host commands run all **79 current-firmware cases**: 54 core/driver
+checks, 23 runtime/bridge checks and 2 transport checks. No legacy sources
+or cases
 are built or extracted.
 
 The build runner compiles GNU Make profiles: default, `TEST=1`, `S4_IMU=1`,
@@ -121,6 +122,10 @@ Historical result rows below are retained as records, not current coverage.
 | S4-U197 | Unequal target speeds | Current S2/S4 bridge | auto (host) | Differential target | Motion available but not straight. |
 | S4-U198 | Unequal measured speeds | Current S2/S4 bridge | auto (host) | Differential wheel feedback | Motion available but not straight. |
 | S4-U199 | Trust revocation API | Current S4 runtime | auto (host) | Assert, revoke and call deprecated scalar API | Explicit revocation succeeds; scalar valid input rejected. |
+| S4-U202 | Short I2C read | Current SDK transport | auto (host) | [transport_main.c](host/transport_main.c), fake SDK | Short read propagates IO_ERROR; register write/read use the configured 2 ms deadline. |
+| S4-U203 | Initialization write timeout | Current SDK transport | auto (host) | [transport_main.c](host/transport_main.c), fake SDK | SDK write failure prevents open; configured 2 ms timeout is passed. |
+| S4-U205 | Flat acceleration then braking after valid hump | Current height guard | auto (host, target) | [buddy4_cases.c](host/buddy4_cases.c); eight 20 ms intervals each at +0.2 g and -0.2 g | False ascent reaches PEAK but is invalid; prior 10 mm synthetic maximum stays valid through return to MONITORING. |
+| S4-U206 | Separate height enable gate | Current height guard | auto (host, target) | [buddy4_cases.c](host/buddy4_cases.c); default config, valid forward/trusted synthetic input | No valid maximum while height calibration remains false. |
 | S4-U170 | Inspect exact breakout, supply and bus pull-ups; verify GP16/17 and axis mapping with power safely isolated | Hardware acceptance | manual (pending) | Authorized physical trial; record conditions and measured errors | Correct part, exclusive pins, common ground, compatible 3.3 V logic; save wiring record |
 | S4-U171 | Stationary calibration, moved startup, known positive/negative tilt fixtures | Hardware acceptance | manual (pending) | Authorized physical trial; record conditions and measured errors | Calibration only under intended stationary conditions; measured bias/noise and tilt error within team-approved limits |
 | S4-U172 | Repeated known humps with differing heights, lengths and slopes at measured speeds | Hardware acceptance | manual (pending) | Authorized physical trial; record conditions and measured errors | Correct highest physical hump, peak-time event, recorded height errors within agreed limits; invalid estimates clearly flagged |
@@ -132,8 +137,9 @@ Historical result rows below are retained as records, not current coverage.
 
 ### Scope and limitations
 
-Current cases compile `app_program/subsystem4/`: 52 core/driver cases also
-compile into `TEST=1`; 23 runtime/bridge cases execute in fresh host processes.
+Current cases compile `app_program/subsystem4/`: 54 core/driver cases also
+compile into `TEST=1`; 23 runtime/bridge and 2 SDK-transport cases run in
+fresh host processes.
 Neither fake kernel validates SMP scheduling, electrical safety or physical
 timing. Compilation is not an on-target test pass. Synthetic tolerances are
 regression fixtures, not physical acceptance criteria.
@@ -309,3 +315,46 @@ source wires S4 init/start in the template order. No application caller of
 `S4_IMU_ENABLE=0` and `S4_HEIGHT_CALIBRATED=false` leave physical sensing and
 calibrated height reporting inactive; passing builds do not establish mission
 operation, measured height accuracy, fault-to-motor-stop latency or SMP timing.
+
+### Braking regression and enablement review — 2026-10-15
+
+Tested branch `buddy4-fix`, HEAD
+`f3e77ffb5fc0d1ddeb7b963bed939fa926db89fc` plus the uncommitted
+Buddy 4 test/documentation changes. The current registry has 79 cases. The
+new cases were defined in this registry and rerun in the final logs below.
+
+| Date | Test ID | Commit | Tester | Result | Log / evidence | Notes |
+|---|---|---|---|---|---|---|
+| 2026-10-15 | S4-U116–U166, U176–U199, U202–U203, U205–U206 | `f3e77ff + WT` | Apple Clang 21 | PASS, 79/79 host | [normal](logs/2026-10-15_host_normal.eOBGWx/console.txt) | Strict C99/O2, 79 distinct IDs; S4-U176 braking and S4-U205 prior-max regression both pass. |
+| 2026-10-15 | Same 79 cases | `f3e77ff + WT` | Apple Clang 21 | PASS, 79/79, ASan + UBSan | [sanitizer](logs/2026-10-15_host_sanitize.czAhGd/console.txt) | No failed cases or sanitizer diagnostics. |
+| 2026-10-15 | Four integrated GNU Make profiles | `f3e77ff + WT` | Arm GNU 15.3.1 | PASS, compile/link/UF2 | [build](logs/2026-10-15_build.EzwBWB/console.txt) | Default, TEST=1, S4_IMU=1 and both; no warnings/errors, no flashing. |
+
+Regression comparison: the [pre-fix diagnostic](logs/2026-10-15_verification.y3BrBf/flat_braking_and_scope.txt)
+used ten 20 ms flat-ground braking samples at -0.2 g and reported a false
+11.187815 mm valid maximum. Current S4-U176 retains that accelerometer and
+distance sequence, adds the independent signed-motion evidence required by
+the new core, and asserts PEAK with no valid height/maximum and a DYNAMIC
+reason. S4-U205 first establishes a valid 10 mm synthetic maximum, then
+runs eight +0.2 g acceleration samples and eight -0.2 g braking samples;
+the braking false ascent reaches PEAK but cannot replace that maximum through
+return to MONITORING. The earlier reported 2.313 mm inputs were unavailable,
+so that exact case cannot be claimed reproduced. These results hold for the
+synthetic guard envelope in the tests, not for every speed/surface/vehicle.
+
+S4-U202/203 use an SDK double to verify the application wrapper passes its
+configured 2 ms deadline/timeout and propagates short-read/write failures.
+Earlier S4-U155–159 exercise sensor-open/read faults, stale samples and full
+ordinary event queue; the latched fault flag stays readable when the queue
+cannot accept an event. S4-U180–184 and U190–199 exercise stale/reverse/turn
+motion and explicit trust revocation. This is software fault-delivery evidence,
+not measured physical stuck-bus or stop latency.
+
+Static inspection confirms GP16/GP17 and I2C0 are assigned to S4 in `TEAM.md`,
+the kernel I2C driver is disabled, and `drv_imu.c` rejects simultaneous
+kernel I2C ownership. The shared Vehicle Controller reads S4 status and its
+independent fault latch, then requests Buddy 2 emergency stop. It currently
+does not assert traction trust or consume ordinary hump events. Actual sensor,
+wiring, pull-ups, mounting, calibration, slip discrimination, physical height
+error, SMP timing and fault-to-motor-stop latency remain unverified. Both
+`S4_MAG_CALIBRATED` and `S4_HEIGHT_CALIBRATED` remain false; no hardware was
+accessed or enabled.

@@ -97,6 +97,16 @@ typedef struct
     s3_fault_t         fault;
 } s3_output_t;
 
+/** @brief Coherent owner snapshot; successful copying is not motion readiness.
+ * raw.timestamp_us is acquisition time from s3_clock_us(), never read time.
+ * black_mask is the unfiltered normalized mask for raw when calibrated and
+ * fault-free; line is the last stable filtered front-pair observation.
+ * line_valid means a filtered value exists, NOT that it matches current raw.
+ * Check calibration, sample age, mask/line agreement, mode/state, fault and
+ * pending_manoeuvre_event_id together before permitting ordinary tracking.
+ * Repeated reads do not renew sensing. On a fault, retained sensor/line fields
+ * are diagnostic only. Failed publication leaves an older snapshot to age out.
+ */
 typedef struct
 {
     ir_sample_t        raw;
@@ -133,7 +143,14 @@ IMPORT volatile ID tid_s3_navigation;
 ER s3_submit (const s3_input_t * p_input, TMO timeout);
 /** @brief Receive and validate one fixed-size owner-task output. */
 ER s3_receive (s3_output_t * p_output, TMO timeout);
-/** @brief Copy the shared status while holding its inheritance mutex. */
+/** @brief Poll once for a copied status; task context only, no retry loop.
+ * E_OK: coherent copy (may be old); E_TMOUT: mutex busy, no wait performed;
+ * E_PAR: NULL output; E_OBJ: objects unavailable. Other kernel errors pass
+ * through, including unlock errors. On EVERY error output remains unchanged.
+ * Treat failure as unavailable feedback; never renew motion from that buffer.
+ * No kernel object wait is requested; target execution latency still requires
+ * measurement under SMP/preemption. Reads never modify acquisition timestamps.
+ */
 ER s3_get_status (s3_status_t * p_status);
 /** @brief Create navigation objects before any subsystem task starts. */
 ER s3_navigation_init (void);

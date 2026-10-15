@@ -53,11 +53,12 @@ def main():
         "junction": ["ir_input", "line_tracking", "junction"],
         "rtos": ["ir_input", "line_tracking", "barcode", "navigation_map", "junction"],
         "production": ["ir_input", "line_tracking", "barcode", "navigation_map", "junction"],
+        "feedback": ["ir_input", "line_tracking", "barcode", "navigation_map", "junction"],
     }
     for suite, modules in suites.items():
         executable = output / f"{suite}.exe"
-        test = root / ("testing/subsystem3/member3_production_test.c"
-                       if suite == "production" else
+        test = root / (f"testing/subsystem3/member3_{suite}_test.c"
+                       if suite in {"production", "feedback"} else
                        f"testing/subsystem3/logs/member3_{suite}_test.c")
         command = [args.gcc, "-std=c99", "-Wall", "-Wextra", "-Werror",
                    "-I" + str(source), test]

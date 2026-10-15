@@ -80,13 +80,24 @@ Include `member3_navigation.h` from subsystem3. All APIs are task-context only.
 | --- | --- |
 | `s3_submit(&input, TMO_POL)` | Queue a configuration, mode, mapping, odometry or manoeuvre-completion message |
 | `s3_receive(&output, timeout)` | Single controller receiver drains S3 events and validation replies |
-| `s3_get_status(&status)` | Read mutex-protected sensor/status/mapping snapshot, including latched fault |
+| `s3_get_status(&status)` | Poll once for coherent copied status; E_TMOUT on contention; any error leaves output unchanged |
 
 E_OK from submit means enqueued, not validated. S3_OUTPUT_REPLY echoes request_id,
 accepted and map revision. Odometry is high-rate and does not produce per-packet
 replies. Send a complete zero-initialized s3_input_t and a bounded NUL-terminated
 mapping string. Raw network bytes are not a C structure; Member 1 must parse
 and validate its transport envelope before constructing one.
+
+The status getter requests `TMO_POL`, never `TMO_FEVR`, and never retries
+internally. E_OK confirms copying, not fresh sensing or motion readiness.
+`raw.timestamp_us` is the original acquisition time. `black_mask` is raw
+normalized sensing; `line` retains the last stable filtered observation and
+may disagree during settling. Check all validity/mode/fault/pending-ID fields
+and sample age. E_TMOUT means try again on a later supervisory cycle while
+applying the controller's unavailable-feedback stop/restriction policy.
+The owner also polls for publication: contention skips publication, preserves
+the previous sample timestamp and continues sampling. Actual SMP execution
+latency remains to be measured; this is not a physical emergency-stop proof.
 
 Configuration is accepted only while paused. Supply actual calibrated polarity
 and measured timing. `s3_config_t` fields include line stability/loss/found
@@ -104,6 +115,10 @@ reset processing. The controller must handle safe stopping; S3 cannot stop motor
 
 For a BARCODE_VALID event with command != NONE, execute its snapshotted command,
 then submit MANOEUVRE_DONE with that event_id. Wrong/stale IDs are rejected.
+Completion is accepted only in TRACKING/AWAITING_MANOEUVRE with no fault.
+Pause preserves pending ownership and rejects late DONE; failed/cancelled
+motion must not send DONE. Reconcile motion ownership before a deliberate
+paused reconfiguration clears that pending ID.
 NONE means a recognized but disabled letter and requests no movement.
 
 The output buffer is bounded and all task sends use TMO_POL. If a receiver does

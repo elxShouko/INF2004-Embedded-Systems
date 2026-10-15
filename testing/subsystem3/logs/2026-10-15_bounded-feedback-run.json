@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-15",
+  "tested_head": "c9b018cb3a108589de0d3f469c85544072f6c5db",
+  "branch": "main",
+  "working_tree": "Uncommitted Buddy 3 bounded-feedback changes; exact source/test hashes in final host report. No branch switch, commit or push.",
+  "host_report": "2026-10-15_bounded-feedback-final-host-results.json",
+  "host_report_sha256": "a712787fb6e7e5d9fd298d51deda70381dd26feda03da7fa277a11d30d4d8b95",
+  "environment": "Installed MSYS2 shell, Arm GNU 15.2.Rel1, Pico SDK 2.3.1. MSYS2 executed outside sandbox because its required Windows runtime objects are sandbox-blocked; no installs/downloads.",
+  "commands": {
+    "environment": "export PATH=/c/Users/linco/.pico-sdk/toolchain/15_2_Rel1/bin:/usr/bin:$PATH\nexport PICO_SDK_PATH=/c/Users/linco/.pico-sdk/sdk/2.3.1",
+    "normal": "cd build_make\nmake -j8",
+    "test": "cd build_make\nmake TEST=1 -j8",
+    "host": "C:/Users/linco/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-15_bounded-feedback-final-host-results.json"
+  },
+  "profiles": {
+    "normal": "SMP=1 CONSOLE=usb_cdc WIFI=cyw43 NET=none MQTT=0 TEST=0 CRASH_REPORT=0 S4_IMU=0",
+    "test": "SMP=1 CONSOLE=usb_cdc WIFI=cyw43 NET=none MQTT=0 TEST=1 CRASH_REPORT=0 S4_IMU=0"
+  },
+  "normal_exit": 0,
+  "test_exit": 0,
+  "artifacts": {
+    "mtk3pico_smp1_usb_cdc_wifi.uf2": {
+      "bytes": 646656,
+      "sha256": "014410162aa69beb014f12b61fa9cb04bd70724e0393175341b6e5299f8a71e4"
+    },
+    "mtk3pico_smp1_usb_cdc_wifi_test.uf2": {
+      "bytes": 792576,
+      "sha256": "58d7b188fbc4b37bff26647ca67a9193c7319fe9cc8bdba36afdb5a3b6adeaa2"
+    }
+  },
+  "limitations": "Host fakes and compilation only. No real mutex contention latency, SMP scheduling, controller-connected motor stop or hardware calibration verified; no flashing."
+}

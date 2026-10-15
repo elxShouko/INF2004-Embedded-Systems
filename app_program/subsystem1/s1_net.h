@@ -10,8 +10,10 @@
  *
  * RULE: No application task calls cyw43, lwIP or MQTT functions (TEAM.md
  * section 3). Application tasks use only the functions in this file. They are
- * all non-blocking except s1_net_command_receive() and s1_net_events_wait(),
- * whose timeout the caller chooses.
+ * non-blocking, except s1_net_command_receive() and s1_net_events_wait()
+ * (the caller chooses the timeout) and s1_net_get_stats() (waits at most
+ * S1_NET_STATUS_LOCK_MS). s1_net_is_connected() and s1_net_estop_latched()
+ * never wait.
  */
 
 #ifndef S1_NET_H
@@ -27,8 +29,18 @@
  *  s1_net_command_receive). */
 #define S1_NET_FLG_COMMAND 0x01u
 
-/** Event flag: set in addition to S1_NET_FLG_COMMAND for EMERGENCY_STOP. */
+/** Event flag: pulse set the moment an EMERGENCY_STOP arrives, before the
+ *  command is queued or any diagnostic lock is taken. Consumed by whoever
+ *  waits on it. The lasting record is s1_net_estop_latched(). */
 #define S1_NET_FLG_ESTOP 0x02u
+
+/** A non-EMERGENCY_STOP command older than this when it is taken from the
+ *  queue is discarded and counted. EMERGENCY_STOP is never discarded as stale.
+ */
+#define S1_NET_COMMAND_MAX_AGE_MS 1000u
+
+/** Longest wait for the status mutex by an application task. */
+#define S1_NET_STATUS_LOCK_MS 5
 
 /** Event flag: the MQTT link came up or went down (see s1_net_is_connected).*/
 #define S1_NET_FLG_LINK_CHANGED 0x04u
@@ -56,6 +68,11 @@ typedef struct
     uint32_t commands_received;
     uint32_t commands_rejected; /**< Unknown or malformed payload. */
     uint32_t commands_dropped;  /**< Command buffer full. */
+    uint32_t commands_bad_size; /**< Queued message of the wrong size or id. */
+    uint32_t commands_stale;    /**< Discarded: older than the age limit. */
+    uint32_t estop_received;    /**< EMERGENCY_STOP commands seen. */
+    uint32_t estop_post_failures; /**< Safety flag could not be set. */
+    uint32_t telemetry_bad_size;  /**< Queued frame of the wrong size. */
     uint32_t command_forward_max_ms;
     uint32_t backoff_count;
     uint32_t backoff_last_ms;
@@ -81,10 +98,18 @@ ER s1_net_start (void);
 ER s1_net_telemetry_send (const s1_codec_frame_t * p_frame);
 
 /**
- * @brief Take the oldest remote command.
+ * @brief Take the oldest valid remote command.
+ *
+ * The message must be exactly sizeof(s1_codec_command_t) with a known command
+ * id; otherwise it is discarded and counted, and E_SYS is returned (the
+ * caller's output is zeroed, never partly filled). Kernel errors such as
+ * E_TMOUT are returned unchanged. A non-EMERGENCY_STOP command older than
+ * S1_NET_COMMAND_MAX_AGE_MS is discarded and counted, and the next one is
+ * tried without waiting again. This function never waits for the status mutex.
  * @param p_command Receives the command.
  * @param timeout   TMO_POL (do not wait), TMO_FEVR, or milliseconds.
- * @return E_OK, or E_TMOUT if there was none.
+ * @return E_OK, E_TMOUT if there was none, E_SYS for a malformed message, or
+ * another kernel error.
  */
 ER s1_net_command_receive (s1_codec_command_t * p_command, TMO timeout);
 
@@ -98,13 +123,44 @@ ER s1_net_command_receive (s1_codec_command_t * p_command, TMO timeout);
  */
 ER s1_net_events_wait (UINT pattern, UINT * p_flags, TMO timeout);
 
-/** @brief True while the MQTT session to the broker is open. */
+/** @brief True while the MQTT session to the broker is open. Never blocks and
+ *  takes no mutex. False if the state cannot be read. */
 bool s1_net_is_connected (void);
+
+/**
+ * @brief True from the moment an EMERGENCY_STOP command arrives until
+ * s1_net_estop_clear() is called. Nothing else clears it: not a later command
+ * (RESUME, START_RUN, PAUSE), not a reconnect, not a full queue. Never blocks,
+ * takes no mutex, and is SMP-safe (a kernel event flag). Fail-safe: returns
+ * true if the latch cannot be read.
+ *
+ * Buddy 1 only DELIVERS the emergency signal. Deciding to inhibit or stop
+ * motion belongs to the vehicle controller.
+ */
+bool s1_net_estop_latched (void);
+
+/**
+ * @brief Clear the emergency latch. Only the owner of the safety policy (the
+ * vehicle controller) may call this, as a deliberate act after the robot is
+ * safe. It does not touch the command queue or the event flags.
+ * @return E_OK, or the kernel error.
+ */
+ER s1_net_estop_clear (void);
+
+#if APP_TEST
+/** @brief Self-test only: the status mutex, so a test can hold it. */
+ID s1_net_test_status_mutex (void);
+
+/** @brief Self-test only: the command message buffer, so a test can insert a
+ *  malformed message. */
+ID s1_net_test_command_buffer (void);
+#endif
 
 /**
  * @brief Copy the whole status block at one moment (one coherent snapshot).
  * @param p_stats Receives the copy; zeroed if the status is unavailable.
- * @return E_OK, or E_SYS if the status mutex could not be taken.
+ * @return E_OK, or the kernel error (E_TMOUT if the mutex stayed busy for
+ * S1_NET_STATUS_LOCK_MS). The wait is bounded; the copy is then zeroed.
  */
 ER s1_net_get_stats (s1_net_stats_t * p_stats);
 
