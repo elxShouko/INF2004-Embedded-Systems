@@ -1,5 +1,5 @@
 /** @file imu_core.h
- * Buddy 4 pure sensing logic. See testing/buddy4/README.md for assumptions.
+ * Buddy 4 pure logic. See testing/subsystem4/TEST_LOG.md for test scope.
  * Contexts have one owner; callers provide synchronization when shared.
  */
 #ifndef IMU_CORE_H
@@ -40,6 +40,7 @@ typedef enum
 #define IMU_EVENT_TURN       0x20u
 #define IMU_EVENT_FAULT      0x40u
 #define IMU_EVENT_IMPACT     0x80u
+#define IMU_EVENT_HEIGHT_INVALID 0x100u
 
 typedef struct
 {
@@ -49,6 +50,14 @@ typedef struct
     float32_t distance_mm;      /**< Forward path since previous sample. */
     bool      b_distance_valid;
     bool      b_mag_valid;
+    float32_t speed_mm_s;       /**< Signed mean wheel speed; never abs(). */
+    float32_t wheel_delta_mm_s; /**< Absolute left/right speed difference. */
+    uint32_t  motion_time_ms;   /**< Source clock; used only for differences. */
+    uint32_t  motion_age_ms;    /**< Age checked in the source clock. */
+    uint32_t  motion_epoch;     /**< Changes on explicit trust revocation. */
+    bool      b_motion_valid;
+    bool      b_straight;
+    bool      b_traction_trusted;
 } imu_core_sample_t;
 
 typedef struct
@@ -63,6 +72,15 @@ typedef struct
     uint32_t  maximum_gap_ms;
     uint32_t  maximum_hump_ms;
     bool      b_mag_calibrated;
+    /* Measured operating envelope. Zero/default means height is disabled. */
+    float32_t maximum_accel_mm_s2;
+    float32_t speed_band_mm_s;
+    float32_t wheel_delta_mm_s;
+    float32_t minimum_speed_mm_s;
+    uint32_t  settle_ms;
+    uint32_t  ascent_ms;
+    uint32_t  level_ms;
+    bool      b_height_calibrated;
 } imu_core_config_t;
 
 typedef struct
@@ -80,6 +98,8 @@ typedef struct
     bool              b_heading_valid;
     bool              b_height_valid;
     bool              b_highest_valid;
+    uint32_t          height_reasons;
+    bool              b_peak_provisional;
 } imu_core_status_t;
 
 typedef struct
@@ -98,7 +118,29 @@ typedef struct
     bool              b_time_valid;
     bool              b_previous_heading;
     bool              b_hump_height_valid;
+    float32_t         previous_speed;
+    float32_t         stable_speed;
+    float32_t         saved_highest_mm;
+    uint32_t          previous_motion_ms;
+    uint32_t          previous_motion_epoch;
+    uint32_t          stable_since_ms;
+    uint32_t          level_since_ms;
+    bool              b_motion_baseline;
+    bool              b_motion_stable;
+    bool              b_level_pending;
+    bool              b_saved_highest_valid;
+    bool              b_peak_recorded;
 } imu_core_t;
+
+#define IMU_HEIGHT_UNCALIBRATED 0x001u
+#define IMU_HEIGHT_MOTION       0x002u
+#define IMU_HEIGHT_REVERSE      0x004u
+#define IMU_HEIGHT_TURN         0x008u
+#define IMU_HEIGHT_TRACTION     0x010u
+#define IMU_HEIGHT_DYNAMIC      0x020u
+#define IMU_HEIGHT_PERSISTENCE  0x040u
+#define IMU_HEIGHT_REVOKED      0x080u
+#define IMU_MOTION_MAX_AGE_MS    40u
 
 /** Development settings, NOT measured calibration or accepted thresholds. */
 imu_core_config_t imu_core_defaults (void);

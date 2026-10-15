@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-15",
+  "branch": "buddy3-barcode",
+  "head": "4240895a455679ad0a3996057e03723cf2e9daea",
+  "environment": "Installed MSYS2 shell, Arm GNU 15.2.Rel1 and Pico SDK 2.3.1; no installs, downloads or hardware access. Sandbox MSYS2 startup failed with 0xC0000022; authorised build retried outside sandbox.",
+  "profiles": {
+    "normal": "SMP=1 CONSOLE=usb_cdc WIFI=cyw43 NET=none MQTT=0 TEST=0 CRASH_REPORT=0 S4_IMU=0",
+    "test": "SMP=1 CONSOLE=usb_cdc WIFI=cyw43 NET=none MQTT=0 TEST=1 CRASH_REPORT=0 S4_IMU=0"
+  },
+  "commands": {
+    "environment": "export PATH=/c/Users/linco/.pico-sdk/toolchain/15_2_Rel1/bin:/usr/bin:$PATH\nexport PICO_SDK_PATH=/c/Users/linco/.pico-sdk/sdk/2.3.1",
+    "normal": "cd build_make\nmake -j8",
+    "test": "cd build_make\nmake TEST=1 -j8",
+    "host": "C:/Users/linco/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-15_production-host-results.json"
+  },
+  "normal_exit": 0,
+  "test_exit": 0,
+  "artifacts": {
+    "mtk3pico_smp1_usb_cdc_wifi.uf2": {
+      "bytes": 646144,
+      "sha256": "b895972f31144dd9456f573ce7dd56677fbcbcdb2d899526be944323bf90d77c"
+    },
+    "mtk3pico_smp1_usb_cdc_wifi_test.uf2": {
+      "bytes": 786432,
+      "sha256": "a967549500b94ca8d02d7f672fa8871bcf02a85aefae2bf45913b349ce51493d"
+    }
+  },
+  "limitations": "Host simulations and firmware compilation only; no target scheduling, physical calibration, controller-connected stop proof, flashing, commits or pushes.",
+  "host_exit": 0,
+  "tested_file_manifest": "2026-10-15_production-host-results.json",
+  "source_manifest_sha256": "68a28f041e9d5c57efb3843440afc858b03d10657e5f5788ab814c04c0a48e4c"
+}

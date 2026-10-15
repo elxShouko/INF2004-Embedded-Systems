@@ -30,6 +30,31 @@ identified as integrated status. State names, callbacks, task names, and
 telemetry listed there are not implemented public interfaces in the current
 µT-Kernel subsystem.
 
+## Integrated host-side validation and planning status
+
+The integrated `s5_obstacle_logic` module now validates a caller-supplied scan
+context before producing a profile. It rejects cancelled, failed, incomplete,
+or non-stationary scans; missing validation limits; scans over their configured
+duration or age; sample timestamps outside the scan window or out of order;
+invalid ranges; and adjacent-range jumps over the supplied consistency limit.
+Acquisition failure statuses distinguish trigger failure, echo timeout or
+stuck-high/stuck-low conditions, and servo initialization or positioning
+failure. These are inputs to the pure logic module, not faults currently
+detected by an implemented sensor or servo driver.
+
+Range comparisons can identify only a left/right **candidate**. They do not
+prove vehicle clearance. Plan generation therefore returns
+`S5_LOGIC_CLEARANCE_UNVERIFIED`, leaves the action count at zero, and marks the
+plan non-executable. Reverse is likewise advisory metadata only. The caller
+must not interpret the profile or candidate as permission to move.
+
+These checks are host-testable logic only. They do not implement or validate
+physical acquisition, servo settling, stop confirmation, an RTOS task/state
+machine, motion requests or timeouts, fault recovery, or line reacquisition.
+The context is only as trustworthy as its future producer. Hardware use
+remains blocked on the unresolved items below, approved interfaces, validated
+vehicle geometry and clearance, and authorized target testing.
+
 ## Unresolved integration placeholders
 
 These placeholders make missing information visible without assigning
@@ -40,11 +65,11 @@ approved interface.
 | Item | Placeholder / current status | Required before implementation or vehicle use |
 |---|---|---|
 | Sensor and servo models | `TBD — exact part numbers not confirmed` | Record manufacturer and model; check datasheets and operating limits |
-| Servo signal pin | `TBD — no GPIO claimed` | Confirm physical wiring, check TEAM.md pin ownership, claim before coding |
-| Ultrasonic TRIG pin | `TBD — no GPIO claimed` | Confirm module wiring and claim an unowned pin |
-| Ultrasonic ECHO pin and voltage | `TBD — no GPIO claimed; output level not verified` | Verify worst-case ECHO voltage and required level shifting before RP2040 connection |
+| Servo signal pin | `GP15 — user identified the GP15 three-pin servo header; close-up board photo shows the GP12–GP15 servo header bank` | Signal GPIO identified; verify servo voltage/current and retain single-task PWM ownership before driver implementation |
+| Ultrasonic TRIG/ECHO pins | `GP26` = TRIG and `GP6` = ECHO (user-confirmed against the sensor labels) | Keep TRIG as GPIO/SIO; verify sensor model and electrical limits before enabling the driver |
+| Ultrasonic ECHO voltage | `TBD — not measured or confirmed from the photos` | Verify the sensor model's ECHO high voltage and provide level shifting if required before RP2040 connection |
 | Sensor/servo power and ground | `TBD — not verified` | Confirm supply voltage/current, common ground, and Robo Pico power constraints |
-| PWM resource / owner task | `TBD — no slice, channel, or task reserved` | Check pin-to-slice mapping and team PWM ownership; assign exactly one owning task |
+| PWM resource / owner task | GP15 is PWM7B; Buddy 5 resource reserved, owning task TBD | Implement only in one approved owning task; check servo signal/power compatibility before driving |
 | Servo angle, pulse mapping, direction, settling time | `TBD — uncalibrated` | Measure on the assembled vehicle; define bounds and command-failure behavior |
 | Sensor filtering, detection and range limits | `TBD — development values only` | Calibrate against repeatable measurements; document invalid, timeout, and overflow handling |
 | Bypass clearance, reverse distance, turn targets | `TBD — heuristic values only` | Agree with Buddy 2/controller and validate against vehicle geometry and stopping tests |
@@ -352,16 +377,22 @@ The actual µT-Kernel task wrappers are still pending because the project-specif
 
 ## Hardware assignments in the legacy source (unverified)
 
-The legacy configuration contains provisional HC-SR04 pin values:
+The legacy standalone configuration contains GP26/TRIG and GP6/ECHO values.
+The old source comment calling these connections “confirmed” was incorrect;
+they are unverified demo values and are not used by the integrated Make build.
 
-- TRIG: GP26
-- ECHO: GP6
+The user confirmed the ultrasonic connections as GND, 3V3, GP6, and GP26, and
+then traced the signal labels: GP26 is TRIG and GP6 is ECHO. The legacy
+standalone source uses that mapping. GP26 is also PWM5A, which aliases Buddy
+2's motor output on GP10. Buddy 5 must use GP26 as ordinary GPIO/SIO only and
+must not configure its PWM mux or write the PWM5A compare value.
 
-The current wiring and ECHO voltage have not been confirmed. Do not connect
-the sensor to RP2040 GPIO until its output voltage is verified as safe.
-
-Servo GPIO remains unconfirmed and is intentionally configured as the invalid
-placeholder value 255 in the legacy source.
+The user identified the servo as connected to the board's GP15 three-pin
+servo header, also visible in the close-up. GP15 is PWM7B. The legacy servo
+GPIO remains at its disabled placeholder value 255 because the standalone
+demo must not begin driving a physical servo before its supply, signal level,
+PWM behavior, and command bounds are validated. The integrated µT-Kernel
+subsystem has no servo driver and remains disabled.
 
 ---
 

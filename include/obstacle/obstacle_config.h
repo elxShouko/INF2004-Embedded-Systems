@@ -4,14 +4,16 @@
 #include <stdint.h>
 
 /*
- * Confirmed HC-SR04 connections.
+ * User-confirmed wiring: TRIG on GP26, ECHO on GP6. This standalone code is
+ * not integrated; verify the exact sensor model and electrical limits before
+ * enabling it.
  */
 #define OBSTACLE_TRIG_GPIO                 26U
 #define OBSTACLE_ECHO_GPIO                 6U
 
 /*
- * Servo GPIO is not yet confirmed.
- * 255 prevents accidental use of the wrong GPIO.
+ * The user identified the GP15 servo header, but keep the standalone demo
+ * disabled until electrical limits and PWM behavior have been validated.
  */
 #define OBSTACLE_SERVO_GPIO                255U
 

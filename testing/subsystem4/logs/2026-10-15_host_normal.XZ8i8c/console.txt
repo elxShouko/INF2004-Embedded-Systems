@@ -1,0 +1,288 @@
+Subsystem 4 current host suite: mode=normal
+Temporary artifacts: /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE
+UTC run time: 2026-10-15T11:04:38Z
+Harness/current firmware HEAD: 4240895a455679ad0a3996057e03723cf2e9daea
+ M CMakeLists.txt
+ M TEAM.md
+ M app_program/subsystem4/imu_config.h
+ M app_program/subsystem4/imu_core.c
+ M app_program/subsystem4/imu_core.h
+ M app_program/subsystem4/imu_runtime.c
+ M app_program/subsystem4/imu_runtime.h
+ M app_program/subsystem4/subsystem4_test.c
+ M build_make/makefile
+ M docs/buddy4/BUDDY4_FULL_LISTING.md
+ M docs/buddy4/README.md
+ M include/imu/imu_hal.h
+ D testing/buddy4/BARR_REVIEW.md
+ D testing/buddy4/README.md
+ D testing/buddy4/REFERENCE_REVIEW.md
+ D testing/buddy4/TEST_LOG.md
+ D testing/buddy4/buddy4_cases.c
+ D testing/buddy4/buddy4_cases.h
+ D testing/buddy4/fake/bsp/libbsp.h
+ D testing/buddy4/fake/tk/tkernel.h
+ D testing/buddy4/fake/tm/tmonitor.h
+ D testing/buddy4/host_main.c
+ D testing/buddy4/logs/build.FCBUK8/console.txt
+ D testing/buddy4/logs/build.e1hvBA/console.txt
+ D testing/buddy4/logs/normal.50scyT/console.txt
+ D testing/buddy4/logs/normal.HVq4Ev/console.txt
+ D testing/buddy4/logs/normal.K4iFbV/console.txt
+ D testing/buddy4/logs/normal.Z2SqVv/console.txt
+ D testing/buddy4/logs/sanitize.brjx0W/console.txt
+ D testing/buddy4/logs/sanitize.cscKF0/console.txt
+ D testing/buddy4/run_builds.sh
+ D testing/buddy4/run_host_tests.sh
+ D testing/buddy4/runtime_fake.c
+ D testing/buddy4/runtime_fake.h
+ D testing/buddy4/runtime_main.c
+ D testing/subsystem4/CASES.md
+ D testing/subsystem4/README.md
+ D testing/subsystem4/REFERENCE_REVIEW.md
+ M testing/subsystem4/TEST_LOG.md
+ D testing/subsystem4/host/fake_tk/fake_tk.c
+ D testing/subsystem4/host/fake_tk/tk/tkernel.h
+ D testing/subsystem4/host/replay_main.c
+ D testing/subsystem4/host/scenario.c
+ D testing/subsystem4/host/scenario.h
+ D testing/subsystem4/host/sim_lsm303.c
+ D testing/subsystem4/host/sim_lsm303.h
+ D testing/subsystem4/host/test_blackbox.c
+ D testing/subsystem4/host/test_main.c
+ D testing/subsystem4/host/test_robustness.c
+ D testing/subsystem4/host/test_rtos.c
+ D testing/subsystem4/host/test_unit_driver.c
+ D testing/subsystem4/host/test_unit_events.c
+ D testing/subsystem4/host/test_unit_hump.c
+ D testing/subsystem4/host/test_unit_math_cal.c
+ D testing/subsystem4/host/test_unit_processing.c
+ D testing/subsystem4/host/test_util.c
+ D testing/subsystem4/host/test_util.h
+ D testing/subsystem4/logs/.gitkeep
+ D testing/subsystem4/logs/normal.fsXov0/console.txt
+ D testing/subsystem4/logs/replay.5koR9p/console.txt
+ D testing/subsystem4/logs/replay.5koR9p/synthetic_raw.txt
+ D testing/subsystem4/logs/sanitize.FqCkMD/console.txt
+ D testing/subsystem4/run_host_tests.sh
+ D tests/imu/.gitignore
+ D tests/imu/Makefile
+ D tests/imu/fake_tk/fake_tk.c
+ D tests/imu/fake_tk/tk/tkernel.h
+ D tests/imu/replay_main.c
+ D tests/imu/scenario.c
+ D tests/imu/scenario.h
+ D tests/imu/sim_lsm303.c
+ D tests/imu/sim_lsm303.h
+ D tests/imu/test_blackbox.c
+ D tests/imu/test_main.c
+ D tests/imu/test_robustness.c
+ D tests/imu/test_rtos.c
+ D tests/imu/test_unit_driver.c
+ D tests/imu/test_unit_events.c
+ D tests/imu/test_unit_hump.c
+ D tests/imu/test_unit_math_cal.c
+ D tests/imu/test_unit_processing.c
+ D tests/imu/test_util.c
+ D tests/imu/test_util.h
+?? app_program/subsystem4/imu_guard.c
+?? app_program/subsystem4/imu_guard.h
+?? app_program/subsystem4/imu_link.c
+?? app_program/subsystem4/imu_link.h
+?? testing/subsystem4/host/buddy4_cases.c
+?? testing/subsystem4/host/buddy4_cases.h
+?? testing/subsystem4/host/fake/
+?? testing/subsystem4/host/host_main.c
+?? testing/subsystem4/host/run_builds.sh
+?? testing/subsystem4/host/run_host_tests.sh
+?? testing/subsystem4/host/runtime_fake.c
+?? testing/subsystem4/host/runtime_fake.h
+?? testing/subsystem4/host/runtime_main.c
+?? testing/subsystem4/logs/2026-10-15_build.CFc75E/
+?? testing/subsystem4/logs/2026-10-15_build.PO7S5M/
+?? testing/subsystem4/logs/2026-10-15_build.r1rA3n/
+?? testing/subsystem4/logs/2026-10-15_host_normal.6vHi9h/
+?? testing/subsystem4/logs/2026-10-15_host_normal.8rCPYW/
+?? testing/subsystem4/logs/2026-10-15_host_normal.EEjxut/
+?? testing/subsystem4/logs/2026-10-15_host_normal.GePLCD/
+?? testing/subsystem4/logs/2026-10-15_host_normal.P5Lu4N/
+?? testing/subsystem4/logs/2026-10-15_host_normal.TYD4vS/
+?? testing/subsystem4/logs/2026-10-15_host_normal.XZ8i8c/
+?? testing/subsystem4/logs/2026-10-15_host_normal.ea6nGb/
+?? testing/subsystem4/logs/2026-10-15_host_normal.pLWbxV/
+?? testing/subsystem4/logs/2026-10-15_host_sanitize.CbqPcz/
+?? testing/subsystem4/logs/2026-10-15_host_sanitize.EYKHjP/
+?? testing/subsystem4/logs/2026-10-15_host_sanitize.sRKlax/
+?? testing/subsystem4/logs/2026-10-15_verification.y3BrBf/
+?? testing/subsystem4/logs/build.FCBUK8/
+?? testing/subsystem4/logs/build.e1hvBA/
+?? testing/subsystem4/logs/normal.50scyT/
+?? testing/subsystem4/logs/normal.HVq4Ev/
+?? testing/subsystem4/logs/normal.K4iFbV/
+?? testing/subsystem4/logs/normal.Z2SqVv/
+?? testing/subsystem4/logs/sanitize.brjx0W/
+?? testing/subsystem4/logs/sanitize.cscKF0/
+Apple clang version 21.0.0 (clang-2100.3.34.2)
+Target: arm64-apple-darwin25.6.0
+Thread model: posix
+InstalledDir: /Library/Developer/CommandLineTools/usr/bin
+0989cc2045148995f370862c798444ac9f3541439f4e3cd1e0a5b167a0347f3a  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_guard.c
+bf2a77adfa58955eec225ca7adc9c11bb98bcdc7a33e3ca5ee525ebd50532034  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_config.h
+5857a3e3ab487cf8611213cbc75e6d638d7976b8408a7a4d292b50ea8213beaa  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_lsm.c
+67e36f6272eaf00a444bdfe7b57cec10a77c394579f7c19605326bef0f81317f  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.h
+16d2206a76f8a6b8a5a9e5b66e3e158b066bae09cca8916e55d34eeac2ad1347  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/subsystem4.c
+0cd3ac03761c5b6a665c1e8b1c07c99590a8f943e4e2983f17ab327195339405  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_runtime.c
+7885024f95a5ceaa1b1b0246c96c9091316385b7645184ebcc4ac1ff468baf0e  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_imu.h
+3e1626f1282818d73db084bfdeed42fb00b5de79c135c9307f94be3d8540f510  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/task_monitor.c
+6c9912308d944f5960c315efa361200bdc8a13ed3879edfd1b2200d2da02c5fd  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_link.c
+ab41477b057a3f48001b2f3ac2383feeac115e5dd94cf426a7b7fa5ba0285e2c  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_guard.h
+41f80cbd0cd44ee3544c07af87aa6ea101a8440d70897fa014700ad7858aa8df  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.c
+d16903d172f252d8e87ab927dc0a0cbe82005ad194ff9bd5473398ba85597ed0  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/subsystem4_test.c
+d621889734e53726c0f04ca07c3152b0ed40cc8c3acd07fe6ac4278c26cd1759  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_lsm.h
+378a135d747503f788a3e7906e2e0a3f6b8ae4f71982fa00dcdbe6cc416fc9b7  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/subsystem4.h
+06bae18eac5213fe0d1282cf429f5c1bb2ce620d18b93ef52b836f4871f9aed5  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_imu.c
+f5afa78554577dc00eb5de148b8d136986987b053b7cedb78342cb5e0352cf0c  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_link.h
+ecde0d1bb653ff1566885745bf7e457c9ed6834cd454b4dcf7522eea964f60db  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_runtime.h
+34ab92f81910720d25823db9d618aba47920dc02b1e49d7e447fe75801877fd5  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/run_builds.sh
+8883b7e5e509fe9b85c53c89e1f35f552e1912c2aeea260f58d7a9b42070353c  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/runtime_main.c
+e2752f7b00a09ed55f1cf9678395a4d20599cc554f61d6d921ae41f93589fe05  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/buddy4_cases.h
+fe66fc3d9fdab9e933bf4ed09d43157ec5fabec1506d9b56d0197c3760387d76  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/runtime_fake.c
+848e923a732956324046f54a029ecb66fa8e789df47d21fe797a7d2a68da09d3  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/host_main.c
+ffa27c10b68d1b705205ce328fd90e9f18405e520ecccd66dceb645e15aa0e2e  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/run_host_tests.sh
+1f2ed9eb3cdb7f835ab82d3deb9b1f40f14dfe441c76843e69479264e17ee6b3  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/buddy4_cases.c
+40364ccba3ab71955e4978c06661911ce218ac93cf06515267f147a58ed8559f  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/runtime_fake.h
+336112789429ad7334f8e7cb077b8a82043480f7260a12ea35170b596cf35a2d  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake/tk/tkernel.h
+1b4c6c715dfa5f68fac47d7cbe1c9511e28a8609716fd18dbafb350139290824  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake/tm/tmonitor.h
+049c4da6e921932c8eed50bdc0ea858f9bd9fd1e59c9cb801402ccb872db4cbd  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake/bsp/libbsp.h
+0d2ea066ef53797082dcf474625aeb07f03dcfae42746634733743e0ab7be146  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/TEST_LOG.md
+
+CURRENT firmware: S4-U116-S4-U166 (51 cases)
++ cc -std=c99 -Wall -Wextra -Werror -Wconversion -Wshadow -pedantic -O2 '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_guard.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_lsm.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/buddy4_cases.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/host_main.c' -lm -o /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/current_tests
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/current_tests
+[TEST] S4-U116 PASS invalid config rejected
+[TEST] S4-U117 PASS stationary calibration completes
+[TEST] S4-U118 PASS motion resets calibration window
+[TEST] S4-U119 PASS body-axis pitch is degrees
+[TEST] S4-U120 PASS body-axis roll is degrees
+[TEST] S4-U162 PASS Week 6 highest estimate is published at peak
+[TEST] S4-U121 PASS ascent/peak/descent and distance-integrated height
+[TEST] S4-U122 PASS smaller completed hump retains session maximum
+[TEST] S4-U123 PASS larger completed hump updates session maximum
+[TEST] S4-U124 PASS pitch alone is not reported as measured height
+[TEST] S4-U125 PASS missing distance invalidates entire current hump
+[TEST] S4-U126 PASS unfinished hump times out to a latched fault
+[TEST] S4-U127 PASS impact latches fault
+[TEST] S4-U128 PASS good data cannot silently clear fault
+[TEST] S4-U129 PASS duplicate timestamp rejected
+[TEST] S4-U130 PASS monotonic timestamp wraps correctly
+[TEST] S4-U131 PASS stale samples rejected
+[TEST] S4-U132 PASS NaN cannot enter processing
+[TEST] S4-U133 PASS unsupported reverse distance rejected
+[TEST] S4-U134 PASS gravity alone does not prove vehicle is stationary
+[TEST] S4-U135 PASS uncalibrated magnetometer does not claim valid heading
+[TEST] S4-U136 PASS heading wrap uses shortest turn, no fictitious gyro
+[TEST] S4-U137 PASS missing magnetic sample clears heading validity
+[TEST] S4-U138 PASS datasheet register profile and readback
+[TEST] S4-U139 PASS signed little-endian acceleration in g
+[TEST] S4-U140 PASS magnetic X,Z,Y ordering and unequal axis gains
+[TEST] S4-U141 PASS no stale magnetic sample reuse
+[TEST] S4-U142 PASS no stale acceleration sample reuse
+[TEST] S4-U143 PASS wrong sensor identity rejected
+[TEST] S4-U144 PASS configuration readback mismatch rejected
+[TEST] S4-U145 PASS bus failure propagates without partial sample commit
+[TEST] S4-U146 PASS magnetic overflow invalidates yaw
+[TEST] S4-U147 PASS acceleration saturation cannot look like normal tilt
+[TEST] S4-U148 PASS invalid driver arguments rejected
+[TEST] S4-U163 PASS dynamic acceleration at ascent entry invalidates height
+[TEST] S4-U164 PASS maximum allowed sample gap is inclusive
+[TEST] S4-U165 PASS null processing arguments fail safely
+[TEST] S4-U166 PASS all 4096 signed HR encodings and saturation boundaries
+[TEST] S4-U177 PASS flat acceleration is classified as dynamic
+[TEST] S4-U178 PASS acceleration then braking leaves maximum invalid
+[TEST] S4-U179 PASS one-sample pitch spike fails ascent dwell
+[TEST] S4-U180 PASS stale motion invalidates an entire candidate
+[TEST] S4-U181 PASS unavailable motion cannot preserve candidate validity
+[TEST] S4-U182 PASS reverse speed never counts as forward hump travel
+[TEST] S4-U183 PASS in-place turn cannot create a height maximum
+[TEST] S4-U184 PASS revocation retracts a provisional peak
+[TEST] S4-U185 PASS bad later candidate preserves completed maximum
+[TEST] S4-U186 PASS valid hump after rejected candidate updates maximum
+[TEST] S4-U187 PASS shallow asymmetric descent closes at persistent level
+[TEST] S4-U188 PASS untrusted traction cannot validate height
+[TEST] S4-U189 PASS speed drift outside measured band rejects peak
+[TEST] S4-U176 PASS flat 0.2 g braking cannot create a valid peak
+[TEST] buddy4 SUMMARY 0 failures
++ cc -std=c99 -Wall -Wextra -Werror -Wconversion -Wshadow -pedantic -O2 -DS4_IMU_ENABLE=1 '-I/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_runtime.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_guard.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_link.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/runtime_fake.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/runtime_main.c' -lm -o /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 149
+[TEST] S4-U149 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 150
+[TEST] S4-U150 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 151
+[TEST] S4-U151 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 152
+[TEST] S4-U152 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 153
+[TEST] S4-U153 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 154
+[TEST] S4-U154 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 155
+[TEST] S4-U155 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 156
+[TEST] S4-U156 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 157
+[TEST] S4-U157 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 158
+[TEST] S4-U158 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 159
+[TEST] S4-U159 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 160
+[TEST] S4-U160 PASS runtime fault injection
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 161
+[TEST] S4-U161 PASS runtime fault injection
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 190
+[TEST] S4-U190 PASS runtime fault injection
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 191
+[TEST] S4-U191 PASS runtime fault injection
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 192
+[TEST] S4-U192 PASS runtime fault injection
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 193
+[TEST] S4-U193 PASS runtime fault injection
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 194
+[TEST] S4-U194 PASS runtime fault injection
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 195
+[TEST] S4-U195 PASS runtime fault injection
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 196
+[TEST] S4-U196 PASS runtime fault injection
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 197
+[TEST] S4-U197 PASS runtime fault injection
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 198
+[TEST] S4-U198 PASS runtime fault injection
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.KADjSE/runtime_tests 199
+[TEST] S4-U199 PASS runtime fault injection
++ set +x
+
+Requested suite completed successfully.
+Saved evidence: /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/logs/2026-10-15_host_normal.XZ8i8c/console.txt

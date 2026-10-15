@@ -148,5 +148,5 @@ pico_enable_stdio_usb(buddy4_imu_bringup 1)
 pico_enable_stdio_uart(buddy4_imu_bringup 0)
 pico_add_extra_outputs(buddy4_imu_bringup)
 
-# Host-side unit / black-box / robustness tests: see tests/imu/Makefile
+# Host-side tests and scope: see testing/subsystem4/TEST_LOG.md
 # (they do not use the Pico SDK and are not part of this build).

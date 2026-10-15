@@ -55,12 +55,12 @@ endif
 
 -include mtkernel_3/app_program/subdir.mk
 
-# Keep Buddy 4 test cases in testing/buddy4, shared by host and TEST=1.
+# Keep S4 cases in testing/subsystem4/host, shared by host and TEST=1.
 ifeq ($(TEST),1)
-S4_CASES_OBJ := ./mtkernel_3/testing/buddy4/buddy4_cases.o
+S4_CASES_OBJ := ./mtkernel_3/testing/subsystem4/host/buddy4_cases.o
 OBJS += $(S4_CASES_OBJ)
 C_DEPS += $(S4_CASES_OBJ:.o=.d)
-$(S4_CASES_OBJ): ../testing/buddy4/buddy4_cases.c
+$(S4_CASES_OBJ): ../testing/subsystem4/host/buddy4_cases.c
 	@mkdir -p "$(@D)"
 	$(GCC) $(CFLAGS) -D$(TARGET) $(INCPATH) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
 endif

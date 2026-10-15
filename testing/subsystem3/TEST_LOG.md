@@ -20,6 +20,18 @@ Define a test here before running it. Test IDs never change.
 | S3-U08 | State-transition differential trace | Behaviour preservation | host simulation | Compare 40,000 deterministic sample transitions before/after cleanup | Identical trace hash |
 | S3-U09 | Standalone diagnostic relocation | Optional CMake diagnostic target | compile only | Compare moved source with HEAD, then build `member3_ir_diagnostic` | Source identical; target produces UF2 from `diagnostics/` |
 
+
+| S3-U10 | Production tick configuration | 10 ms kernel tick | host simulation | Run production suite, accepted 10..100 ms multiples and rejected periods | Only supported periods accepted; undersized gap budget rejected |
+| S3-U11 | Sampled barcode waveform | Production polling | host simulation | Independent *A* edges, both directions, phase sweep, 10/20 ms and jitter | Exactly one valid event per resolvable fixture |
+| S3-U12 | Sampling jitter and gaps | Sample freshness | host simulation | Boundary gap, excessive gap, reversed clock | Allowed gap accepted; invalid timing latches fault |
+| S3-U13 | Narrow-element aliasing | Polling limitation | host simulation | Sample subperiod frame and hidden pulse | No valid frame; missed pulse remains unobservable |
+| S3-U14 | Sustained input load | Owner task fairness | host simulation | Run real task loop for 50 fake cycles with persistent input | At most four messages per sample; sensing continues |
+| S3-U15 | Output overload | Latched fault/status | host simulation | Undrained bounded fake output under reply flood | Fault/paused status; sensor reads continue |
+| S3-U16 | Manoeuvre and recovery handoffs | Provider contract | host simulation | Wrong/matched/duplicate completion, found, resume, unchanged observation | Correlated completion; explicit resume; fresh status without repeat event |
+| S3-U17 | Bypass and sensing failures | Provider fault handling | host simulation | Bypass, recovery timeout, malformed sample | Suppressed bypass events; faults latch and pause |
+| S3-U18 | Stable reacquisition interruption | Recovery evidence | host simulation | Interrupt centred run with raw white before filter settles | No LINE_FOUND until a new uninterrupted centred interval |
+| S3-U19 | Actual barcode operating envelope | NFR4 / physical sensing | manual, pending | Follow docs/buddy3/production-timing-and-handoff.md | Measured reliable speed range and both-direction recognition evidence |
+
 *Method:* **auto** = `TEST_CHECK` in code, result printed on the console;
 **manual** = a person observes the result (LED, scope, meter, phone appâ€¦).
 
@@ -115,3 +127,48 @@ the 20 modified tracked C/header files matches HEAD; and
 `python testing/subsystem3/check_barr_style.py` passed its declared subset for
 26 files (longest function 88 lines). The whitespace check
 `git -c core.whitespace=-blank-at-eof diff --check` also passed.
+
+### 2026-10-15 production timing and recovery verification
+
+Tested branch `buddy3-barcode`, HEAD
+`4240895a455679ad0a3996057e03723cf2e9daea` plus the uncommitted S3 code,
+header comments, host tests and Buddy 3 documentation changes in this run.
+No commit was authorised or created. Exact tested source/test hashes and
+compile/run commands are in `logs/2026-10-15_production-host-results.json`.
+Build environment, commands, profiles and UF2 hashes are in
+`logs/2026-10-15_production-run.json`.
+
+| Date | Test ID | Commit / working tree | Tester | Result | Log / evidence | Notes |
+|---|---|---|---|---|---|---|
+| 2026-10-15 | S3-U18 | `4240895` + new production test, before recovery fix | Codex | FAIL, host simulation | `logs/2026-10-15_production-before-fix.txt` | At the confirmation deadline, current raw white still emitted LINE_FOUND because the filter retained centred |
+| 2026-10-15 | S3-U02 | `4240895` + manifest above | Codex | PASS, checked subset | `logs/2026-10-15_production-host-results.json` | 26 application C/header files; longest function 88 lines; not full Barr certification |
+| 2026-10-15 | S3-U03, S3-U04 | Same working tree | Codex | PASS, host simulation | `logs/2026-10-15_production-host-results.json` | Existing IR, navigation, junction and retained 1 ms logical owner suite |
+| 2026-10-15 | S3-U10 through S3-U17 | Same working tree | Codex | PASS, host simulation | `logs/2026-10-15_production-host-results.json` | 10 ms production fixture, accepted multiples, 10/20 ms sampled frames, jitter/gaps, aliasing, task-loop queue load and provider handoffs |
+| 2026-10-15 | S3-U18 | Same working tree, after recovery fix | Codex | PASS, host simulation | `logs/2026-10-15_production-host-results.json` | Raw interruption restarts confirmation; stable sampled centred run is then required |
+| 2026-10-15 | S3-U06 | Same application working tree | Codex | PASS, compilation only | `logs/2026-10-15_production-normal-build.txt` | `cd build_make; make -j8`; normal UF2 generated, not flashed |
+| 2026-10-15 | S3-U07 | Same application working tree | Codex | PASS, compilation only | `logs/2026-10-15_production-test-build.txt` | `cd build_make; make TEST=1 -j8`; test UF2 generated, not executed on board |
+| 2026-10-15 | S3-U19 | Not tested | — | PENDING, hardware | `docs/buddy3/production-timing-and-handoff.md` | Minimum elements, optics, polarity, actual speed, quiet/timeout settings and recognition trials still unmeasured |
+
+Build profiles: `SMP=1 CONSOLE=usb_cdc WIFI=cyw43 NET=none MQTT=0
+CRASH_REPORT=0 S4_IMU=0`, with `TEST=0` and `TEST=1` respectively.
+Used already-installed MSYS2, Arm GNU 15.2.Rel1 and Pico SDK 2.3.1. Initial
+sandboxed MSYS2 startup failed before Make with Windows object access error
+`0xC0000022`; the authorised build retry outside the sandbox passed. No tools
+or dependencies were installed or fetched.
+
+Run the host checks from the repository root:
+
+```powershell
+& 'C:/Users/linco/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-15_production-host-results.json
+```
+
+The new owner-loop load fake is not an RTOS scheduler or SMP simulator. The
+60 ms narrow/180 ms wide *A* waveform is synthetic, not a calibrated speed.
+Subperiod elements can disappear without any timestamp-gap fault. Invalid
+payload coverage is not proof of disconnected/stuck-sensor detection.
+Physical calibration and controller-connected stop, refresh and original-route
+recovery tests remain pending; integration IDs require agreement with owners.
+The controller handoff guide explicitly distinguishes existing provider
+behaviour from proposed policy, clock conversion and unvalidated parameters.
+Shared interfaces/configuration, other subsystem implementations, motor
+outputs and retained demonstration dependencies were not changed.

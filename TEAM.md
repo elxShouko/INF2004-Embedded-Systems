@@ -22,7 +22,7 @@ subsystem, ask its owner or open a pull request for them to review.
 | 3 | IR line sensing, junction detection and barcode navigation; retained example consumer for compatibility | 2500734 | | `app_program/subsystem3/` | `tests/member3_*.c`, `testing/subsystem3/` |
 | 4 | *example:* Monitor: prints reports, pauses the LED | | | `app_program/subsystem4/` | `testing/subsystem4/` |
 | 5 | Obstacle scan/profile calculations and avoidance planning (software-only; hardware integration pending) | | | `app_program/subsystem5/` | `testing/subsystem5/` |
-| 6 | IMU sensing, calibration, terrain and collision events; retained monitor example | | | `app_program/subsystem4/` | `testing/buddy4/` (current), `testing/subsystem4/` (history) |
+| 6 | IMU sensing, calibration, terrain and collision events; retained monitor example | | | `app_program/subsystem4/` | `testing/subsystem4/` |
 | 7 | | | | `app_program/subsystem5/` | `testing/subsystem5/` |
 
 Shared files (`app_program/app_main.c`, `app_program/app.h`, this file)
@@ -56,7 +56,7 @@ fixed.
 | GP3 | | |
 | GP4 | S3 | Right IR line sensor (user-confirmed assignment) |
 | GP5 | | |
-| GP6 | | |
+| GP6 | S5 | Ultrasonic ECHO (user-confirmed) |
 | GP7 | | |
 | GP8 | | |
 | GP9 | | |
@@ -65,7 +65,7 @@ fixed.
 | GP12 | | |
 | GP13 | | |
 | GP14 | | |
-| GP15 | | |
+| GP15 | S5 | Servo signal; Robo Pico GP15 servo header (user-confirmed) |
 | GP16 | S4 | I2C0 SDA, Week 6 design; physical wiring unverified |
 | GP17 | S4 | I2C0 SCL, Week 6 design; physical wiring unverified |
 | GP18 | | |
@@ -73,13 +73,15 @@ fixed.
 | GP20 | | |
 | GP21 | | |
 | GP22 | | |
-| GP26 | | (ADC0 capable) |
+| GP26 | S5 | Ultrasonic TRIG (user-confirmed); use GPIO/SIO only (PWM5A aliases GP10 motor) |
 | GP27 | S3 | Side IR barcode/junction sensor, digital DOUT |
 | GP28 | | (ADC2 capable) |
 
-**Buddy 5 pin placeholder:** no Buddy 5 GPIOs are currently claimed. Servo,
-TRIG, and ECHO assignments remain `TBD`; verify wiring and ECHO voltage, check
-pin ownership, and fill this table before connecting or enabling hardware.
+Buddy 5's user-confirmed wiring is GP26 for ultrasonic TRIG, GP6 for ECHO, and
+GP15 for the servo signal. Sensor model, ECHO voltage/power suitability, and
+servo electrical requirements remain unverified. GP26 must stay GPIO/SIO-only:
+it aliases PWM5A with Buddy 2's GP10 motor output. These pin claims do not
+enable the unimplemented Buddy 5 driver.
 
 ## 3. Peripherals
 
@@ -117,12 +119,13 @@ the drivers have no locking to stop it.
 | SPI0 | | | |
 | SPI1 | | | |
 | ADC | | | GP26–GP28 |
-| PWM slices (list) | | | |
+| PWM slices (list) | S5 (reserved; task TBD) | TBD — hardware integration pending | PWM7B (GP15 servo); do not initialize until approved |
 | WiFi radio, TCP/IP, MQTT | *kernel* | `cyw43_utk_task` (built in) | GP23–25, GP29 |
 
-Buddy 5 has no peripheral or owning task reserved yet. In particular, servo
-PWM ownership/slice and the ultrasonic GPIO owner remain `TBD`; resolve them
-with the pin claims before adding drivers.
+Buddy 5's servo PWM resource is reserved as slice 7 channel B (GP15); its
+owning task remains TBD. Ultrasonic GPIO acquisition and all drivers remain
+unimplemented. Do not initialize or drive these peripherals until the task,
+electrical checks, and startup/fault behavior are reviewed.
 
 ### WiFi and MQTT are special
 
@@ -194,8 +197,8 @@ Buddy 4 additionally provides `imu_runtime.h`: copied status/event reads,
 a latched fault wait, and a proposed calibrated forward-speed input.
 These are **provider proposals**, not agreed cross-subsystem interfaces;
 no Vehicle/Mission Controller exists here. Fault flags do not stop motors.
-Only Buddy 2 may actuate motors. See `testing/buddy4/README.md` for timing,
-validity and the required controller watchdog/stop-path review.
+Only Buddy 2 may actuate motors. See `testing/subsystem4/TEST_LOG.md` for test
+scope and pending hardware/fault-to-stop acceptance checks.
 
 ## 6. Kernel object budget
 
