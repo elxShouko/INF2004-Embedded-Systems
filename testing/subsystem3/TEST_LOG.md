@@ -233,3 +233,14 @@ and explicit CONFIG/MAPPING/reply workflow are documented in
 controller implementation was invented. On-target contention, connected motor
 refresh/stop, physical sensor placement, thresholds and reliability remain
 pending. Other subsystems and shared startup/kernel/build files are unchanged.
+
+
+## Software completion verification (2026-10-16)
+
+Existing verify_production_timing.py: six functional suites and style checker
+PASS. Production source is unchanged. The checker now normalizes Windows CRLF
+before logical line checks, retaining rejection of stray CR and real violations.
+Evidence: ../integration/logs/software_completion_evidence.zip, entry
+testing/integration/logs/completion_s3.json. Base HEAD
+5c08a5c76de39ffe18d9720b40d505a592508230 plus uncommitted files; exact source
+hashes are in the archive manifest. No physical sampling/timing claim.

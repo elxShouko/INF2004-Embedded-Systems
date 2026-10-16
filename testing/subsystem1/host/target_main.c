@@ -29,6 +29,20 @@ main (void)
     }
     else
     {
+        /* TWF_ANDW is zero, not an independently settable mode bit. */
+        T_CFLG flag = {0};
+        UINT pattern = 0u;
+        ID id = tk_cre_flg(&flag);
+
+        if ((id <= 0) || (E_OK != tk_set_flg(id, 1u)) ||
+            (E_TMOUT != tk_wai_flg(id, 3u, TWF_ANDW, &pattern, TMO_POL)) ||
+            (E_OK != tk_wai_flg(id, 3u, TWF_ORW, &pattern, TMO_POL)) ||
+            (E_OK != tk_set_flg(id, 2u)) ||
+            (E_OK != tk_wai_flg(id, 3u, TWF_ANDW, &pattern, TMO_POL)))
+        {
+            tm_printf((UB *) "HOST-RUN: event flag mode regression failed\n");
+            return 2;
+        }
         subsystem1_test();
         passed = host_test_pass_count();
         failed = host_test_fail_count();

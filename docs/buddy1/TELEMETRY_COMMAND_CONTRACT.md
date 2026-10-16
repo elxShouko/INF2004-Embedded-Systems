@@ -1,100 +1,109 @@
-# Buddy 1: real telemetry and command contract (PROPOSAL, not agreed)
+# Buddy 1 telemetry and command contract
 
-Status: **proposal for team review.** Nothing in this file is agreed or implemented
-unless it says so. Buddy 1 cannot decide the open items alone, because each one
-belongs to another Buddy's data or to the (not yet existing) Vehicle/Mission
-Controller. Until the table in section 3 is signed off, the telemetry source stays the
-simulator (`S1_SIMULATE_TELEMETRY=1`) and nothing reads the command buffer except the
-optional test monitor.
+## Production version 2 (approved for implementation, 2026-10-15)
 
-## 1. What Buddy 1 already provides (implemented, host-tested)
+The user authorised compact version-2 keys to preserve signed 64-bit encoder
+precision, source metadata and independent validity within NFR10's 256 bytes.
+This changes the dashboard contract; the project write-up's long FR17 names are
+mapped below rather than emitted in v2. Confirm academic acceptance of that
+representation. Legacy schema 0 still emits those original names for preserved
+professor/standalone demonstration tests. No legacy demo is relabelled real data.
+All firmware objects must be rebuilt together after the copied C frame changes.
 
-| ID (proposed) | Object | Meaning | Rules |
-|---|---|---|---|
-| IF-06 | `s1_net_telemetry_send(const s1_codec_frame_t *)` | one aggregated frame per 100 ms into a 16-frame message buffer | never blocks (`TMO_POL`); `E_TMOUT` when full; stale frames are dropped by the Wi-Fi task while offline |
-| IF-07 | `s1_net_command_receive(&cmd, timeout)` | remote command with its arrival time | 8 deep; `EMERGENCY_STOP` evicts the oldest entry when full; other commands are dropped and counted |
-| IF-08 | `s1_net_events_wait(pattern, &flags, timeout)` | `S1_NET_FLG_COMMAND`, `S1_NET_FLG_ESTOP`, `S1_NET_FLG_LINK_CHANGED` | `LINK_CHANGED` is raised once per change of the connected state, including entering backoff |
-| status | `s1_net_get_stats()`, `s1_net_is_connected()` | one coherent snapshot of the counters and the connected state | brief mutex, never held across a network call |
+The Vehicle Controller is the sole production aggregator and command consumer.
+It queues a copied frame at most once per 100 ms through TMO_POL. The owning
+Wi-Fi/MQTT service retains its fixed-rate publishing/heartbeat schedules; no
+application task calls lwIP/CYW43. Target jitter and network delivery remain
+hardware-test requirements. TEST=1 leaves the controller dormant so professor
+self-tests own their queues and the existing simulator behaviour is preserved.
+Normal startup disables the simulator before starting tasks.
 
-Kernel objects used by Buddy 1 (for the TEAM.md budget, section 6): message buffers 2,
-event flag 1, mutex 2 (`s1_net` status, `s1_sim` switch), cyclic handlers 2 (simulator,
-template LED example), tasks 2 (simulator, template LED example). The Wi-Fi service task is
-the template's. The self-test build adds two short-lived tasks and one flag.
-
-## 2. Hard constraints already in force
-
-* Only the Wi-Fi service task calls CYW43, lwIP or MQTT (TEAM.md section 3). No new network task is added.
-* FR16: one frame every 100 +/- 10 ms. FR17 field names are fixed. NFR10: JSON at most 256 bytes
-  (worst case today: 243 bytes, so any extra field must be paid for by shortening another).
-* FR18/NFR7: a command is forwarded to its consumer within 50 ms. FR19: backoff 1, 2, 4, 8, 8 s.
-* AGENTS.md: the emergency-stop path must not depend on an ordinary queue that can block, and
-  must be reviewed and validated on hardware, with Buddy 2 keeping motor ownership.
-
-## 3. Decisions the team has to make
-
-"Today" is what the code or the other Buddies' headers say right now. "Proposed" is Buddy 1's
-suggestion, not a decision. A row is closed only when its owner agrees and it is written into
-TEAM.md section 5.
-
-| # | Topic | Today | Proposed | Owner to agree |
-|---|---|---|---|---|
-| 1 | **Who builds the 100 ms frame** | Nobody. The simulator does. | Option A (recommended): a Buddy 1 aggregator task, driven by a 100 ms cyclic handler, reads each provider's copied-status getter and calls `s1_net_telemetry_send()`. Providers only need a thread-safe, non-blocking getter. Option B: the future Vehicle/Mission Controller builds the frame and Buddy 1 only transports it. | Team + instructor (it decides whether Buddy 1 may call other Buddies' public getters) |
-| 2 | **Real sources** | `motion_api_status()` (S2), `s3_get_status()` and the line classifier (S3), `imu_runtime_get_status()` (S4), `s5_obstacle_profile_t` (S5). No S5 runtime getter exists on main yet. | Use only these public getters, called from the aggregator task, never from the Wi-Fi task. S5 must publish a copied-status getter. | Buddies 2, 3, 4, 5 |
-| 3 | **Speed units and range** | `motor_speed_left/right` is `int16_t` with no unit defined. S2 reports `speed_mm_s[2]` as `int32_t`. | Signed millimetres per second per wheel, positive = forward, saturated to the `int16_t` range (+/-32767). | Buddy 2 (sign convention, which of measured or target speed to report) |
-| 4 | **Encoder count** | Frame field is `uint32_t`, printed unsigned, so a reversing wheel would show about 4.29 billion. S2 exposes `position_um[2]` (signed 64-bit micrometres), not counts. | Signed 32-bit count per wheel, zero at boot, wraps at 2^31. S2 either exposes counts or the counts-per-micrometre constant so the aggregator can convert. Buddy 1 then changes the field to `int32_t`. | Buddy 2 |
-| 5 | **Line status** | Frame: bit 0 left, bit 1 centre, bit 2 right (a placeholder written by Buddy 1). S3 produces a 2-bit black mask (bit 0 = GP2 left, bit 1 = GP4 right) and an observation enum (centred, correct left, correct right, absent). | Send the S3 observation enum (0 centred, 1 correct left, 2 correct right, 3 absent) as `line_status`. Drop the 3-bit placeholder. | Buddy 3 |
-| 6 | **Hump peak** | Frame: `hump_peak_x10` (tenths, unit not stated). S4 reports `hump_peak_mm` as a float. | Millimetres, integer, converted by the aggregator; the JSON keeps one decimal only if the team wants centimetres. | Buddy 4 |
-| 7 | **Obstacle distance** | Frame: `obstacle_distance_x10` (tenths of cm). S5 reports whole centimetres (`uint16_t`). | Send centimetres to match S5, with one decimal kept only if S5 can supply it. | Buddy 5 |
-| 8 | **Validity and stale data** | The frame has no validity. A dead sensor looks like a good value. | Add a `valid_mask` byte to the frame (one bit each for motion, line, IMU/hump, obstacle). The aggregator clears a bit when the source reports invalid or its sample is older than 3 periods (300 ms, adjustable). The JSON prints `null` for an invalid field, which is also shorter than a number, so NFR10 holds. | Every provider (what "invalid" means for each) |
-| 9 | **Remote-command consumer** | None. The test monitor `s1_cmd_echo` (patch, off by default) only prints. | The Vehicle/Mission Controller is the single reader of `s1_net_command_receive()`. Two readers would steal commands from each other, so the test monitor is removed when it exists. | Team (the controller owner) |
-| 10 | **Emergency stop** | IMPLEMENTED in Buddy 1 (host-tested): `EMERGENCY_STOP` is published FIRST, before any queue or mutex work, as a latch (`s1_net_estop_latched()`) and a pulse (`S1_NET_FLG_ESTOP`); it also goes in the command queue, evicting the oldest command when full. The latch is cleared only by `s1_net_estop_clear()`; ordinary commands, reconnects and queue draining never clear it. A failed publish is retried 3 times and counted (`estop_post_failures`). Nothing consumes it yet. | Buddy 1 owns DELIVERY only. The vehicle controller owns the decision to inhibit or stop motion, and decides when the safety policy calls `s1_net_estop_clear()` (for example after a local, deliberate operator action). A small high-priority task waits on the latch or pulse and calls `motion_api_estop()`; it never reads the ordinary queue. This remote stop is a Wi-Fi convenience path, not the safety function; a local stop must exist independently. Needs Buddy 2's rules for which context may call `motion_api_estop()`, and a measured end-to-end time on hardware (NFR7: 50 ms). | Controller owner + Buddy 2 + team; hardware validation |
-| 11 | **Simulation switch** | `S1_SIMULATE_TELEMETRY` defaults to 1; build with `-DS1_SIMULATE_TELEMETRY=0` to remove it. | The robot profile sets it to 0 once rows 1 to 8 are closed. A build-profile variable in `build_make` is a shared-file change and needs approval. | Team |
-| 12 | **TEAM.md entries** | IF-06, IF-07, IF-08 are not recorded; the S1 budget row still shows the template example. | Add IF-06 to IF-08 and the S1 budget from section 1 once rows 1 to 10 are agreed. | Team (shared file) |
-
-
-### 3a. Further questions the real telemetry needs answered (added after safety review)
-
-Buddy 1 has NOT changed `s1_codec.h` or the frame struct for these: `vehicle.c` builds the frames,
-and a guess here would put an invented meaning into the telemetry.
-
-| # | Question | Mismatch found in the current code | Needed from |
-|---|---|---|---|
-| 13 | **Encoder reset semantics**: signed counts per wheel (type, sign for reverse), what resets them (boot only, new run, START_RUN?), and what the wrap does | Frame field is `uint32_t`; S2 exposes `position_um[2]` as `int64_t` micrometres | Buddy 2 |
-| 14 | **Line and side sensors**: what "front-left", "front-right" and "side" mean physically, and which GPIO each is | Frame uses a 3-bit left/centre/right placeholder; S3 has a 2-bit mask (GP2 left, GP4 right); `vehicle_frame()` returns false with the note that no S3 side-sensor mapping is agreed | Buddy 3 + controller owner |
-| 15 | **Units and timestamp domain**: one unit per field, and one time base for the frame timestamp (ms since boot from `tk_get_otm`?) and for the age of each source sample | Mixed: mm/s (S2), float mm (S4), whole cm (S5), tenths in the frame | Every provider |
-| 16 | **Unavailable, stale or uncalibrated**: how each is shown | No representation today: a dead sensor looks like a good value. Proposed (row 8): `valid_mask` plus JSON `null`; "uncalibrated" would be a separate bit or be treated as invalid | Every provider |
-
-Until 13 to 16 are answered, no validity or boundary test for real telemetry can be written. The
-codec already tests the worst-case frame size (NFR10) and the numeric extremes of the current fields.
-
-### 3b. Command delivery contract (implemented)
-
-* `s1_net_command_receive()` returns exactly one complete, validated command or an error. It never
-  returns a partly filled one: a message of the wrong size or with an unknown id gives `E_SYS`
-  (counted in `commands_bad_size`); a kernel error such as `E_TMOUT` is returned unchanged.
-* A non-emergency command older than `S1_NET_COMMAND_MAX_AGE_MS` (1 s) is dropped and counted in
-  `commands_stale`. An emergency stop is never dropped for age.
-* `s1_net_get_stats()` waits at most 5 ms and can return `E_TMOUT`; `s1_net_is_connected()` and
-  `s1_net_estop_latched()` never block (the latter reads true if the read itself fails).
-
-### 3c. Network profile
-
-The default build (`make`) does not include lwIP or MQTT; telemetry and commands over MQTT exist
-only with `make NET=lwip MQTT=1`. The robot profile therefore has to be selected deliberately (a
-shared `build_make` change that needs approval). lwIP and MQTT stay in the Wi-Fi task.
-
-## 4. Shared files touched by Buddy 1 (need explicit approval)
-
-| File | Change | Why |
+| Key | Semantic field | Representation / units |
 |---|---|---|
-| `lib/libwifi/sysdepend/pico_rp2040/cyw43_utk.c` | A refused first join request is now recovered through the bounded backoff; a refused retry re-arms the backoff; radio or interface failure stays permanent and is reported as not ready | feedback item 1 |
-| `lib/liblwip/sysdepend/pico_rp2040/mqtt_utk.c/.h`, `net_backoff.h`, `lwipopts.h` | earlier work, already in the branch | MQTT client, backoff, ring-buffer sizes |
+| z | schema version | 2 |
+| q | sequence | uint32, modulo rollover |
+| t | timestamp | kernel operating time modulo 2^32 ms |
+| s | robot_state | existing S1 enum 0..7 |
+| ml, mr | left/right_motor_speed | signed int32 mm/s, measured; positive forward |
+| el, er | left/right_encoder_count | signed int64 decimal **strings**, exact including INT64_MIN |
+| l | line_status | normalized raw black mask: bit0 GP2 left-front, bit1 GP4 right-front, bit2 GP27 side |
+| h | hump_peak | highest validated S4 hump in cm, 0.1 cm increments; S4 mm truncated below 1 mm |
+| o | obstacle_distance | forward ultrasonic cm, 2.0..400.0; no side range substituted |
+| v | validity mask | bits: speed 1, counts 2, raw line 4, highest hump 8, obstacle 16, IMU snapshot 32 |
+| et | encoder sample time | full uint64 kernel us, decimal string; original capture snapshot time |
+| eg | encoder generation | uint32 acquisition generation; not a unique boot identifier |
+| a | source ages | microseconds [line, obstacle, IMU], raw source domains, 0..999999 when valid |
 
-No other Buddy's implementation is modified.
+Invalid fields encode JSON `null`, including count metadata and source ages.
+Speed validity and count validity are independent: first encoder baseline may
+have valid counts before speed. Highest-hump validity requires a healthy IMU
+snapshot. Absent calibration, stale/future data and faulty acquisition do not
+become valid zeros. Validity is telemetry evidence, not permission to actuate;
+mission gates use their own configured tighter freshness requirements. Raw line
+bits do not establish that filtered steering agrees with the current sample.
 
-## 5. Not yet verified
+Encoder counts are the actual polarity-applied x4 transitions, never inferred
+from micrometres. Boot establishes the origin; START/RESUME do not reset counts.
+No live reset is supported. Saturation/overflow invalidates feedback and faults;
+there is no silent count rollover. Generation restarts on reboot and does not
+identify a boot globally; clients must start a new odometry history on reboot.
+The codec rejects inconsistent flags, unsupported schemas and out-of-range valid
+values without emitting truncated JSON. Valid hump input is 0..99999 mm; larger
+or nonfinite heights are invalidated by the aggregator. Tests exercise full
+signed widths, maximum source timestamp, null fields, age and capacity limits.
 
-* Hardware: the status mutex test (S1-U14), the simulator switch test (S1-U15) and the first-join
-  recovery have been run only on a PC. The two-core evidence needs `make TEST=1` on the Pico.
-* The 5-minute delivery run (NFR8) and the CPU load during an outage (NFR9).
-* Any real telemetry source and any command consumer (they do not exist yet).
+## Commands and safety
+
+S1 publishes a persistent, SMP-safe emergency latch and a pulse before ordinary
+queue admission or diagnostic mutex acquisition. The controller reads the latch
+and pulse before ordinary providers. A consumed pulse, full queue or RESUME does
+not clear the latch; current integrated recovery requires reboot. Only S2 owns
+motor actuation. S1 command reception validates exact copied-message size and
+known IDs; stale ordinary commands are discarded, emergency commands retain
+priority. Status reads are bounded; link/latch getters never wait.
+
+Threaded U14/U16 failures were host-test defects: the fake treated zero-valued
+TWF_ANDW as a set bit, completing multi-bit waits prematurely. A direct AND/OR
+regression now checks the kernel ABI. The busy reader also yields periodically
+so its iteration budget measures coherence while the writer completes. All
+original coherence, overlap, update totals and emergency assertions remain.
+The enlarged host message storage accommodates the new copied frame.
+
+## Build and physical verification
+
+MQTT requires NET=lwip MQTT=1 and local credentials. Final build verification
+uses the published example credentials in ignored build/profiles, not real
+network credentials. Those images are compile/link evidence, not configured
+network deliverables. No firmware was flashed. End-to-end emergency latency,
+real two-core contention, five-minute delivery and outage CPU/timing still need
+physical measurements. Results and exact hashes: testing/subsystem1/TEST_LOG.md
+and testing/integration/TEST_LOG.md.
+"
+
+## Consumer implementation and exact payload bound
+
+Repository inspection found no dashboard application/decoder (no maintained
+HTML/JavaScript/TypeScript dashboard sources). The consumer is external;
+there is therefore no in-repository dashboard code to update. Implement the
+table above as the authoritative version-2 contract, keeping schema 0 support
+only for explicitly labelled demonstrations.
+
+Consumers must branch on z, check v before using fields, retain null as unknown,
+parse el/er with BigInt or another signed-64 implementation, and parse et as
+uint64/BigInt. Never pass these decimal strings through JavaScript Number.
+Other integers fit JavaScript's exact integer range. Counts are independent of
+speed validity. Track generation and boot/session changes; modulo q/t rollover
+does not imply count reset. Do not plot unavailable fields as zero or carry old
+values forward as fresh. Display acquisition ages separately from arrival time.
+s retains the existing S1 robot-state enum; a bypass is OPERATIONAL, not a new
+undocumented wire enum. ml/mr are measured mm/s, not PWM effort.
+
+Exhaustive validity-mask encoding with both signed speeds/counts at their
+negative width limits, maximum q/t/et/eg, longest valid h/o/ages proves a
+maximum of **239 JSON payload bytes (240 including NUL)**. The largest mask is
+59: unknown line is null, which can be longer than a known one-digit mask.
+All valid subsets and invalid HUMP-without-IMU masks are tested. Encoding into
+an insufficient buffer returns zero and clears output; truncated JSON is never
+published. Original FR17 semantic fields are all mapped above; acceptance of
+compact field names remains an academic/consumer agreement, not instructor
+approval inferred from the user's implementation authorization.

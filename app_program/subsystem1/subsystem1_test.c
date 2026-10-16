@@ -142,10 +142,10 @@ static void
 test_codec (void)
 {
     char             text[TEXT_CAPACITY] = {0};
-    s1_codec_frame_t frame  = {1234u, 5u, 6u, 12, 455, 120, -120, 2u, 2u};
+    s1_codec_frame_t frame  = {1234u, 5u, 6u, 12, 455, 120, -120, 2u, 2u, 0u, 0u, {0u,0u,0u}, 0u, 0u};
     s1_codec_frame_t worst  = {0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu,
                                -2000000000, -2000000000, -32768,
-                               -32768,      255u,        255u};
+                               -32768,      255u,        255u, 0u, 0u, {0u,0u,0u}, 0u, 0u};
     uint32_t         length = 0u;
     TEST_INIT();
 
@@ -496,7 +496,9 @@ status_reader_task (INT stacd, void * p_exinf)
         }
         (void) s1_net_is_connected();
         b_done = (E_OK == tk_wai_flg(g_status_test.flag_id, FLAG_WRITER_DONE,
-                                     TWF_ORW, &pattern, TMO_POL));
+                                     TWF_ORW, &pattern,
+                                     (0u == (count % STATUS_PAUSE_EVERY)) ?
+                                     1 : TMO_POL));
         count++;
     }
     g_status_test.b_reader_gave_up = !b_done;

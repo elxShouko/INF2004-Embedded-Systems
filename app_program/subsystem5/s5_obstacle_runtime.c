@@ -370,6 +370,13 @@ s5_runtime_step(
 			}
 			else if (!s5_runtime_copy_scan(runtime, input))
 			{
+                if (input->controller_owned && runtime->status.scan_valid &&
+                    (S5_LOGIC_CLEARANCE_UNVERIFIED == runtime->status.scan_status))
+                {
+                    runtime->status.state = S5_RUNTIME_HOLD;
+                    runtime->status.busy = true;
+                    break; /* Preserve real profile; never invent a route. */
+                }
 				s5_runtime_set_fault(
 					runtime,
 					runtime->status.scan_valid
@@ -456,6 +463,27 @@ s5_runtime_step(
 				events);
 		}
 		break;
+
+    case S5_RUNTIME_HOLD:
+        if (!input->controller_owned ||
+            (!s5_runtime_forward_is_fresh(runtime,input) &&
+             ((uint32_t)(input->now_ms -
+              runtime->status.scan_completed_at_ms) >
+              runtime->config.forward_sample_max_age_ms)))
+        {
+            s5_runtime_set_fault(runtime,S5_RUNTIME_FAULT_FORWARD_SENSOR,events);
+        }
+        else if (input->line_found)
+        {
+            runtime->status.state = S5_RUNTIME_MONITOR;
+            runtime->status.busy = false;
+            runtime->status.scan_complete = false;
+            runtime->status.scan_valid = false;
+            runtime->obstacle_confirmations = 0U;
+            runtime->have_forward_sample = false;
+            runtime->state_started_at_ms = input->now_ms;
+        }
+        break;
 
 	case S5_RUNTIME_FAULT:
 	default:

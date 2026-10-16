@@ -12,7 +12,8 @@ typedef enum
 	S5_RUNTIME_SCANNING,
 	S5_RUNTIME_WAIT_BYPASS,
 	S5_RUNTIME_LINE_RECOVERY,
-	S5_RUNTIME_FAULT
+	S5_RUNTIME_FAULT,
+	S5_RUNTIME_HOLD
 } s5_runtime_state_t;
 
 typedef enum
@@ -60,6 +61,7 @@ typedef struct
 	size_t fine_count;
 	bool bypass_complete;
 	bool line_found;
+	bool controller_owned; /* Live controller owns route execution/deadlines. */
 } s5_runtime_input_t;
 
 typedef struct

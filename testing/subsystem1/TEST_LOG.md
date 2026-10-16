@@ -52,3 +52,44 @@ Each run saves its commands, revision metadata and raw output to
   CYW43 firmware does on a real access point.
 * Emergency latency (NFR7, 50 ms) is not measured. The host tests show the ORDER of operations and that no lock or
   full queue can delay the publish; the time itself needs a scope or GPIO timestamp on the Pico.
+
+
+## Software completion verification (2026-10-16)
+
+Tested HEAD 5c08a5c76de39ffe18d9720b40d505a592508230 plus the final uncommitted
+software-completion working tree. This is source-hash-bound preliminary evidence,
+not a claim that a committed final revision was tested.
+
+Command: S1_NO_LOG=1 bash testing/subsystem1/host/run_host_tests.sh (MSYS2,
+GCC 14.2). Final result: 43 threaded application checks, 40 codec checks,
+15 backoff checks, 33 MQTT checks and 17 Wi-Fi checks PASS. The optional Windows
+cross-build compiled; wine was unavailable, so that executable was not run.
+The MSYS shell could not locate Git: raw output says revision unknown; the
+external archive manifest records the actual repository revision/source hashes.
+
+Root causes corrected: zero-valued TWF_ANDW was tested as a nonzero flag in
+the fake, completing multi-bit AND waits prematurely; U14's busy reader could
+consume its finite budget before the writer completed. Corrected AND/OR
+semantics now have a direct regression, and periodic 1 ms test waits preserve
+all coherence, overlap and totals assertions. Host copied-message capacity
+is now 128 bytes, accommodating the enlarged production frame.
+
+Seven additional codec checks cover signed INT64 endpoints, UINT64 source-time
+precision, missing/null fields, invalid generation/validity, age bounds,
+capacity failure and legacy behavior. User-approved production v2 keys and
+dashboard/FR17 mapping: ../../docs/buddy1/TELEMETRY_COMMAND_CONTRACT.md.
+Full output: ../integration/logs/software_completion_evidence.zip,
+entry testing/integration/logs/completion_verified_s1.log. Original failed
+attempts are preserved in that archive. No physical networking or SMP claim.
+
+
+## Configured bypass and recovery verification (2026-10-16)
+
+Existing host script PASS: 43 threaded checks, 41 codec, 15 backoff, 33 MQTT,
+17 Wi-Fi checks. The added codec check enumerates all validity masks with
+full negative widths and longest fields: maximum v2 payload 239 bytes,
+240 including NUL. The largest mask is 59 (unknown line). Legacy format/tests
+remain unchanged. Optional Windows cross-build compiled but not executed
+without wine. Evidence: ../integration/logs/software_completion_evidence.zip,
+route_final_s1.log. No dashboard sources were found; the external contract is
+../../docs/buddy1/TELEMETRY_COMMAND_CONTRACT.md.

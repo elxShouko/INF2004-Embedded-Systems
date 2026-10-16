@@ -26,7 +26,7 @@ extern int  host_thread_start (void (*entry) (int, void *));
 #define MAX_FLAGS 8
 #define MAX_MUTEXES 8
 #define MAX_MESSAGES 64
-#define MAX_MESSAGE_SIZE 64
+#define MAX_MESSAGE_SIZE 128
 #define WAIT_STEP_MS 1
 
 typedef struct { unsigned char data[MAX_MESSAGE_SIZE]; INT size; } message_t;
@@ -80,7 +80,7 @@ ER tk_wai_flg (ID id, UINT wai, UINT mode, UINT * flg, TMO tmout)
         UINT now; int b_met;
         host_global_lock ();
         now   = g_flag_pattern[id - 1];
-        b_met = (0u != (mode & TWF_ANDW)) ? ((now & wai) == wai) : (0u != (now & wai));
+        b_met = (0u == (mode & TWF_ORW)) ? ((now & wai) == wai) : (0u != (now & wai));
         if (b_met)
         {
             *flg = now;

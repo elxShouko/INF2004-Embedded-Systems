@@ -12,6 +12,7 @@ typedef int32_t PRI;
 typedef struct { UW spver; UW prver; } T_RVER;
 #define TASK_STACK_SIZE (2048U)
 #define TP_PRC1 (1U)
+#define TA_WMUL (8U)
 #define E_PAR (-17)
 #define E_NOSPT (-9)
 #define CHECK(error, label) ((void)(error), (void)(label))
@@ -20,6 +21,11 @@ ER tk_slp_tsk (TMO delay);
 ER tk_ref_ver (T_RVER * p_version);
 INT tk_get_prc (void);
 void tm_printf (UB * p_format, ...);
+void subsystem1_test (void);
+void subsystem2_test (void);
+void subsystem3_test (void);
+void subsystem4_test (void);
+void subsystem5_test (void);
 ER subsystem1_init (void);
 ER subsystem3_init (void);
 ER subsystem4_init (void);

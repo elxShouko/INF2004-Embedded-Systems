@@ -7,6 +7,7 @@
  */
 
 #include "s1_codec.h"
+#include <stddef.h>
 
 #define DECIMAL_BASE 10u
 #define U32_DIGITS_MAX 10u
@@ -45,6 +46,10 @@ static void     writer_start (text_writer_t * p_writer, char * p_buffer,
 static void     writer_char (text_writer_t * p_writer, char letter);
 static void     writer_text (text_writer_t * p_writer, const char * p_text);
 static void     writer_u32 (text_writer_t * p_writer, uint32_t value);
+static void     writer_i64 (text_writer_t * p_writer, int64_t value);
+static void     writer_u64 (text_writer_t * p_writer, uint64_t value);
+static uint32_t encode_v2 (const s1_codec_frame_t * p_frame,
+    uint32_t sequence, char * p_buffer, uint32_t capacity);
 static void     writer_i32 (text_writer_t * p_writer, int32_t value);
 static void     writer_tenths (text_writer_t * p_writer, int32_t value_x10);
 static uint32_t writer_finish (text_writer_t * p_writer);
@@ -66,6 +71,27 @@ s1_codec_encode_telemetry (const s1_codec_frame_t * p_frame, uint32_t sequence,
 {
     text_writer_t writer = {0};
 
+    if ((NULL == p_frame) || (NULL == p_buffer))
+    {
+        return 0u;
+    }
+    if (2u == p_frame->schema_version)
+    {
+        return encode_v2(p_frame, sequence, p_buffer, capacity);
+    }
+    if ((0u != p_frame->schema_version) ||
+        (p_frame->encoder_count_left < 0) ||
+        (p_frame->encoder_count_left > UINT32_MAX) ||
+        (p_frame->encoder_count_right < 0) ||
+        (p_frame->encoder_count_right > UINT32_MAX) ||
+        (p_frame->motor_speed_left < INT16_MIN) ||
+        (p_frame->motor_speed_left > INT16_MAX) ||
+        (p_frame->motor_speed_right < INT16_MIN) ||
+        (p_frame->motor_speed_right > INT16_MAX))
+    {
+        if (capacity > 0u) { p_buffer[0] = '\0'; }
+        return 0u;
+    }
     writer_start(&writer, p_buffer, capacity);
     writer_text(&writer, "{\"seq\":");
     writer_u32(&writer, sequence);
@@ -78,9 +104,9 @@ s1_codec_encode_telemetry (const s1_codec_frame_t * p_frame, uint32_t sequence,
     writer_text(&writer, ",\"right_motor_speed\":");
     writer_i32(&writer, p_frame->motor_speed_right);
     writer_text(&writer, ",\"left_encoder_count\":");
-    writer_u32(&writer, p_frame->encoder_count_left);
+    writer_u32(&writer, (uint32_t)p_frame->encoder_count_left);
     writer_text(&writer, ",\"right_encoder_count\":");
-    writer_u32(&writer, p_frame->encoder_count_right);
+    writer_u32(&writer, (uint32_t)p_frame->encoder_count_right);
     writer_text(&writer, ",\"line_status\":");
     writer_u32(&writer, p_frame->line_status);
     writer_text(&writer, ",\"hump_peak\":");
@@ -98,6 +124,7 @@ s1_codec_encode_heartbeat (uint32_t uptime_ms, char * p_buffer,
 {
     text_writer_t writer = {0};
 
+    if (NULL == p_buffer) { return 0u; }
     writer_start(&writer, p_buffer, capacity);
     writer_text(&writer, "{\"status\":\"ALIVE\",\"uptime_ms\":");
     writer_u32(&writer, uptime_ms);
@@ -115,6 +142,7 @@ s1_codec_parse_command (const char * p_payload, uint32_t length)
     uint32_t              entry_number                = 0u;
     s1_codec_command_id_t command_id                  = S1_CMD_NONE;
 
+    if (NULL == p_payload) { return S1_CMD_NONE; }
     while ((position < length) && is_blank(p_payload[position]))
     {
         position++;
@@ -214,7 +242,7 @@ writer_u32 (text_writer_t * p_writer, uint32_t value)
 
     do
     {
-        digits[count] = '0' + (remaining % DECIMAL_BASE);
+        digits[count] = (char)('0' + (remaining % DECIMAL_BASE));
         remaining     = remaining / DECIMAL_BASE;
         count++;
     } while (remaining > 0u);
@@ -230,7 +258,7 @@ writer_u32 (text_writer_t * p_writer, uint32_t value)
 static void
 writer_i32 (text_writer_t * p_writer, int32_t value)
 {
-    uint32_t magnitude = value;
+    uint32_t magnitude = (uint32_t)value;
 
     if (value < 0)
     {
@@ -268,7 +296,7 @@ writer_tenths (text_writer_t * p_writer, int32_t value_x10)
     }
     else
     {
-        magnitude = limited;
+        magnitude = (uint32_t)limited;
     }
     writer_u32(p_writer, magnitude / DECIMAL_BASE);
     writer_char(p_writer, '.');
@@ -335,4 +363,116 @@ text_equal (const char * p_first, const char * p_second)
     return (*p_left == *p_right);
 }
 
+
+
+/* Compact versioned production schema keeps complete int64 counts plus source
+ * metadata under the project's 256-byte payload limit. See the contract. */
+static uint32_t encode_v2 (const s1_codec_frame_t * p_frame,
+    uint32_t sequence, char * p_buffer, uint32_t capacity)
+{
+    text_writer_t writer = {0};
+    const uint8_t valid = p_frame->validity;
+
+    writer_start(&writer, p_buffer, capacity);
+    if ((p_frame->robot_state > S1_ROBOT_STATE_FAULT) ||
+        (0u != (valid & (uint8_t)~S1_VALID_ALL)) ||
+        (((valid & S1_VALID_LINE) != 0u) && (p_frame->line_status > 7u)) ||
+        (((valid & S1_VALID_HUMP) != 0u) &&
+         ((p_frame->hump_peak_x10 < 0) ||
+          (p_frame->hump_peak_x10 > TENTHS_LIMIT))) ||
+        (((valid & S1_VALID_OBSTACLE) != 0u) &&
+         ((p_frame->obstacle_distance_x10 < 20) ||
+          (p_frame->obstacle_distance_x10 > 4000))) ||
+        (((valid & S1_VALID_HUMP) != 0u) &&
+         ((valid & S1_VALID_IMU) == 0u)) ||
+        (((valid & S1_VALID_ENCODER) != 0u) &&
+         (0u == p_frame->encoder_generation)))
+    {
+        return 0u;
+    }
+    writer_text(&writer, "{\"z\":2,\"q\":");
+    writer_u32(&writer, sequence);
+    writer_text(&writer, ",\"t\":");
+    writer_u32(&writer, p_frame->timestamp_ms);
+    writer_text(&writer, ",\"s\":");
+    writer_u32(&writer, p_frame->robot_state);
+    const char * const names[] = {",\"ml\":", ",\"mr\":",
+        ",\"el\":", ",\"er\":", ",\"l\":", ",\"h\":", ",\"o\":"};
+    const uint8_t masks[] = {S1_VALID_SPEED,S1_VALID_SPEED,
+        S1_VALID_ENCODER,S1_VALID_ENCODER,S1_VALID_LINE,S1_VALID_HUMP,
+        S1_VALID_OBSTACLE};
+    for (uint32_t field = 0u; field < 7u; ++field)
+    {
+        writer_text(&writer, names[field]);
+        if (0u == (valid & masks[field])) { writer_text(&writer, "null"); }
+        else if (field < 2u)
+        {
+            writer_i32(&writer, (0u == field) ? p_frame->motor_speed_left :
+                p_frame->motor_speed_right);
+        }
+        else if (field < 4u)
+        {
+            writer_char(&writer, '\"');
+            writer_i64(&writer, (2u == field) ? p_frame->encoder_count_left :
+                p_frame->encoder_count_right);
+            writer_char(&writer, '\"');
+        }
+        else if (4u == field) { writer_u32(&writer,p_frame->line_status); }
+        else { writer_tenths(&writer, (5u == field) ?
+            p_frame->hump_peak_x10 : p_frame->obstacle_distance_x10); }
+    }
+    writer_text(&writer, ",\"v\":"); writer_u32(&writer,valid);
+    writer_text(&writer, ",\"et\":");
+    if (0u != (valid & S1_VALID_ENCODER))
+    {
+        writer_char(&writer,'\"');
+        writer_u64(&writer,p_frame->encoder_timestamp_us);
+        writer_char(&writer,'\"');
+        writer_text(&writer, ",\"eg\":");
+        writer_u32(&writer,p_frame->encoder_generation);
+    }
+    else { writer_text(&writer,"null,\"eg\":null"); }
+    writer_text(&writer, ",\"a\":[");
+    const uint8_t ages[] = {S1_VALID_LINE,S1_VALID_OBSTACLE,S1_VALID_IMU};
+    for (uint32_t source = 0u; source < 3u; ++source)
+    {
+        if (source > 0u) { writer_char(&writer, ','); }
+        if (0u == (valid & ages[source])) { writer_text(&writer,"null"); }
+        else
+        {
+            if (p_frame->sensor_age_us[source] > 999999u)
+            {
+                if (capacity > 0u) { p_buffer[0] = '\0'; } return 0u;
+            }
+            writer_u32(&writer,p_frame->sensor_age_us[source]);
+        }
+    }
+    writer_text(&writer,"]}");
+    return writer_finish(&writer);
+}
+
+static void writer_u64 (text_writer_t * p_writer, uint64_t value)
+{
+    char digits[20];
+    uint32_t count = 0u;
+
+    do
+    {
+        digits[count++] = (char)('0' + (value % 10u));
+        value /= 10u;
+    } while (value > 0u);
+    while (count > 0u) { writer_char(p_writer,digits[--count]); }
+}
+
+static void writer_i64 (text_writer_t * p_writer, int64_t value)
+{
+    uint64_t magnitude = (uint64_t)value;
+
+    if (value < 0)
+    {
+        writer_char(p_writer,'-');
+        magnitude = 0u - magnitude; /* Includes INT64_MIN without signed UB. */
+    }
+    writer_u64(p_writer,magnitude);
+}
 /*** end of file ***/

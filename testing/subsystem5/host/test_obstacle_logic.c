@@ -5,6 +5,7 @@
 #include "../../../app_program/subsystem5/s5_obstacle_logic.h"
 
 static unsigned int s5_test_failures;
+static void test_route_planner (void);
 
 static void
 check_result(
@@ -590,6 +591,97 @@ main(void)
 		     !plan.executable,
 		     "a profile that was not successfully built cannot create a plan");
 
+    test_route_planner();
 	(void)printf("[TEST] subsystem5 host failures: %u\n", s5_test_failures);
 	return (s5_test_failures == 0U) ? 0 : 1;
 }
+
+
+static void test_route_planner (void)
+{
+    const s5_route_config_t config = {50000,80000,10000,5000,10000,0,
+        100000,200000,50000,200000,50,1000000U,20000000U,true};
+    const s5_clearance_t evidence = {
+        {{-155000,155000,-155000,460000},
+         {-155000,960000,150000,460000},
+         {650000,1160000,-155000,460000}},
+        100000U,1000000U,40000000U,true,true};
+    s5_obstacle_profile_t profile = {0};
+    s5_obstacle_plan_t plan = {0};
+
+    profile.valid = true;
+    profile.forward_distance_cm = 40U;
+    profile.bypass_direction = S5_BYPASS_LEFT_CANDIDATE;
+    check_result("S5-U73",S5_LOGIC_OK == s5_route_plan(&profile,&config,
+        &evidence,100000U,1000000U,1010000U,&plan) &&
+        plan.executable && (8U == plan.action_count) &&
+        (305000 == plan.distance_um[1]) &&
+        (805000 == plan.distance_um[3]) &&
+        (200000 == plan.distance_um[7]) &&
+        (S5_ACTION_TURN_LEFT == plan.actions[0]),
+        "configured left geometry and exact um conversion");
+    s5_clearance_t right = evidence;
+    for (size_t n = 0U; n < 3U; ++n)
+    {
+        int32_t min = right.corridor[n].y_min_um;
+        right.corridor[n].y_min_um = -right.corridor[n].y_max_um;
+        right.corridor[n].y_max_um = -min;
+    }
+    profile.bypass_direction = S5_BYPASS_RIGHT_CANDIDATE;
+    check_result("S5-U74",S5_LOGIC_OK == s5_route_plan(&profile,&config,
+        &right,100000U,1000000U,1010000U,&plan) &&
+        (S5_ACTION_TURN_RIGHT == plan.actions[0]) &&
+        (S5_ACTION_TURN_LEFT == plan.actions[2]),
+        "right route mirrors turns and clearance");
+    profile.bypass_direction = S5_BYPASS_LEFT_CANDIDATE;
+    s5_clearance_t invalid = evidence;
+    invalid.b_verified = false;
+    check_result("S5-U75",S5_LOGIC_CLEARANCE_UNVERIFIED ==
+        s5_route_plan(&profile,&config,&invalid,100000U,1000000U,
+            1010000U,&plan) && !plan.executable && (0U == plan.action_count),
+        "unverified evidence clears previously executable output");
+    invalid = evidence; invalid.scan_id_us++;
+    check_result("S5-U76",S5_LOGIC_CLEARANCE_UNVERIFIED ==
+        s5_route_plan(&profile,&config,&invalid,100000U,1000000U,1010000U,&plan),
+        "different scan frame rejected");
+    invalid = evidence; invalid.observed_us = 999999U;
+    check_result("S5-U77",S5_LOGIC_CLEARANCE_UNVERIFIED ==
+        s5_route_plan(&profile,&config,&invalid,100000U,1000000U,1010000U,&plan),
+        "evidence predating completed scan rejected");
+    invalid = evidence; invalid.observed_us = 1010001U;
+    check_result("S5-U78",S5_LOGIC_CLEARANCE_UNVERIFIED ==
+        s5_route_plan(&profile,&config,&invalid,100000U,1000000U,1010000U,&plan),
+        "future evidence rejected");
+    invalid = evidence; invalid.valid_until_us = 21009999U;
+    check_result("S5-U79",S5_LOGIC_CLEARANCE_UNVERIFIED ==
+        s5_route_plan(&profile,&config,&invalid,100000U,1000000U,1010000U,&plan),
+        "certificate must cover entire route deadline");
+    invalid = evidence; invalid.corridor[0].x_max_um--;
+    check_result("S5-U80",S5_LOGIC_CLEARANCE_UNVERIFIED ==
+        s5_route_plan(&profile,&config,&invalid,100000U,1000000U,1010000U,&plan),
+        "one micrometre swept corridor undercoverage rejects");
+    invalid = evidence; invalid.corridor[1].y_min_um = -200000;
+    check_result("S5-U81",S5_LOGIC_CLEARANCE_UNVERIFIED ==
+        s5_route_plan(&profile,&config,&invalid,100000U,1000000U,1010000U,&plan),
+        "claimed free box contradicting bounded obstacle rejects");
+    invalid = evidence; invalid.b_original_line_verified = false;
+    check_result("S5-U87",S5_LOGIC_CLEARANCE_UNVERIFIED ==
+        s5_route_plan(&profile,&config,&invalid,100000U,1000000U,1010000U,&plan),
+        "free space without original-line identity cannot authorize recovery");
+    profile.lateral_offset_cm = 30; /* Profile positive RIGHT -> route y negative. */
+    invalid = evidence;
+    invalid.corridor[0] = (s5_clear_box_t){-155000,450000,-155000,760000};
+    invalid.corridor[1] = (s5_clear_box_t){-155000,960000,450000,760000};
+    invalid.corridor[2] = (s5_clear_box_t){650000,1160000,-155000,760000};
+    check_result("S5-U88",S5_LOGIC_OK ==
+        s5_route_plan(&profile,&config,&invalid,100000U,1000000U,1010000U,&plan) &&
+        (605000 == plan.distance_um[1]),"legacy lateral sign maps into robot frame");
+    profile.lateral_offset_cm = 0;
+    s5_route_config_t bad = config;
+    bad.stopping_um = 0;
+    check_result("S5-U82",!s5_route_validate(&bad) &&
+        (S5_LOGIC_CLEARANCE_UNVERIFIED == s5_route_plan(&profile,&config,
+            &evidence,100000U,1000000U,UINT64_MAX,&plan)) &&
+        !plan.executable, "missing stopping calibration and clock overflow reject");
+}
+/*** end of file ***/

@@ -7,7 +7,7 @@
 
 #define S5_COARSE_SCAN_COUNT	5U
 #define S5_FINE_SCAN_MAX_COUNT	9U
-#define S5_ACTION_PLAN_MAX	7U
+#define S5_ACTION_PLAN_MAX	8U
 #define S5_MIN_VALID_DISTANCE_CM	2U
 #define S5_MAX_VALID_DISTANCE_CM	400U
 
@@ -54,7 +54,8 @@ typedef enum
 	S5_ACQUISITION_ECHO_STUCK_HIGH,
 	S5_ACQUISITION_ECHO_STUCK_LOW,
 	S5_ACQUISITION_SERVO_INIT_FAILED,
-	S5_ACQUISITION_SERVO_POSITION_FAILED
+	S5_ACQUISITION_SERVO_POSITION_FAILED,
+	S5_ACQUISITION_ABORTED
 } s5_acquisition_status_t;
 
 typedef struct
@@ -85,7 +86,7 @@ typedef struct
 	bool valid;
 	uint16_t closest_distance_cm;
 	uint8_t closest_angle_deg;
-	int16_t lateral_offset_cm;
+	int16_t lateral_offset_cm; /* Legacy profile: positive right, negative left. */
 	uint16_t forward_distance_cm;
 	/* Approximate angular-span estimate; not calibrated physical width. */
 	uint16_t estimated_width_cm;
@@ -106,7 +107,59 @@ typedef struct
 	s5_bypass_direction_t bypass_direction;
 	bool reverse_candidate;
 	bool executable;
+	int32_t distance_um[S5_ACTION_PLAN_MAX];
+	int32_t speed_mm_s;
+	uint64_t scan_id_us;
+	uint64_t valid_until_us;
 } s5_obstacle_plan_t;
+
+/* Robot-local frame at stopped scan: x forward, y left, origin axle centre.
+ * Each box is verified FREE SPACE, not a box inferred from a range ray.
+ * Its source must bound static-scene coverage, occlusion and measurement error.
+ * No current acquisition routine manufactures these certificates.
+ */
+typedef struct
+{
+    int32_t x_min_um, x_max_um;
+    int32_t y_min_um, y_max_um;
+} s5_clear_box_t;
+
+typedef struct
+{
+    s5_clear_box_t corridor[3]; /* outward, forward, return plus search */
+    uint64_t scan_id_us;
+    uint64_t observed_us;
+    uint64_t valid_until_us;
+    bool b_verified;
+    /* Initial heading/origin matches original line within tracking bound,
+     * and the search corridor has no other eligible line.
+     */
+    bool b_original_line_verified;
+} s5_clearance_t;
+
+typedef struct
+{
+    int32_t half_length_um;
+    int32_t half_width_um;
+    int32_t clearance_um;
+    int32_t tracking_error_um;
+    int32_t stopping_um;
+    int32_t sensor_forward_um;
+    int32_t obstacle_half_width_um; /* Verified enclosing bound, not span estimate */
+    int32_t obstacle_depth_um;
+    int32_t lateral_extra_um;
+    int32_t search_um;
+    int32_t speed_mm_s;
+    uint32_t step_timeout_us;
+    uint32_t route_timeout_us;
+    bool b_calibrated;
+} s5_route_config_t;
+
+bool s5_route_validate (s5_route_config_t const * p_config);
+s5_logic_status_t s5_route_plan (s5_obstacle_profile_t const * p_profile,
+    s5_route_config_t const * p_config, s5_clearance_t const * p_clearance,
+    uint64_t scan_id_us, uint64_t completed_us, uint64_t now_us,
+    s5_obstacle_plan_t * p_plan);
 
 /*
  * Development assumptions: 90 degrees is forward; smaller angles are left.

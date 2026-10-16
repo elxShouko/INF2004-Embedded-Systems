@@ -24,6 +24,7 @@ static bool g_vehicle_have_setup;
 static vehicle_setup_t g_vehicle_setup;
 static vehicle_t g_vehicle_owner;
 static vehicle_t g_vehicle_published;
+static s5_clearance_t g_vehicle_clearance;
 static gpio_bank_t g_vehicle_bank;
 
 static void vehicle_task (INT code, void * p_context);
@@ -102,6 +103,35 @@ ER vehicle_runtime_setup (vehicle_setup_t const * p_setup)
          {
              return (E_PAR);
          }
+    if (p_setup->mission.route.b_calibrated &&
+        (!p_setup->b_obstacle_requested ||
+         ((uint64_t)(uint32_t)p_setup->mission.route.half_width_um * 2U <
+          p_setup->motion.geometry.track_width_um) ||
+         ((uint64_t)p_setup->navigation.recovery_timeout_us <
+          (uint64_t)p_setup->mission.route.step_timeout_us +
+          p_setup->navigation.line_found_us + p_setup->mission.sensor_age_us) ||
+         (p_setup->mission.route.speed_mm_s >
+          p_setup->motion.geometry.max_wheel_speed_mm_s)))
+    {
+        return (E_PAR);
+    }
+    if (p_setup->b_obstacle_requested)
+    {
+        uint64_t expected_gap_us =
+            (uint64_t)p_setup->obstacle.acquisition.sample_period_us +
+            p_setup->obstacle.acquisition.servo_settle_us +
+            p_setup->obstacle.acquisition.echo_timeout_us + 20000U;
+
+        if (p_setup->mission.sensor_age_us < expected_gap_us)
+        {
+            return (E_PAR); /* Two 10 ms service quanta; not measured WCET. */
+        }
+        drv_encoder_port_t port = {&g_vehicle_bank,
+            gpio_bank_reserve,gpio_bank_enable,vehicle_release};
+        ER error = s5_live_configure(&p_setup->obstacle,&port);
+
+        if (E_OK != error) { return (error); }
+    }
     g_vehicle_setup = *p_setup;
     g_vehicle_owner = candidate;
     g_vehicle_have_setup = true;
@@ -116,7 +146,20 @@ ER vehicle_runtime_start (uint32_t started_mask)
     }
     g_vehicle_started_mask = started_mask;
     g_vehicle_started = true; /* Set BEFORE another core can run the task. */
-    return (tk_sta_tsk(g_vehicle_task, 0));
+#if APP_TEST
+    /* Professor self-tests own the S1/S3 queues while they run. Do not add a
+     * concurrent command consumer or telemetry producer to that test image.
+     */
+    return (E_OK);
+#else
+    ER error = tk_sta_tsk(g_vehicle_task, 0);
+
+    if (E_OK != error)
+    {
+        g_vehicle_started = false; /* Failed start leaves the task dormant. */
+    }
+    return (error);
+#endif
 }
 
 ER vehicle_runtime_status (vehicle_t * p_status)
@@ -135,11 +178,40 @@ ER vehicle_runtime_status (vehicle_t * p_status)
     return (error);
 }
 
+ER vehicle_runtime_clearance (s5_clearance_t const * p_clearance)
+{
+    if ((NULL == p_clearance) || !p_clearance->b_verified ||
+        !p_clearance->b_original_line_verified ||
+        (0U == p_clearance->scan_id_us) || (g_vehicle_mutex <= 0))
+    {
+        return (E_PAR);
+    }
+    ER error = tk_loc_mtx(g_vehicle_mutex,TMO_POL);
+
+    if (E_OK == error)
+    {
+        bool b_allowed = g_vehicle_have_setup && g_vehicle_started &&
+            g_vehicle_setup.mission.route.b_calibrated &&
+            g_vehicle_published.b_obstacle_pending &&
+            !g_vehicle_published.b_route_active &&
+            (0U == g_vehicle_published.active_id) &&
+            (VEHICLE_OBSTACLE == g_vehicle_published.state);
+
+        if (b_allowed) { g_vehicle_clearance = *p_clearance; }
+        ER release = tk_unl_mtx(g_vehicle_mutex);
+
+        error = (E_OK != release) ? release : (b_allowed ? E_OK : E_OBJ);
+    }
+    return (error);
+}
+
 static void vehicle_task (INT code, void * p_context)
 {
     bool b_motion_configured = false;
     bool b_navigation_configured = false;
     uint32_t navigation_done_sent = 0U;
+    uint64_t telemetry_last_us = 0U;
+    bool b_telemetry_sent = false;
     vehicle_odometry_t odometry = {0};
 
     (void)code; (void)p_context;
@@ -225,10 +297,14 @@ static void vehicle_task (INT code, void * p_context)
          */
         s1_codec_frame_t frame;
 
-        if (vehicle_frame(&g_vehicle_owner, &input, &frame) &&
+        if ((!b_telemetry_sent || ((input.now_us >= telemetry_last_us) &&
+            (input.now_us - telemetry_last_us >= 100000U))) &&
+            vehicle_frame(&g_vehicle_owner, &input, &frame) &&
             (0U != (g_vehicle_started_mask & 1U)))
         {
             (void)s1_net_telemetry_send(&frame);
+            telemetry_last_us = input.now_us;
+            b_telemetry_sent = true;
         }
         if (E_OK == tk_loc_mtx(g_vehicle_mutex, TMO_POL))
         {
@@ -257,7 +333,9 @@ static void vehicle_collect (vehicle_input_t * p_input)
         UINT flags = 0U;
         ER error = s1_net_events_wait(S1_NET_FLG_ESTOP, &flags, TMO_POL);
 
-        p_input->b_estop = (E_OK == error) && (0U != flags);
+        p_input->b_estop = s1_net_estop_latched() ||
+            ((E_OK == error) && (0U != flags));
+        p_input->b_link_up = s1_net_is_connected();
         p_input->b_provider_fault = (E_OK != error) && (E_TMOUT != error);
     }
     if (0U != (g_vehicle_started_mask & 8U))
@@ -266,6 +344,13 @@ static void vehicle_collect (vehicle_input_t * p_input)
 
         p_input->b_provider_fault = p_input->b_provider_fault ||
             (E_TMOUT != error); /* Includes latched fault or API failure. */
+    }
+    if (0U != (g_vehicle_started_mask & 16U))
+    {
+        ER error = s5_live_fault();
+
+        p_input->b_provider_fault = p_input->b_provider_fault ||
+            (E_TMOUT != error);
     }
     if (p_input->b_estop || p_input->b_provider_fault)
     {
@@ -282,6 +367,12 @@ static void vehicle_collect (vehicle_input_t * p_input)
         motion_api_result_t result = motion_api_status(&p_input->motion);
 
         p_input->b_motion_available = (MOTION_API_QUEUED == result);
+        if (p_input->b_motion_available)
+        {
+            p_input->b_counts_valid = p_input->motion.b_encoder_valid;
+            p_input->encoder_count[0] = p_input->motion.encoder_count[0];
+            p_input->encoder_count[1] = p_input->motion.encoder_count[1];
+        }
         p_input->b_provider_fault = p_input->b_provider_fault ||
             (MOTION_API_ERROR == result);
     }
@@ -321,9 +412,25 @@ static void vehicle_collect (vehicle_input_t * p_input)
     }
     if (0U != (g_vehicle_started_mask & 4U))
     {
-        /* Do NOT call s3_get_status: its TMO_FEVR defeats bounded safety.
-         * No private mutex/state access. Buddy 3 must provide bounded status.
-         */
+        s3_status_t status = {0};
+        ER status_error = s3_get_status(&status); /* Provider uses TMO_POL. */
+
+        p_input->b_line_available = (E_OK == status_error);
+        p_input->b_provider_fault = p_input->b_provider_fault ||
+            ((E_OK != status_error) && (E_TMOUT != status_error));
+        if (p_input->b_line_available)
+        {
+            p_input->line_time_us = status.raw.timestamp_us;
+            p_input->line = status.line;
+            p_input->line_state = status.state;
+            p_input->line_mode = status.mode;
+            p_input->black_mask = status.black_mask;
+            p_input->b_line_calibrated = status.calibrated;
+            p_input->b_line_valid = status.line_valid;
+            p_input->pending_navigation_id = status.pending_manoeuvre_event_id;
+            p_input->b_provider_fault = p_input->b_provider_fault ||
+                (S3_FAULT_NONE != status.fault);
+        }
         for (uint32_t n = 0U; n < 4U; ++n)
         {
             s3_output_t event = {0};
@@ -344,9 +451,7 @@ static void vehicle_collect (vehicle_input_t * p_input)
             }
             if (S3_OUTPUT_NAVIGATION == event.kind)
             {
-                /* Runtime cannot execute navigation until bounded status is
-                 * supplied; draining preserves provider queue fault detection.
-                 */
+                /* Match event IDs against the copied pending-owner status. */
                 p_input->navigation = event.navigation;
                 p_input->navigation_id = event.event_id;
             }
@@ -365,6 +470,26 @@ static void vehicle_collect (vehicle_input_t * p_input)
             ((E_OK != error) && (E_TMOUT != error));
         p_input->b_imu_available = (E_OK == error) && status.b_enabled;
         p_input->imu = status.sensing;
+        /* Consume transitions without letting an event backlog starve safety.
+         * Highest hump remains provider-owned in the coherent snapshot.
+         */
+        for (uint32_t count = 0U; count < 4U; ++count)
+        {
+            imu_core_status_t event = {0};
+            ER event_error = imu_runtime_get_event(&event);
+
+            if (E_TMOUT == event_error)
+            {
+                break;
+            }
+            if ((E_OK != event_error) || (IMU_FAULT == event.phase) ||
+                (0U != (event.events & (IMU_EVENT_FAULT | IMU_EVENT_IMPACT))))
+            {
+                p_input->b_provider_fault = true;
+                (void)motion_api_estop();
+                break;
+            }
+        }
     }
     /* Providers may run on the other core or block for their documented bound.
      * Refresh both clocks AFTER reading their snapshots, so a newer sample is
@@ -376,10 +501,42 @@ static void vehicle_collect (vehicle_input_t * p_input)
         (void)motion_api_estop();
     }
     p_input->raw_now_us = s3_clock_us();
-    /* S5 has no public acquisition/status API. No fake clear-path assertion.
-     * S2 has no public raw-count field. No distance-to-count reconstruction.
-     * S1 link/status getters also wait forever; do not call them here.
-     */
+    if (0U != (g_vehicle_started_mask & 16U))
+    {
+        s5_live_status_t status = {0};
+        ER error = s5_live_status(&status);
+
+        p_input->b_obstacle_available = (E_OK == error) && status.b_configured;
+        p_input->b_forward_valid = (E_OK == error) && status.b_forward_valid;
+        p_input->forward_cm = status.forward_cm;
+        p_input->obstacle_time_us = status.forward_timestamp_us;
+        p_input->obstacle_started_us = status.forward_started_us;
+        p_input->obstacle = status.policy.profile;
+        p_input->scan_id_us = status.scan_id_us;
+        p_input->scan_completed_us = status.scan_completed_us;
+        p_input->b_scan_held = status.policy.scan_valid &&
+            (S5_RUNTIME_HOLD == status.policy.state);
+        p_input->b_provider_fault = p_input->b_provider_fault ||
+            ((E_OK != error) && (E_TMOUT != error)) || status.b_fault;
+    }
+    ER certificate = tk_loc_mtx(g_vehicle_mutex,TMO_POL);
+
+    if (E_OK == certificate)
+    {
+        p_input->clearance = g_vehicle_clearance;
+        if (E_OK != tk_unl_mtx(g_vehicle_mutex))
+        {
+            p_input->b_provider_fault = true;
+        }
+    }
+    else if (E_TMOUT != certificate) { p_input->b_provider_fault = true; }
+    /* Refresh after the last provider too; source clocks are never replaced. */
+    if (!motion_api_now(&p_input->now_us))
+    {
+        p_input->b_provider_fault = true;
+        (void)motion_api_estop();
+    }
+    p_input->raw_now_us = s3_clock_us();
 }
 
 static void vehicle_apply (vehicle_output_t const * p_output)
@@ -389,6 +546,20 @@ static void vehicle_apply (vehicle_output_t const * p_output)
     if (p_output->b_estop)
     {
         result = motion_api_estop();
+        if (0U != (g_vehicle_started_mask & 16U))
+        {
+            (void)s5_live_cancel();
+        }
+    }
+    else if (0U != p_output->obstacle_recovered_us)
+    {
+        ER error = s5_live_recovered(p_output->obstacle_recovered_us);
+
+        if ((E_OK != error) && (E_TMOUT != error))
+        {
+            (void)motion_api_estop();
+            g_vehicle_owner.state = VEHICLE_FAULT;
+        }
     }
     else if (p_output->b_stop)
     {

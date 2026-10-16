@@ -21,7 +21,9 @@ def check(root):
         if path.suffix not in {".c", ".h"}:
             continue
         count += 1
-        data = path.read_bytes()
+        # Git may materialize CRLF on Windows. Check logical lines while still
+        # rejecting tabs and stray CR bytes; do not rewrite provider sources.
+        data = path.read_bytes().replace(b"\r\n", b"\n")
         text = data.decode("utf-8")
         if b"\r" in data or b"\t" in data:
             errors.append(f"{path}: CR or tab character (3.5/3.6)")

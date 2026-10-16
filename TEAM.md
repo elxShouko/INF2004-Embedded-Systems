@@ -21,7 +21,7 @@ subsystem, ask its owner or open a pull request for them to review.
 | 2 | Motor/encoder motion control; retained producer example | | | `app_program/subsystem2/` | `testing/subsystem2/` |
 | 3 | IR line sensing, junction detection and barcode navigation; retained example consumer for compatibility | 2500734 | | `app_program/subsystem3/` | `tests/member3_*.c`, `testing/subsystem3/` |
 | 4 | IMU sensing, terrain/collision monitoring; retained monitor example | | | `app_program/subsystem4/` | `testing/subsystem4/` |
-| 5 | Obstacle scan/profile calculations and avoidance planning (software-only; hardware integration pending) | | | `app_program/subsystem5/` | `testing/subsystem5/` |
+| 5 | Live ultrasonic/servo owner, scan/profile calculations; configurable certified-route planner; physical clearance evidence pending | | | `app_program/subsystem5/` | `testing/subsystem5/` |
 
 Shared files (`app_program/app_main.c`, `app_program/app.h`, this file)
 are changed only by agreement of the team. The exception is claiming an empty
@@ -80,7 +80,7 @@ TRIG, and GP6 to ECHO. The module's operating suitability at 3V3, ECHO voltage,
 and any level shifting are unverified. The servo model, signal GPIO, supply,
 and wiring are unconfirmed; GP15 remains only an unverified candidate. GP26
 must stay GPIO/SIO-only because it aliases PWM5A with Buddy 2's GP10 motor
-output. These records do not enable the unimplemented Buddy 5 driver.
+output. These records do not authorize the explicitly configured Buddy 5 driver.
 
 ## 3. Peripherals
 
@@ -119,14 +119,14 @@ the drivers have no locking to stop it.
 | SPI1 | | | |
 | ADC | | | GP26–GP28 |
 | PWM4A/B, PWM5A/B | S2 | motion owner (core 1) | GP8/9, GP10/11 |
-| IO_BANK0 IRQ13 | Shared integration | dispatcher, core 1 only | S2 encoders; GP6 reserved for future S5 client |
-| PWM slices (list) | S5 (provisional; task TBD) | TBD — no verified servo signal/PWM assignment | GP15/PWM7B is unconfirmed; do not initialize |
+| IO_BANK0 IRQ13 | Shared integration | dispatcher, core 1 only | S2 encoders and opt-in S5 ECHO GP6; cooperative subscriptions |
+| PWM7B | S5 | s5_live_task, core 1; opt-in only | GP15 supported only after physical wiring/calibration confirmation; GP14 alias must be free |
 | WiFi radio, TCP/IP, MQTT | *kernel* | `cyw43_utk_task` (built in) | GP23–25, GP29 |
 
-Buddy 5 has no verified servo PWM resource or owning task; GP15/PWM7B is an
-unconfirmed candidate only. Ultrasonic GPIO acquisition and all drivers remain
-unimplemented. Do not initialize or drive these peripherals until the pin,
-task, electrical checks, and startup/fault behavior are reviewed.
+Buddy 5 now has an explicit core-1 acquisition owner and PWM7B backend.
+GP15 is still physically unconfirmed; configuration must attest wiring and
+calibration before opening GPIO. TRIG GP26 remains SIO, never PWM5A.
+Electrical suitability, pulse limits and timing remain hardware gates.
 
 ### WiFi and MQTT are special
 
@@ -164,14 +164,14 @@ change it only by team agreement. Write down every task you create.
 | 2 | 14–15 | *example:* producer_task – 14 – core 1 |
 | 3 | 16–17 | retained consumer_task – 16 – core 0; s3_navigation_task – 17 – core 0 |
 | 4 | 18–19 | retained monitor_task – 18 – any; imu_runtime_task – 19 – any |
-| 5 | 20–21 | |
+| 5 | 20–21 | s5_live_task – 20 – core 1, static 4096-byte stack |
 
 Shared vehicle task: priority 16, core 0, 10 ms service delay, static 8192-byte
 stack. These are software scheduling choices, not measured timing guarantees.
 
 Core: `TP_PRC1` = core 0, `TP_PRC2` = core 1, or "any".
-The Buddy 5 priority band is available, not an assignment of task names,
-periods, affinity, or startup behavior; these remain `TBD`.
+Buddy 5 polls every 10 ms. Priority, stack headroom, callback latency and
+servo/echo timing require target measurements; the delay is not a WCET bound.
 
 ## 5. Interfaces between subsystems
 
@@ -188,11 +188,14 @@ sends to it or waits on it. Agree on the data format before coding.
 | IF-05 | S4 → S1 | task control | `tid_led` | `tk_sus_tsk` / `tk_rsm_tsk` / `tk_chg_pri` | *example* |
 | IF-06 | | | | | |
 
-No Buddy 5 interface is agreed or registered yet. Stop/fault, motion,
-line-reacquisition, and optional telemetry contracts are placeholders only;
-record agreed provider, consumer, mechanism, object, data/lifetime, errors,
-and acknowledgement semantics here before implementing cross-subsystem calls.
-See [Buddy 5 unresolved integration placeholders](docs/buddy5/OBSTACLE_SYSTEM.md#unresolved-integration-placeholders).
+Buddy 5 now provides `s5_live.h`: immutable pre-start configuration, bounded
+copied status (original capture timestamp/validity), dedicated fault/cancel
+flag and core-1 shared dispatcher hooks. The central controller consumes
+forward readiness and scan diagnostics, never direct motor outputs.
+Configurable bypass execution and bounded moving line recovery are implemented;
+actual movement remains blocked without calibrated geometry and scan-specific
+verified swept corridors/original-line evidence.
+See [Buddy 5 current status](docs/buddy5/OBSTACLE_SYSTEM.md#current-integrated-status-2026-10-16).
 
 Each interface is tested by at least one integration test
 (`testing/integration/TEST_LOG.md`).
@@ -223,12 +226,14 @@ limit there. The numbers below are the example's usage.
 | Cyclic handler | 12 | 1 | | | | |
 | Alarm handler | 12 | | | | 1 | |
 
-Buddy 5 currently allocates no kernel objects; its future demand remains
-`TBD` and must be reviewed before task or interface implementation.
+The table above retains the professor example budget. Buddy 5 now adds one
+task, one inheritance mutex and one event flag; the shared controller adds one
+task and one inheritance mutex. Actual full-profile budgets and stack/heap
+headroom require target review; no kernel object limits were changed.
 
 (The kernel's USB and WiFi service tasks also use a few of these.)
 
-## 7. Phase 2 shared integration (2026-10-15)
+## 7. Phase 2 shared integration (updated 2026-10-16)
 
 Authoritative shared architecture: `app_program/vehicle.c/.h` (single-owner
 mission policy), `vehicle_rt.c/.h` (micro T-Kernel/public-API adapter),
@@ -268,7 +273,7 @@ No finish-marker/mission-completion contract has been supplied.
 
 There is no default calibration profile or `vehicle_runtime_setup()` caller.
 The optional pre-start API copies one validated immutable mission/motion/S3
-configuration; configuration updates, task restart and live fault reset are
+configuration and optional S5 acquisition/policy configuration; configuration updates, task restart and live fault reset are
 unsupported (restart the firmware after addressing the cause). Explicit
 calibration, power authorization, START/RESUME and fresh mandatory providers
 are all required. Missing providers keep the mission blocked. Configuring a
@@ -278,8 +283,8 @@ motor GPIO during ordinary automatic startup.
 The controller adds one task and one inheritance mutex, without increasing
 kernel limits. Status uses copied snapshots and `TMO_POL`; no other task reads
 its mutable owner context. Ordinary queue drains are bounded to eight S1
-commands and four S3 outputs per cycle. Dedicated S1 emergency flags and S4
-fault latch are checked first; emergency is posted to S2 before ordinary
+commands, four S3 outputs and four S4 transitions per cycle. Dedicated S1
+persistent emergency latch/pulse, S4 and S5 fault latches are checked first; emergency is posted to S2 before ordinary
 sensing/telemetry processing. The S4 status getter has a provider-defined 10 ms
 bound. Poll period, priority, worst-case API/ISR execution, jitter, stop latency,
 stack headroom and full network-profile object budget still need target review.
@@ -300,7 +305,7 @@ stack headroom and full network-profile object budget still need target review.
 - IRQ13 is installed lazily only by an explicit S2 configuration on core 1.
   Installation refuses existing handlers or active/forced bank sources on either
   core. No pin mux is changed by the dispatcher. S2 reserves its four pins;
-  GP6 is permitted for a future cooperative S5 client (no S5 driver is fabricated).
+  explicitly configured S5 reserves GP6 through the same dispatcher.
   Other bank users must register with this owner, not replace its vector.
 - Reserve/enable/release/callback operations are confined to core 1 with local
   interrupt exclusion; cross-core operations fail. Release quiesces callbacks
@@ -311,30 +316,49 @@ stack headroom and full network-profile object budget still need target review.
   storm from starving the stop task. Recovery requires restart. The IRQ design
   requires SMP=1; SMP=0 compilation is checked but activation safely fails.
 
-### Remaining provider work (no silent substitutions)
+### Current verification and remaining gates
 
-| Owner | Required correction or agreement | Actual source |
-|---|---|---|
-| Buddy 1 | Publish dedicated ESTOP independently of queue admission and diagnostic mutex waits; validate received command byte count | `subsystem1/s1_net.c` (hook, queue_command, command_receive) |
-| Buddy 1 + team | Agree signed encoder counts, line mapping and validity-bearing telemetry; full real frames currently suppressed | `subsystem1/s1_codec.h`; proposed `docs/buddy1/TELEMETRY_COMMAND_CONTRACT.md` |
-| Buddy 2 | Agree copied raw encoder counts (and reset epoch if reset becomes supported) for telemetry; verify encoder wiring, motor polarity/PID/geometry and stop latency | `subsystem2/motion_api.h`, `motion_run.h` |
-| Buddy 3 | Provide bounded copied status API (current getter waits forever); agree calibrated raw/filtered line snapshot and mapped barcode commands | `subsystem3/member3_navigation.c:120`; `member3_navigation.h` |
-| Buddy 4 | Enable only after mounting/bus/calibration checks; supply measured traction trust/envelope and heading/height validity | `subsystem4/imu_config.h`, `imu_runtime.h` |
-| Buddy 5 | Implement live servo/ultrasonic owner, bounded profile/status API, fault path and executable clearance-validated bypass/recovery plan | `subsystem5/subsystem5.c:15`, `s5_obstacle_logic.h` |
+S1 threaded failures were traced to the host fake misinterpreting zero-valued
+TWF_ANDW and a reader exhausting its poll budget before writer completion.
+The fake and test scheduling are corrected; all 43 threaded checks pass.
+The user-approved production telemetry v2 preserves signed int64 counts and
+uint64 source time as decimal strings, with independent validity and source
+ages. Legacy demonstration JSON remains unchanged; dashboard consumers must
+use the documented v2 mapping. FR17 academic field-name acceptance still needs
+confirmation. Production telemetry is rate-limited to at most 10 Hz.
 
-Current runtime does not call S3's unbounded getter or S1's blocking status/link
-getters. It consumes bounded queues and S4 status; S3 line readiness and S5
-obstacle readiness remain false, so driving is impossible through the mission
-controller even if a caller later supplies a profile. Wiring/calibration and
-end-to-end SMP/physical validation remain unperformed. Shared integration still
-must wire the approved bounded S3/S5 getters and telemetry contract once owners
-provide them; neither a host fixture nor S5 pure planner is a real sensor API.
+S5 now starts an unconfigured core-1 owner without GPIO activation, supports
+opt-in forward monitoring and stopped coarse/fine scanning, and exposes POL
+copied status plus an independent fault latch. Forward readiness does not
+depend on a complete scan or motor enable. Acquisition faults/cancellation
+close owned outputs and latch a restart-required fault. Complete range scans
+still cannot prove swept-path/rear/blind-sector clearance. The new configured
+planner/controller implement mirrored eight-action routes and bounded forward
+recovery, but require scan-specific verified free corridors and original-line
+identity. No default certificate producer exists; physical coverage/environment
+evidence is still required. The original range-only planner remains inhibited.
 
-Full build requires README's WSL/GNU Make environment, ARM toolchain, Pico SDK
-2.2.0 plus submodules. This host has no installed WSL distribution. MSYS2 GNU
-Make 4.4.1 is installed outside PATH (its normal sandbox launch fails; version
-check succeeded outside the sandbox). Only SDK 1.5.1 was discovered; SDK 2.2.0 is not
-available in the checked locations/environment. New shared files are included
-by unchanged Make source discovery. ARM object compilation is not full firmware
-linking. MQTT additionally requires the documented `NET=lwip MQTT=1` profile and
-local credentials; defaults do not supply network navigation.
+TEST=1 deliberately leaves the vehicle task dormant so it cannot consume the
+professor demonstration test queues or inject production telemetry. Subsystem
+self-tests remain present. This image is not a powered movement test profile.
+Normal images contain no default mission/calibration setup caller.
+
+Approved repository-local SDK 2.2.0 lives in ignored build/deps/pico-sdk.
+The unchanged Make rules now link USB/Wi-Fi normal, TEST, IMU and lwIP/MQTT
+profiles. Network-profile verification uses only the published example
+credential header in ignored build/profiles; actual credentials/broker setup
+and over-the-air operation remain unverified. No system-wide installation,
+kernel/template/Makefile patch, flash or physical actuation was performed.
+
+| Owner | Remaining gate |
+|---|---|
+| Buddy 1/team | Deploy v2 dashboard decoding and confirm FR17 representation; real Wi-Fi/MQTT/reconnection measurements |
+| Buddy 2 | Confirm wiring, encoder levels/polarity, motor PID/geometry, stopping and SMP/IRQ latency |
+| Buddy 3 | Physical IR/barcode calibration and sample-to-motion latency |
+| Buddy 4 | IMU mounting/bus/calibration, traction trust and height validation |
+| Buddy 5 | Servo pin/supply/endpoints, ultrasonic voltage/range/settling calibration; geometry/tracking/stopping calibration and a verified free-space/original-line evidence source |
+| Shared | Explicit immutable mission profile/power authorization, measured resource budgets/WCET/stop latency and mission acceptance |
+
+Exact source hashes, commands, results, evidence and artifact identities are in
+testing/integration/TEST_LOG.md. Host fakes and successful linking do not prove
+physical accuracy, target synchronization timing or autonomous completion.

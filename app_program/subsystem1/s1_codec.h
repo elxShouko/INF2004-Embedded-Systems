@@ -49,15 +49,35 @@ typedef enum
 typedef struct
 {
     uint32_t timestamp_ms; /**< Milliseconds since boot. */
-    uint32_t encoder_count_left;
-    uint32_t encoder_count_right;
+    int64_t encoder_count_left;
+    int64_t encoder_count_right;
     int32_t  hump_peak_x10;
     int32_t  obstacle_distance_x10;
-    int16_t  motor_speed_left;
-    int16_t  motor_speed_right;
+    int32_t  motor_speed_left;
+    int32_t  motor_speed_right;
     uint8_t  robot_state; /**< An s1_codec_robot_state_t value. */
     uint8_t  line_status; /**< Bit 0 left, bit 1 centre, bit 2 right. */
+    /* Version 0 preserves professor/demo wire keys. Production uses version 2.
+     * v2 counts are signed decimal STRINGS to preserve 64 bits in JSON clients.
+     * t: kernel modulo-2^32 ms; et: full kernel us; eg: acquisition generation.
+     * a: raw-source ages in us [line, obstacle, IMU], <=999999 when valid.
+     * l: bit0 left front, bit1 right front, bit2 side; not left/centre/right.
+     * Invalid observations encode null, never an invented zero measurement.
+     */
+    uint64_t encoder_timestamp_us;
+    uint32_t encoder_generation;
+    uint32_t sensor_age_us[3];
+    uint8_t validity;
+    uint8_t schema_version;
 } s1_codec_frame_t;
+
+#define S1_VALID_SPEED 1u
+#define S1_VALID_ENCODER 2u
+#define S1_VALID_LINE 4u
+#define S1_VALID_HUMP 8u
+#define S1_VALID_OBSTACLE 16u
+#define S1_VALID_IMU 32u
+#define S1_VALID_ALL 63u
 
 /** One remote command as delivered to the Vehicle Controller. */
 typedef struct

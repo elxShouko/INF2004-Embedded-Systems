@@ -191,3 +191,98 @@ Add a new row for every run. Never edit or delete old rows.
 | 2026-10-15 | S5-U45 | `afbbbd7 + WT` | GCC 14.2 | PASS | `logs/2026-10-15_prepush.txt` | Branch-level forward obstacle during bypass |
 | 2026-10-15 | S5-U46 | `afbbbd7 + WT` | GCC 14.2 | PASS | `logs/2026-10-15_runtime_hold.txt` | Stop request persists until stopped acknowledgement |
 | 2026-10-15 | S5-U47 | `afbbbd7 + WT` | GCC 14.2 | PASS | `logs/2026-10-15_runtime_hold.txt` | Stop request persists during stationary scanning |
+
+
+## Software completion verification (2026-10-16)
+
+Preserved S5-U02..U47 and added the cases below to the existing runtime suite
+plus one focused MMIO-port fake. Host files remain under testing/subsystem5.
+S5-U01 physical verification remains unverified. Pure policy bypass branch tests
+do not establish an executable geometric avoidance planner.
+
+Commands: python testing/integration/verify_integration.py --label
+completion_release_host; same runner --arm --label completion_race_verified_arm.
+Default and optimized (-O2 -fshort-enums), strict-warning/GCC analyzer profiles:
+71 unique S5-U02..U72 PASS each. RTOS cases execute the real owner task in
+bounded subprocesses with typed resource fakes; adapter cases execute the real
+drv_s5.c with fake MMIO/IRQ hooks. No real GPIO activation. Full firmware links
+and ARM object results are recorded in ../integration/TEST_LOG.md.
+
+Evidence: ../integration/logs/software_completion_evidence.zip, final
+completion_verified entries and manifest. Tested base HEAD
+5c08a5c76de39ffe18d9720b40d505a592508230 plus exact hashed uncommitted sources.
+
+| New ID | Required PASS behavior |
+|---|---|
+| S5-U48 | Explicit wiring/calibration/pin/timing validation; no defaults |
+| S5-U49 | Repeated acquisition open preserves original instance |
+| S5-U50 | ISR capture after clock read defers, then preserves actual range/time |
+| S5-U51 | Moving scan request is deferred |
+| S5-U52 | Full coarse/fine scan, >60 ms inter-trigger spacing |
+| S5-U53 | Close is idempotent and clears validity |
+| S5-U54 | Pending echo faults exactly at deadline |
+| S5-U55 | Motion during scan aborts acquisition |
+| S5-U56 | Regressing acquisition clock faults |
+| S5-U57 | Cancellation reports ABORTED rather than echo timeout |
+| S5-U58 | Typed RTOS partial-init cleanup preserves IDs/error and allows retry |
+| S5-U59 | Unconfigured startup never opens GPIO |
+| S5-U60 | Actual owner publishes original source time and valid forward range |
+| S5-U61 | Timeout closes once and publishes latched fault state/cause |
+| S5-U62 | Failed start retries; repeated start/configuration rejects |
+| S5-U63 | Stale status invalidates; POL contention preserves caller buffer |
+| S5-U64 | Actual MMIO adapter reserves ECHO and owned outputs only |
+| S5-U65 | PWM7 endpoints preserve motor PWM4/5 sentinels |
+| S5-U66 | Actual ISR callback captures rise/fall width and timestamp |
+| S5-U67 | Adapter close is idempotent |
+| S5-U68 | Existing GPIO owner prevents open |
+| S5-U69 | Reservation failure never activates outputs |
+| S5-U70 | Partial GPIO failure releases owned subscription |
+| S5-U71 | Enable failure rolls back outputs/reservation |
+| S5-U72 | Duplicate echo edge marks acquisition error |
+
+Target scan/capture timing, voltage safety, PWM endpoints, range accuracy,
+fault latency and stack headroom remain unverified. Range-only planning still
+returns CLEARANCE_UNVERIFIED and zero actions. Safe bypass and moving recovery
+software remain incomplete pending a validated geometry/coverage/error model.
+Authoritative guide: ../../docs/buddy5/OBSTACLE_SYSTEM.md.
+
+Late self-review: U50 now simulates an ISR completing after the cycle clock
+read. The production engine defers consumption without restamping or losing
+the sample. Reintroducing the old rejection makes U50 fail (confirmed mutation).
+Final reruns use completion_race_verified_* evidence; earlier attempts retained.
+
+
+## Configured bypass and recovery verification (2026-10-16)
+
+Extends the existing logic/runtime/port suites; all earlier S5-U02..U72 retained.
+No new test files or runners. Strict C99/GCC analyzer default and
+-O2 -fshort-enums profiles: S5-U02..U88, 87 unique groups PASS/profile.
+Hardware fakes exercise real planner, scan engine, owner and MMIO port.
+The full live-owner U86 runs scanning -> held profile -> exact-ID acknowledgement
+-> monitoring within one uninterrupted task invocation; it checks wrong tokens,
+idempotence and clearing the old completed scan. No task restart is simulated.
+
+| ID | Definition / expected behavior |
+|---|---|
+| S5-U73 | Left route distances in um and action order match explicit fixture geometry |
+| S5-U74 | Right turns and free-space corridors mirror the left route |
+| S5-U75 | Missing verification clears output and inhibits execution |
+| S5-U76 | Clearance from another scan frame rejects |
+| S5-U77 | Evidence older than completed scan rejects |
+| S5-U78 | Future evidence rejects |
+| S5-U79 | Validity must cover the entire route deadline |
+| S5-U80 | One-um swept-path undercoverage rejects |
+| S5-U81 | Free-space claim intersecting the bounded obstacle rejects |
+| S5-U82 | Missing stopping calibration and uint64 time overflow reject |
+| S5-U83 | Real valid scan holds for controller without inventing clearance |
+| S5-U84 | Recovery handshake rearms monitoring and invalidates old scan |
+| S5-U85 | Held scan still faults on unavailable forward sensing |
+| S5-U86 | Real task scan/hold/recovery API sequence and typed object checks |
+| S5-U87 | Free space without original-line identity cannot authorize recovery |
+| S5-U88 | Legacy positive-right offset converts to positive-left route frame |
+
+Commands/results: ../integration/logs/software_completion_evidence.zip,
+route_verified_host_{default,optimized}.log, route_verified_arm_arm.log.
+Base HEAD 5c08a5c76de39ffe18d9720b40d505a592508230 plus uncommitted source;
+exact current source/test hashes are archived. These are software tests, not
+physical certificates. No field dimensions/gains/margins were invented.

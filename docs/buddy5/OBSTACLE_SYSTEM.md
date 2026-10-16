@@ -2,35 +2,144 @@
 
 ## Buddy 5 - Adaptive Ultrasonic Scanning and Obstacle Profiling
 
-This file describes the earlier standalone Pico SDK Buddy 5 demo. It is
-separate from the integrated micro T-Kernel firmware under
-`app_program/subsystem5/`; the root Make build does not compile the standalone
-files in `src/` and `include/`.
+The current integrated micro T-Kernel implementation is described first.
+Later standalone Pico SDK sections are retained as historical design notes;
+the root Make build does not compile standalone files in `src/` and `include/`.
 
 ---
 
-## Current Status
+## Current integrated status (2026-10-16)
 
-**Buddy 5 is not yet operational in the integrated firmware.** The integrated
-folder currently contains a host-testable scan/profile/planning calculation
-module only. Its RTOS task startup reports `E_NOSPT` until hardware and team
-interfaces are confirmed and implemented.
+`subsystem5_init/start` now create/start a real core-1 owner at priority 20,
+with a static 4096-byte stack, inheritance mutex and dedicated fault flag.
+Startup is unconfigured and performs no GPIO/PWM activation. Explicit pre-start
+`s5_live_configure` copies immutable acquisition/policy configuration and shared
+IRQ hooks; no default mission caller supplies it. Wiring and calibration must
+be confirmed before opt-in. Failed initialization cleans up only its own
+objects, preserves original errors, and prevents retries over unreleased handles.
+Failed task start may retry; successful restart/live fault reset are unsupported.
 
-The standalone demo remains unverified: its servo GPIO is intentionally set
-to 255, its callbacks simulate stop/bypass/line-found notifications, and it
-does not execute actual vehicle motion. Neither that demo nor the current
-host-only logic proves physical sensing, safe bypass, or line reacquisition.
+`s5_acquire` is the bounded hardware-independent engine. `drv_s5` owns TRIG
+GP26 as SIO, ECHO GP6 through the existing core-1 dispatcher, and **only confirmed
+GP15/PWM7B** as the currently supported servo signal. GP15 remains unverified
+physical wiring; other servo pins are rejected rather than assigned implicitly.
+PWM7 ownership, GP14 aliases, ADC pin configuration and the template 125 MHz
+clock are checked before claiming pins. PWM4/5 and motor GPIO are untouched.
+Divider 125 yields a 1 MHz servo counter; caller-supplied period/min/max pulse
+widths determine frequency and angle mapping. Mechanical endpoints, mounting
+orientation and settling time must be measured before confirmation.
 
-The integrated `subsystem5_start()` currently returns `E_NOSPT`. The current
-`usermain()` treats that specific result as missing Buddy 5 readiness and
-passes the missing-start bit to the Vehicle Controller. The controller has no
-default mission setup, so it remains interlocked; this is not a physical
-emergency-stop guarantee.
+Echo rise/fall timestamps are captured by a short callback and copied under
+same-core IRQ exclusion. Private backend access is core-1 only; cross-core
+status readers use the inheritance mutex, never volatile/local masking as an
+SMP lock. ISR service timestamps are not hardware-latched edge timestamps;
+latency/jitter must be measured. Missing/coalesced edges, stuck-high trigger
+admission, echo deadlines, clock regression, cancellation and scan motion fail
+closed. Close releases only the owned subscription and disables servo output.
+Status retains source capture time and historical values with validity cleared;
+failed POL reads leave caller storage unchanged. A separate fault latch does
+not depend on status publication or telemetry queues. Reboot is required after
+a latched fault. GPIO/servo disable latency still needs target measurement.
 
-The sections below describe the legacy standalone design unless explicitly
-identified as integrated status. State names, callbacks, task names, and
-telemetry listed there are not implemented public interfaces in the current
-µT-Kernel subsystem.
+Forward monitoring runs independently of motor enable, avoiding circular startup
+readiness. Scanning requires fresh S2 READY/standstill feedback after STOP/ACK;
+it aborts on motion or unavailable stationary evidence. Five coarse positions
+and the existing bounded fine-angle generator feed the existing profile logic.
+Actual echo capture times, not task read times, timestamp samples. If the ISR
+finishes after the current cycle's clock read, consumption waits until the next
+cycle; acceptance remains bounded by the original echo deadline. The
+[HC-SR04 datasheet](https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf)
+specifies a >=10 us trigger and recommends cycles over 60 ms. Monitoring and
+scans enforce a configurable interval >60000 us, counted conservatively from
+the previous echo completion; settling uses non-blocking deadlines. The 10 us
+trigger uses the BSP delay with IRQs enabled; preemption stretch is unmeasured.
+The same datasheet specifies 5 V operation. Existing 3V3 wiring, ECHO level
+shifting and actual module variant must be resolved before connecting/operating
+it. No physical range accuracy is claimed.
+
+Copied `s5_live_status` and fault APIs are connected to the controller.
+Forward freshness gates motion independently of full-scan diagnostics.
+An unconfigured/stale/faulty provider inhibits movement. Scan consistency limits,
+pulse/range conversion and source-age budgets have no production defaults.
+Software tests use labelled fixtures, never production synthetic ranges.
+
+### Configurable bypass and moving recovery
+
+The software now implements an eight-action route in the existing planner and
+central controller: turn outward 90 degrees, travel laterally, turn forward,
+travel beyond the bounded obstacle depth, turn inward, return the lateral
+distance, turn forward, then search forward a bounded distance for the line.
+Right routes mirror left routes. All travel is forward; no blind reverse is
+inserted. The final search may finish stationary if the line is already found.
+It is a bounded nominal-line reacquisition, not an unbounded search of arbitrary
+branches. Failure to find the line within the distance/time bounds faults.
+
+The legacy range-only s5_build_obstacle_plan still returns
+CLEARANCE_UNVERIFIED with zero actions. New s5_route_plan accepts explicit
+s5_route_config_t and scan-specific s5_clearance_t. It never treats minimum
+side ranges or estimated angular width as certified free space.
+
+Required measured/configured inputs, with no production defaults:
+- Half-length about the axle (maximum front/rear extent), half-width including
+  wheels/body, sensor forward offset, clearance margin, total route tracking/
+  angular-error envelope and stopping-distance bound at the configured speed.
+- An enclosing obstacle half-width and depth bound, lateral extra distance,
+  forward search distance, speed, per-action and total route deadlines.
+- Three independently verified FREE rectangles covering the outward, forward,
+  and return/search corridors, in the stopped-scan frame (x forward, y left,
+  micrometres). Include blind/rear sectors and full-height body clearance.
+- Full raw-timer scan ID, evidence observation time and expiry. The evidence
+  must postdate the completed scan and remain valid through the route deadline.
+  Its verification attests scene/coverage/occlusion/error assumptions; expiry
+  alone does not establish static-scene safety.
+- Original-line evidence: the initial axle/heading matches the original line
+  within the tracking envelope, and the search corridor contains no competing
+  eligible line. A raw LINE_FOUND event cannot establish line identity.
+
+The conservative swept radius is half-length + half-width + clearance +
+tracking error + stopping bound. This L1 radius encloses rotations without
+floating-point underestimation. Every entire axis-aligned swept segment must
+fit its corresponding rectangle. Claimed free boxes intersecting the bounded
+obstacle are rejected. Coordinates use int64 intermediates and bounded input
+ranges before conversion to int32 motion distances. Existing profiles are
+positive-right; the planner explicitly converts to its positive-left frame.
+
+s5_live holds a valid stopped scan in S5_RUNTIME_HOLD instead of fabricating a
+plan or faulting merely because clearance is unavailable. It continues actual
+forward monitoring. The controller's optional vehicle_runtime_clearance API
+copies a certificate under its existing inheritance mutex while stopped;
+E_OK means copied for owner validation, not motion acceptance. No default
+caller or automatic certificate producer exists. A lone HC-SR04 scan cannot
+observe all required free space; numeric calibration alone does not resolve
+that observability limitation. A validated coverage/environment model or
+additional evidence source is still required for autonomous authorization.
+
+The controller freezes an accepted plan, sends only one finite S2 command
+at a time, waits for matching owner admission and terminal ID, repeatedly
+ACKs until READY/standstill, and never refreshes finite moves. Translation
+waits for a forward sample triggered after the preceding action completed;
+a recent echo from an older trigger is insufficient. Unexpected modes,
+wrong/rejected terminals, stale providers, certificate expiry, scan changes,
+timeouts, PAUSE, emergency and ambiguous barcode events fail closed. Only
+S2 actuates motors. Turns rely on the certified swept envelope; forward
+translation additionally retains fresh proximity stopping.
+
+S3 stays in BYPASS during the detour and RECOVERY for search. A centred,
+raw/filtered-consistent, fresh LINE_FOUND for the current search stops motion;
+the controller accepts S3's actual PAUSED-on-found behavior. It waits for the
+matching stopped terminal/ACK/standstill, sends idempotent s5_live_recovered
+for the exact scan ID, observes rearmed monitoring, then explicitly requests
+TRACKING. Recovery clears the old scan-complete marker so the next obstacle
+cannot reuse the previous profile. Mode waits, each action and total route
+are bounded. No live reset or automatic retry of a failed route is provided.
+
+Geometry/clearance/line-identity evidence is absent in the current repository.
+Movement remains inhibited for this route. Host fixtures verify the complete
+software sequence; they are not physical certificates or calibrated settings.
+
+Standalone sections below describe legacy bench code, not live RTOS interfaces.
+Their simulated stop/bypass callbacks never connect to the integrated mission.
+Verification is recorded in testing/subsystem5/TEST_LOG.md.
 
 ## Integrated host-side validation and planning status
 
@@ -41,8 +150,8 @@ duration or age; sample timestamps outside the scan window or out of order;
 invalid ranges; and adjacent-range jumps over the supplied consistency limit.
 Acquisition failure statuses distinguish trigger failure, echo timeout or
 stuck-high/stuck-low conditions, and servo initialization or positioning
-failure. These are inputs to the pure logic module, not faults currently
-detected by an implemented sensor or servo driver.
+failure. These are pure-logic inputs; the new acquisition port supplies actual
+trigger/echo/servo outcomes without asserting physical calibration.
 
 Range comparisons can identify only a left/right **candidate**. They do not
 prove vehicle clearance. Plan generation therefore returns
@@ -60,10 +169,9 @@ asserted on subsequent calls so a future owner task can retry delivery. Its
 configuration has no production defaults; callers must provide
 measured/approved values.
 
-This policy module does not acquire sensor data, drive a servo, create an RTOS
-task, or transport requests to the Vehicle Controller. Its status-copy API is
-single-owner-task only; a cross-task reader needs an agreed bounded RTOS
-publication mechanism. The current profile planner still marks every route
+This policy remains pure and single-owner. The new s5_live task supplies
+real acquisition and bounded cross-task publication; readers use s5_live_status
+instead of calling the private policy-copy function across cores. The current profile planner still marks every route
 non-executable because vehicle clearance is unverified, so bypass and line
 recovery are intentionally unreachable. Hardware use remains blocked on the
 unresolved items below, approved interfaces, measured geometry and clearance,

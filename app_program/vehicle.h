@@ -12,7 +12,8 @@ typedef enum
 {
     VEHICLE_UNCONFIGURED = 0, VEHICLE_BLOCKED, VEHICLE_READY,
     VEHICLE_FOLLOW, VEHICLE_STOPPING, VEHICLE_MANOEUVRE,
-    VEHICLE_RECOVERY, VEHICLE_PAUSED, VEHICLE_OBSTACLE, VEHICLE_FAULT
+    VEHICLE_RECOVERY, VEHICLE_PAUSED, VEHICLE_OBSTACLE, VEHICLE_FAULT,
+    VEHICLE_BYPASS
 } vehicle_state_t;
 
 #define VEHICLE_BLOCK_LINE (1U)
@@ -35,6 +36,7 @@ typedef struct
     bool b_calibrated;
     bool b_power_authorised;
     bool b_uturn_right;
+    s5_route_config_t route; /* Optional; all zero means disabled. */
 } vehicle_config_t;
 
 typedef struct
@@ -52,7 +54,14 @@ typedef struct
     line_mode_t line_mode;
     uint8_t black_mask;
     imu_core_status_t imu;
-    s5_obstacle_profile_t obstacle;
+    s5_obstacle_profile_t obstacle; /* Scan diagnostics, not forward readiness. */
+    s5_clearance_t clearance;
+    uint64_t scan_id_us;
+    uint64_t scan_completed_us;
+    bool b_scan_held;
+    uint16_t forward_cm;
+    bool b_forward_valid;
+    uint64_t obstacle_started_us;
     uint64_t obstacle_time_us; /* Raw timer domain, checked by provider. */
     int64_t encoder_count[2]; /* Actual counts, never reconstructed distance. */
     bool b_motion_available;
@@ -72,6 +81,7 @@ typedef struct
     move_plan_command_t command;
     uint32_t acknowledge_id;
     uint32_t navigation_done_id;
+    uint64_t obstacle_recovered_us;
     line_mode_t mode;
     bool b_command;
     bool b_enable;
@@ -100,6 +110,16 @@ typedef struct
     bool b_pending_command;
     bool b_line_found;
     move_plan_command_t pending_command;
+    s5_obstacle_plan_t route;
+    uint64_t route_started_us;
+    uint64_t route_step_raw_us;
+    uint64_t route_ready_raw_us;
+    uint8_t route_index;
+    bool b_obstacle_pending;
+    bool b_route_active;
+    bool b_route_terminal;
+    bool b_route_found;
+    bool b_route_finishing;
 } vehicle_t;
 
 /* Single owner. Relative forward path, not encoder counts or absolute pose. */
@@ -120,9 +140,7 @@ bool vehicle_odometry (vehicle_odometry_t * p_odometry,
 bool vehicle_init (vehicle_t * p_vehicle, vehicle_config_t const * p_config);
 bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
     vehicle_output_t * p_output);
-/* Suppress a full S1 frame unless every compulsory source is real and valid.
- * Existing S1 unsigned counts/line mapping cannot represent all provider data.
- */
+/* Version 2 copied telemetry: independently valid fields, missing data null. */
 bool vehicle_frame (vehicle_t const * p_vehicle,
     vehicle_input_t const * p_input, s1_codec_frame_t * p_frame);
 #endif /* VEHICLE_H */

@@ -658,3 +658,137 @@ s5_build_obstacle_plan(
 	 */
 	return S5_LOGIC_CLEARANCE_UNVERIFIED;
 }
+
+
+/* Conservative circle uses L1 half-extents, avoiding floating point/underbound. */
+bool s5_route_validate (s5_route_config_t const * p_config)
+{
+    if (NULL == p_config) { return (false); }
+    const int32_t values[] = {p_config->half_length_um,
+        p_config->half_width_um,p_config->clearance_um,
+        p_config->tracking_error_um,p_config->stopping_um,
+        p_config->obstacle_half_width_um,p_config->obstacle_depth_um,
+        p_config->lateral_extra_um,p_config->search_um};
+
+    for (size_t index = 0U; index < sizeof(values)/sizeof(values[0]); ++index)
+    {
+        if ((values[index] <= 0) || (values[index] > 1000000))
+        {
+            return (false);
+        }
+    }
+    return (p_config->b_calibrated &&
+        (p_config->sensor_forward_um >= 0) &&
+        (p_config->sensor_forward_um <= 1000000) &&
+        (p_config->speed_mm_s > 0) && (p_config->speed_mm_s <= 1000) &&
+        (p_config->step_timeout_us > 0U) &&
+        (p_config->route_timeout_us > p_config->step_timeout_us) &&
+        (p_config->route_timeout_us <= 60000000U));
+}
+
+s5_logic_status_t s5_route_plan (s5_obstacle_profile_t const * p_profile,
+    s5_route_config_t const * p_config, s5_clearance_t const * p_clearance,
+    uint64_t scan_id_us, uint64_t completed_us, uint64_t now_us,
+    s5_obstacle_plan_t * p_plan)
+{
+    if (NULL == p_plan) { return (S5_LOGIC_INVALID_ARGUMENT); }
+    *p_plan = (s5_obstacle_plan_t){0};
+    if ((NULL == p_profile) || !p_profile->valid ||
+        !s5_route_validate(p_config) || (NULL == p_clearance))
+    {
+        return (S5_LOGIC_INVALID_ARGUMENT);
+    }
+    if (!p_clearance->b_verified || !p_clearance->b_original_line_verified ||
+        (0U == scan_id_us) ||
+        (scan_id_us != p_clearance->scan_id_us) ||
+        (completed_us < scan_id_us) ||
+        (p_clearance->observed_us < completed_us) ||
+        (p_clearance->observed_us > now_us) ||
+        (now_us > UINT64_MAX - p_config->route_timeout_us) ||
+        (p_clearance->valid_until_us < now_us + p_config->route_timeout_us))
+    {
+        return (S5_LOGIC_CLEARANCE_UNVERIFIED);
+    }
+    if (((p_profile->bypass_direction != S5_BYPASS_LEFT_CANDIDATE) &&
+         (p_profile->bypass_direction != S5_BYPASS_RIGHT_CANDIDATE)) ||
+        (p_profile->forward_distance_cm < S5_MIN_VALID_DISTANCE_CM) ||
+        (p_profile->forward_distance_cm > S5_MAX_VALID_DISTANCE_CM) ||
+        (p_profile->lateral_offset_cm < -400) ||
+        (p_profile->lateral_offset_cm > 400))
+    {
+        return (S5_LOGIC_INVALID_SCAN);
+    }
+    const int64_t radius = (int64_t)p_config->half_length_um +
+        p_config->half_width_um + p_config->clearance_um +
+        p_config->tracking_error_um + p_config->stopping_um;
+    int64_t lateral = (int64_t)p_profile->lateral_offset_cm * 10000;
+
+    if (lateral < 0) { lateral = -lateral; }
+    lateral += p_config->obstacle_half_width_um + radius +
+        p_config->lateral_extra_um;
+    const int64_t forward = (int64_t)p_profile->forward_distance_cm * 10000 +
+        p_config->sensor_forward_um + p_config->obstacle_depth_um + radius +
+        p_config->lateral_extra_um;
+    const bool b_left = p_profile->bypass_direction == S5_BYPASS_LEFT_CANDIDATE;
+    const int64_t y_min = b_left ? 0 : -lateral;
+    const int64_t y_max = b_left ? lateral : 0;
+    /* One certificate must contain each ENTIRE swept corridor, including
+     * in-place rotations, braking/pose error, and the bounded forward search.
+     */
+    const int64_t bounds[3][4] = {
+        {-radius,radius,y_min-radius,y_max+radius},
+        {-radius,forward+radius,(b_left ? lateral : -lateral)-radius,
+            (b_left ? lateral : -lateral)+radius},
+        {forward-radius,forward+p_config->search_um+radius,
+            y_min-radius,y_max+radius}};
+    for (size_t index = 0U; index < 3U; ++index)
+    {
+        s5_clear_box_t const * p_box = &p_clearance->corridor[index];
+
+        const int64_t obstacle_x = (int64_t)p_profile->forward_distance_cm *
+            10000 + p_config->sensor_forward_um;
+        /* Legacy profile is positive RIGHT; route coordinates are positive LEFT. */
+        const int64_t obstacle_y = -(int64_t)p_profile->lateral_offset_cm * 10000;
+        const bool b_overlap =
+            ((int64_t)p_box->x_max_um >= obstacle_x) &&
+            ((int64_t)p_box->x_min_um <= obstacle_x + p_config->obstacle_depth_um) &&
+            ((int64_t)p_box->y_max_um >= obstacle_y - p_config->obstacle_half_width_um) &&
+            ((int64_t)p_box->y_min_um <= obstacle_y + p_config->obstacle_half_width_um);
+
+        if (b_overlap || (p_box->x_min_um >= p_box->x_max_um) ||
+            (p_box->y_min_um >= p_box->y_max_um) ||
+            ((int64_t)p_box->x_min_um > bounds[index][0]) ||
+            ((int64_t)p_box->x_max_um < bounds[index][1]) ||
+            ((int64_t)p_box->y_min_um > bounds[index][2]) ||
+            ((int64_t)p_box->y_max_um < bounds[index][3]))
+        {
+            return (S5_LOGIC_CLEARANCE_UNVERIFIED);
+        }
+    }
+    /* Configuration/profile bounds keep distances below INT32_MAX. */
+    const s5_obstacle_action_t outward = b_left ?
+        S5_ACTION_TURN_LEFT : S5_ACTION_TURN_RIGHT;
+    const s5_obstacle_action_t inward = b_left ?
+        S5_ACTION_TURN_RIGHT : S5_ACTION_TURN_LEFT;
+    *p_plan = (s5_obstacle_plan_t){0};
+    p_plan->actions[0] = outward;
+    p_plan->actions[1] = S5_ACTION_BYPASS;
+    p_plan->actions[2] = inward;
+    p_plan->actions[3] = S5_ACTION_BYPASS;
+    p_plan->actions[4] = inward;
+    p_plan->actions[5] = S5_ACTION_BYPASS;
+    p_plan->actions[6] = outward;
+    p_plan->actions[7] = S5_ACTION_SEARCH_LINE;
+    p_plan->distance_um[1] = (int32_t)lateral;
+    p_plan->distance_um[3] = (int32_t)forward;
+    p_plan->distance_um[5] = (int32_t)lateral;
+    p_plan->distance_um[7] = p_config->search_um;
+    p_plan->speed_mm_s = p_config->speed_mm_s;
+    p_plan->scan_id_us = scan_id_us;
+    p_plan->valid_until_us = p_clearance->valid_until_us;
+    p_plan->action_count = S5_ACTION_PLAN_MAX;
+    p_plan->bypass_direction = p_profile->bypass_direction;
+    p_plan->executable = true;
+    return (S5_LOGIC_OK);
+}
+/*** end of file ***/
