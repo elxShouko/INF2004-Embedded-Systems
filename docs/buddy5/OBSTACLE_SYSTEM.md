@@ -159,7 +159,7 @@ prove vehicle clearance. Plan generation therefore returns
 plan non-executable. Reverse is likewise advisory metadata only. The caller
 must not interpret the profile or candidate as permission to move.
 
-The host-only `s5_obstacle_runtime` policy layer checks configured forward
+The hardware-independent `s5_obstacle_runtime` policy layer checks configured forward
 sample freshness, counts distinct proximity samples, requests a stop before a
 full scan, keeps requesting stop until the stopped acknowledgement and
 throughout scanning. Scan, bypass, and recovery requests remain asserted until

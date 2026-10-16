@@ -482,7 +482,7 @@ static bool test_case (void)
         setup.b_obstacle_requested = true;
         setup.obstacle.acquisition = (s5_acquire_config_t){61000U,24000U,
             10000U,2000000U,20000U,1000U,2000U,58U,400U,15U,true,true};
-        setup.obstacle.policy = (s5_runtime_config_t){200U,100U,2000U,
+        setup.obstacle.policy = (s5_runtime_config_t){200U,100U,100U,2000U,
             1000U,1000U,25U,2U};
         if ((E_OK != vehicle_runtime_init()) ||
             (E_PAR != vehicle_runtime_setup(&setup)) ||

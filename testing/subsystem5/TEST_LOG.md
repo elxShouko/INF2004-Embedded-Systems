@@ -308,6 +308,13 @@ Base HEAD 5c08a5c76de39ffe18d9720b40d505a592508230 plus uncommitted source;
 exact current source/test hashes are archived. These are software tests, not
 physical certificates. No field dimensions/gains/margins were invented.
 
+## Preserved incoming main results (historical IDs)
+
+These rows retain their original revision-specific IDs. See the merge mapping
+below for current IDs; historical PASS results are not new merged-run results.
+
+| Date | Test ID | Commit | Tester | Result | Log / evidence | Notes |
+|---|---|---|---|---|---|---|
 | 2026-10-15 | S5-U02 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
 | 2026-10-15 | S5-U03 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
 | 2026-10-15 | S5-U04 | `5c08a5c + WT` | GCC 14.2 | PASS | `logs/2026-10-15_ack_freshness.txt` | Strict C99 host logic suite |
@@ -549,3 +556,10 @@ as new test evidence. Both complete test implementations are retained.
 | S5-U57 | S5-U98 |
 | S5-U58 | S5-U99 |
 | S5-U59 | S5-U100 |
+
+Merge-resolution verification: default and optimized strict/analyzer host
+profiles PASS: 79 integration IDs and 99 unique S5-U02..U100 IDs each, with
+eight integration mutations detected/profile. All 44 strict ARM objects PASS.
+No full firmware link or physical test was repeated in this merge-resolution
+pass. Evidence and current source hashes: ../integration/logs/
+software_completion_evidence.zip, merge_resolution_* entries.

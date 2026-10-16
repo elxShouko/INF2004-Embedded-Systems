@@ -19,6 +19,9 @@ static drv_encoder_port_t g_s5_irq;
 static s5_live_status_t g_s5_published;
 static s5_acquire_t g_s5_acquisition;
 static s5_runtime_t g_s5_policy;
+static uint64_t g_s5_motion_sample_us;
+static uint32_t g_s5_motion_raw_ms;
+static bool g_s5_motion_baseline;
 static drv_s5_t g_s5_driver;
 
 static void s5_live_task (INT code, void * p_context);
@@ -88,6 +91,7 @@ ER s5_live_configure (s5_live_config_t const * p_config,
         !s5_acquire_validate(&p_config->acquisition) ||
         (S5_LOGIC_OK != s5_runtime_init(&candidate,&p_config->policy)) ||
         (p_config->policy.forward_sample_max_age_ms > 999U) ||
+        (p_config->policy.acknowledgement_max_age_ms < 10U) ||
         ((uint64_t)p_config->policy.forward_sample_max_age_ms * 1000U <=
          (uint64_t)p_config->acquisition.sample_period_us +
          p_config->acquisition.servo_settle_us +
@@ -238,6 +242,31 @@ static bool s5_live_cycle (uint64_t now_us, bool * p_scan_requested)
     bool b_stationary = (MOTION_API_QUEUED == result) &&
         motion.b_measurement_valid && motion.b_standstill &&
         (0U == motion.active_id) && (MOTION_RUN_READY == motion.state);
+    uint64_t kernel_now_us = 0U;
+    bool b_motion_time = (MOTION_API_QUEUED == result) &&
+        motion_api_now(&kernel_now_us) &&
+        (kernel_now_us >= motion.measurement_timestamp_us);
+    uint64_t sample_age_us = b_motion_time ?
+        kernel_now_us - motion.measurement_timestamp_us : UINT64_MAX;
+
+    b_stationary = b_stationary && b_motion_time &&
+        (sample_age_us <= motion.measurement_max_age_us) &&
+        (sample_age_us <= now_us);
+    if (b_stationary)
+    {
+        if (g_s5_motion_baseline &&
+            (motion.measurement_timestamp_us < g_s5_motion_sample_us))
+        {
+            b_stationary = false;
+        }
+        else if (!g_s5_motion_baseline ||
+            (motion.measurement_timestamp_us != g_s5_motion_sample_us))
+        {
+            g_s5_motion_sample_us = motion.measurement_timestamp_us;
+            g_s5_motion_raw_ms = (uint32_t)((now_us - sample_age_us) / 1000U);
+            g_s5_motion_baseline = true;
+        }
+    }
     bool b_cancel = (MOTION_API_ERROR == result) ||
         ((MOTION_API_QUEUED == result) && (MOTION_RUN_FAULT == motion.state));
 
@@ -283,6 +312,8 @@ static bool s5_live_cycle (uint64_t now_us, bool * p_scan_requested)
         input.forward_distance_cm = g_s5_acquisition.forward_cm;
         input.forward_valid = g_s5_acquisition.b_forward_valid;
         input.vehicle_stopped = b_stationary;
+        input.vehicle_stopped_sample_time_ms = g_s5_motion_raw_ms;
+        if (input.line_found) { input.line_found_time_ms = input.now_ms; }
         input.scan_busy = g_s5_acquisition.b_scan;
         input.scan_complete = g_s5_acquisition.b_scan_complete;
         input.scan_context = &g_s5_acquisition.scan;
