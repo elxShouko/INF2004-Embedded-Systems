@@ -22,6 +22,7 @@ typedef enum
 	S5_RUNTIME_FAULT_INVALID_INPUT,
 	S5_RUNTIME_FAULT_FORWARD_SENSOR,
 	S5_RUNTIME_FAULT_STOP_TIMEOUT,
+	S5_RUNTIME_FAULT_STOP_STATUS_STALE,
 	S5_RUNTIME_FAULT_MOVED_DURING_SCAN,
 	S5_RUNTIME_FAULT_SCAN_CANCELLED,
 	S5_RUNTIME_FAULT_SCAN_TIMEOUT,
@@ -34,6 +35,7 @@ typedef enum
 typedef struct
 {
 	uint32_t forward_sample_max_age_ms;
+	uint32_t acknowledgement_max_age_ms;
 	uint32_t stop_timeout_ms;
 	uint32_t scan_timeout_ms;
 	uint32_t bypass_timeout_ms;
@@ -44,12 +46,16 @@ typedef struct
 
 typedef struct
 {
-	/* Runtime and scan timestamps use one wrapping monotonic millisecond clock. */
+	/*
+	 * All timestamps use one wrapping monotonic millisecond clock.
+	 * Acknowledgement times must be later than the matching state request.
+	 */
 	uint32_t now_ms;
 	uint32_t forward_sample_time_ms;
 	uint16_t forward_distance_cm;
 	bool forward_valid;
 	bool vehicle_stopped;
+	uint32_t vehicle_stopped_sample_time_ms;
 	bool scan_busy;
 	bool scan_complete;
 	bool scan_cancelled;
@@ -60,8 +66,11 @@ typedef struct
 	const s5_scan_sample_t *fine_samples;
 	size_t fine_count;
 	bool bypass_complete;
+	uint32_t bypass_complete_time_ms;
 	bool line_found;
 	bool controller_owned; /* Live controller owns route execution/deadlines. */
+
+	uint32_t line_found_time_ms;
 } s5_runtime_input_t;
 
 typedef struct
@@ -70,8 +79,11 @@ typedef struct
 	s5_runtime_fault_t fault;
 	uint32_t updated_at_ms;
 	uint32_t forward_sample_time_ms;
+	uint32_t stop_ack_time_ms;
 	uint32_t scan_started_at_ms;
 	uint32_t scan_completed_at_ms;
+	uint32_t bypass_completed_at_ms;
+	uint32_t line_found_at_ms;
 	uint16_t forward_distance_cm;
 	s5_logic_status_t scan_status;
 	s5_acquisition_status_t acquisition_status;
@@ -91,6 +103,11 @@ typedef struct
 
 typedef struct
 {
+	/*
+	 * Requests are retryable levels, not one-shot messages. Scan request is
+	 * held until scan-busy/completion; bypass until completion; recovery
+	 * until line-found. Consumers must make repeated requests idempotent.
+	 */
 	bool request_stop;
 	bool request_scan;
 	bool request_bypass;
@@ -112,6 +129,8 @@ typedef struct
 
 /*
  * Configuration values are mandatory and have no calibrated defaults.
+ * Acknowledgement freshness must fit the provider's timestamp resolution;
+ * same-tick or uncorrelated acknowledgements are intentionally rejected.
  * Call step/get_status only from the single owning task; cross-task readers
  * require a separately agreed RTOS publication mechanism.
  */

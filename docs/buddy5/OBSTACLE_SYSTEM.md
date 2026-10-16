@@ -162,20 +162,33 @@ must not interpret the profile or candidate as permission to move.
 The host-only `s5_obstacle_runtime` policy layer checks configured forward
 sample freshness, counts distinct proximity samples, requests a stop before a
 full scan, keeps requesting stop until the stopped acknowledgement and
-throughout scanning, and fails closed on stop/scan timeouts, cancellation,
-movement during a scan, acquisition errors, or unverified clearance. A valid
-scan is copied into a fixed-size status snapshot. Fault outputs remain
-asserted on subsequent calls so a future owner task can retry delivery. Its
-configuration has no production defaults; callers must provide
+throughout scanning. Scan, bypass, and recovery requests remain asserted until
+the policy observes their corresponding acknowledgement; a fault request
+remains asserted while the fault state is latched. Stopped/bypass/line
+acknowledgements must be fresh and timestamped after their corresponding
+policy state begins. It fails closed on stop/scan timeouts, stale stopped
+status, cancellation, movement during a scan, acquisition errors, or
+unverified clearance. A valid scan is copied into a fixed-size status
+snapshot. Its configuration has no production defaults; callers must provide
 measured/approved values.
 
-This policy remains pure and single-owner. The new s5_live task supplies
-real acquisition and bounded cross-task publication; readers use s5_live_status
-instead of calling the private policy-copy function across cores. The current profile planner still marks every route
-non-executable because vehicle clearance is unverified, so bypass and line
-recovery are intentionally unreachable. Hardware use remains blocked on the
-unresolved items below, approved interfaces, measured geometry and clearance,
-and authorized target testing.
+This policy remains pure and single-owner. The real s5_live task supplies
+acquisition, source timestamps and bounded cross-task publication; readers use
+s5_live_status rather than reading the private policy across cores. Stopped
+status is mapped conservatively from S2's kernel clock into the raw timer
+domain without renewing repeated measurements. Legacy stopped/bypass/line
+acknowledgements retain main's freshness and post-request timestamp checks.
+Timestamps do not replace request IDs: controller-owned recovery additionally
+uses the exact full-width scan token. Completed malformed scans remain complete
+but invalid, and forward faults revoke cached validity while retaining history.
+
+The range-only planner remains non-executable. The configured planner and
+controller described above can execute only with calibrated geometry and
+verified scan-specific free corridors/original-line evidence. Main's legacy
+pure-policy regressions and the integrated acquisition/recovery tests are both
+preserved; colliding test IDs are mapped explicitly in TEST_LOG.md.
+Physical use remains gated by the electrical/calibration/coverage requirements
+below and separate hardware authorization.
 
 ## Unresolved integration placeholders
 

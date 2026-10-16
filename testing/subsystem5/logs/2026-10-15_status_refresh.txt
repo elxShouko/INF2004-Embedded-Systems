@@ -1,0 +1,64 @@
+Date: 2026-10-15
+Tested revision: 5c08a5c + uncommitted Buddy 5 working-tree changes
+Environment: Windows, GCC 14.2; host-only, no RTOS/hardware validation
+Logic command: gcc -std=c99 -Wall -Wextra -Werror -Wconversion -Wsign-conversion -pedantic app_program\subsystem5\s5_obstacle_logic.c testing\subsystem5\host\test_obstacle_logic.c -o %TEMP%\s5_obstacle_logic_release.exe
+Runtime command: gcc -std=c99 -Wall -Wextra -Werror -Wconversion -Wsign-conversion -pedantic -fanalyzer app_program\subsystem5\s5_obstacle_logic.c app_program\subsystem5\s5_obstacle_runtime.c testing\subsystem5\host\test_obstacle_runtime.c -o %TEMP%\s5_obstacle_runtime_release.exe
+
+--- LOGIC SUITE ---
+[TEST] S5-U02 PASS  coarse and fine angles are bounded and edge-clamped
+[TEST] S5-U03 PASS  profile reports nearest point, geometry, width and side ranges
+[TEST] S5-U11 PASS  profiles off-axis scans centred at coarse directions
+[TEST] S5-U04 PASS  left range candidate is not emitted as an executable route
+[TEST] S5-U05 PASS  reverse remains an advisory candidate, never an action
+[TEST] S5-U06 PASS  missing range candidates are not misreported as proven unsafe
+[TEST] S5-U07 PASS  malformed scan is rejected and output is cleared
+[TEST] S5-U08 PASS  right range candidate is not emitted as an executable route
+[TEST] S5-U09 PASS  too few valid fine readings cannot produce a profile
+[TEST] S5-U12 PASS  cancelled scan is rejected and profile cleared
+[TEST] S5-U13 PASS  echo timeout or unsettled servo rejects scan
+[TEST] S5-U14 PASS  partial or moving-vehicle scan is rejected
+[TEST] S5-U15 PASS  scan exceeding supplied maximum duration is rejected
+[TEST] S5-U16 PASS  non-monotonic sample times are rejected
+[TEST] S5-U17 PASS  range jumps over supplied consistency limit are rejected
+[TEST] S5-U18 PASS  scan older than configured maximum age is rejected
+[TEST] S5-U19 PASS  late sample beyond scan completion is rejected
+[TEST] S5-U20 PASS  trigger, echo, and servo faults reject profile creation
+[TEST] S5-U21 PASS  missing scan-validation configuration is rejected
+[TEST] S5-U22 PASS  out-of-range measurement is rejected
+[TEST] S5-U23 PASS  valid scan across millisecond-counter wrap is accepted
+[TEST] S5-U10 PASS  a profile that was not successfully built cannot create a plan
+[TEST] subsystem5 host failures: 0
+--- RUNTIME SUITE ---
+[TEST] S5-U24 PASS  runtime rejects missing timeout configuration
+[TEST] S5-U25 PASS  invalid forward sample requests stop and latches fault
+[TEST] S5-U26 PASS  distinct confirmed proximity samples request a stop
+[TEST] S5-U27 PASS  a full scan is requested only after stopped acknowledgement
+[TEST] S5-U28 PASS  missing stopped acknowledgement fails closed on timeout
+[TEST] S5-U29 PASS  cancelled scan requests stop and latches fault
+[TEST] S5-U30 PASS  vehicle movement during a full scan fails closed
+[TEST] S5-U31 PASS  unfinished full scan fails closed at configured timeout
+[TEST] S5-U32 PASS  echo acquisition failure cannot produce a profile or route
+[TEST] S5-U33 PASS  valid scan without measured clearance never emits bypass
+[TEST] S5-U34 PASS  status snapshot copies scan completion and acquisition fault
+[TEST] S5-U35 PASS  latched fault keeps requesting stop and fault handling
+[TEST] S5-U36 PASS  invalid runtime input requests a safe stop and latches fault
+[TEST] S5-U37 PASS  stale forward sample cannot maintain motion monitoring
+[TEST] S5-U38 PASS  backwards runtime clock fails closed
+[TEST] S5-U39 PASS  valid runtime timestamp wrap is accepted
+[TEST] S5-U40 PASS  scan startup grace is bounded by the full-scan timeout
+[TEST] S5-U41 PASS  bypass completion requests line recovery
+[TEST] S5-U42 PASS  bypass acknowledgement timeout fails closed
+[TEST] S5-U43 PASS  LINE_FOUND returns the policy to forward monitoring
+[TEST] S5-U44 PASS  line reacquisition timeout fails closed
+[TEST] S5-U45 PASS  renewed forward obstacle during bypass fails closed
+[TEST] S5-U46 PASS  stop request remains asserted until stopped acknowledgement
+[TEST] S5-U47 PASS  stop request remains asserted throughout stationary scanning
+[TEST] S5-U48 PASS  a stopped sample from before the stop request is rejected
+[TEST] S5-U49 PASS  stale stopped status fails closed during a scan
+[TEST] S5-U50 PASS  pre-request bypass completion cannot advance the state
+[TEST] S5-U51 PASS  pre-request LINE_FOUND cannot resume monitoring
+[TEST] S5-U52 PASS  bypass acknowledgement at its deadline times out
+[TEST] S5-U53 PASS  runtime rejects missing acknowledgement freshness limit
+[TEST] S5-U54 PASS  completed but malformed scan is reported complete and invalid
+[TEST] S5-U55 PASS  a new scan request clears stale scan timestamps and faults
+[TEST] subsystem5 runtime failures: 0

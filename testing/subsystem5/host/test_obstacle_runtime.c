@@ -229,6 +229,8 @@ bool drv_s5_now (uint64_t * p) { *p = g_test_now; return (true); }
 bool drv_s5_bind (drv_s5_t * driver, drv_encoder_port_t const * irq,
     s5_acquire_io_t * io)
 { (void)driver; (void)irq; *io = acquire_io(); return (true); }
+bool motion_api_now (uint64_t * p)
+{ *p = g_test_now; return (true); }
 motion_api_result_t motion_api_status (motion_run_status_t * p)
 {
     *p = (motion_run_status_t){0};
@@ -237,6 +239,8 @@ motion_api_result_t motion_api_status (motion_run_status_t * p)
         p->state = MOTION_RUN_READY;
         p->b_measurement_valid = true;
         p->b_standstill = true;
+        p->measurement_timestamp_us = g_test_now;
+        p->measurement_max_age_us = 20000U;
     }
     return (MOTION_API_QUEUED);
 }
@@ -325,6 +329,7 @@ make_config(void)
 	s5_runtime_config_t config;
 
 	config.forward_sample_max_age_ms = 50U;
+	config.acknowledgement_max_age_ms = 50U;
 	config.stop_timeout_ms = 100U;
 	config.scan_timeout_ms = 2000U;
 	config.bypass_timeout_ms = 1000U;
@@ -346,6 +351,9 @@ make_input(
 	input->forward_sample_time_ms = sample_time_ms;
 	input->forward_distance_cm = distance_cm;
 	input->forward_valid = true;
+	input->vehicle_stopped_sample_time_ms = now_ms;
+	input->bypass_complete_time_ms = now_ms;
+	input->line_found_time_ms = now_ms;
 }
 
 static bool
@@ -981,6 +989,294 @@ main(int argc, char * argv[])
 
 	test_acquisition();
     test_hold();
+
+	result = init_runtime(&runtime);
+	if (result)
+	{
+		result = trigger_stop(&runtime, &input);
+		if (result)
+		{
+			make_input(&input, 120U, 120U, 20U);
+			input.vehicle_stopped = true;
+			input.vehicle_stopped_sample_time_ms = 109U;
+			result = (S5_LOGIC_OK ==
+				  s5_runtime_step(&runtime, &input, &events)) &&
+				 events.request_stop &&
+				 !events.request_scan &&
+				 !events.request_fault &&
+				 (runtime.status.state == S5_RUNTIME_WAIT_STOP);
+		}
+	}
+	check_result("S5-U89", result,
+		     "a stopped sample from before the stop request is rejected");
+
+	result = init_runtime(&runtime);
+	if (result)
+	{
+		result = trigger_stop(&runtime, &input);
+		if (result)
+		{
+			make_input(&input, 120U, 120U, 20U);
+			input.vehicle_stopped = true;
+			result = (S5_LOGIC_OK ==
+				  s5_runtime_step(&runtime, &input, &events)) &&
+				 events.request_scan;
+			make_input(&input, 200U, 200U, 20U);
+			input.vehicle_stopped = true;
+			input.vehicle_stopped_sample_time_ms = 120U;
+			input.scan_busy = true;
+			result = result &&
+				 (S5_LOGIC_OK ==
+				  s5_runtime_step(&runtime, &input, &events)) &&
+				 events.request_stop &&
+				 events.request_fault &&
+				 (runtime.status.fault ==
+				  S5_RUNTIME_FAULT_STOP_STATUS_STALE);
+		}
+	}
+	check_result("S5-U90", result,
+		     "stale stopped status fails closed during a scan");
+
+	result = init_runtime(&runtime);
+	if (result)
+	{
+		make_input(&input, 10U, 10U, 100U);
+		result = (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events));
+		runtime.status.state = S5_RUNTIME_WAIT_BYPASS;
+		runtime.status.busy = true;
+		runtime.state_started_at_ms = 10U;
+		make_input(&input, 20U, 20U, 100U);
+		input.bypass_complete = true;
+		input.bypass_complete_time_ms = 9U;
+		result = result &&
+			 (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events)) &&
+			 !events.request_line_recovery &&
+			 !events.request_fault &&
+			 (runtime.status.state == S5_RUNTIME_WAIT_BYPASS);
+	}
+	check_result("S5-U91", result,
+		     "pre-request bypass completion cannot advance the state");
+
+	result = init_runtime(&runtime);
+	if (result)
+	{
+		make_input(&input, 10U, 10U, 100U);
+		result = (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events));
+		runtime.status.state = S5_RUNTIME_LINE_RECOVERY;
+		runtime.status.busy = true;
+		runtime.state_started_at_ms = 10U;
+		make_input(&input, 20U, 20U, 100U);
+		input.line_found = true;
+		input.line_found_time_ms = 9U;
+		result = result &&
+			 (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events)) &&
+			 !events.request_fault &&
+			 (runtime.status.state == S5_RUNTIME_LINE_RECOVERY);
+	}
+	check_result("S5-U92", result,
+		     "pre-request LINE_FOUND cannot resume monitoring");
+
+	result = init_runtime(&runtime);
+	if (result)
+	{
+		make_input(&input, 10U, 10U, 100U);
+		(void)s5_runtime_step(&runtime, &input, &events);
+		runtime.status.state = S5_RUNTIME_WAIT_BYPASS;
+		runtime.status.busy = true;
+		runtime.state_started_at_ms = 10U;
+		make_input(&input, 1010U, 1010U, 100U);
+		input.bypass_complete = true;
+		result = (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events)) &&
+			 events.request_stop &&
+			 events.request_fault &&
+			 (runtime.status.fault ==
+			  S5_RUNTIME_FAULT_BYPASS_TIMEOUT);
+	}
+	check_result("S5-U93", result,
+		     "bypass acknowledgement at its deadline times out");
+
+	config = make_config();
+	config.acknowledgement_max_age_ms = 0U;
+	check_result("S5-U94",
+		     s5_runtime_init(&runtime, &config) ==
+			     S5_LOGIC_INVALID_ARGUMENT,
+		     "runtime rejects missing acknowledgement freshness limit");
+
+	result = init_runtime(&runtime);
+	if (result)
+	{
+		result = trigger_stop(&runtime, &input);
+		if (result)
+		{
+			make_input(&input, 120U, 120U, 20U);
+			input.vehicle_stopped = true;
+			result = (S5_LOGIC_OK ==
+				  s5_runtime_step(&runtime, &input, &events)) &&
+				 events.request_scan;
+			make_input(&input, 130U, 130U, 20U);
+			input.vehicle_stopped = true;
+			input.scan_complete = true;
+			result = result &&
+				 (S5_LOGIC_OK ==
+				  s5_runtime_step(&runtime, &input, &events)) &&
+				 events.request_stop &&
+				 events.request_fault &&
+				 runtime.status.scan_complete &&
+				 !runtime.status.scan_valid &&
+				 (runtime.status.scan_status ==
+				  S5_LOGIC_INVALID_ARGUMENT);
+		}
+	}
+	check_result("S5-U95", result,
+		     "completed but malformed scan is reported complete and invalid");
+
+	result = init_runtime(&runtime);
+	if (result)
+	{
+		runtime.status.scan_complete = true;
+		runtime.status.scan_valid = true;
+		runtime.status.scan_started_at_ms = 15U;
+		runtime.status.scan_completed_at_ms = 20U;
+		runtime.status.acquisition_status =
+			S5_ACQUISITION_ECHO_TIMEOUT;
+		make_input(&input, 100U, 100U, 20U);
+		result = (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events));
+		make_input(&input, 110U, 110U, 20U);
+		result = result &&
+			 (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events)) &&
+			 (runtime.status.state == S5_RUNTIME_WAIT_STOP) &&
+			 !runtime.status.scan_complete &&
+			 !runtime.status.scan_valid &&
+			 (runtime.status.scan_started_at_ms == 0U) &&
+			 (runtime.status.scan_completed_at_ms == 0U) &&
+			 (runtime.status.acquisition_status ==
+			  S5_ACQUISITION_OK);
+	}
+	check_result("S5-U96", result,
+		     "a new scan request clears stale scan timestamps and faults");
+
+	result = init_runtime(&runtime);
+	if (result)
+	{
+		s5_runtime_status_t status;
+
+		make_input(&input, 100U, 100U, 100U);
+		result = (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events)) &&
+			 runtime.status.forward_valid;
+		make_input(&input, 151U, 100U, 100U);
+		result = result &&
+			 (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events)) &&
+			 events.request_stop &&
+			 events.request_fault &&
+			 (S5_LOGIC_OK ==
+			  s5_runtime_get_status(&runtime, &status)) &&
+			 !status.forward_valid;
+	}
+	check_result("S5-U97", result,
+		     "faulted stale forward status is no longer marked valid");
+
+	result = init_runtime(&runtime);
+	if (result)
+	{
+		result = trigger_stop(&runtime, &input);
+		if (result)
+		{
+			make_input(&input, 120U, 120U, 20U);
+			input.vehicle_stopped = true;
+			result = (S5_LOGIC_OK ==
+				  s5_runtime_step(&runtime, &input, &events)) &&
+				 events.request_scan;
+			make_input(&input, 125U, 125U, 20U);
+			input.vehicle_stopped = true;
+			result = result &&
+				 (S5_LOGIC_OK ==
+				  s5_runtime_step(&runtime, &input, &events)) &&
+				 events.request_scan &&
+				 !events.request_fault;
+			make_input(&input, 130U, 130U, 20U);
+			input.vehicle_stopped = true;
+			input.scan_busy = true;
+			result = result &&
+				 (S5_LOGIC_OK ==
+				  s5_runtime_step(&runtime, &input, &events)) &&
+				 !events.request_scan &&
+				 !events.request_fault;
+		}
+	}
+	check_result("S5-U98", result,
+		     "scan request retries until the scan owner reports busy");
+
+	result = init_runtime(&runtime);
+	if (result)
+	{
+		make_input(&input, 10U, 10U, 100U);
+		result = (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events));
+		runtime.status.state = S5_RUNTIME_WAIT_BYPASS;
+		runtime.status.busy = true;
+		runtime.state_started_at_ms = 10U;
+		make_input(&input, 20U, 20U, 100U);
+		result = result &&
+			 (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events)) &&
+			 events.request_bypass;
+		make_input(&input, 25U, 25U, 100U);
+		result = result &&
+			 (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events)) &&
+			 events.request_bypass &&
+			 !events.request_fault;
+		make_input(&input, 30U, 30U, 100U);
+		input.bypass_complete = true;
+		result = result &&
+			 (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events)) &&
+			 !events.request_bypass &&
+			 events.request_line_recovery;
+	}
+	check_result("S5-U99", result,
+		     "bypass request retries until completion acknowledgement");
+
+	result = init_runtime(&runtime);
+	if (result)
+	{
+		make_input(&input, 10U, 10U, 100U);
+		result = (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events));
+		runtime.status.state = S5_RUNTIME_LINE_RECOVERY;
+		runtime.status.busy = true;
+		runtime.state_started_at_ms = 10U;
+		make_input(&input, 20U, 20U, 100U);
+		result = result &&
+			 (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events)) &&
+			 events.request_line_recovery;
+		make_input(&input, 25U, 25U, 100U);
+		result = result &&
+			 (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events)) &&
+			 events.request_line_recovery &&
+			 !events.request_fault;
+		make_input(&input, 30U, 30U, 100U);
+		input.line_found = true;
+		result = result &&
+			 (S5_LOGIC_OK ==
+			  s5_runtime_step(&runtime, &input, &events)) &&
+			 !events.request_line_recovery &&
+			 !events.request_fault;
+	}
+	check_result("S5-U100", result,
+		     "line-recovery request retries until LINE_FOUND");
+
 	(void)printf("[TEST] subsystem5 runtime failures: %u\n",
 		     s5_test_failures);
 	return (s5_test_failures == 0U) ? 0 : 1;
