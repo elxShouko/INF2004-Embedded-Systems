@@ -39,6 +39,21 @@ Define a test here before running it. Test IDs never change.
 | S3-U24 | Barcode noise | Decoder owner gating | host simulation | Inject incomplete side-sensor burst with stable front pair | Invalid event; no motion command/pending ID; front sensing remains valid |
 | S3-U25 | Configuration/map delivery | Owner-task validation | host simulation | Send config/map/mode with request IDs, invalid map, active config | Correlated replies; map revision stable on rejection; active config rejected |
 
+| S3-U26 | Packed map isolation | Minimum-bit representation | host | Exercise every slot/action, cross-byte boundaries and invalid setters | Adjacent entries/padding unchanged; invalid writes rejected |
+| S3-U27 | Compact input codec | S3 queue contract | host | Round trips, golden vector, numeric limits, every truncated length and padding | Exact 79/5/18/21/9-byte frames; malformed input rejected |
+| S3-U28 | Compact output codec | S3 event contract | host | All output kinds and A-Z/absent, limits, malformed lengths and enums | Exact 19/18/13-byte frames; no partial decode |
+| S3-U29 | Packed transport integration | Ownership and failure handling | host simulation | Check actual queue-create requests, submit/receive wrappers and invalid updates | 336/384-byte allocations; negative replies preserve map; receive error preserves caller |
+| S3-U30 | Target ABI and RAM comparison | Week 13 evidence | compile/static | Run verify_minbits.py against archived d4c91f2, compare identical-profile ELF size output | Complete ARM/host size report and allocation comparison |
+| S3-U31 | Packed-path real-time performance | Week 13 target timing | manual, pending | Measure sample gaps, API time, stack high-water and stop latency under SMP/network load | Meets agreed timing budgets without navigation regression |
+
+| S3-U32 | Owner delay failure | Bounded failure handling | host simulation | Inject delay errors, full output and busy publication into real task loop | One failed delay, fault/paused publication or stale old sample, then task exit; no spin |
+| S3-U33 | Event/drop lifetime | Completion correlation | host | Exercise final IDs, repeated sends, exhausted-ID configuration and saturated drops | Final ID reserved for fault; zero/reused IDs never issued; counter saturates |
+| S3-U34 | Odometry lifetime | Junction evidence | host | Boundary age, stale/future/regressing/conflicting duplicates at 64-bit times | Invalid input revokes usable evidence without resetting monotonic baseline |
+| S3-U35 | Timestamp/observation semantics | Raw versus filtered feedback | host | Cross 32-bit microsecond boundary and settle filtered transition | Full source timestamp retained; change emitted on confirmation update, not before |
+| S3-U36 | Before/after navigation trace | Behaviour equivalence | host differential | Compare deterministic 40,000-sample traces against saved pre-follow-up implementation | Same normal navigation/status/events; intentional fault-path changes tested separately |
+
+| S3-U37 | Runtime queue-storage readback | Actual allocation evidence | on-target, pending | On an authorised unconfigured TEST=1 image, read tk_ref_mbf and save [S3-MEM] output | Empty input/output report 336/384 free bytes and 79/19 maximum message bytes; excludes allocator overhead |
+
 *Method:* **auto** = `TEST_CHECK` in code, result printed on the console;
 **manual** = a person observes the result (LED, scope, meter, phone app…).
 
@@ -244,3 +259,185 @@ Evidence: ../integration/logs/software_completion_evidence.zip, entry
 testing/integration/logs/completion_s3.json. Base HEAD
 5c08a5c76de39ffe18d9720b40d505a592508230 plus uncommitted files; exact source
 hashes are in the archive manifest. No physical sampling/timing claim.
+
+## Minimum bit representation run 2026-10-21
+
+Baseline `d4c91f271c9801802e3994967c96e9ec8fcba38c` was clean `main`.
+The tested revision is that HEAD plus the uncommitted S3 application, test and
+Buddy 3 documentation changes. No branch switch, staging, commit or push.
+Per-file SHA256 fingerprints are saved in `logs/2026-10-21_minbits_release.json`
+and `logs/2026-10-21_minbits_release_measurements.json`. The latter confirms all
+89 application C/header files outside S3 match the baseline. The ABI changes
+are intentional; S3-U05's historical ABI-preservation expectation is not a gate
+for this migration.
+
+| Date | Test IDs | Tested revision | Result | Evidence and limits |
+|---|---|---|---|---|
+| 2026-10-21 | S3-U02/U03/U04/U10-U18/U20-U25 | Clean baseline d4c91f2 | PASS, host | `logs/2026-10-21_minbits_before.json`; historical algorithm/owner suites before editing |
+| 2026-10-21 | S3-U02/U03/U04/U10-U18/U20-U29 | d4c91f2 + release source fingerprint | PASS, host | `logs/2026-10-21_minbits_release.json`; includes strict C99/O2 conversion warnings, pedantic and GCC analyzer for the packed suite; 29 C/header files pass the mechanical Barr subset |
+| 2026-10-21 | S3-U30 | Baseline and release fingerprint | PASS, compiler/static | `logs/2026-10-21_minbits_release_measurements.json`; ARM/host layouts, queue-create requests and per-function ARM stack frames |
+| 2026-10-21 | S3-U06 | Baseline archived from d4c91f2 | PASS, compile/link | `logs/2026-10-21_minbits_before_build_fresh.txt`; default profile, SDK 2.3.1, forced rebuild |
+| 2026-10-21 | S3-U06 | d4c91f2 + release fingerprint | PASS, compile/link | `logs/2026-10-21_minbits_release_normal_build.txt`; normal ELF and UF2; not flashed |
+| 2026-10-21 | S3-U07 | d4c91f2 + release fingerprint | PASS, compile/link | `logs/2026-10-21_minbits_release_test_build.txt`; TEST=1 ELF and UF2; self-tests were not executed on target |
+| 2026-10-21 | S3-U19/U31 | Current working tree | PENDING, hardware | Physical calibration, operating speed, sample/API latency, SMP jitter, stack high-water and stop response require separately authorised robot measurements |
+
+Consumer integration checks and source fingerprints are in
+`testing/integration/logs/S3_minbits_release_metadata.json`,
+`S3_minbits_release_default.log` and `S3_minbits_release_optimized.log`.
+The runner compiles the real controller/provider boundaries, uses host fakes,
+and also checks startup isolation, shared mutations and obstacle paths. It does
+not model real SMP scheduling or substitute for target integration tests.
+
+### Reproduction commands
+
+From the repository root, using the already-installed bundled Python:
+
+```powershell
+$taskPython = 'C:/Users/linco/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'
+& $taskPython testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-21_minbits_release.json
+& $taskPython testing/subsystem3/verify_minbits.py --baseline-root build/minbits-baseline-firmware --log testing/subsystem3/logs/2026-10-21_minbits_release_measurements.json
+& $taskPython testing/integration/verify_integration.py --label S3_minbits_release
+```
+
+Use a new log filename/label when rerunning; preserve the saved results. The
+baseline directory was extracted from `git archive d4c91f2` into ignored build
+scratch, without checking out or switching branches. The measurement runner
+requires that identified baseline directory. It does not invoke Make or hardware.
+
+No WSL Ubuntu distribution was available. Native MSYS GNU Make and Arm GNU
+10.3.1 used the existing Make foundation and installed SDK 2.3.1. No tools or
+dependencies were installed/fetched. From `build_make/`, the exact final builds
+were (with the existing tool directories prepended to PATH):
+
+```powershell
+$env:PICO_SDK_PATH = 'C:/Users/linco/.pico-sdk/sdk/2.3.1'
+& C:/msys64/usr/bin/make.exe SHELL=C:/msys64/usr/bin/sh.exe -j8
+& C:/msys64/usr/bin/make.exe SHELL=C:/msys64/usr/bin/sh.exe TEST=1 -j8
+```
+
+Profile: `SMP=1 CONSOLE=usb_cdc WIFI=cyw43 NET=none MQTT=0 CRASH_REPORT=0
+S4_IMU=0`; TEST=0 then TEST=1. A prior `-B -j8` rebuild avoided mixing SDK
+objects. Earlier failed sandbox/SDK attempts and development checks remain in
+the dated logs; they are not passing evidence. The older installed SDK lacked
+`pico.h` at the Make include layout; a mixed-SDK incremental retry could not
+link `tusb_rhport_init`. Forcing a rebuild with the one SDK resolved it without
+source changes. No network-enabled profile or hardware run is claimed.
+
+### Measured comparison and limits
+
+| Measurement | Before | After |
+|---|---:|---:|
+| Default ELF text/rodata as reported by arm-none-eabi-size | 345,880 B | 351,080 B |
+| Default ELF .data | 92 B | 92 B |
+| Default ELF .bss | 45,156 B | 45,140 B |
+| Combined requested queue storage, allocator overhead excluded | 2,288 B | 720 B |
+| Native ARM request | 392 B | 96 B |
+| Native ARM status | 64 B | 48 B |
+| Native ARM map with revision/alignment | 32 B | 16 B |
+
+This saves 1,568 requested heap bytes plus 16 static BSS bytes. Queue backing
+allocations occur at runtime; the 1,568-byte saving is not expected to appear as
+an equal linker BSS reduction. The two 8 KiB task stack allocations are unchanged.
+Flash text/rodata grows by 5,200 bytes. The native ARM output is still 40 bytes,
+but its actual queued payload is 13/18/19 bytes depending on kind; input queued
+payloads are 5/9/18/21/79 bytes. Host ABI sizes differ and must not be used as
+Pico RAM measurements.
+
+Variable-length queues remain byte-bounded. They can hold more small frames
+than the old fixed-message count; input service remains four messages/cycle.
+See `docs/buddy3/minimum-bit-representation.md` for exact limits and the required
+latency/load validation. Event IDs, timestamps, odometry units and the dedicated
+motor stop path were not narrowed or redirected. Native validation carriers,
+legacy demo data and other owners' representations remain explicit coverage
+gaps. Buddy 1's JSON must still be migrated with its dashboard owner.
+
+Final controller-consumer integration run: **PASS** in both default and
+`-O2 -fshort-enums` host profiles. Each passed 78 normal integration groups
+(INT-03..INT-62 and INT-64..INT-81), TEST=1 startup isolation (INT-63), eight
+shared mutations, and the runner's S5 policy/acquisition/live/MMIO checks.
+Evidence: `testing/integration/logs/S3_minbits_release_{default,optimized}.log`
+and its metadata file. These results are host/fake-port evidence only.
+
+Final whitespace check: `git -c core.safecrlf=false -c
+core.whitespace=-blank-at-eof diff --check` PASS. The existing blank-at-EOF
+exception follows the documented Barr-C end-of-file convention. Application
+source/test SHA256 values were rechecked against the passing release host run
+and matched; subsequent changes only appended documentation/evidence.
+
+## Feedback audit and safety follow-up 2026-10-21
+
+This run starts from the existing uncommitted minimum-bit release, not a clean
+checkout of HEAD. Its saved source manifest is included in the differential log.
+HEAD remains `d4c91f271c9801802e3994967c96e9ec8fcba38c` on `main`; no previous work
+was discarded, staged, committed or pushed. The final host JSON and measurement
+JSON record exact current source/test SHA256 values. Only S3 application/tests
+and Buddy 3 documentation changed in this follow-up.
+
+| Test | Result | Saved evidence and limits |
+|---|---|---|
+| S3-U02/U03/U04/U10-U18/U20-U29 | PASS, host | `logs/2026-10-21_feedback_verified_host.json`; existing eight-suite runner including new safety suite, mechanical Barr subset, strict conversion/pedantic/analyzer checks |
+| S3-U32 | PASS, host task simulation | Same log; delay E_OBJ/E_TMOUT/E_PAR, output-full and mutex-busy combinations; exactly one failed delay and one task exit |
+| S3-U33 | PASS, host | Same log; final unique ID becomes a fault, no ID wrap/reuse, exhausted-ID config rejected, drop saturation and revision exhaustion |
+| S3-U34 | PASS, host | Same log; fresh age boundary, stale/future/regressing/conflicting duplicates and uint64 limits |
+| S3-U35 | PASS, host logical ordering | Same log; full timestamp across 2^32 microseconds and event on filter-confirming update; not physical latency |
+| S3-U36 | PASS, differential host | `logs/2026-10-21_feedback_final_equivalence.json`; both normal and O2/short-enum builds match 40,316 samples / 352 outputs, hash 4f8ab3ded524f205 |
+| S3-U30 | PASS, compile/static | `logs/2026-10-21_feedback_verified_measurements.json`; queue-create requests still total 720 bytes, request/status/map 96/48/16 ARM bytes; 89 other application C/header files unchanged against d4c91f2 |
+| S3-U06 | PASS, compile/link | `logs/2026-10-21_feedback_normal_build.txt`; default integrated ELF/UF2, SDK 2.3.1 |
+| S3-U07 | PASS, compile/link | `logs/2026-10-21_feedback_verified_test_build.txt`; TEST=1 ELF/UF2 includes read-only allocation probe; tests not executed on target |
+| S3-U37 | PENDING, target execution | Readback code added to subsystem3_test.c; no [S3-MEM] target log or target PASS exists yet |
+| S3-U19/U31 | PENDING, physical evidence | Mounting/polarity/black-white calibration, speed/lighting envelope, full sample-to-motion latency, SMP jitter/stack/stop measurements |
+
+Consumer integration: `testing/integration/logs/S3_feedback_safety_retry_*`
+records PASS in default and optimised profiles: 78 normal integration groups,
+TEST=1 startup isolation, eight mutations and S5 policy/acquisition/live/MMIO
+host checks in each profile. The first `S3_feedback_safety_*` attempt passed
+normal groups but hit Windows Permission denied while reopening mutant.exe
+for a subsequent link. The fresh-run retry passed; the earlier failed attempt
+is preserved and is not treated as a pass.
+
+Exact verification commands from repository root:
+
+```powershell
+$taskPython = 'C:/Users/linco/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'
+& $taskPython testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-21_feedback_verified_host.json
+& $taskPython testing/subsystem3/verify_feedback.py --before build/s3-feedback-before --log testing/subsystem3/logs/2026-10-21_feedback_final_equivalence.json
+& $taskPython testing/subsystem3/verify_minbits.py --baseline-root build/minbits-baseline-firmware --log testing/subsystem3/logs/2026-10-21_feedback_verified_measurements.json
+& $taskPython testing/integration/verify_integration.py --label S3_feedback_safety_retry
+```
+
+Use new filenames/labels for future runs. `build/s3-feedback-before` is the
+saved uncommitted packing release with a verified per-file snapshot manifest;
+`build/minbits-baseline-firmware` is the original archived d4c91f2 foundation.
+The two baseline identities are intentionally different. The differential run
+checks normal behaviour; the deliberate failure-path changes are covered by
+S3-U32..U34 rather than claimed identical to the defective baseline.
+
+Builds used the same native GNU Make/Arm GNU 10.3.1/installed SDK 2.3.1 setup as
+the previous run, because WSL Ubuntu remains unavailable. From build_make:
+
+```powershell
+$env:PICO_SDK_PATH = 'C:/Users/linco/.pico-sdk/sdk/2.3.1'
+& C:/msys64/usr/bin/make.exe SHELL=C:/msys64/usr/bin/sh.exe -j8
+& C:/msys64/usr/bin/make.exe SHELL=C:/msys64/usr/bin/sh.exe TEST=1 -j8
+```
+
+Profile: SMP=1, USB CDC, CYW43, NET=none, MQTT=0, CRASH_REPORT=0,
+S4_IMU=0, TEST=0/1. The final TEST image was relinked after a comment-only
+80-column style repair; the normal-profile executable statements were unchanged.
+All earlier development/failed style logs are retained, not overwritten.
+
+| Linked image metric | Packing release | Safety follow-up |
+|---|---:|---:|
+| Normal text/rodata | 351,080 B | 351,608 B |
+| Normal .data | 92 B | 92 B |
+| Normal .bss | 45,140 B | 45,140 B |
+| TEST=1 text/rodata | 439,736 B | 440,628 B |
+| TEST=1 .data | 1,160 B | 1,160 B |
+| TEST=1 .bss | 53,988 B | 53,988 B |
+
+Queue-create requests remain 336/384 bytes; allocator overhead and actual heap
+high-water are not measured. No physical result, full-target latency result,
+network-enabled profile, flashing or actuation is claimed. Buffer readback is
+prepared for a separately authorised idle TEST=1 target session. See
+`docs/buddy3/feedback-audit-and-contract.md` for the complete disposition and
+current sensor/mapping/trigger/recovery/lifetime contract.

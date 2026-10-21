@@ -17,10 +17,11 @@
 
 #define CODE39_STAR_PATTERN 0x094U
 
-static const uint16_t g_letter_patterns[BARCODE_ALPHABET_COUNT] = {
-    0x109U, 0x049U, 0x148U, 0x019U, 0x118U, 0x058U, 0x00DU, 0x10CU, 0x04CU,
-    0x01CU, 0x103U, 0x043U, 0x142U, 0x013U, 0x112U, 0x052U, 0x007U, 0x106U,
-    0x046U, 0x016U, 0x181U, 0x0C1U, 0x1C0U, 0x091U, 0x190U, 0x0D0U};
+/* 26 nine-bit patterns = 234 bits; high six bits of the final byte are zero. */
+static const uint8_t g_letter_patterns[30] = {
+    0x09U, 0x93U, 0x20U, 0xcdU, 0x80U, 0x11U, 0x4bU, 0x03U, 0x86U, 0x4cU,
+    0x38U, 0x0cU, 0x1cU, 0x22U, 0x74U, 0x82U, 0x44U, 0x29U, 0x07U, 0x0cU,
+    0x1aU, 0xb1U, 0x10U, 0x38U, 0x18U, 0xf0U, 0x48U, 0x90U, 0xa1U, 0x01U};
 
 static bool classify_symbol (const uint32_t * p_widths, uint16_t * p_pattern,
                              uint32_t * p_narrow);
@@ -30,6 +31,16 @@ static barcode_result_t capture_transition (barcode_capture_t * p_capture,
                                             uint64_t            timestamp_us,
                                             uint64_t duration, bool black,
                                             barcode_result_t result);
+
+/** @brief Read one nine-bit pattern without assuming host byte ordering. */
+static uint16_t letter_pattern (uint32_t index)
+{
+    const uint32_t bit = index * 9U;
+    const uint32_t byte = bit / 8U;
+    const uint32_t pair = (uint32_t)g_letter_patterns[byte] |
+                         ((uint32_t)g_letter_patterns[byte + 1U] << 8U);
+    return (uint16_t)((pair >> (bit % 8U)) & 0x1ffU);
+}
 
 /**
  * @brief Decode one framed uppercase letter in either scan direction.
@@ -204,8 +215,8 @@ static bool classify_symbol (const uint32_t * p_widths, uint16_t * p_pattern,
  */
 static bool decode_forward (const uint32_t * p_widths, char * p_letter)
 {
-    uint16_t patterns[3];
-    uint32_t narrow[3];
+    uint16_t patterns[3] = {0};
+    uint32_t narrow[3] = {0};
 
     for (uint32_t element_index = 0U; element_index < BARCODE_SYMBOLS_PER_FRAME;
          ++element_index)
@@ -242,7 +253,7 @@ static bool decode_forward (const uint32_t * p_widths, char * p_letter)
     for (uint32_t element_index = 0U; element_index < BARCODE_ALPHABET_COUNT;
          ++element_index)
     {
-        if (patterns[1] == g_letter_patterns[element_index])
+        if (patterns[1] == letter_pattern(element_index))
         {
             *p_letter = (char)('A' + element_index);
 

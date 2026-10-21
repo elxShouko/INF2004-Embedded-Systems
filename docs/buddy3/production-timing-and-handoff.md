@@ -1,5 +1,22 @@
 # Buddy 3 production timing and controller handoff
 
+> Trigger confirmed by the user on 2026-10-21: after full barcode validation,
+> coordinate the controller stop/manoeuvre handshake without waiting for a
+> junction. Retain freshness and stop/fault/obstacle arbitration. See the
+> current contract for the remaining physical validation and mapping checks.
+
+> Follow-up safety review: see [feedback audit and current contract](feedback-audit-and-contract.md)
+> for checked delay failure, identifier exhaustion, odometry lifetime and current
+> evidence. Earlier size/stack/flash figures below identify the packing release;
+> the appended feedback run in TEST_LOG records the later firmware comparison.
+
+> Current update 2026-10-21: `vehicle.c` and `vehicle_rt.c` now implement the
+> controller caller. Older statements below saying it is absent are historical.
+> Queue layouts, packed mapping access, mapping requests and fault encodings are
+> superseded by [minimum-bit representation](minimum-bit-representation.md).
+> Existing configuration/mode/odometry/completion calls remain source compatible;
+> every component must be rebuilt with the current headers.
+
 ## Status and evidence
 
 This is the S3 provider contract and a **proposal for controller integration**,

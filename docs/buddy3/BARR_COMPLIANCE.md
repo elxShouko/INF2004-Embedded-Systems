@@ -102,3 +102,35 @@ The whitespace diff check uses `git -c core.whitespace=-blank-at-eof diff --chec
 Only Git's blank-at-EOF warning is exempted because Barr rule 3.3.c explicitly
 requires an end-of-file comment followed by a blank line. Other whitespace
 checks remain enabled.
+
+## Minimum bit representation update 2026-10-21
+
+The user's current S3 change request authorises the scoped layout/queue-format
+migration described in [minimum-bit representation](minimum-bit-representation.md).
+The earlier ABI-preservation verification above describes the earlier cleanup,
+not an invariant for this migration. S3-U30 records the deliberately changed ABI.
+
+Unsigned fixed-width bit-field bases are compiler-supported storage choices;
+GNU C11 is the existing firmware profile. The pure codecs define byte order and
+bit order independently, check invalid values before narrowing and reject
+noncanonical padding. Public ingress carriers retain sufficient width to reject
+illegal enum/mask values. Native in-process objects are never network frames.
+The existing mutex remains the synchronisation mechanism; private packed setters
+are single-owner operations, not multicore atomic APIs.
+
+Compatibility carriers (native navigation event, raw/calibration ingress,
+transient calculation scratch and retained demo interfaces) are explicitly
+listed as residual coverage. This migration does not claim whole-firmware
+minimum-bit compliance or full Barr-C certification. Historical log fixtures
+remain unchanged; current owner fixtures model the revised copied queue bytes.
+
+## Feedback safety follow-up
+
+The periodic delay result is now checked; failure causes one bounded publication
+attempt and task termination, not an unpaced loop. Packed fault updates remain
+single-owner operations and retain condition bits. Output IDs do not wrap,
+diagnostic drops saturate, and odometry is validated at full width before use.
+The added TEST=1 queue diagnostic uses the existing kernel reference API only;
+no kernel/template internals or cross-subsystem motor outputs are changed.
+See S3-U32..U37 and feedback-audit-and-contract.md for exact scope and evidence
+limits. Target memory readback and timing have not been executed.

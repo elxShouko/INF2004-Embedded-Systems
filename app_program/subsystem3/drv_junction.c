@@ -231,7 +231,7 @@ static junction_result_t advance_exit (junction_detector_t *     p_detector,
         p_event->kind         = NAV_EVENT_JUNCTION;
         p_event->command      = NAV_COMMAND_NONE;
         p_event->state        = LINE_STATE_TRACKING;
-        p_event->black_mask   = p_sample->black_mask;
+        p_event->black_mask   = (uint8_t)(p_sample->black_mask & 7U);
         p_detector->phase     = JUNCTION_ARMED;
 
         return JUNCTION_RESULT_DETECTED;

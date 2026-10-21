@@ -10,6 +10,7 @@
 #define PROHIBIT_DEF_SIZE_T 1
 #include "member3_navigation.h"
 #include "drv_ir_rtos.h"
+#include "drv_s3_codec.h"
 #include <string.h>
 
 #define S3_INPUTS_PER_CYCLE 4U
@@ -34,13 +35,14 @@ typedef struct
     uint64_t            odometry_us;
     uint64_t            distance_um;
     uint32_t            event_id;
-    bool                b_absent;
-    bool                b_finding;
-    bool                b_recovering;
-    bool                b_previous_sample;
-    bool                b_have_odometry;
-    bool                b_odometry_forward;
-    bool                b_have_barcode;
+    uint8_t             b_absent : 1;
+    uint8_t             b_finding : 1;
+    uint8_t             b_recovering : 1;
+    uint8_t             b_previous_sample : 1;
+    uint8_t             b_have_odometry : 1;
+    uint8_t             b_odometry_forward : 1;
+    uint8_t             b_have_barcode : 1;
+    uint8_t             b_odometry_usable : 1;
 } s3_context_t;
 
 volatile ID                 mbf_s3_input;
@@ -49,6 +51,10 @@ volatile ID                 mtx_s3_status;
 volatile ID                 tid_s3_navigation;
 static volatile s3_status_t g_status;
 
+static void publish_status (s3_context_t * p_context);
+static void latch_state (s3_context_t * p_context, s3_fault_t reason);
+static bool accept_odometry (s3_context_t * p_context,
+                              const s3_odometry_t * p_odometry, uint64_t now);
 static void emit (s3_context_t * p_context, s3_output_t * p_output);
 static void navigation_event (s3_context_t * p_context, nav_event_kind_t kind,
                               nav_command_t command, char letter);
@@ -88,13 +94,16 @@ ER s3_submit (const s3_input_t * p_input, TMO timeout)
         return E_OBJ;
     }
 
-    return tk_snd_mbf(mbf_s3_input, p_input, sizeof(*p_input), timeout);
+    uint8_t bytes[S3_INPUT_WIRE_MAX];
+    const uint32_t size = s3_input_encode(p_input, bytes);
+
+    return (0U == size) ? E_PAR :
+        tk_snd_mbf(mbf_s3_input, bytes, (INT)size, timeout);
 }
 
 /**
- * @brief Receive and validate one fixed-size owner-task output.
- * @note The fixed output structure is smaller than INT32_MAX; converting its
- * sizeof value to the kernel INT type is exact.
+ * @brief Decode one compact output without exposing partially received data.
+ * @note Encoded lengths are bounded by the private queue maximum.
  */
 ER s3_receive (s3_output_t * p_output, TMO timeout)
 {
@@ -108,10 +117,14 @@ ER s3_receive (s3_output_t * p_output, TMO timeout)
         return E_OBJ;
     }
 
-    INT size = tk_rcv_mbf(mbf_s3_output, p_output, timeout);
+    uint8_t bytes[S3_OUTPUT_WIRE_MAX];
+    const INT size = tk_rcv_mbf(mbf_s3_output, bytes, timeout);
 
-    return (size < E_OK) ? size
-                         : ((size == (INT)sizeof(*p_output)) ? E_OK : E_PAR);
+    if (size < E_OK)
+    {
+        return size;
+    }
+    return s3_output_decode(bytes, (uint32_t)size, p_output) ? E_OK : E_PAR;
 }
 
 /**
@@ -174,8 +187,9 @@ ER s3_navigation_init (void)
     }
 
     buffer.mbfatr = TA_TFIFO;
-    buffer.maxmsz = sizeof(s3_input_t);
-    buffer.bufsz  = S3_INPUT_CAPACITY * (sizeof(s3_input_t) + sizeof(UW));
+    buffer.maxmsz = S3_INPUT_WIRE_MAX;
+    buffer.bufsz  = S3_INPUT_CAPACITY *
+        (((S3_INPUT_WIRE_MAX + 3U) & ~3U) + sizeof(UW));
     mbf_s3_input  = tk_cre_mbf(&buffer);
 
     if (mbf_s3_input < E_OK)
@@ -185,8 +199,9 @@ ER s3_navigation_init (void)
         return mbf_s3_input;
     }
 
-    buffer.maxmsz = sizeof(s3_output_t);
-    buffer.bufsz  = S3_OUTPUT_CAPACITY * (sizeof(s3_output_t) + sizeof(UW));
+    buffer.maxmsz = S3_OUTPUT_WIRE_MAX;
+    buffer.bufsz  = S3_OUTPUT_CAPACITY *
+        (((S3_OUTPUT_WIRE_MAX + 3U) & ~3U) + sizeof(UW));
     mbf_s3_output = tk_cre_mbf(&buffer);
 
     if (mbf_s3_output < E_OK)
@@ -270,15 +285,17 @@ void s3_navigation_task (INT stacd, void * p_exinf)
 
         for (uint32_t count = 0U; count < S3_INPUTS_PER_CYCLE; ++count)
         {
+            uint8_t bytes[S3_INPUT_WIRE_MAX];
             s3_input_t message;
-            INT        size = tk_rcv_mbf(mbf_s3_input, &message, TMO_POL);
+            INT size = tk_rcv_mbf(mbf_s3_input, bytes, TMO_POL);
 
             if (E_TMOUT == size)
             {
                 break;
             }
 
-            if (size != (INT)sizeof(message))
+            if ((size < E_OK) ||
+                !s3_input_decode(bytes, (uint32_t)size, &message))
             {
                 fault(&context, S3_FAULT_KERNEL);
                 break;
@@ -290,32 +307,54 @@ void s3_navigation_task (INT stacd, void * p_exinf)
         ir_sample_t sample;
         s3_ir_read(&sample);
         process(&context, &sample);
-        context.status.map_revision = context.map.revision;
-        memcpy(context.status.mapping, context.map.actions,
-               sizeof(context.status.mapping));
-        ER lock = tk_loc_mtx(mtx_s3_status, TMO_POL);
-
-        if (E_OK == lock)
+        publish_status(&context);
+        if (E_OK != tk_dly_tsk(context.config.period_ms))
         {
-            g_status = context.status;
-            if (tk_unl_mtx(mtx_s3_status) != E_OK)
-            {
-                fault(&context, S3_FAULT_KERNEL);
-            }
+            latch_state(&context, S3_FAULT_KERNEL);
+            navigation_event(&context, NAV_EVENT_FAULT, NAV_COMMAND_NONE, '\0');
+            publish_status(&context);
+            tk_ext_tsk();
+            return; /* Defensive if an invalid platform/test stub returns. */
         }
-        else if (lock != E_TMOUT)
-        {
-            fault(&context, S3_FAULT_KERNEL);
-        }
-        else
-        {
-            /* Skip this publication; old acquisition time exposes staleness.
-             * Sensing must continue even if another task holds the mutex.
-             */
-        }
-
-        tk_dly_tsk(context.config.period_ms);
     }
+}
+
+/** @brief Publish once without waiting; busy copies keep their old time. */
+static void publish_status (s3_context_t * p_context)
+{
+    p_context->status.map_revision = p_context->map.revision;
+    memcpy(p_context->status.mapping, p_context->map.actions,
+           sizeof(p_context->status.mapping));
+    ER lock = tk_loc_mtx(mtx_s3_status, TMO_POL);
+
+    if (E_OK == lock)
+    {
+        g_status = p_context->status;
+        if (tk_unl_mtx(mtx_s3_status) != E_OK)
+        {
+            fault(p_context, S3_FAULT_KERNEL);
+        }
+    }
+    else if (lock != E_TMOUT)
+    {
+        fault(p_context, S3_FAULT_KERNEL);
+    }
+    else
+    {
+        /* Skip this publication; old acquisition time exposes staleness.
+         * Sensing must continue even if another task holds the mutex.
+         */
+    }
+
+}
+
+/** @brief Latch condition bits without sending recursively or changing time. */
+static void latch_state (s3_context_t * p_context, s3_fault_t reason)
+{
+    p_context->status.fault = (uint8_t)(
+        ((uint32_t)p_context->status.fault | (uint32_t)reason) & 31U);
+    p_context->status.state = LINE_STATE_FAULT_REPORTED;
+    p_context->status.mode = LINE_MODE_PAUSED;
 }
 
 /**
@@ -323,15 +362,40 @@ void s3_navigation_task (INT stacd, void * p_exinf)
  */
 static void emit (s3_context_t * p_context, s3_output_t * p_output)
 {
+    if (UINT32_MAX == p_context->event_id)
+    {
+        latch_state(p_context, S3_FAULT_KERNEL);
+        if (p_context->status.output_drops < UINT32_MAX)
+        {
+            ++p_context->status.output_drops;
+        }
+        return;
+    }
+    if ((UINT32_MAX - 1U) == p_context->event_id)
+    {
+        /* Reserve the final unique ID for a terminal fault, never a command. */
+        latch_state(p_context, S3_FAULT_KERNEL);
+        *p_output = (s3_output_t){0};
+        p_output->kind = S3_OUTPUT_NAVIGATION;
+        p_output->navigation.kind = NAV_EVENT_FAULT;
+        p_output->navigation.state = LINE_STATE_FAULT_REPORTED;
+        p_output->navigation.timestamp_us = p_context->status.raw.timestamp_us;
+        p_output->fault = p_context->status.fault;
+    }
     p_output->event_id     = ++p_context->event_id;
     p_output->map_revision = p_context->map.revision;
 
-    if (tk_snd_mbf(mbf_s3_output, p_output, sizeof(*p_output), TMO_POL) != E_OK)
+    uint8_t bytes[S3_OUTPUT_WIRE_MAX];
+    const uint32_t size = s3_output_encode(p_output, bytes);
+
+    if ((0U == size) ||
+        (tk_snd_mbf(mbf_s3_output, bytes, (INT)size, TMO_POL) != E_OK))
     {
-        ++p_context->status.output_drops;
-        p_context->status.fault = S3_FAULT_OUTPUT_FULL;
-        p_context->status.state = LINE_STATE_FAULT_REPORTED;
-        p_context->status.mode  = LINE_MODE_PAUSED;
+        if (p_context->status.output_drops < UINT32_MAX)
+        {
+            ++p_context->status.output_drops;
+        }
+        latch_state(p_context, S3_FAULT_OUTPUT_FULL);
     }
 }
 
@@ -366,9 +430,7 @@ static void fault (s3_context_t * p_context, s3_fault_t reason)
 {
     if (S3_FAULT_NONE == p_context->status.fault)
     {
-        p_context->status.fault = reason;
-        p_context->status.state = LINE_STATE_FAULT_REPORTED;
-        p_context->status.mode  = LINE_MODE_PAUSED;
+        latch_state(p_context, reason);
         navigation_event(p_context, NAV_EVENT_FAULT, NAV_COMMAND_NONE, '\0');
     }
 }
@@ -393,6 +455,7 @@ static void reset_processing (s3_context_t * p_context)
     p_context->b_recovering      = false;
     p_context->b_previous_sample = false;
     p_context->b_have_barcode    = false;
+    p_context->b_odometry_usable = false;
     p_context->status.line_valid = false;
 }
 
@@ -406,7 +469,8 @@ static bool configure (s3_context_t * p_context, const s3_config_t * p_config)
     barcode_capture_t   barcode;
     junction_detector_t junction;
 
-    if ((p_context->status.mode != LINE_MODE_PAUSED) ||
+    if ((UINT32_MAX == p_context->event_id) ||
+        (p_context->status.mode != LINE_MODE_PAUSED) ||
         (p_config->calibration.valid_mask != 7U) ||
         ((p_config->calibration.black_high_mask & ~7U) != 0U) ||
         (p_config->period_ms < (uint32_t)CNF_TIMER_PERIOD) ||
@@ -432,6 +496,7 @@ static bool configure (s3_context_t * p_context, const s3_config_t * p_config)
     p_context->status.state                      = LINE_STATE_TRACKING;
     p_context->status.pending_manoeuvre_event_id = 0U;
     p_context->b_have_odometry                   = false;
+    p_context->b_odometry_usable                 = false;
     reset_processing(p_context);
 
     return true;
@@ -480,6 +545,34 @@ static bool change_mode (s3_context_t * p_context, const s3_input_t * p_input,
     return b_accepted;
 }
 
+/** @brief Reject stale/regressing evidence and conflicting duplicates. */
+static bool accept_odometry (s3_context_t * p_context,
+                              const s3_odometry_t * p_odometry, uint64_t now)
+{
+    bool b_accepted = (p_odometry->timestamp_us <= now) &&
+        ((now - p_odometry->timestamp_us) <=
+         p_context->config.odometry_stale_us);
+
+    if (b_accepted && p_context->b_have_odometry)
+    {
+        b_accepted = (p_odometry->timestamp_us >= p_context->odometry_us) &&
+            (p_odometry->forward_distance_um >= p_context->distance_um) &&
+            ((p_odometry->timestamp_us != p_context->odometry_us) ||
+             ((p_odometry->forward_distance_um == p_context->distance_um) &&
+              (p_odometry->tracking_forward ==
+               p_context->b_odometry_forward)));
+    }
+    p_context->b_odometry_usable = b_accepted;
+    if (b_accepted)
+    {
+        p_context->odometry_us = p_odometry->timestamp_us;
+        p_context->distance_um = p_odometry->forward_distance_um;
+        p_context->b_odometry_forward = p_odometry->tracking_forward;
+        p_context->b_have_odometry = true;
+    }
+    return b_accepted;
+}
+
 /**
  * @brief Dispatch a request and reply with its validation result.
  */
@@ -494,31 +587,15 @@ static void input (s3_context_t * p_context, const s3_input_t * p_input,
             b_accepted = configure(p_context, &p_input->value.config);
         break;
         case S3_INPUT_MAPPING:
-            b_accepted =
-                (memchr(p_input->value.mapping, '\0', S3_MAPPING_TEXT_MAX) !=
-                 NULL) &&
-                (nav_map_apply(&p_context->map, p_input->value.mapping));
+            b_accepted = nav_map_commit(&p_context->map,
+                                       &p_input->value.mapping);
         break;
         case S3_INPUT_MODE:
             b_accepted = change_mode(p_context, p_input, now);
         break;
         case S3_INPUT_ODOMETRY:
-            b_accepted = (p_input->value.odometry.timestamp_us <= now) &&
-                         ((!p_context->b_have_odometry) ||
-                          ((p_input->value.odometry.timestamp_us >=
-                            p_context->odometry_us) &&
-                           (p_input->value.odometry.forward_distance_um >=
-                            p_context->distance_um)));
-
-            if (b_accepted)
-            {
-                p_context->odometry_us = p_input->value.odometry.timestamp_us;
-                p_context->distance_um =
-                    p_input->value.odometry.forward_distance_um;
-                p_context->b_odometry_forward =
-                    p_input->value.odometry.tracking_forward;
-                p_context->b_have_odometry = true;
-            }
+            b_accepted = accept_odometry(p_context,
+                                         &p_input->value.odometry, now);
 
         break;
         case S3_INPUT_MANOEUVRE_DONE:
@@ -584,7 +661,7 @@ static line_observation_t update_line (s3_context_t *      p_context,
             output.line                    = observation;
             output.navigation.timestamp_us = p_sample->timestamp_us;
             output.navigation.kind         = NAV_EVENT_LINE_STATUS;
-            output.navigation.black_mask   = mask;
+            output.navigation.black_mask   = (uint8_t)(mask & 7U);
             emit(p_context, &output);
         }
     }
@@ -734,6 +811,7 @@ static void process_junction (s3_context_t * p_context, uint64_t now,
     {
         junction_sample_t sample = {now, p_context->distance_um, mask,
                                     (p_context->b_have_odometry) &&
+                                        (p_context->b_odometry_usable) &&
                                         (p_context->b_odometry_forward) &&
                                         (now >= p_context->odometry_us) &&
                                         (now - p_context->odometry_us <=
@@ -771,7 +849,7 @@ static void process (s3_context_t * p_context, const ir_sample_t * p_sample)
         return;
     }
 
-    p_context->status.black_mask = mask;
+    p_context->status.black_mask = (uint8_t)(mask & 7U);
     const uint64_t now           = p_sample->timestamp_us;
     const bool     b_active = (LINE_MODE_TRACKING == p_context->status.mode) ||
                               (LINE_MODE_RECOVERY == p_context->status.mode);

@@ -8,7 +8,7 @@
 #define CNF_TIMER_PERIOD 10
 #define S3_HOST_PRODUCTION 1
 #define main logical_suite_main
-#include "logs/member3_rtos_test.c"
+#include "member3_rtos_test.c"
 #undef main
 
 static jmp_buf g_task_exit;
@@ -240,11 +240,12 @@ INT tk_rcv_mbf (ID id, void * p_message, TMO timeout)
     else if (g_b_flood_replies)
     {
         message.kind = S3_INPUT_MAPPING;
-        strcpy(message.value.mapping, "MAP A=RIGHT");
+        assert(nav_update_parse(&message.value.mapping, "MAP A=RIGHT"));
     }
-    memcpy(p_message, &message, sizeof(message));
+    const uint32_t size = s3_input_encode(&message, p_message);
+    assert(size > 0U);
     ++g_received;
-    return (INT)sizeof(message);
+    return (INT)size;
 }
 
 /** @brief Fake a timestamped GPIO read while counting actual task sampling. */
@@ -269,6 +270,14 @@ uint64_t s3_clock_us (void)
 /** @brief Bound the real infinite loop and emulate output capacity/consumer. */
 ER tk_dly_tsk (uint32_t delay)
 {
+#ifdef S3_HOST_DELAY_FAILURE
+    if (g_delay_result != E_OK)
+    {
+        ++g_delay_calls;
+        assert(1U == g_delay_calls); /* Catch a regression before it can spin. */
+        return g_delay_result;
+    }
+#endif
     assert(g_config.period_ms == delay);
     assert(S3_INPUTS_PER_CYCLE == g_received);
     assert(g_reads == g_cycles + 1U);

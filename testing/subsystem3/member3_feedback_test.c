@@ -85,7 +85,8 @@ static void test_status_poll (void)
     g_status.fault = S3_FAULT_SAMPLE_GAP;
     g_status.pending_manoeuvre_event_id = 42U;
     g_status.map_revision = 7U;
-    g_status.mapping[0] = NAV_COMMAND_LEFT;
+    assert(nav_action_set((uint8_t *)g_status.mapping, 0U,
+                          NAV_COMMAND_LEFT));
     assert(E_OK == s3_get_status(&output));
     assert(output.calibrated && output.line_valid);
     assert(123U == output.raw.timestamp_us);
@@ -96,7 +97,7 @@ static void test_status_poll (void)
     assert(S3_FAULT_SAMPLE_GAP == output.fault);
     assert(42U == output.pending_manoeuvre_event_id);
     assert(7U == output.map_revision);
-    assert(NAV_COMMAND_LEFT == output.mapping[0]);
+    assert(NAV_COMMAND_LEFT == nav_action_get(output.mapping, 0U));
     g_clock_us = 1000000U;
     assert(E_OK == s3_get_status(&output));
     assert(123U == output.raw.timestamp_us);
@@ -240,13 +241,14 @@ static void test_config_delivery (void)
     assert(!context.status.line_valid);
     request.kind = S3_INPUT_MAPPING;
     request.request_id = 102U;
-    strcpy(request.value.mapping, "MAP A=LEFT B=RIGHT C=FORWARD D=UTURN");
+    assert(nav_update_parse(&request.value.mapping, "MAP A=LEFT B=RIGHT C=FORWARD D=UTURN"));
     input(&context, &request, 0U);
     assert(g_outputs[g_count - 1U].accepted);
     assert(102U == g_outputs[g_count - 1U].request_id);
     const uint32_t revision = context.map.revision;
     assert(revision == g_outputs[g_count - 1U].map_revision);
-    strcpy(request.value.mapping, "MAP A=INVALID");
+    request.value.mapping = (nav_update_t){0};
+    assert(!nav_update_parse(&request.value.mapping, "MAP A=INVALID"));
     input(&context, &request, 0U);
     assert(!g_outputs[g_count - 1U].accepted);
     assert(revision == context.map.revision);
@@ -266,7 +268,10 @@ static void test_config_delivery (void)
 }
 
 /** @brief Exercise provider feedback without a controller or physical motors. */
-int main (void)
+#ifndef S3_FEEDBACK_MAIN
+#define S3_FEEDBACK_MAIN main
+#endif
+int S3_FEEDBACK_MAIN (void)
 {
     test_status_poll();
     test_snapshot_semantics();

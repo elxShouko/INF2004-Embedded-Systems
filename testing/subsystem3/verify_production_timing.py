@@ -13,8 +13,12 @@ import sys
 
 
 def run(command):
-    result = subprocess.run([str(part) for part in command],
-                            capture_output=True, text=True)
+    try:
+        result = subprocess.run([str(part) for part in command],
+                                capture_output=True, text=True, timeout=60)
+    except subprocess.TimeoutExpired:
+        return {"command": [str(part) for part in command], "exit": 124,
+                "stdout": "", "stderr": "Timed out after 60 seconds\n"}
     return {"command": [str(part) for part in command],
             "exit": result.returncode,
             "stdout": result.stdout, "stderr": result.stderr}
@@ -54,14 +58,21 @@ def main():
         "rtos": ["ir_input", "line_tracking", "barcode", "navigation_map", "junction"],
         "production": ["ir_input", "line_tracking", "barcode", "navigation_map", "junction"],
         "feedback": ["ir_input", "line_tracking", "barcode", "navigation_map", "junction"],
+        "minbits": ["ir_input", "line_tracking", "barcode", "navigation_map", "junction"],
+        "safety": ["ir_input", "line_tracking", "barcode", "navigation_map", "junction"],
     }
     for suite, modules in suites.items():
+        if suite in {"rtos", "production", "feedback", "minbits", "safety"}:
+            modules = modules + ["s3_codec"]
         executable = output / f"{suite}.exe"
         test = root / (f"testing/subsystem3/member3_{suite}_test.c"
-                       if suite in {"production", "feedback"} else
+                       if suite in {"rtos", "production", "feedback", "minbits", "safety"} else
                        f"testing/subsystem3/logs/member3_{suite}_test.c")
         command = [args.gcc, "-std=c99", "-Wall", "-Wextra", "-Werror",
                    "-I" + str(source), test]
+        if suite in {"minbits", "safety"}:
+            command += ["-O2", "-Wconversion", "-Wsign-conversion",
+                        "-pedantic", "-fanalyzer"]
         command += [source / f"drv_{module}.c" for module in modules]
         command += ["-o", executable]
         compiled = run(command)

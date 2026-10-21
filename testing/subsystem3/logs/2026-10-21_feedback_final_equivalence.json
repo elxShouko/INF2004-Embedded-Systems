@@ -1,0 +1,221 @@
+{
+  "baseline": {
+    "head": "d4c91f271c9801802e3994967c96e9ec8fcba38c",
+    "description": "Uncommitted minimum-bit release before follow-up safety changes",
+    "sha256": {
+      "app_program/subsystem3/drv_barcode.c": "7dd81b1cbece5b718cd58fd7222a289863e04ca12d37113ea898c1d76dc0d67f",
+      "app_program/subsystem3/drv_barcode.h": "0233464e3261f17d704a9225d716f8d42d7f9e7cb133b6ff4005fd7350209a71",
+      "app_program/subsystem3/drv_ir_input.c": "5f5d1fe08403d5a3530e3b8b47da61c4056cb737e6e41cf5258d9c41c12f9b51",
+      "app_program/subsystem3/drv_ir_input.h": "0964f762581497d9087fa0942c1bcad738e5a458340aa1d56a1dc5d96fbf6dcb",
+      "app_program/subsystem3/drv_ir_rtos.c": "08faa16db40db5be97caf14e2d445836bfb1e54dd967d0ee31cef071cc089c17",
+      "app_program/subsystem3/drv_ir_rtos.h": "e7861627aac9cdd86b4178376e69b67c252436ce72e960e6fe76fa18083c810f",
+      "app_program/subsystem3/drv_junction.c": "e44dc8dd6a5354c6543d9dcb9e01887407fcf227625359f27282b2f10c3b1aed",
+      "app_program/subsystem3/drv_junction.h": "36f685b78e9e5a78d4cc0f68fbf13f804b422002b0d06d8af840e9ec8c638595",
+      "app_program/subsystem3/drv_line_tracking.c": "07c4e33ad582fae671b072bb0f95dc74aaf99587e0919adcbfde6c48984a04bb",
+      "app_program/subsystem3/drv_line_tracking.h": "7cea5536e37736b09d91985c2be1e502d529061a5aa228ec875743c4be28abd9",
+      "app_program/subsystem3/drv_navigation_map.c": "c9567292e62c54b8ded4b988b1f65c4821a399af2db51df0c81474753cf8046a",
+      "app_program/subsystem3/drv_navigation_map.h": "0d27221f1e2a3eb1e367b7e89d75bfce71eef2dee193dd2144e89b0e941be50c",
+      "app_program/subsystem3/drv_s3_codec.c": "586af8694793b9160154c45c745bd03dd8060c57995fb8952b9871410a435ee4",
+      "app_program/subsystem3/drv_s3_codec.h": "83269d0680d1998d9063861e5af5214362f0b6552575d5f55de9cfca1c5e2bdd",
+      "app_program/subsystem3/line/barcode.h": "ab212e59f98f27ecfa84dffb32a2bf7eefd91dfb187a3fdc18cd6c428e01da34",
+      "app_program/subsystem3/line/ir_input.h": "6471d99464baf0354bb7bf0b90f5df8cde978853649908cb670b3edfb3778ea7",
+      "app_program/subsystem3/line/junction.h": "1373bf9beea78161dd1d4bb451589441331da701cc9dafd04dbab0f89ce72dab",
+      "app_program/subsystem3/line/line_tracking.h": "c160d3a21c35eacd701fe63798e28d2c7cd5ab9b00f61436a74ff987d4ec77a2",
+      "app_program/subsystem3/line/navigation_map.h": "ddd7a671ae38c0238669cc3432e54953815b6e7f8e852b7fa5308efeac7eae9e",
+      "app_program/subsystem3/line/navigation_types.h": "40dbf2c2d297e83c4522d0a98e330122e86204f64ee97ff83180cbc30128e1dd",
+      "app_program/subsystem3/member3_data.h": "a7287aaefe20bfba4a2d244afa61af0c25b42667d068478f1ec82685f37ed088",
+      "app_program/subsystem3/member3_navigation.c": "ebdc90b3904543185aadfff91c3268914d0e07e16287326495a7ed1cbfe93713",
+      "app_program/subsystem3/member3_navigation.h": "a913b1c8f0e30c37f7c146745d8e06e6df5851a59164de31eff878a8a025d646",
+      "app_program/subsystem3/subsystem3.c": "cca893fd28b6e7072102c59a7f00209e6657c33694d6f4670acc85f4b19802a7",
+      "app_program/subsystem3/subsystem3.h": "3eaf75c622e511d1025065480a18cf4fa5a4c70589b2ed3637ed72d11c4afe4c",
+      "app_program/subsystem3/subsystem3_test.c": "c25a8c93ebd9dcbf52e8d0fcf50f50ed4b74e1a97ad53697bdfdc6fd64a663d1",
+      "app_program/subsystem3/subsystem3_test.h": "161a8a02e37fb370a5260d266ce1ba7d766e825d98a7f26bf65eb88cf27bb76a",
+      "app_program/subsystem3/task_consumer.c": "a808eb4106320bf3ff99c3ddd58a205a2fb310665cbb6227fa0d0d9457375fe7",
+      "app_program/subsystem3/task_consumer.h": "be130b3eb210b599cd3a2da1071fe4ae08772961240cf31d91672aacfd6c6d39"
+    }
+  },
+  "head": "d4c91f271c9801802e3994967c96e9ec8fcba38c",
+  "scope": "Deterministic host equivalence; elapsed host process time is informational, not target latency/WCET evidence",
+  "checks": [
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Ibuild\\s3-feedback-before\\subsystem3",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s3-feedback-comparison\\trace.c",
+        "build\\s3-feedback-before\\subsystem3\\drv_ir_input.c",
+        "build\\s3-feedback-before\\subsystem3\\drv_line_tracking.c",
+        "build\\s3-feedback-before\\subsystem3\\drv_barcode.c",
+        "build\\s3-feedback-before\\subsystem3\\drv_navigation_map.c",
+        "build\\s3-feedback-before\\subsystem3\\drv_junction.c",
+        "build\\s3-feedback-before\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s3-feedback-comparison\\default_before.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "host_elapsed_s": 1.2844695999992837
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s3-feedback-comparison\\default_before.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U36 samples=40316 outputs=352 hash=4f8ab3ded524f205\n",
+      "stderr": "",
+      "host_elapsed_s": 0.11130410000259872
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s3-feedback-comparison\\trace.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s3-feedback-comparison\\default_after.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "host_elapsed_s": 1.1053165000012086
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s3-feedback-comparison\\default_after.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U36 samples=40316 outputs=352 hash=4f8ab3ded524f205\n",
+      "stderr": "",
+      "host_elapsed_s": 0.23699000000124215
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-O2",
+        "-fshort-enums",
+        "-Ibuild\\s3-feedback-before\\subsystem3",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s3-feedback-comparison\\trace.c",
+        "build\\s3-feedback-before\\subsystem3\\drv_ir_input.c",
+        "build\\s3-feedback-before\\subsystem3\\drv_line_tracking.c",
+        "build\\s3-feedback-before\\subsystem3\\drv_barcode.c",
+        "build\\s3-feedback-before\\subsystem3\\drv_navigation_map.c",
+        "build\\s3-feedback-before\\subsystem3\\drv_junction.c",
+        "build\\s3-feedback-before\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s3-feedback-comparison\\optimized_before.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "host_elapsed_s": 1.7158774999988964
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s3-feedback-comparison\\optimized_before.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U36 samples=40316 outputs=352 hash=4f8ab3ded524f205\n",
+      "stderr": "",
+      "host_elapsed_s": 0.0956973000029393
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-O2",
+        "-fshort-enums",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s3-feedback-comparison\\trace.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s3-feedback-comparison\\optimized_after.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "host_elapsed_s": 1.61577049999687
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s3-feedback-comparison\\optimized_after.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U36 samples=40316 outputs=352 hash=4f8ab3ded524f205\n",
+      "stderr": "",
+      "host_elapsed_s": 0.24997479999728967
+    }
+  ],
+  "profiles": {
+    "default": {
+      "equal": true,
+      "before": "S3-U36 samples=40316 outputs=352 hash=4f8ab3ded524f205\n",
+      "after": "S3-U36 samples=40316 outputs=352 hash=4f8ab3ded524f205\n"
+    },
+    "optimized": {
+      "equal": true,
+      "before": "S3-U36 samples=40316 outputs=352 hash=4f8ab3ded524f205\n",
+      "after": "S3-U36 samples=40316 outputs=352 hash=4f8ab3ded524f205\n"
+    }
+  },
+  "current_sha256": {
+    "app_program/subsystem3/drv_barcode.c": "7dd81b1cbece5b718cd58fd7222a289863e04ca12d37113ea898c1d76dc0d67f",
+    "app_program/subsystem3/drv_barcode.h": "0233464e3261f17d704a9225d716f8d42d7f9e7cb133b6ff4005fd7350209a71",
+    "app_program/subsystem3/drv_ir_input.c": "5f5d1fe08403d5a3530e3b8b47da61c4056cb737e6e41cf5258d9c41c12f9b51",
+    "app_program/subsystem3/drv_ir_input.h": "0964f762581497d9087fa0942c1bcad738e5a458340aa1d56a1dc5d96fbf6dcb",
+    "app_program/subsystem3/drv_ir_rtos.c": "08faa16db40db5be97caf14e2d445836bfb1e54dd967d0ee31cef071cc089c17",
+    "app_program/subsystem3/drv_ir_rtos.h": "e7861627aac9cdd86b4178376e69b67c252436ce72e960e6fe76fa18083c810f",
+    "app_program/subsystem3/drv_junction.c": "e44dc8dd6a5354c6543d9dcb9e01887407fcf227625359f27282b2f10c3b1aed",
+    "app_program/subsystem3/drv_junction.h": "36f685b78e9e5a78d4cc0f68fbf13f804b422002b0d06d8af840e9ec8c638595",
+    "app_program/subsystem3/drv_line_tracking.c": "07c4e33ad582fae671b072bb0f95dc74aaf99587e0919adcbfde6c48984a04bb",
+    "app_program/subsystem3/drv_line_tracking.h": "7cea5536e37736b09d91985c2be1e502d529061a5aa228ec875743c4be28abd9",
+    "app_program/subsystem3/drv_navigation_map.c": "c9567292e62c54b8ded4b988b1f65c4821a399af2db51df0c81474753cf8046a",
+    "app_program/subsystem3/drv_navigation_map.h": "0d27221f1e2a3eb1e367b7e89d75bfce71eef2dee193dd2144e89b0e941be50c",
+    "app_program/subsystem3/drv_s3_codec.c": "586af8694793b9160154c45c745bd03dd8060c57995fb8952b9871410a435ee4",
+    "app_program/subsystem3/drv_s3_codec.h": "83269d0680d1998d9063861e5af5214362f0b6552575d5f55de9cfca1c5e2bdd",
+    "app_program/subsystem3/line/barcode.h": "ab212e59f98f27ecfa84dffb32a2bf7eefd91dfb187a3fdc18cd6c428e01da34",
+    "app_program/subsystem3/line/ir_input.h": "6471d99464baf0354bb7bf0b90f5df8cde978853649908cb670b3edfb3778ea7",
+    "app_program/subsystem3/line/junction.h": "1373bf9beea78161dd1d4bb451589441331da701cc9dafd04dbab0f89ce72dab",
+    "app_program/subsystem3/line/line_tracking.h": "c160d3a21c35eacd701fe63798e28d2c7cd5ab9b00f61436a74ff987d4ec77a2",
+    "app_program/subsystem3/line/navigation_map.h": "ddd7a671ae38c0238669cc3432e54953815b6e7f8e852b7fa5308efeac7eae9e",
+    "app_program/subsystem3/line/navigation_types.h": "40dbf2c2d297e83c4522d0a98e330122e86204f64ee97ff83180cbc30128e1dd",
+    "app_program/subsystem3/member3_data.h": "a7287aaefe20bfba4a2d244afa61af0c25b42667d068478f1ec82685f37ed088",
+    "app_program/subsystem3/member3_navigation.c": "a07e437cf096eda39b5c1bf9815130afb4b1e9ba0116d54ae5061cd7698f33c5",
+    "app_program/subsystem3/member3_navigation.h": "a913b1c8f0e30c37f7c146745d8e06e6df5851a59164de31eff878a8a025d646",
+    "app_program/subsystem3/subsystem3.c": "cca893fd28b6e7072102c59a7f00209e6657c33694d6f4670acc85f4b19802a7",
+    "app_program/subsystem3/subsystem3.h": "3eaf75c622e511d1025065480a18cf4fa5a4c70589b2ed3637ed72d11c4afe4c",
+    "app_program/subsystem3/subsystem3_test.c": "87ecb983451ec77e1c4be0b39a22ef45802f47fe46b5c1125a28323fd41366d5",
+    "app_program/subsystem3/subsystem3_test.h": "161a8a02e37fb370a5260d266ce1ba7d766e825d98a7f26bf65eb88cf27bb76a",
+    "app_program/subsystem3/task_consumer.c": "a808eb4106320bf3ff99c3ddd58a205a2fb310665cbb6227fa0d0d9457375fe7",
+    "app_program/subsystem3/task_consumer.h": "be130b3eb210b599cd3a2da1071fe4ae08772961240cf31d91672aacfd6c6d39"
+  },
+  "passed": true
+}

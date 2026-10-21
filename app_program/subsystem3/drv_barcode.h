@@ -35,11 +35,11 @@ typedef struct
     uint64_t last_us;
     uint32_t quiet_us;
     uint32_t timeout_us;
-    uint8_t  count;
-    bool     started;
-    bool     black;
-    bool     armed;
-    bool     capturing;
+    uint8_t  count : 5;
+    uint8_t  started : 1;
+    uint8_t  black : 1;
+    uint8_t  armed : 1;
+    uint8_t  capturing : 1;
 } barcode_capture_t;
 
 /* Timing is caller-supplied, measured for the supported speed range.

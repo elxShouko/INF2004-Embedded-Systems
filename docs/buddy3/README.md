@@ -6,6 +6,8 @@ barcode recognition and navigation events. Its integrated source is in
 
 | Document | Purpose |
 | --- | --- |
+| [Feedback audit and contract](feedback-audit-and-contract.md) | Current feedback disposition, pacing/ID fixes, sensor/mapping/recovery contract and pending target evidence |
+| [Minimum-bit representation](minimum-bit-representation.md) | Current packed formats, measured RAM/message sizes and owner handoffs |
 | [Member 3 guide](member3.md) | Algorithms, sensor mounting, standalone diagnostic use and limitations |
 | [Template integration](member3-template-integration.md) | Integrated task lifecycle, configuration, messages and connections required from other subsystems |
 | [Production timing and handoff](production-timing-and-handoff.md) | 10 ms host coverage, pending hardware envelope and proposed controller coordination |

@@ -149,7 +149,7 @@ bool ir_filter_update (ir_filter_t * p_filter, const ir_sample_t * p_sample,
 
     if ((!p_filter->started) || (p_sample->levels != p_filter->candidate))
     {
-        p_filter->candidate          = p_sample->levels;
+        p_filter->candidate          = (uint8_t)(p_sample->levels & 7U);
         p_filter->candidate_since_us = p_sample->timestamp_us;
         p_filter->started            = true;
     }

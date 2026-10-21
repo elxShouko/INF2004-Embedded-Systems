@@ -54,8 +54,8 @@ typedef struct
     uint64_t          black_start_us;
     uint64_t          first_white_um;
     uint64_t          first_white_us;
-    uint8_t           phase;
-    bool              started;
+    uint8_t           phase : 3;
+    uint8_t  started : 1;
 } junction_detector_t;
 
 /** @brief Reset crossing evidence after validating configuration. */

@@ -1,0 +1,10 @@
+ir_sample_t=16
+ir_filter_t=24
+barcode_capture_t=160
+junction_detector_t=104
+nav_map_t=108
+nav_event_t=24
+s3_config_t=84
+s3_input_t=392
+s3_output_t=56
+s3_status_t=152

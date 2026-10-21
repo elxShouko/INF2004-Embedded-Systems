@@ -1,0 +1,6 @@
+Baseline HEAD d4c91f271c9801802e3994967c96e9ec8fcba38c
+['C:/msys64/usr/bin/make.exe', 'SHELL=C:/msys64/usr/bin/sh.exe', '-j8']
+PICO_SDK_PATH=C:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk
+      0 [main] make (26852) C:\msys64\usr\bin\make.exe: *** fatal error - NtCreateDirectoryObject(\BaseNamedObjects\msys-2.0S5-dd50a72ab4668b33): 0xC0000022
+
+EXIT 3221225794

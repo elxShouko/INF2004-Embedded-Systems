@@ -55,10 +55,10 @@ typedef struct
     uint64_t candidate_since_us;
     uint64_t last_timestamp_us;
     uint32_t stable_us;
-    uint8_t  candidate;
-    uint8_t  stable;
-    bool     started;
-    bool     valid;
+    uint8_t  candidate : 3;
+    uint8_t  stable : 3;
+    uint8_t  started : 1;
+    uint8_t  valid : 1;
 } ir_filter_t;
 
 /* No assumed filtering duration: the caller must supply a measured value. */
