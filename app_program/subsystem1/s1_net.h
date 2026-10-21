@@ -66,11 +66,11 @@ typedef struct
     uint32_t telemetry_flushed;   /**< Stale frames dropped on reconnect. */
     uint32_t telemetry_oversize;  /**< JSON did not fit, not sent. */
     uint32_t commands_received;
-    uint32_t commands_rejected; /**< Unknown or malformed payload. */
-    uint32_t commands_dropped;  /**< Command buffer full. */
-    uint32_t commands_bad_size; /**< Queued message of the wrong size or id. */
-    uint32_t commands_stale;    /**< Discarded: older than the age limit. */
-    uint32_t estop_received;    /**< EMERGENCY_STOP commands seen. */
+    uint32_t commands_rejected;   /**< Unknown or malformed payload. */
+    uint32_t commands_dropped;    /**< Command buffer full. */
+    uint32_t commands_bad_size;   /**< Queued message of the wrong size or id. */
+    uint32_t commands_stale;      /**< Discarded: older than the age limit. */
+    uint32_t estop_received;      /**< EMERGENCY_STOP commands seen. */
     uint32_t estop_post_failures; /**< Safety flag could not be set. */
     uint32_t telemetry_bad_size;  /**< Queued frame of the wrong size. */
     uint32_t command_forward_max_ms;
@@ -78,15 +78,16 @@ typedef struct
     uint32_t backoff_last_ms;
     uint32_t connects;
     uint32_t disconnects;
-    bool     b_connected;
+    bool b_connected;
+    uint32_t telemetry_overwritten; /**< Count of oldest frames dropped to make room. */
 } s1_net_stats_t;
 
 /** @brief Create the kernel objects. Called from subsystem1_init(). */
-ER s1_net_init (void);
+ER s1_net_init(void);
 
 /** @brief Register the hooks with the MQTT client. Called from
  *  subsystem1_start(). Does nothing in a build without MQTT=1. */
-ER s1_net_start (void);
+ER s1_net_start(void);
 
 /**
  * @brief Queue a telemetry frame for publishing. Never blocks.
@@ -95,7 +96,7 @@ ER s1_net_start (void);
  * unreachable the Wi-Fi task discards the oldest frames, so the buffer stays
  * fresh and a full buffer is rare.
  */
-ER s1_net_telemetry_send (const s1_codec_frame_t * p_frame);
+ER s1_net_telemetry_send(const s1_codec_frame_t *p_frame);
 
 /**
  * @brief Take the oldest valid remote command.
@@ -111,7 +112,7 @@ ER s1_net_telemetry_send (const s1_codec_frame_t * p_frame);
  * @return E_OK, E_TMOUT if there was none, E_SYS for a malformed message, or
  * another kernel error.
  */
-ER s1_net_command_receive (s1_codec_command_t * p_command, TMO timeout);
+ER s1_net_command_receive(s1_codec_command_t *p_command, TMO timeout);
 
 /**
  * @brief Wait for any of the event flag bits, then clear the ones that
@@ -121,11 +122,11 @@ ER s1_net_command_receive (s1_codec_command_t * p_command, TMO timeout);
  * @param timeout  TMO_POL, TMO_FEVR, or milliseconds.
  * @return E_OK, or E_TMOUT.
  */
-ER s1_net_events_wait (UINT pattern, UINT * p_flags, TMO timeout);
+ER s1_net_events_wait(UINT pattern, UINT *p_flags, TMO timeout);
 
 /** @brief True while the MQTT session to the broker is open. Never blocks and
  *  takes no mutex. False if the state cannot be read. */
-bool s1_net_is_connected (void);
+bool s1_net_is_connected(void);
 
 /**
  * @brief True from the moment an EMERGENCY_STOP command arrives until
@@ -137,7 +138,7 @@ bool s1_net_is_connected (void);
  * Buddy 1 only DELIVERS the emergency signal. Deciding to inhibit or stop
  * motion belongs to the vehicle controller.
  */
-bool s1_net_estop_latched (void);
+bool s1_net_estop_latched(void);
 
 /**
  * @brief Clear the emergency latch. Only the owner of the safety policy (the
@@ -145,15 +146,15 @@ bool s1_net_estop_latched (void);
  * safe. It does not touch the command queue or the event flags.
  * @return E_OK, or the kernel error.
  */
-ER s1_net_estop_clear (void);
+ER s1_net_estop_clear(void);
 
 #if APP_TEST
 /** @brief Self-test only: the status mutex, so a test can hold it. */
-ID s1_net_test_status_mutex (void);
+ID s1_net_test_status_mutex(void);
 
 /** @brief Self-test only: the command message buffer, so a test can insert a
  *  malformed message. */
-ID s1_net_test_command_buffer (void);
+ID s1_net_test_command_buffer(void);
 #endif
 
 /**
@@ -162,22 +163,22 @@ ID s1_net_test_command_buffer (void);
  * @return E_OK, or the kernel error (E_TMOUT if the mutex stayed busy for
  * S1_NET_STATUS_LOCK_MS). The wait is bounded; the copy is then zeroed.
  */
-ER s1_net_get_stats (s1_net_stats_t * p_stats);
+ER s1_net_get_stats(s1_net_stats_t *p_stats);
 
 /** @brief Build the next telemetry JSON from the buffer. Returns the length,
  *  or 0 if the buffer was empty. Called by the Wi-Fi task (and by tests). */
-uint32_t s1_net_hook_pull_telemetry (char * p_buffer, uint32_t capacity);
+uint32_t s1_net_hook_pull_telemetry(char *p_buffer, uint32_t capacity);
 
 /** @brief Build the heartbeat JSON. */
-uint32_t s1_net_hook_make_heartbeat (char * p_buffer, uint32_t capacity,
-                                     uint32_t uptime_ms);
+uint32_t s1_net_hook_make_heartbeat(char *p_buffer, uint32_t capacity,
+                                    uint32_t uptime_ms);
 
 /** @brief Handle a complete payload from the command topic. */
-void s1_net_hook_on_command (const char * p_payload, uint32_t length,
-                             uint32_t rx_ms);
+void s1_net_hook_on_command(const char *p_payload, uint32_t length,
+                            uint32_t rx_ms);
 
 /** @brief Handle a connection event (an S1_NET_EVENT_* value). */
-void s1_net_hook_on_event (uint32_t event, uint32_t value);
+void s1_net_hook_on_event(uint32_t event, uint32_t value);
 
 #endif /* S1_NET_H */
 

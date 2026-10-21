@@ -4,17 +4,16 @@
 #include "../../../app_program/subsystem1/s1_net.h"
 #include "../../../app_program/subsystem1/s1_sim.h"
 
-extern void subsystem1_test (void);
-extern int  host_test_pass_count (void);
-extern int  host_test_fail_count (void);
-extern int  host_has_threads (void);
+extern void subsystem1_test(void);
+extern int host_test_pass_count(void);
+extern int host_test_fail_count(void);
+extern int host_has_threads(void);
 
 /* A run that skips tests must not pass: update when tests are added. */
-#define S1_HOST_MIN_CHECKS_THREADS 43
-#define S1_HOST_MIN_CHECKS_SERIAL 40
+#define S1_HOST_MIN_CHECKS_THREADS 45
+#define S1_HOST_MIN_CHECKS_SERIAL 42
 
-int
-main (void)
+int main(void)
 {
     int passed = 0;
     int failed = 0;
@@ -24,7 +23,7 @@ main (void)
 
     if ((s1_net_init() < 0) || (s1_sim_init() < 0))
     {
-        tm_printf((UB *) "HOST-RUN: kernel object creation failed\n");
+        tm_printf((UB *)"HOST-RUN: kernel object creation failed\n");
         status = 2;
     }
     else
@@ -40,18 +39,18 @@ main (void)
             (E_OK != tk_set_flg(id, 2u)) ||
             (E_OK != tk_wai_flg(id, 3u, TWF_ANDW, &pattern, TMO_POL)))
         {
-            tm_printf((UB *) "HOST-RUN: event flag mode regression failed\n");
+            tm_printf((UB *)"HOST-RUN: event flag mode regression failed\n");
             return 2;
         }
         subsystem1_test();
         passed = host_test_pass_count();
         failed = host_test_fail_count();
-        tm_printf((UB *) "HOST-RUN: %d passed, %d failed, threads=%d\n", passed,
-                 failed, host_has_threads());
+        tm_printf((UB *)"HOST-RUN: %d passed, %d failed, threads=%d\n", passed,
+                  failed, host_has_threads());
         if ((failed > 0) || (passed < min_checks))
         {
-            tm_printf((UB *) "HOST-RUN: FAILED (need 0 failed and >= %d passed)\n",
-                     min_checks);
+            tm_printf((UB *)"HOST-RUN: FAILED (need 0 failed and >= %d passed)\n",
+                      min_checks);
             status = 1;
         }
     }
