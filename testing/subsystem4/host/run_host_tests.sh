@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One entry point for the 79 current-firmware core/driver/runtime cases.
+# One entry point for the 82 current-firmware core/driver/runtime cases.
 # No downloads, hardware access, checkout, or integrated Make invocation.
 set -euo pipefail
 
@@ -28,12 +28,13 @@ run_current()
         flags+=(-O1 -g -fsanitize=address,undefined
                 -fno-sanitize-recover=all -fno-omit-frame-pointer)
     fi
-    printf '\nCURRENT firmware: 79 cases '
-    printf '(U116-U166, U176-U199, U202-U203, U205-U206)\n'
+    printf '\nCURRENT firmware: 82 cases '
+    printf '(U116-U166, U176-U199, U202-U203, U205-U209)\n'
     set -x
     "$compiler" "${flags[@]}" \
         "$repo_dir/app_program/subsystem4/imu_core.c" \
         "$repo_dir/app_program/subsystem4/imu_guard.c" \
+        "$repo_dir/app_program/subsystem4/imu_packed.c" \
         "$repo_dir/app_program/subsystem4/drv_lsm.c" \
         "$host_dir/buddy4_cases.c" "$host_dir/host_main.c" \
         -lm -o "$build_dir/current_tests"
@@ -43,6 +44,7 @@ run_current()
         "$repo_dir/app_program/subsystem4/imu_runtime.c" \
         "$repo_dir/app_program/subsystem4/imu_guard.c" \
         "$repo_dir/app_program/subsystem4/imu_link.c" \
+        "$repo_dir/app_program/subsystem4/imu_packed.c" \
         "$host_dir/runtime_fake.c" "$host_dir/runtime_main.c" \
         -lm -o "$build_dir/runtime_tests"
     for case_id in {149..161}; do

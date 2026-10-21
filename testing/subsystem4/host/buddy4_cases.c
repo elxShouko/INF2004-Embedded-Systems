@@ -5,6 +5,7 @@
 #include "buddy4_cases.h"
 #include "../../../app_program/subsystem4/imu_core.h"
 #include "../../../app_program/subsystem4/drv_lsm.h"
+#include "../../../app_program/subsystem4/imu_packed.h"
 
 #include <math.h>
 #include <stddef.h>
@@ -28,6 +29,7 @@ static void test_motion_validity (void);
 static void test_braking_regression (void);
 static void test_flat_cycle_after_hump (void);
 static void test_height_enable_gate (void);
+static void test_packed_status (void);
 static void bus_reset (void);
 static bool fake_read (uint8_t address, uint8_t reg, uint8_t *p_data,
                        uint32_t length);
@@ -56,6 +58,7 @@ uint32_t buddy4_cases_run (buddy4_cases_report_t p_report)
     test_braking_regression();
     test_flat_cycle_after_hump();
     test_height_enable_gate();
+    test_packed_status();
     return g_failures;
 }
 
@@ -809,6 +812,63 @@ static void test_height_enable_gate (void)
                  (0u != (core.status.height_reasons &
                          IMU_HEIGHT_UNCALIBRATED)),
                  "uncalibrated height gate remains closed");
+}
+
+static void test_packed_status (void)
+{
+    imu_core_status_t source = {0};
+    imu_core_status_t decoded = {0};
+    imu_packed_status_t packed = {0};
+    bool b_round_trip = false;
+
+    source.phase = IMU_FAULT;
+    source.motion = IMU_IMPACT;
+    source.time_ms = UINT32_MAX;
+    source.events = 0x01FFu;
+    source.pitch_deg = -89.5f;
+    source.roll_deg = 45.25f;
+    source.heading_deg = 359.5f;
+    source.turn_dps = -720.0f;
+    source.hump_peak_mm = 123.25f;
+    source.highest_hump_mm = 456.5f;
+    source.b_heading_valid = true;
+    source.b_height_valid = true;
+    source.b_highest_valid = true;
+    source.height_reasons = 0xFFu;
+    source.b_peak_provisional = true;
+    b_round_trip = imu_packed_encode(&source, &packed) &&
+                   imu_packed_decode(&packed, &decoded);
+    b_round_trip = b_round_trip &&
+                   (source.phase == decoded.phase) &&
+                   (source.motion == decoded.motion) &&
+                   (source.time_ms == decoded.time_ms) &&
+                   (source.events == decoded.events) &&
+                   near_value(source.pitch_deg, decoded.pitch_deg) &&
+                   near_value(source.roll_deg, decoded.roll_deg) &&
+                   near_value(source.heading_deg, decoded.heading_deg) &&
+                   near_value(source.turn_dps, decoded.turn_dps) &&
+                   near_value(source.hump_peak_mm, decoded.hump_peak_mm) &&
+                   near_value(source.highest_hump_mm,
+                              decoded.highest_hump_mm) &&
+                   decoded.b_heading_valid && decoded.b_height_valid &&
+                   decoded.b_highest_valid &&
+                   decoded.b_peak_provisional &&
+                   (source.height_reasons == decoded.height_reasons);
+    report_case("S4-U207", b_round_trip,
+                "packed status round-trips every bounded field");
+    report_case("S4-U208",
+                (IMU_PACKED_STATUS_BYTES == sizeof(imu_packed_status_t)) &&
+                (sizeof(imu_packed_status_t) <
+                 IMU_STATUS_PRE_TRIBUNAL_HOST_BYTES) &&
+                (IMU_PACKED_STATUS_BYTES == sizeof(imu_core_status_t)),
+                "host event payload falls from 52 to 32 bytes");
+    packed.fields |= 0x80000000u;
+    source.phase = 6u;
+    report_case("S4-U209", (!imu_packed_decode(&packed, &decoded)) &&
+                (!imu_packed_encode(&source, &packed)) &&
+                (!imu_packed_encode(NULL, &packed)) &&
+                (!imu_packed_decode(NULL, &decoded)),
+                "reserved bits and invalid states fail closed");
 }
 
 /* End of file. */

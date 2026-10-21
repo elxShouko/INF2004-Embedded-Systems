@@ -8,6 +8,7 @@
 #include "imu_config.h"
 #include "drv_imu.h"
 #include "imu_link.h"
+#include "imu_packed.h"
 
 #include <math.h>
 
@@ -16,8 +17,15 @@
 typedef struct
 {
     uint32_t epoch;
-    bool     b_trusted;
+    uint8_t  b_trusted : 1;
 } imu_runtime_trust_t;
+
+typedef struct
+{
+    imu_packed_status_t sensing;
+    uint32_t            dropped_events;
+    uint8_t             b_enabled : 1;
+} imu_runtime_shared_t;
 
 static void imu_runtime_task (INT start_code, void *p_context);
 static ER publish_status (const imu_core_t *p_core);
@@ -30,7 +38,7 @@ static ID g_mutex = 0;
 static ID g_events = 0;
 static ID g_fault = 0;
 static ID g_task = 0;
-static imu_runtime_status_t g_status;
+static imu_runtime_shared_t g_status;
 static imu_runtime_trust_t g_trust;
 
 ER imu_runtime_init (void)
@@ -59,16 +67,26 @@ ER imu_runtime_init (void)
     }
     buffer.mbfatr = TA_TFIFO;
     /* Include kernel per-message size overhead, rounded up to UW. */
-    buffer.bufsz = S4_IMU_EVENT_DEPTH * (sizeof(imu_core_status_t) +
+    buffer.bufsz = S4_IMU_EVENT_DEPTH * (sizeof(imu_packed_status_t) +
                     (2u * sizeof(UW)));
-    buffer.maxmsz = sizeof(imu_core_status_t);
+    buffer.maxmsz = sizeof(imu_packed_status_t);
     g_events = tk_cre_mbf(&buffer);
     if (g_events < E_OK)
     {
         return g_events;
     }
-    g_status.b_enabled = (0 != S4_IMU_ENABLE);
-    g_status.sensing.phase = IMU_CALIBRATING;
+    {
+        const imu_core_status_t initial =
+        {
+            .phase = IMU_CALIBRATING
+        };
+
+        g_status.b_enabled = (0 != S4_IMU_ENABLE);
+        if (!imu_packed_encode(&initial, &g_status.sensing))
+        {
+            return E_SYS;
+        }
+    }
     task.task = (FP)imu_runtime_task; /* Required RTOS callback convention. */
     task.itskpri = S4_IMU_PRIORITY;
     task.stksz = TASK_STACK_SIZE;
@@ -89,6 +107,7 @@ ER imu_runtime_start (void)
 
 ER imu_runtime_get_status (imu_runtime_status_t *p_status)
 {
+    imu_runtime_shared_t shared = {0};
     ER result = E_PAR;
 
     if ((NULL == p_status) || (g_task <= 0))
@@ -98,22 +117,33 @@ ER imu_runtime_get_status (imu_runtime_status_t *p_status)
     result = tk_loc_mtx(g_mutex, IMU_LOCK_TIMEOUT_MS);
     if (E_OK == result)
     {
-        *p_status = g_status;
+        shared = g_status;
         result = tk_unl_mtx(g_mutex);
+    }
+    if ((E_OK == result) &&
+        (!imu_packed_decode(&shared.sensing, &p_status->sensing)))
+    {
+        result = E_SYS;
+    }
+    if (E_OK == result)
+    {
+        p_status->dropped_events = shared.dropped_events;
+        p_status->b_enabled = shared.b_enabled;
     }
     return result;
 }
 
 ER imu_runtime_get_event (imu_core_status_t *p_event)
 {
+    imu_packed_status_t packed = {0};
     ER result = E_PAR;
 
     if (NULL != p_event)
     {
-        result = tk_rcv_mbf(g_events, p_event, TMO_POL);
-        if ((ER)sizeof(*p_event) == result)
+        result = tk_rcv_mbf(g_events, &packed, TMO_POL);
+        if ((ER)sizeof(packed) == result)
         {
-            result = E_OK;
+            result = imu_packed_decode(&packed, p_event) ? E_OK : E_SYS;
         }
         else if (result >= E_OK)
         {
@@ -297,13 +327,18 @@ static void sample_loop (imu_core_t *p_core)
 
 static ER publish_status (const imu_core_t *p_core)
 {
+    imu_packed_status_t packed = {0};
     ER result = E_OK;
     bool b_dropped = false;
 
+    if (!imu_packed_encode(&p_core->status, &packed))
+    {
+        return E_SYS;
+    }
+
     if (0u != p_core->status.events)
     {
-        result = tk_snd_mbf(g_events, &p_core->status,
-                            sizeof(p_core->status), TMO_POL);
+        result = tk_snd_mbf(g_events, &packed, sizeof(packed), TMO_POL);
         b_dropped = (E_TMOUT == result);
         if ((!b_dropped) && (E_OK != result))
         {
@@ -313,7 +348,7 @@ static ER publish_status (const imu_core_t *p_core)
     result = tk_loc_mtx(g_mutex, IMU_LOCK_TIMEOUT_MS);
     if (E_OK == result)
     {
-        g_status.sensing = p_core->status;
+        g_status.sensing = packed;
         if (b_dropped && (UINT32_MAX != g_status.dropped_events))
         {
             /* Drop newest; the status snapshot stays current. */

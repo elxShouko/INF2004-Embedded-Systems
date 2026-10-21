@@ -1,6 +1,7 @@
 /** @file runtime_fake.c API checks cannot establish SMP or real-time safety. */
 #include "runtime_fake.h"
 #include "../../../app_program/subsystem4/drv_imu.h"
+#include "../../../app_program/subsystem4/imu_packed.h"
 
 #include <stddef.h>
 #include <string.h>
@@ -9,7 +10,7 @@ static ID create_object (void);
 
 runtime_fake_state_t g_fake;
 static FP g_p_task;
-static imu_core_status_t g_event;
+static imu_packed_status_t g_event;
 static bool g_b_event_pending;
 
 void runtime_fake_run (void)
