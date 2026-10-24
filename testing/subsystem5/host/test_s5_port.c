@@ -15,6 +15,8 @@ static uint32_t g_writes;
 static uint32_t g_failure;
 static bool g_bad;
 static bool g_reserved;
+static bool g_roll_timer;
+static bool g_deliver_after_unlock;
 static drv_encoder_sink_t g_sink;
 static void * g_context;
 static uint32_t g_failures;
@@ -32,7 +34,13 @@ static uint32_t * reg (uint32_t address)
 uint32_t in_w (uint32_t address)
 {
     if (0x40054024UL == address) { return ((uint32_t)(g_now >> 32U)); }
-    if (0x40054028UL == address) { return ((uint32_t)g_now); }
+    if (0x40054028UL == address)
+    {
+        uint32_t low = (uint32_t)g_now;
+
+        if (g_roll_timer) { ++g_now; g_roll_timer = false; }
+        return (low);
+    }
     return (*reg(address));
 }
 void out_w (uint32_t address,uint32_t value)
@@ -64,7 +72,16 @@ void WaitUsec (uint32_t delay)
 { if (10U != delay) { g_bad = true; } g_now += delay; }
 uint32_t test_s5_enter (void)
 { uint32_t old = g_lock; g_lock = 1U; return (old); }
-void test_s5_leave (uint32_t saved) { g_lock = saved; }
+void test_s5_leave (uint32_t saved)
+{
+    g_lock = saved;
+    if (g_deliver_after_unlock && (0U == saved))
+    {
+        g_deliver_after_unlock = false;
+        g_now = 100U; g_sink(g_context,1UL << 6U,1UL << 6U);
+        g_now = 680U; g_sink(g_context,1UL << 6U,0U);
+    }
+}
 static bool reserve (void * p,uint32_t mask,drv_encoder_sink_t sink,void * ctx)
 {
     (void)p; ++g_reserves;
@@ -94,6 +111,7 @@ static void reset (void)
 {
     g_count = 0U; g_now = 0U; g_reserves = 0U; g_releases = 0U;
     g_writes = 0U; g_failure = 0U; g_reserved = false; g_bad = false;
+    g_lock = 0U; g_roll_timer = false; g_deliver_after_unlock = false;
     *reg(0xD0000000UL) = 1U;
     *reg(XOSC_STATUS) = 0x80000000U;
     *reg(PLL_SYS_BASE + PLL_CS) = 0x80000001U;
@@ -164,6 +182,90 @@ int main (void)
     result = result && (-1 == io.p_echo(io.p_context,&width,&capture));
     io.p_close(io.p_context);
     check(72U,result);
+
+    reset(); driver = (drv_s5_t){0};
+    config.echo_us_per_cm = 1000U; config.echo_timeout_us = 500000U;
+    config.sample_period_us = 600000U;
+    result = drv_s5_bind(&driver,&irq,&io) && io.p_open(io.p_context,&config) &&
+        io.p_trigger(io.p_context);
+    if (!result || (NULL == g_sink)) { return 1; }
+    g_now = UINT32_MAX - 100U; g_sink(g_context,1UL << 6U,1UL << 6U);
+    g_now += 400000U; g_sink(g_context,1UL << 6U,0U);
+    result = result && (1 == io.p_echo(io.p_context,&width,&capture)) &&
+        (400000U == width) && (g_now == capture);
+    io.p_close(io.p_context); check(107U,result);
+
+    reset(); driver = (drv_s5_t){0};
+    result = drv_s5_bind(&driver,&irq,&io) && io.p_open(io.p_context,&config);
+    for (uint32_t state = 5U; result && (state <= UINT8_MAX); ++state)
+    {
+        driver.echo_state = (uint8_t)state;
+        result = (-1 == io.p_echo(io.p_context,&width,&capture));
+    }
+    io.p_close(io.p_context); check(108U,result);
+
+    reset(); driver = (drv_s5_t){0};
+    result = drv_s5_bind(&driver,&irq,&io) && io.p_open(io.p_context,&config) &&
+        io.p_trigger(io.p_context);
+    if (!result || (NULL == g_sink)) { return 1; }
+    g_now = 100U; g_sink(g_context,1UL << 6U,1UL << 6U);
+    g_now = 101U; g_sink(g_context,1UL << 6U,1UL << 6U);
+    g_now = 680U; g_sink(g_context,1UL << 6U,0U);
+    result = (-1 == io.p_echo(io.p_context,&width,&capture)) &&
+        (100U == driver.rise_us) && (0U == width) && (0U == capture);
+    io.p_close(io.p_context); check(109U,result);
+
+    result = true;
+    for (uint32_t sequence = 0U; sequence < 3U; ++sequence)
+    {
+        reset(); driver = (drv_s5_t){0};
+        bool opened = drv_s5_bind(&driver,&irq,&io) &&
+            io.p_open(io.p_context,&config) && io.p_trigger(io.p_context);
+        if (!opened || (NULL == g_sink)) { return 1; }
+        g_now = 100U;
+        if (0U != sequence) { g_sink(g_context,1UL << 6U,1UL << 6U); }
+        if (2U == sequence) { g_now += config.echo_timeout_us + 1U; }
+        g_sink(g_context,1UL << 6U,0U);
+        result = result && (-1 == io.p_echo(io.p_context,&width,&capture));
+        io.p_close(io.p_context);
+    }
+    check(110U,result); /* Fall without rise, zero width, over-timeout pulse. */
+
+    reset(); g_now = UINT32_MAX; g_roll_timer = true;
+    result = drv_s5_now(&capture) && (UINT64_C(0x100000000) == capture);
+    check(111U,result);
+
+    reset(); driver = (drv_s5_t){0};
+    result = drv_s5_bind(&driver,&irq,&io) && io.p_open(io.p_context,&config);
+    *reg(GPIO_IN) |= 1UL << 6U;
+    result = result && !io.p_trigger(io.p_context) &&
+        (0U == (in_w(0xD0000010UL) & (1UL << 26U)));
+    io.p_close(io.p_context); check(112U,result);
+
+    reset(); driver = (drv_s5_t){0};
+    result = drv_s5_bind(&driver,&irq,&io) && io.p_open(io.p_context,&config);
+    uint32_t writes = g_writes;
+
+    *reg(0xD0000000UL) = 0U;
+    result = result && !io.p_trigger(io.p_context) &&
+        !io.p_servo(io.p_context,90U) &&
+        (-1 == io.p_echo(io.p_context,&width,&capture)) && (writes == g_writes);
+    *reg(0xD0000000UL) = 1U;
+    io.p_close(io.p_context); check(113U,result);
+
+    reset(); driver = (drv_s5_t){0};
+    result = drv_s5_bind(&driver,&irq,&io) && io.p_open(io.p_context,&config) &&
+        io.p_trigger(io.p_context);
+    if (!result || (NULL == g_sink)) { return 1; }
+    g_deliver_after_unlock = true;
+    result = (0 == io.p_echo(io.p_context,&width,&capture)) &&
+        (0U == width) && (0U == capture) &&
+        (1 == io.p_echo(io.p_context,&width,&capture)) &&
+        (580U == width) && (680U == capture) && (0U == g_lock);
+    g_now = 900U; g_sink(g_context,1UL << 6U,0U);
+    result = result && (1 == io.p_echo(io.p_context,&width,&capture)) &&
+        (580U == width) && (680U == capture);
+    io.p_close(io.p_context); check(114U,result);
     return ((0U == g_failures) ? 0 : 1);
 }
 /*** end of file ***/

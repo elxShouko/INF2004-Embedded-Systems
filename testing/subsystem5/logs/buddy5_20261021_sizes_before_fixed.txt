@@ -1,0 +1,186 @@
+git rev-parse HEAD
+d4c91f271c9801802e3994967c96e9ec8fcba38c
+EXIT 0
+git status --short
+?? ../testing/integration/logs/buddy5_20261021_baseline_arm_arm.log
+?? ../testing/integration/logs/buddy5_20261021_baseline_arm_metadata.json
+?? ../testing/integration/logs/buddy5_20261021_baseline_default.log
+?? ../testing/integration/logs/buddy5_20261021_baseline_metadata.json
+?? ../testing/integration/logs/buddy5_20261021_baseline_optimized.log
+?? ../testing/subsystem5/host/measure_representation.c
+?? ../testing/subsystem5/logs/buddy5_20261021_sizes_baseline.txt
+?? ../testing/subsystem5/logs/buddy5_20261021_sizes_before.txt
+?? ../testing/subsystem5/logs/buddy5_20261021_sizes_before_fixed.txt
+?? ../testing/subsystem5/measure_representation.py
+EXIT 0
+{
+  "app_program\\subsystem5\\drv_s5.c": "e9ee77127279619cbfd71114970d6e66f47d6f18460cc99665a438f92d7a9402",
+  "app_program\\subsystem5\\drv_s5.h": "619f62ca8c912857e3e9524f954b9ec0bd67d82b93ab2aae12dfb12151d8906e",
+  "app_program\\subsystem5\\s5_acquire.c": "9fc4206c4b44b7985fca3d4b38d1bb666048ee89c3018f12f1fe39e34079bb3e",
+  "app_program\\subsystem5\\s5_acquire.h": "4c322011240d1ad566b4b0e4d8540f00e8bcfeaab3dcaaad650942f4fe6516d1",
+  "app_program\\subsystem5\\s5_live.c": "06bfac04d091c332dd42eb0e3f39ef552017daef4db655d870a1bab3a7387663",
+  "app_program\\subsystem5\\s5_live.h": "4fc5ff703b46ee5f2e011010803beb5e2b1d714aa4547f77d8811c603241b1e1",
+  "app_program\\subsystem5\\s5_obstacle_logic.c": "6fef58044578aec4b40c9268b022449e95a91ccf47b6737378f8cf4db703d306",
+  "app_program\\subsystem5\\s5_obstacle_logic.h": "372986adcfbbb6a958c523dccfd2884ececb15671068572024c9891e62e7a10d",
+  "app_program\\subsystem5\\s5_obstacle_runtime.c": "c236f99f90e1f38b04c2d6cda1436093ca6939c929d3c54c7b48fb3d64e38b95",
+  "app_program\\subsystem5\\s5_obstacle_runtime.h": "dfd234fc684c1b70f77fead43b868b3ee75779f6481d3e5b0163dcb5088449f6",
+  "app_program\\subsystem5\\subsystem5.c": "24228e66ad310d7fe4a5635cb3133f75cfa25aef6814c5dcb0ddbef4111828dd",
+  "app_program\\subsystem5\\subsystem5.h": "e778b1165b1e5de658ae15bdb95da39247cf7c32d4d1e0453da8a6ae69f376a1",
+  "app_program\\subsystem5\\subsystem5_test.c": "f2b6a129143713568b10e03cee63e6027fe7ac827d6722a7fd5a7482355d89d5"
+}
+
+HOST default
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -DVEHICLE_HOST_TEST -DMOTION_RTOS_HOST_TEST -DMOTION_CONFIG_HOST_TEST -include "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\measure_representation.c" -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\default.exe"
+EXIT 0
+"C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\default.exe"
+s5_scan_sample_t 12
+s5_scan_context_t 32
+s5_obstacle_profile_t 24
+s5_obstacle_plan_t 96
+s5_clear_box_t 16
+s5_clearance_t 80
+s5_route_config_t 56
+s5_runtime_config_t 28
+s5_runtime_input_t 80
+s5_runtime_status_t 392
+s5_runtime_events_t 5
+s5_runtime_t 440
+s5_acquire_config_t 32
+s5_acquire_io_t 48
+s5_acquire_t 384
+drv_s5_t 96
+s5_live_config_t 60
+s5_live_status_t 440
+EXIT 0
+
+HOST optimized
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -O2 -fshort-enums -DVEHICLE_HOST_TEST -DMOTION_RTOS_HOST_TEST -DMOTION_CONFIG_HOST_TEST -include "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\measure_representation.c" -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\optimized.exe"
+EXIT 0
+"C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\optimized.exe"
+s5_scan_sample_t 12
+s5_scan_context_t 28
+s5_obstacle_profile_t 20
+s5_obstacle_plan_t 64
+s5_clear_box_t 16
+s5_clearance_t 80
+s5_route_config_t 56
+s5_runtime_config_t 28
+s5_runtime_input_t 80
+s5_runtime_status_t 344
+s5_runtime_events_t 5
+s5_runtime_t 392
+s5_acquire_config_t 32
+s5_acquire_io_t 48
+s5_acquire_t 368
+drv_s5_t 96
+s5_live_config_t 60
+s5_live_status_t 392
+EXIT 0
+"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe" --version
+arm-none-eabi-gcc.exe (GNU Arm Embedded Toolchain 10.3-2021.10) 10.3.1 20210824 (release)
+Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+EXIT 0
+"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe" -DS5_SIZE_ONLY -fstack-usage -mcpu=cortex-m0plus -mthumb -ffreestanding -std=gnu11 -O2 -g3 -MMD -MP -mfloat-abi=soft -DCNF_SMP=1 -DAPP_TEST=1 -DTM_CONSOLE_UART=0 -DBOARD_UART0_FREE=1 -DTM_CONSOLE_USB_CDC=1 -DNDEBUG -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/tinyusb/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -DTM_WIFI_CYW43=1 -DCYW43_LWIP=0 -DCYW43_ENABLE_BLUETOOTH=0 -DCYW43_USE_OTP_MAC=1 -DPICO_CYW43_LOGGING_ENABLED=0 -DPICO_RP2040=1 -DPICO_32BIT=1 -DPICO_ON_DEVICE=1 -DPICO_BUILD=1 -DPICO_NO_HARDWARE=0 -DRASPBERRYPI_PICO_W=1 -DCYW43_DEFAULT_PIN_WL_REG_ON=23u -DCYW43_DEFAULT_PIN_WL_DATA_OUT=24u -DCYW43_DEFAULT_PIN_WL_DATA_IN=24u -DCYW43_DEFAULT_PIN_WL_HOST_WAKE=24u -DCYW43_DEFAULT_PIN_WL_CLOCK=29u -DCYW43_DEFAULT_PIN_WL_CS=25u -DNDEBUG -ffunction-sections -fdata-sections -I../lib/libwifi/sysdepend/pico_rp2040 -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/firmware -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_cyw43_driver/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/boards/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/hardware_claim/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_util/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_pio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_gpio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_dma/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_clocks/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -D_PICO_RP2040_ -I../include -I../config -I../kernel/knlinc "-MFC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\measure_representation.c.d" "-MTC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\measure_representation.c.o" -c -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\measure_representation.c.o" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\measure_representation.c"
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-nm.exe" -S --size-sort "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\measure_representation.c.o"
+00000000 00000005 R g_size_s5_runtime_events_t
+00000000 0000000c R g_size_s5_scan_sample_t
+00000000 00000010 R g_size_s5_clear_box_t
+00000000 00000014 R g_size_s5_obstacle_profile_t
+00000000 00000018 R g_size_s5_acquire_io_t
+00000000 0000001c R g_size_s5_runtime_config_t
+00000000 0000001c R g_size_s5_scan_context_t
+00000000 00000020 R g_size_s5_acquire_config_t
+00000000 00000038 R g_size_s5_route_config_t
+00000000 00000038 R g_size_s5_runtime_input_t
+00000000 0000003c R g_size_s5_live_config_t
+00000000 00000040 R g_size_s5_obstacle_plan_t
+00000000 00000050 R g_size_drv_s5_t
+00000000 00000050 R g_size_s5_clearance_t
+00000000 00000150 R g_size_s5_acquire_t
+00000000 00000150 R g_size_s5_runtime_status_t
+00000000 00000180 R g_size_s5_live_status_t
+00000000 00000180 R g_size_s5_runtime_t
+EXIT 0
+"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe" -DS5_SIZE_ONLY -fstack-usage -mcpu=cortex-m0plus -mthumb -ffreestanding -std=gnu11 -O2 -g3 -MMD -MP -mfloat-abi=soft -DCNF_SMP=1 -DAPP_TEST=1 -DTM_CONSOLE_UART=0 -DBOARD_UART0_FREE=1 -DTM_CONSOLE_USB_CDC=1 -DNDEBUG -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/tinyusb/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -DTM_WIFI_CYW43=1 -DCYW43_LWIP=0 -DCYW43_ENABLE_BLUETOOTH=0 -DCYW43_USE_OTP_MAC=1 -DPICO_CYW43_LOGGING_ENABLED=0 -DPICO_RP2040=1 -DPICO_32BIT=1 -DPICO_ON_DEVICE=1 -DPICO_BUILD=1 -DPICO_NO_HARDWARE=0 -DRASPBERRYPI_PICO_W=1 -DCYW43_DEFAULT_PIN_WL_REG_ON=23u -DCYW43_DEFAULT_PIN_WL_DATA_OUT=24u -DCYW43_DEFAULT_PIN_WL_DATA_IN=24u -DCYW43_DEFAULT_PIN_WL_HOST_WAKE=24u -DCYW43_DEFAULT_PIN_WL_CLOCK=29u -DCYW43_DEFAULT_PIN_WL_CS=25u -DNDEBUG -ffunction-sections -fdata-sections -I../lib/libwifi/sysdepend/pico_rp2040 -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/firmware -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_cyw43_driver/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/boards/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/hardware_claim/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_util/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_pio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_gpio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_dma/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_clocks/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -D_PICO_RP2040_ -I../include -I../config -I../kernel/knlinc "-MFC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\s5_live.c.d" "-MTC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\s5_live.c.o" -c -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\s5_live.c.o" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_live.c"
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-nm.exe" -S --size-sort "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\s5_live.c.o"
+00000000 00000001 b g_s5_configured
+00000000 00000001 b g_s5_motion_baseline
+00000000 00000001 b g_s5_started
+00000000 00000004 b g_s5_fault
+00000000 00000004 b g_s5_motion_raw_ms
+00000000 00000004 b g_s5_mutex
+00000000 00000004 b g_s5_task
+00000000 00000008 b g_s5_motion_sample_us
+00000000 00000008 b g_s5_recovered
+00000000 00000008 b g_s5_recovery_pending
+00000000 00000010 b g_s5_irq
+00000000 0000001c T s5_live_cancel
+00000000 0000002c T s5_live_fault
+00000000 00000034 T s5_live_start
+00000000 0000003c b g_s5_config
+00000000 00000050 b g_s5_driver
+00000000 00000058 t s5_live_cleanup
+00000000 00000090 T s5_live_recovered
+00000000 000000b8 T s5_live_init
+00000000 000000e0 T s5_live_status
+00000000 000000ec T s5_live_configure
+00000000 00000150 b g_s5_acquisition
+00000000 00000180 b g_s5_policy
+00000000 00000180 b g_s5_published
+00000000 00000680 t s5_live_task
+00000000 00001000 b g_s5_stack
+EXIT 0
+"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe" -DS5_SIZE_ONLY -fstack-usage -mcpu=cortex-m0plus -mthumb -ffreestanding -std=gnu11 -O2 -g3 -MMD -MP -mfloat-abi=soft -DCNF_SMP=1 -DAPP_TEST=1 -DTM_CONSOLE_UART=0 -DBOARD_UART0_FREE=1 -DTM_CONSOLE_USB_CDC=1 -DNDEBUG -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/tinyusb/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -DTM_WIFI_CYW43=1 -DCYW43_LWIP=0 -DCYW43_ENABLE_BLUETOOTH=0 -DCYW43_USE_OTP_MAC=1 -DPICO_CYW43_LOGGING_ENABLED=0 -DPICO_RP2040=1 -DPICO_32BIT=1 -DPICO_ON_DEVICE=1 -DPICO_BUILD=1 -DPICO_NO_HARDWARE=0 -DRASPBERRYPI_PICO_W=1 -DCYW43_DEFAULT_PIN_WL_REG_ON=23u -DCYW43_DEFAULT_PIN_WL_DATA_OUT=24u -DCYW43_DEFAULT_PIN_WL_DATA_IN=24u -DCYW43_DEFAULT_PIN_WL_HOST_WAKE=24u -DCYW43_DEFAULT_PIN_WL_CLOCK=29u -DCYW43_DEFAULT_PIN_WL_CS=25u -DNDEBUG -ffunction-sections -fdata-sections -I../lib/libwifi/sysdepend/pico_rp2040 -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/firmware -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_cyw43_driver/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/boards/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/hardware_claim/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_util/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_pio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_gpio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_dma/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_clocks/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -D_PICO_RP2040_ -I../include -I../config -I../kernel/knlinc "-MFC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\drv_s5.c.d" "-MTC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\drv_s5.c.o" -c -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\drv_s5.c.o" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c"
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-nm.exe" -S --size-sort "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\drv_s5.c.o"
+00000000 00000038 T drv_s5_now
+00000000 00000042 t drv_s5_echo
+00000000 0000004c t drv_s5_servo
+00000000 00000054 t drv_s5_close.part.0
+00000000 0000005c t drv_s5_trigger
+00000000 00000060 t drv_s5_close
+00000000 00000064 T drv_s5_bind
+00000000 00000098 t drv_s5_edge
+00000000 00000244 t drv_s5_open
+EXIT 0
+"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe" -DS5_SIZE_ONLY -fstack-usage -mcpu=cortex-m0plus -mthumb -ffreestanding -std=gnu11 -O2 -g3 -MMD -MP -mfloat-abi=soft -DCNF_SMP=1 -DAPP_TEST=1 -DTM_CONSOLE_UART=0 -DBOARD_UART0_FREE=1 -DTM_CONSOLE_USB_CDC=1 -DNDEBUG -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/tinyusb/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -DTM_WIFI_CYW43=1 -DCYW43_LWIP=0 -DCYW43_ENABLE_BLUETOOTH=0 -DCYW43_USE_OTP_MAC=1 -DPICO_CYW43_LOGGING_ENABLED=0 -DPICO_RP2040=1 -DPICO_32BIT=1 -DPICO_ON_DEVICE=1 -DPICO_BUILD=1 -DPICO_NO_HARDWARE=0 -DRASPBERRYPI_PICO_W=1 -DCYW43_DEFAULT_PIN_WL_REG_ON=23u -DCYW43_DEFAULT_PIN_WL_DATA_OUT=24u -DCYW43_DEFAULT_PIN_WL_DATA_IN=24u -DCYW43_DEFAULT_PIN_WL_HOST_WAKE=24u -DCYW43_DEFAULT_PIN_WL_CLOCK=29u -DCYW43_DEFAULT_PIN_WL_CS=25u -DNDEBUG -ffunction-sections -fdata-sections -I../lib/libwifi/sysdepend/pico_rp2040 -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/firmware -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_cyw43_driver/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/boards/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/hardware_claim/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_util/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_pio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_gpio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_dma/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_clocks/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -D_PICO_RP2040_ -I../include -I../config -I../kernel/knlinc "-MFC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\s5_acquire.c.d" "-MTC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\s5_acquire.c.o" -c -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\s5_acquire.c.o" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_acquire.c"
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-nm.exe" -S --size-sort "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before_fixed\s5_acquire.c.o"
+00000000 00000026 T s5_acquire_close
+00000000 000000a0 T s5_acquire_validate
+00000000 000000a2 t s5_acquire_position
+00000000 000000ec T s5_acquire_open
+00000000 00000578 T s5_acquire_step
+EXIT 0
+drv_s5.c.su
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c:155:13:drv_s5_close.part.0	16	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c:138:16:drv_s5_echo	16	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c:119:13:drv_s5_trigger	24	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c:102:13:drv_s5_servo	16	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c:61:13:drv_s5_open	40	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c:176:13:drv_s5_edge	20	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c:155:13:drv_s5_close	16	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c:31:6:drv_s5_now	12	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c:48:6:drv_s5_bind	16	static
+measure_representation.c.su
+s5_acquire.c.su
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_acquire.c:176:13:s5_acquire_position	24	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_acquire.c:11:6:s5_acquire_validate	12	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_acquire.c:34:6:s5_acquire_open	32	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_acquire.c:59:6:s5_acquire_step	88	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_acquire.c:153:6:s5_acquire_close	8	static
+s5_live.c.su
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_live.c:337:13:s5_live_cleanup	8	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_live.c:168:13:s5_live_task	728	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_live.c:31:4:s5_live_init	80	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_live.c:69:4:s5_live_start	16	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_live.c:79:4:s5_live_configure	408	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_live.c:108:4:s5_live_status	432	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_live.c:132:4:s5_live_recovered	16	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_live.c:155:4:s5_live_fault	24	static
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_live.c:163:4:s5_live_cancel	8	static

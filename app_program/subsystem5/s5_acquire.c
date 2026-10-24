@@ -61,6 +61,15 @@ bool s5_acquire_step (s5_acquire_t * p_owner, uint64_t now_us,
 {
     if ((NULL == p_owner) || !p_owner->b_open ||
         (S5_ACQUIRE_FAULT == p_owner->state)) { return (false); }
+    if ((p_owner->state > S5_ACQUIRE_ECHO) ||
+        (p_owner->b_scan &&
+         ((p_owner->index >= (p_owner->b_fine ? p_owner->fine_count :
+                              S5_COARSE_SCAN_COUNT)) ||
+          (p_owner->b_fine && ((p_owner->fine_count < 3U) ||
+                              (p_owner->fine_count > S5_FINE_SCAN_MAX_COUNT))))))
+    {
+        return (s5_acquire_fault(p_owner));
+    }
     if ((now_us < p_owner->last_us) ||
         (now_us > UINT64_MAX - p_owner->config.scan_timeout_us) ||
         b_cancel || (p_owner->b_scan && (!b_stationary ||
@@ -131,7 +140,9 @@ bool s5_acquire_step (s5_acquire_t * p_owner, uint64_t now_us,
         {
             if ((captured_us < p_owner->deadline_us -
                  p_owner->config.echo_timeout_us) ||
-                (captured_us > p_owner->deadline_us))
+                (captured_us > p_owner->deadline_us) ||
+                ((uint64_t)width > captured_us - (p_owner->deadline_us -
+                 p_owner->config.echo_timeout_us)))
             {
                 return (s5_acquire_fault(p_owner));
             }
@@ -196,7 +207,14 @@ static bool s5_acquire_sample (s5_acquire_t * p_owner, uint64_t now_us,
 {
     uint32_t cm = width_us / p_owner->config.echo_us_per_cm;
 
-    if ((width_us > p_owner->config.echo_timeout_us) ||
+    /* Check the physical range before flooring to whole cm. In particular,
+     * max_range * scale + 1 must not round back into the accepted range.
+     */
+    if ((width_us < (uint32_t)p_owner->config.echo_us_per_cm *
+                    S5_MIN_VALID_DISTANCE_CM) ||
+        (width_us > (uint32_t)p_owner->config.echo_us_per_cm *
+                    S5_MAX_VALID_DISTANCE_CM) ||
+        (width_us > p_owner->config.echo_timeout_us) ||
         (cm < S5_MIN_VALID_DISTANCE_CM) || (cm > S5_MAX_VALID_DISTANCE_CM))
     {
         return (s5_acquire_fault(p_owner));
@@ -222,6 +240,7 @@ static bool s5_acquire_sample (s5_acquire_t * p_owner, uint64_t now_us,
     if (!p_owner->b_fine && (S5_COARSE_SCAN_COUNT == p_owner->index))
     {
         size_t closest = 0U;
+        size_t fine_count = 0U;
 
         for (size_t index = 1U; index < S5_COARSE_SCAN_COUNT; ++index)
         {
@@ -230,10 +249,12 @@ static bool s5_acquire_sample (s5_acquire_t * p_owner, uint64_t now_us,
         }
         if (S5_LOGIC_OK != s5_make_fine_scan_angles(
             p_owner->coarse[closest].angle_deg,p_owner->angles,
-            S5_FINE_SCAN_MAX_COUNT,&p_owner->fine_count))
+            S5_FINE_SCAN_MAX_COUNT,&fine_count) ||
+            (fine_count < 3U) || (fine_count > S5_FINE_SCAN_MAX_COUNT))
         {
             return (s5_acquire_fault(p_owner));
         }
+        p_owner->fine_count = (uint8_t)fine_count;
         p_owner->b_fine = true;
         p_owner->index = 0U;
     }

@@ -6,6 +6,37 @@ See `testing/README.md` for how to run tests and record results.
 
 ## Test cases
 
+### Tribunal representation additions (2026-10-21)
+
+Host fixtures only; no calibration, target execution or physical safety claim.
+
+| ID | Check | Expected result |
+|---|---|---|
+| S5-U101 | Pulse minimum/maximum and one-past bounds before cm rounding | 115 us rejected, 116 us = 2 cm, 23200 us = 400 cm, 23201 us rejected at fixture scale 58 |
+| S5-U102 | Largest configured range at scale 1000 | 400000 us preserved and accepted; 400001 us rejected |
+| S5-U103 | All reserved acquisition state bytes 4..255 | Close and fault without reading sample arrays |
+| S5-U104 | Low 32-bit raw timer rollover, regression and uint64 limit | Rollover accepted; regression/overflow admission rejected |
+| S5-U105 | Width longer than trigger-to-capture interval | Inconsistent capture rejected |
+| S5-U106 | Invalid scan counts/index and compact storage | Invalid counts/index fail closed; private counts/state occupy one byte each |
+| S5-U107 | Real driver adapter: 400000 us pulse crossing low timer wrap | Width/time preserved without truncation |
+| S5-U108 | Reserved driver state bytes 5..255 | All report fault |
+| S5-U109 | Duplicate rise then late fall | Fault remains latched; timestamps/width are not replaced |
+| S5-U110 | Fall without rise, zero width, over-timeout width | Every sequence faults |
+| S5-U111 | High-low-high timer snapshot crosses rollover during read | Retry returns consistent 64-bit timestamp |
+| S5-U112 | ECHO high before trigger | No TRIG pulse issued |
+| S5-U113 | Wrong-core task access | Trigger/servo rejected, echo faults, no MMIO writes |
+| S5-U114 | ISR delivery immediately after snapshot unlock; extra falling edge | First copy pending, next complete/coherent; completed capture retained |
+| S5-U115 | Manual electrical record, before powered movement | With separate authorization, trace GP15/26/6, identify modules and measure supply/ECHO levels/level shifting/common ground; resolve compatibility before connection/actuation |
+| S5-U116 | Manual servo mapping and settling | With authorized wiring, record model, supply, endpoints, angle convention and repeated angle/settling measurements; reject unverified confirmation flags |
+| S5-U117 | Target acquisition and scheduling | Measure known distances across approved range, missing/stuck/noisy echo, pulse/IRQ/trigger timing under encoder/network load, cancellation/stop latency and stack high-water; document errors versus team acceptance limits |
+| S5-U118 | Manual profile/clearance feasibility | Compare profiles against measured objects/geometry; document unobserved sectors and moving-obstacle assumptions; no executable route without reviewed free-space evidence |
+| S5-U119 | Authorized physical bypass and recovery | Record command IDs, emergency/queue/timeout behavior, competing-line challenge and original-route identity; resume only after valid stopped recovery; link video in videos/README.md |
+
+The size probe `host/measure_representation.c` reports each relevant `sizeof`;
+ARM object symbol lengths measure the compiled target ABI without running it.
+`measure_representation.py` saves exact commands, source hashes, object symbol
+sizes and compiler stack estimates. Historical records below remain unchanged.
+
 Define a test here before running it. Test IDs never change.
 
 | ID | What is tested | Requirement / interface | Method | Steps / how | Expected result |
@@ -563,3 +594,110 @@ eight integration mutations detected/profile. All 44 strict ARM objects PASS.
 No full firmware link or physical test was repeated in this merge-resolution
 pass. Evidence and current source hashes: ../integration/logs/
 software_completion_evidence.zip, merge_resolution_* entries.
+
+## Tribunal representation run — 2026-10-21
+
+Tested revision: `d4c91f271c9801802e3994967c96e9ec8fcba38c` plus uncommitted
+Buddy 5 changes on `buddy5-obstacle-actual`. No commit was made: the user's
+explicit no-commit instruction takes precedence over the generic guide's
+commit-before-test convention. Exact input hashes and commands are retained in
+the logs/metadata below, with current source identities in
+`logs/buddy5_20261021_evidence_manifest.json`. Codex ran the host/compiler checks.
+
+| IDs / measurement | Result | Evidence | Scope / limitation |
+|---|---|---|---|
+| Baseline S5-U02..U100 | PASS in both host profiles | `../integration/logs/buddy5_20261021_baseline_default.log`, `_optimized.log` and `_metadata.json` | Existing 99 unique S5 checks, before production edits |
+| Final S5-U02..U100 and S5-U107..U114 | PASS in both host profiles | `../integration/logs/buddy5_20261021_final_default.log`, `_optimized.log`, `_metadata.json` | 107 unique S5 checks/profile; actual live-task fake and MMIO boundaries, no target execution |
+| S5-U101..U106 | PASS in both host profiles | `logs/buddy5_20261021_representation.txt` | Six numerical/state/count cases/profile; reserved state values exhausted |
+| S5-U107..U114 and retained driver checks | PASS in both host profiles | `logs/buddy5_20261021_representation.txt` | 17 MMIO checks/profile including existing S5-U64..U72 |
+| Two deliberately reintroduced acquisition bugs | Detected in both profiles | `logs/buddy5_20261021_representation.txt` | Intentional FAIL output/exit 1 is expected for max-range and impossible capture mutations |
+| Existing 79 integration IDs and eight mutations | PASS / all mutations detected in both profiles | `../integration/logs/buddy5_20261021_final_default.log`, `_optimized.log` | Includes controller stop/recovery, command correlation and failure paths; fake providers only |
+| ARM SMP=0/1, TEST=0/1 | All 44 checked objects compile | `../integration/logs/buddy5_20261021_final_arm_arm.log`, `_metadata.json` | Strict compilation, not firmware link or target operation |
+| Before/after representation | Measured: acquisition 336 ->328; driver 80 ->72 bytes on ARM ABI | `logs/buddy5_20261021_sizes_before_fixed.txt`, `logs/buddy5_20261021_sizes_after.txt` | Host sizeof plus ARM object-symbol sizes; unchanged shared layouts |
+| Before/after static/stack | Named static symbols 5399 ->5383 bytes; live task frame 728 ->728 | Same size logs | Compiler evidence only, no runtime timing or actual stack high-water |
+| First two size-probe harness attempts | FAIL: missing host fake flags | `logs/buddy5_20261021_sizes_before.txt`, `logs/buddy5_20261021_sizes_baseline.txt` | Corrected before baseline/production changes; not firmware failures |
+| Default and TEST=1 Make, SDK unset | FAIL: PICO_SDK_PATH missing | `logs/buddy5_20261021_make_prerequisites.txt` | Windows MSYS GNU Make fallback; WSL Ubuntu absent |
+| Default and TEST=1 Make, installed SDK 1.5.1 | FAIL: missing pico.h in unchanged USB support | `logs/buddy5_20261021_make_sdk151.txt` | No full firmware image; documented SDK 2.2.0 not installed/fetched |
+| S5-U01, S5-U115..U119 | NOT RUN | None | Target/physical/electrical/servo/avoidance validation outstanding |
+
+Commands run from the repository root with installed Python 3.14:
+
+```powershell
+$pythonExe = 'C:/Users/User/AppData/Local/Programs/Python/Python314/python.exe'
+& $pythonExe testing/integration/verify_integration.py --label buddy5_20261021_baseline
+& $pythonExe testing/integration/verify_integration.py --label buddy5_20261021_baseline_arm --arm
+& $pythonExe testing/subsystem5/measure_representation.py --label buddy5_20261021_sizes_before_fixed
+& $pythonExe testing/subsystem5/measure_representation.py --label buddy5_20261021_sizes_after
+& $pythonExe testing/subsystem5/verify_representation.py --label buddy5_20261021_representation
+& $pythonExe testing/integration/verify_integration.py --label buddy5_20261021_final
+& $pythonExe testing/integration/verify_integration.py --label buddy5_20261021_final_arm --arm
+git diff --check
+```
+
+An intermediate integration run `buddy5_20261021_change` also passed; it predates
+the compiler barriers/final driver cases and is not the final evidence. Exact
+compiler/linker commands and versions are inside the corresponding logs.
+The Make attempts used installed `C:/msys64/usr/bin/make.exe`, Arm toolchain
+directory prepended to PATH, cwd `build_make`, `-j8` / `TEST=1 -j8`, first with
+SDK unset, then process-local `PICO_SDK_PATH=C:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk`.
+Profile: SMP=1, CONSOLE=usb_cdc, WIFI=cyw43, NET=none, MQTT=0,
+CRASH_REPORT=0, TEST=0 then1. No network/hardware test or flash was performed.
+
+See `docs/buddy5/TRIBUNAL1_IMPLEMENTATION.md` for the full field representation
+table, numerical/timing analysis, electrical record and integration decisions.
+
+## Cross-buddy pre-commit verification — 2026-10-21
+
+Same base HEAD `d4c91f271c9801802e3994967c96e9ec8fcba38c` plus the uncommitted
+Buddy 5 working tree. Peer source and shared/kernel/build files are unchanged.
+Exact current input hashes and file scope are in
+`logs/precommit_20261021_manifest.json`; no stage, commit or push was performed.
+
+| Scope | Actual result | Evidence |
+|---|---|---|
+| Buddy 1 codec/backoff/MQTT/Wi-Fi | PASS: 41/15/33/17 checks | `logs/precommit_20261021_peers.json` |
+| Buddy 1 threaded application | PASS: 43 checks, threads=1 | Same peer log |
+| Buddy 2 host regression | PASS: 95 pure + 43 adapter/lifecycle/feedback groups per profile, eight mutation/guard checks | `../subsystem2/logs/verify_buddy5_precommit_20261021_*` |
+| Buddy 2 strict ARM | PASS: 76 object compilations across SMP/TEST combinations | `../subsystem2/logs/verify_buddy5_precommit_arm_20261021_*` |
+| Buddy 3 current six host suites and style subset | PASS | `logs/precommit_20261021_s3.json` |
+| Buddy 4 core/runtime/transport | PASS: 79 cases | Peer log above |
+| Buddy 5 S5-U02..U114 | PASS: 113 unique IDs per normal/optimized profile | `../integration/logs/precommit_20261021_host_*`, `logs/precommit_20261021_representation.txt` |
+| Shared integration | PASS: 79 IDs and eight mutations per profile | `../integration/logs/precommit_20261021_host_*` |
+| Integration/provider strict ARM | PASS: 44 objects | `../integration/logs/precommit_20261021_arm_*` |
+| Scope/artifact/whitespace/source identity | PASS | `logs/precommit_20261021_manifest.json` |
+| Full firmware linking | BLOCKED by installed SDK setup; SDK download authorization pending | Prior Make failure evidence retained above |
+| Physical and on-target cases | NOT RUN | S5-U01, S5-U115..U119 remain outstanding |
+
+Commands and limitations are recorded in `docs/buddy5/PRECOMMIT_REVIEW.md`.
+The peer runner uses existing test inputs and shell-runner compiler flags
+through Windows-compatible Python subprocess arguments; it changes no peer
+code. Expected negative-control FAIL/timeout output is labelled as such and
+does not represent a failed ordinary regression case.
+
+## Tribunal 1 follow-up verification — 2026-10-24
+
+Tested HEAD `5f3a6ac` plus the current uncommitted working tree on
+`buddy5-obstacle-actual`. The host integration runner verified 78 normal
+integration groups and detected all eight deliberate mutations in both
+default and optimized profiles. Its Buddy 5 policy/acquisition/live/MMIO and
+logic suites passed in both profiles, including exact scan-ID recovery
+acknowledgement. The representation runner passed all 23 checks per profile
+and detected both deliberate acquisition regressions. No full firmware image,
+target execution, calibration or physical test was performed.
+
+| Scope | Result | Evidence |
+|---|---|---|
+| Controller route and Buddy 5 policy/acquisition/live/MMIO integration | PASS in default and optimized host profiles | `../integration/logs/tribunal1_review_20261024_default.log`, `_optimized.log`, `_metadata.json` |
+| Buddy 5 acquisition representation and driver MMIO checks | 23 checks PASS per profile; both deliberate regressions detected | `logs/tribunal1_review_20261024.txt` |
+| Whitespace validation | PASS | `git diff --check` |
+
+Commands:
+
+```powershell
+python testing\integration\verify_integration.py --label tribunal1_review_20261024
+python testing\subsystem5\verify_representation.py --label tribunal1_review_20261024
+git diff --check
+```
+
+Host fakes do not verify electrical compatibility, timing on the target,
+original-route identity evidence or physical bypass/recovery.

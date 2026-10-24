@@ -40,12 +40,6 @@ typedef struct
 {
     s5_acquire_config_t config;
     s5_acquire_io_t io;
-    s5_scan_context_t scan;
-    s5_scan_sample_t coarse[S5_COARSE_SCAN_COUNT];
-    s5_scan_sample_t fine[S5_FINE_SCAN_MAX_COUNT];
-    uint8_t angles[S5_FINE_SCAN_MAX_COUNT];
-    size_t index;
-    size_t fine_count;
     uint64_t last_us;
     uint64_t deadline_us;
     uint64_t scan_start_us;
@@ -53,8 +47,15 @@ typedef struct
     uint64_t forward_us;
     uint64_t forward_started_us;
     uint64_t next_trigger_us;
+    s5_scan_context_t scan;
+    s5_scan_sample_t coarse[S5_COARSE_SCAN_COUNT];
+    s5_scan_sample_t fine[S5_FINE_SCAN_MAX_COUNT];
     uint16_t forward_cm;
-    s5_acquire_state_t state;
+    uint8_t angles[S5_FINE_SCAN_MAX_COUNT];
+    /* Owner-private storage: 0..9 counts, 0..3 states; no wire encoding. */
+    uint8_t index;
+    uint8_t fine_count;
+    uint8_t state;
     bool b_open;
     bool b_scan;
     bool b_fine;

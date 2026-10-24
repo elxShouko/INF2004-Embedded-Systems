@@ -1,0 +1,586 @@
+{
+  "head": "d4c91f271c9801802e3994967c96e9ec8fcba38c",
+  "status": " M app_program/subsystem5/drv_s5.c\n M app_program/subsystem5/drv_s5.h\n M app_program/subsystem5/s5_acquire.c\n M app_program/subsystem5/s5_acquire.h\n M docs/buddy5/OBSTACLE_SYSTEM.md\n M testing/subsystem5/TEST_LOG.md\n M testing/subsystem5/host/test_s5_port.c\n?? docs/buddy5/TRIBUNAL1_IMPLEMENTATION.md\n?? testing/integration/logs/buddy5_20261021_baseline_arm_arm.log\n?? testing/integration/logs/buddy5_20261021_baseline_arm_metadata.json\n?? testing/integration/logs/buddy5_20261021_baseline_default.log\n?? testing/integration/logs/buddy5_20261021_baseline_metadata.json\n?? testing/integration/logs/buddy5_20261021_baseline_optimized.log\n?? testing/integration/logs/buddy5_20261021_change_default.log\n?? testing/integration/logs/buddy5_20261021_change_metadata.json\n?? testing/integration/logs/buddy5_20261021_change_optimized.log\n?? testing/integration/logs/buddy5_20261021_final_arm_arm.log\n?? testing/integration/logs/buddy5_20261021_final_arm_metadata.json\n?? testing/integration/logs/buddy5_20261021_final_default.log\n?? testing/integration/logs/buddy5_20261021_final_metadata.json\n?? testing/integration/logs/buddy5_20261021_final_optimized.log\n?? testing/subsystem2/logs/verify_buddy5_precommit_20261021_checks.log\n?? testing/subsystem2/logs/verify_buddy5_precommit_20261021_default.log\n?? testing/subsystem2/logs/verify_buddy5_precommit_20261021_metadata.json\n?? testing/subsystem2/logs/verify_buddy5_precommit_20261021_optimized.log\n?? testing/subsystem5/host/measure_representation.c\n?? testing/subsystem5/host/test_representation.c\n?? testing/subsystem5/logs/buddy5_20261021_evidence_manifest.json\n?? testing/subsystem5/logs/buddy5_20261021_make_prerequisites.txt\n?? testing/subsystem5/logs/buddy5_20261021_make_sdk151.txt\n?? testing/subsystem5/logs/buddy5_20261021_representation.txt\n?? testing/subsystem5/logs/buddy5_20261021_sizes_after.txt\n?? testing/subsystem5/logs/buddy5_20261021_sizes_baseline.txt\n?? testing/subsystem5/logs/buddy5_20261021_sizes_before.txt\n?? testing/subsystem5/logs/buddy5_20261021_sizes_before_fixed.txt\n?? testing/subsystem5/logs/precommit_20261021_representation.txt\n?? testing/subsystem5/logs/precommit_20261021_s3.json\n?? testing/subsystem5/measure_representation.py\n?? testing/subsystem5/verify_peer_regressions.py\n?? testing/subsystem5/verify_representation.py\n",
+  "scope": "Host fakes only; S1 includes actual pthreads",
+  "sha256": {
+    "app_program/subsystem1/s1_codec.c": "00b81228178be076fa0678d2e9d933ea81131edb20da714c736d5343bd60b88a",
+    "app_program/subsystem1/s1_codec.h": "141262168e239d574fa1a3f6933454b5317d770044b07cd430148435204b2b2b",
+    "app_program/subsystem1/s1_led_legacy.c": "421b5877aa7bdeceda913c437b782628a953c70b58264ff0fe34324a637c3f14",
+    "app_program/subsystem1/s1_led_legacy.h": "9007dc0d6c563c404ab115c19b0f2abb9016c1cb2f4580c5a678644e283dcb21",
+    "app_program/subsystem1/s1_net.c": "713e483d80d6f59c9c3051e295570d117da27f91882dcf9c6cc1833046d1aadf",
+    "app_program/subsystem1/s1_net.h": "8ab94d3137f947da8a8981dc31df5c87749c16a26e91ec55c91f3a737201b83d",
+    "app_program/subsystem1/s1_sim.c": "f4505cf5ca3a10c96ddc1c85cc3adbd8525adf4b29866a16cf88befdde7c7736",
+    "app_program/subsystem1/s1_sim.h": "cea8a85856d7f029198e44d38d38654e9391606630f21ea8636c7790b5fb48b0",
+    "app_program/subsystem1/subsystem1.c": "eaf7b436041a067eade15592e3eb45c87836d0b8fb06123e490643cc5150459c",
+    "app_program/subsystem1/subsystem1.h": "3e2441e22bc6438750f57551ae2ca9f6669b93c4f259bd0751d54e1703fab5b9",
+    "app_program/subsystem1/subsystem1_test.c": "047d8f2e817e0e6ffc8b8c60097aba84a5f2ae9222c81dc8a92b73bf0b77174a",
+    "app_program/subsystem1/task_led.c": "6b2405b92b3692d92174e381dd167c8c88cd81062c5afa2405268b11a45ba85d",
+    "app_program/subsystem4/drv_imu.c": "06bae18eac5213fe0d1282cf429f5c1bb2ce620d18b93ef52b836f4871f9aed5",
+    "app_program/subsystem4/drv_imu.h": "7885024f95a5ceaa1b1b0246c96c9091316385b7645184ebcc4ac1ff468baf0e",
+    "app_program/subsystem4/drv_lsm.c": "5857a3e3ab487cf8611213cbc75e6d638d7976b8408a7a4d292b50ea8213beaa",
+    "app_program/subsystem4/drv_lsm.h": "d621889734e53726c0f04ca07c3152b0ed40cc8c3acd07fe6ac4278c26cd1759",
+    "app_program/subsystem4/imu_config.h": "4184f6a8fc4352971f09be44c501a46212a193d15f1f1d93b8e7c7da8c32c504",
+    "app_program/subsystem4/imu_core.c": "41f80cbd0cd44ee3544c07af87aa6ea101a8440d70897fa014700ad7858aa8df",
+    "app_program/subsystem4/imu_core.h": "67e36f6272eaf00a444bdfe7b57cec10a77c394579f7c19605326bef0f81317f",
+    "app_program/subsystem4/imu_guard.c": "91b60a6cfa9461f14231bfe47179a847dd32e553844e0b540cb3934274912dcb",
+    "app_program/subsystem4/imu_guard.h": "3a001b92df44a3fd8fdf8e80bc26c64fdec1afa4bbbbaec50393a93ca98e2d88",
+    "app_program/subsystem4/imu_link.c": "c2b5a21dc126470550c33d5177e7e90417f8e75e0271eeea481e6a498e80e493",
+    "app_program/subsystem4/imu_link.h": "f5afa78554577dc00eb5de148b8d136986987b053b7cedb78342cb5e0352cf0c",
+    "app_program/subsystem4/imu_runtime.c": "0cd3ac03761c5b6a665c1e8b1c07c99590a8f943e4e2983f17ab327195339405",
+    "app_program/subsystem4/imu_runtime.h": "299d36e1842c58131a67db82936f89a7db23b02bf3ef315ec36eb8a79cc428cf",
+    "app_program/subsystem4/subsystem4.c": "16d2206a76f8a6b8a5a9e5b66e3e158b066bae09cca8916e55d34eeac2ad1347",
+    "app_program/subsystem4/subsystem4.h": "378a135d747503f788a3e7906e2e0a3f6b8ae4f71982fa00dcdbe6cc416fc9b7",
+    "app_program/subsystem4/subsystem4_test.c": "d16903d172f252d8e87ab927dc0a0cbe82005ad194ff9bd5473398ba85597ed0",
+    "app_program/subsystem4/task_monitor.c": "3e1626f1282818d73db084bfdeed42fb00b5de79c135c9307f94be3d8540f510",
+    "testing/subsystem1/host/host_sync.c": "34cd61dcc46e69bcb1a020f3748ae94e1b8c60277633834d73127906ca72e9bf",
+    "testing/subsystem1/host/kernel_emulation.c": "5633d83aaadab1f329cac9403b986c7287318bb87a4d75e54c7179b81df486ff",
+    "testing/subsystem1/host/mocks/lwip/apps/mqtt.h": "df4a11b14a97fe899c5488bd013007588884032a0777433967f8fe629e24f6c9",
+    "testing/subsystem1/host/mocks/lwip/ip_addr.h": "61ef6d75292cc6e94ee6909ba338ba2521b1e79a98c9c7f3e745a34161a71d88",
+    "testing/subsystem1/host/mocks/lwip/sys.h": "6bfb3ff713bdb19d8cb950458911cbf642ec4c13bd51aea76678b442f4b831ab",
+    "testing/subsystem1/host/mocks/tm/tmonitor.h": "e231017f138740aaa7c324380c2ebdad35a4c3fca81b7c74b3baf2a466f6ea8e",
+    "testing/subsystem1/host/mocks/wifi_secrets.h": "5e689b545306e6c1b06ff4f91574fa129d5578c4f2a439c14e9b422e101ad4ee",
+    "testing/subsystem1/host/mocks_wifi/cyw43.h": "022842b5f7a6e4945dc7c4db0f80042da71955662ad73496c276fe82792b74af",
+    "testing/subsystem1/host/mocks_wifi/cyw43_country.h": "eee099baa80609678af832e5ab11165eca4f0fffdb1c609590b5505a31e9f657",
+    "testing/subsystem1/host/mocks_wifi/lwip/init.h": "14c899c460393ccc2de0abfa6357a85c7ad89c3f336a9cdb62f68dd6b2071eea",
+    "testing/subsystem1/host/mocks_wifi/lwip/netif.h": "b4cde20a8920ffc28dd3083eb84d9804efd73ea9ab73cbbc701a8389a5c076d2",
+    "testing/subsystem1/host/mocks_wifi/lwip/timeouts.h": "c85cf05e6dc252f4c90040f2520aea3bce15c3ba588dfb1743811b435688fcd3",
+    "testing/subsystem1/host/mocks_wifi/tm/tmonitor.h": "73437cf6248457b2219ede7bea1cb9276459820129b7d3e988f7ea724361d9de",
+    "testing/subsystem1/host/mocks_wifi/wifi_secrets.h": "607d06064dbe92e21d5753b2850bf195eb46b38f0ced6ace3f96977735a754be",
+    "testing/subsystem1/host/run_host_tests.sh": "fc2c2ea5864b5d86042606e8836f344596d73d3403b3caf5776da99f4e36085e",
+    "testing/subsystem1/host/target_main.c": "6493e1356078df538bb90522b91118985fbc951d35e4f5a55f8246f504769de4",
+    "testing/subsystem1/host/test_backoff_host.c": "5f8722f9e62a56b7924694d2a6f5d0dec7bd807deedd2e4aa4dd1dc97fd1ca32",
+    "testing/subsystem1/host/test_codec_host.c": "f7fa298893840e826a376747a5b0e83637ef3b2ca0df0fd5bcf6733b2e5f0370",
+    "testing/subsystem1/host/test_mqtt_host.c": "0ec2cc1719d12f7ed86b2ffecce5b0ea59644cf9544f2006427399c7a4c0ac87",
+    "testing/subsystem1/host/test_wifi_host.c": "fe5ed4b5862a5508975ab5c16084be655344511e84d77f3f2228d5ba8c0b50a0",
+    "testing/subsystem4/host/buddy4_cases.c": "1c4e54d2cd2c8ad420f8325199f5f00ffb6782181924e522aa07bdda013e6373",
+    "testing/subsystem4/host/buddy4_cases.h": "e2752f7b00a09ed55f1cf9678395a4d20599cc554f61d6d921ae41f93589fe05",
+    "testing/subsystem4/host/fake/bsp/libbsp.h": "049c4da6e921932c8eed50bdc0ea858f9bd9fd1e59c9cb801402ccb872db4cbd",
+    "testing/subsystem4/host/fake/config_device.h": "c3feca7db2b9808bc7ba75bcb4f37840b555508c45a848ae20ae8b2b872a89dd",
+    "testing/subsystem4/host/fake/hardware/gpio.h": "ff77a7e251e5a539ae6fa9f354fe0611bed67509f9c8bb0c40dc1cfd9ca5ecd7",
+    "testing/subsystem4/host/fake/hardware/i2c.h": "cf093a9baac9bb1ff2aedcb4a0e584f34750eb0442c4dca07bfa591cc4eeeef1",
+    "testing/subsystem4/host/fake/hardware/structs/timer.h": "6224a2434bf38949112345508ffee8f155d458e803c22044f1cfc43f955c636b",
+    "testing/subsystem4/host/fake/tk/tkernel.h": "336112789429ad7334f8e7cb077b8a82043480f7260a12ea35170b596cf35a2d",
+    "testing/subsystem4/host/fake/tm/tmonitor.h": "1b4c6c715dfa5f68fac47d7cbe1c9511e28a8609716fd18dbafb350139290824",
+    "testing/subsystem4/host/host_main.c": "848e923a732956324046f54a029ecb66fa8e789df47d21fe797a7d2a68da09d3",
+    "testing/subsystem4/host/run_builds.sh": "34ab92f81910720d25823db9d618aba47920dc02b1e49d7e447fe75801877fd5",
+    "testing/subsystem4/host/run_host_tests.sh": "ccb44f0b615f1cd416d0178e865068df9ab55194af3ee26d71a72cfd6d095348",
+    "testing/subsystem4/host/runtime_fake.c": "fe66fc3d9fdab9e933bf4ed09d43157ec5fabec1506d9b56d0197c3760387d76",
+    "testing/subsystem4/host/runtime_fake.h": "40364ccba3ab71955e4978c06661911ce218ac93cf06515267f147a58ed8559f",
+    "testing/subsystem4/host/runtime_main.c": "521b3121ebf48d76aa0ece05ee5a9806485c2589bf5d04b8184e6acd135958b3",
+    "testing/subsystem4/host/transport_main.c": "7948316e1f810e8c8492749b30e7e2505f8c7297da7ebb9522dc6a48a26dfc00",
+    "testing/subsystem5/verify_peer_regressions.py": "c11cfe9978b901c983f5807976b4a8065bc98ad63ff80701e4d1fde4f8f8ef4a"
+  },
+  "suites": {
+    "S1": "PASS",
+    "S4": "PASS"
+  },
+  "checks": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "d4c91f271c9801802e3994967c96e9ec8fcba38c\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "exit": 0,
+      "stdout": " M app_program/subsystem5/drv_s5.c\n M app_program/subsystem5/drv_s5.h\n M app_program/subsystem5/s5_acquire.c\n M app_program/subsystem5/s5_acquire.h\n M docs/buddy5/OBSTACLE_SYSTEM.md\n M testing/subsystem5/TEST_LOG.md\n M testing/subsystem5/host/test_s5_port.c\n?? docs/buddy5/TRIBUNAL1_IMPLEMENTATION.md\n?? testing/integration/logs/buddy5_20261021_baseline_arm_arm.log\n?? testing/integration/logs/buddy5_20261021_baseline_arm_metadata.json\n?? testing/integration/logs/buddy5_20261021_baseline_default.log\n?? testing/integration/logs/buddy5_20261021_baseline_metadata.json\n?? testing/integration/logs/buddy5_20261021_baseline_optimized.log\n?? testing/integration/logs/buddy5_20261021_change_default.log\n?? testing/integration/logs/buddy5_20261021_change_metadata.json\n?? testing/integration/logs/buddy5_20261021_change_optimized.log\n?? testing/integration/logs/buddy5_20261021_final_arm_arm.log\n?? testing/integration/logs/buddy5_20261021_final_arm_metadata.json\n?? testing/integration/logs/buddy5_20261021_final_default.log\n?? testing/integration/logs/buddy5_20261021_final_metadata.json\n?? testing/integration/logs/buddy5_20261021_final_optimized.log\n?? testing/subsystem2/logs/verify_buddy5_precommit_20261021_checks.log\n?? testing/subsystem2/logs/verify_buddy5_precommit_20261021_default.log\n?? testing/subsystem2/logs/verify_buddy5_precommit_20261021_metadata.json\n?? testing/subsystem2/logs/verify_buddy5_precommit_20261021_optimized.log\n?? testing/subsystem5/host/measure_representation.c\n?? testing/subsystem5/host/test_representation.c\n?? testing/subsystem5/logs/buddy5_20261021_evidence_manifest.json\n?? testing/subsystem5/logs/buddy5_20261021_make_prerequisites.txt\n?? testing/subsystem5/logs/buddy5_20261021_make_sdk151.txt\n?? testing/subsystem5/logs/buddy5_20261021_representation.txt\n?? testing/subsystem5/logs/buddy5_20261021_sizes_after.txt\n?? testing/subsystem5/logs/buddy5_20261021_sizes_baseline.txt\n?? testing/subsystem5/logs/buddy5_20261021_sizes_before.txt\n?? testing/subsystem5/logs/buddy5_20261021_sizes_before_fixed.txt\n?? testing/subsystem5/logs/precommit_20261021_representation.txt\n?? testing/subsystem5/logs/precommit_20261021_s3.json\n?? testing/subsystem5/measure_representation.py\n?? testing/subsystem5/verify_peer_regressions.py\n?? testing/subsystem5/verify_representation.py\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "gcc.exe (Rev2, Built by MSYS2 project) 14.2.0\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "-Wswitch-default",
+        "-Wfloat-equal",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem1\\host\\test_codec_host.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "-o",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s1_codec.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s1_codec.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-codec-1 typical: {\"seq\":7,\"timestamp\":123456,\"robot_state\":2,\"left_motor_speed\":120,\"right_motor_speed\":-120,\"left_encoder_count\":1234567,\"right_encoder_count\":1234560,\"line_status\":2,\"hump_peak\":1.2,\"obstacle_distance\":45.5}\nT-codec-2 worst case (243 bytes): {\"seq\":4294967295,\"timestamp\":4294967295,\"robot_state\":255,\"left_motor_speed\":-32768,\"right_motor_speed\":-32768,\"left_encoder_count\":4294967295,\"right_encoder_count\":4294967295,\"line_status\":255,\"hump_peak\":-9999.9,\"obstacle_distance\":-9999.9}\nT-codec-3 heartbeat: {\"status\":\"ALIVE\",\"uptime_ms\":74829}\nT-codec-v2 maximum across validity masks: 239 bytes\n\n41 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "-Wswitch-default",
+        "-Wfloat-equal",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem1\\host\\test_backoff_host.c",
+        "-o",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s1_backoff.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s1_backoff.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-backoff-1 sequence: 1000 -> 2000 -> 4000 -> 8000 -> 8000 -> 8000\n\n15 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "-Wswitch-default",
+        "-Wfloat-equal",
+        "-IC:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem1\\host\\mocks",
+        "-IC:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem1\\host\\test_mqtt_host.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040\\mqtt_utk.c",
+        "-o",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s1_mqtt.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s1_mqtt.exe"
+      ],
+      "exit": 0,
+      "stdout": "T1 connect, subscribe, CONNECTED event\nT2 backoff 1,2,4,8,8 s while the broker refuses, then reset after success (FR19)\n  gap 1 = 1000 ms (expected 1000)\n  gap 2 = 2000 ms (expected 2000)\n  gap 3 = 4000 ms (expected 4000)\n  gap 4 = 8000 ms (expected 8000)\n  gap 5 = 8000 ms (expected 8000)\nT3 connect timeout (no answer) after 5 s\nT4 subscribe failure -> backoff\nT5 dead link from publish failures: 10 in a row yes, a 4-frame stall no\nT6 Wi-Fi link loss: no backoff, discards frames, reconnects at once when the link returns\nT7 commands: fragments, wrong topic, oversize\nT8 cadence: telemetry 100 +/- 10 ms, heartbeat 1000 +/- 50 ms, for several poll intervals\n  poll every  3 ms: telemetry frames 600, worst period error  3 ms | heartbeat worst error  3 ms\n  poll every  5 ms: telemetry frames 600, worst period error  0 ms | heartbeat worst error  0 ms\n  poll every 12 ms: telemetry frames 600, worst period error  8 ms | heartbeat worst error  8 ms\n  poll every 20 ms: telemetry frames 600, worst period error  0 ms | heartbeat worst error  0 ms\n\n33 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-DTM_NET_LWIP=1",
+        "-DTM_MQTT=1",
+        "-DCNF_SMP=1",
+        "-IC:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem1\\host\\mocks_wifi",
+        "-IC:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\lib\\libwifi\\sysdepend\\pico_rp2040",
+        "-IC:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem1\\host\\test_wifi_host.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\lib\\libwifi\\sysdepend\\pico_rp2040\\cyw43_utk.c",
+        "-o",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s1_wifi.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s1_wifi.exe"
+      ],
+      "exit": 0,
+      "stdout": "\nW1: first join request fails immediately, second succeeds\n  ok:   two join requests were made (got 2)\n  ok:   retry came after the 1 s backoff (1000 ms)\n  ok:   radio reported ready, init_result 0\n  ok:   task entered the poll loop (2500 polls)\n  ok:   link up, MQTT polled with link up\n  ok:   no delay longer than 2 ms in the task (max 2)\n\nW2: every join request fails immediately -> 1,2,4,8,8,8 s\n  ok:   at least 7 requests in 40 s (got 8)\n        gap 0: 1000 ms (want 1000)\n        gap 1: 2000 ms (want 2000)\n        gap 2: 4000 ms (want 4000)\n        gap 3: 8000 ms (want 8000)\n        gap 4: 8000 ms (want 8000)\n        gap 5: 8000 ms (want 8000)\n  ok:   gaps follow 1,2,4,8,8,8 s (FR19)\n  ok:   never blocks longer than 2 ms (max 2)\n\nW3: link established, then lost -> rejoin after 1 s again\n  ok:   a rejoin request followed the loss (4 requests)\n  ok:   the link was lost at 3100 ms\n  ok:   rejoin came 1 s after the loss, not at the old 4 s step (1000 ms)\n\nW4: radio/interface bring-up failure is NOT retried\n  ok:   no join request when the interface never came up\n  ok:   radio not ready, init_result -5\n  ok:   network service is not polled\n\nW5: interface disappears during a retry -> stop, report not ready\n  ok:   exactly two requests, then no more (got 2)\n  ok:   radio reported not ready after the interface was lost\n\n17 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-DHOST_THREADS=1",
+        "-pthread",
+        "-c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem1\\host\\host_sync.c",
+        "-o",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s1_host_sync.o"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-pthread",
+        "-IC:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem1\\host\\kernel_emulation.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s1_host_sync.o",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem1\\host\\target_main.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_sim.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c",
+        "-o",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s1_threaded.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s1_threaded.exe"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S1-U01 PASS  telemetry JSON has all FR17 fields\n[TEST] S1-U02 PASS  worst-case JSON is under 256 bytes\n[TEST] S1-U05 PASS  heartbeat is {status ALIVE, uptime_ms}\n[TEST] subsystem1 codec SUMMARY 3 passed, 0 failed\n[TEST] S1-U03 PASS  command parser accepts the four commands, rejects junk\n[TEST] S1-U04 PASS  backoff 1,2,4,8 then capped at 8 s\n[TEST] subsystem1 commands and backoff SUMMARY 2 passed, 0 failed\n[TEST] S1-U06 PASS  telemetry frames keep their order\n[TEST] S1-U07 PASS  full telemetry buffer returns E_TMOUT, does not block\n[TEST] S1-U07b PASS  buffer accepts frames again after it is drained\n[TEST] subsystem1 telemetry buffer SUMMARY 3 passed, 0 failed\n[TEST] S1-U08a PASS  EMERGENCY_STOP sets the E-STOP event flag\n[TEST] S1-U08b PASS  EMERGENCY_STOP delivered, forwarded in under 50 ms\n[TEST] S1-U09 PASS  unknown command is rejected and not queued\n[TEST] S1-U10 PASS  EMERGENCY_STOP evicts the oldest command when full\n[TEST] subsystem1 command path SUMMARY 4 passed, 0 failed\n[TEST] S1-U11a PASS  CONNECTED flushes stale telemetry\n[TEST] S1-U11b PASS  CONNECTED raises the link-changed flag\n[TEST] S1-U11c PASS  DISCONNECTED clears the connected state\n[TEST] subsystem1 link events SUMMARY 3 passed, 0 failed\n[TEST] S1-U13a PASS  start connected; initial notification consumed\n[TEST] S1-U13b PASS  BACKOFF clears connected and raises link-changed\n[TEST] S1-U13c PASS  BACKOFF is counted and the disconnect is counted once\n[TEST] S1-U13d PASS  repeat BACKOFF / DISCONNECTED while down: no new notification\n[TEST] S1-U13e PASS  DISCONNECTED (without BACKOFF first) still notifies once\n[TEST] subsystem1 backoff notification SUMMARY 5 passed, 0 failed\n[TEST] S1-U14a PASS  writer and reader tasks finished (no deadlock)\n[TEST] S1-U14b PASS  every concurrent snapshot was coherent\n[TEST] S1-U14c PASS  reader saw both states while the writer ran\n[TEST] S1-U14d PASS  no update was lost under contention\ns1: S1-U14 reads=9034 violations=0 seen_up=8348 seen_down=686\n[TEST] subsystem1 concurrent status SUMMARY 4 passed, 0 failed\n[TEST] S1-U16a PASS  latch and pulse published while the hook is still blocked on the held mutex\n[TEST] S1-U16b PASS  readers stay bounded: get_stats times out, latch and link reads never block\n[TEST] S1-U16c PASS  after the mutex is released the hook finishes and counts it\n[TEST] S1-U16d PASS  EMERGENCY_STOP also reaches the queue (full of PAUSE)\n[TEST] subsystem1 emergency with held mutex SUMMARY 4 passed, 0 failed\n[TEST] S1-U17a PASS  an ordinary command does not latch an emergency\n[TEST] S1-U17b PASS  EMERGENCY_STOP sets the latch and the pulse flag\n[TEST] S1-U18a PASS  RESUME, START_RUN, PAUSE, reconnects and draining the queue leave the latch set\n[TEST] S1-U19a PASS  s1_net_estop_clear() releases the latch\n[TEST] S1-U19b PASS  after the clear, RESUME does not latch again\n[TEST] S1-U19c PASS  a new EMERGENCY_STOP latches again; no post failures counted\n[TEST] subsystem1 emergency latch SUMMARY 6 passed, 0 failed\n[TEST] S1-U20a PASS  one failed flag post is retried; the latch is set\n[TEST] S1-U20b PASS  a persistent post failure is counted and the queued command still delivers the emergency\n[TEST] subsystem1 emergency post failure SUMMARY 2 passed, 0 failed\n[TEST] S1-U21a PASS  truncated message: E_SYS, output zeroed, counted\n[TEST] S1-U21b PASS  unknown command id: E_SYS, output zeroed\n[TEST] S1-U21c PASS  empty queue returns the kernel's E_TMOUT unchanged\n[TEST] S1-U21d PASS  a good message after a bad one is delivered\n[TEST] S1-U22a PASS  a 2 s old PAUSE is discarded, the fresh RESUME is delivered\n[TEST] S1-U22b PASS  an old EMERGENCY_STOP is still delivered\n[TEST] S1-U22c PASS  only a stale command queued: nothing is delivered\n[TEST] subsystem1 command validation SUMMARY 7 passed, 0 failed\n[TEST] subsystem1 simulator SUMMARY 0 passed, 0 failed\n[TEST] subsystem1 simulator switch SUMMARY 0 passed, 0 failed\nHOST-RUN: 43 passed, 0 failed, threads=1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wconversion",
+        "-Wshadow",
+        "-pedantic",
+        "-O2",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem4\\imu_core.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem4\\imu_guard.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem4\\drv_lsm.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem4\\host\\buddy4_cases.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem4\\host\\host_main.c",
+        "-lm",
+        "-o",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_core.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_core.exe"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U116 PASS invalid config rejected\n[TEST] S4-U117 PASS stationary calibration completes\n[TEST] S4-U118 PASS motion resets calibration window\n[TEST] S4-U119 PASS body-axis pitch is degrees\n[TEST] S4-U120 PASS body-axis roll is degrees\n[TEST] S4-U162 PASS Week 6 highest estimate is published at peak\n[TEST] S4-U121 PASS ascent/peak/descent and distance-integrated height\n[TEST] S4-U122 PASS smaller completed hump retains session maximum\n[TEST] S4-U123 PASS larger completed hump updates session maximum\n[TEST] S4-U124 PASS pitch alone is not reported as measured height\n[TEST] S4-U125 PASS missing distance invalidates entire current hump\n[TEST] S4-U126 PASS unfinished hump times out to a latched fault\n[TEST] S4-U127 PASS impact latches fault\n[TEST] S4-U128 PASS good data cannot silently clear fault\n[TEST] S4-U129 PASS duplicate timestamp rejected\n[TEST] S4-U130 PASS monotonic timestamp wraps correctly\n[TEST] S4-U131 PASS stale samples rejected\n[TEST] S4-U132 PASS NaN cannot enter processing\n[TEST] S4-U133 PASS unsupported reverse distance rejected\n[TEST] S4-U134 PASS gravity alone does not prove vehicle is stationary\n[TEST] S4-U135 PASS uncalibrated magnetometer does not claim valid heading\n[TEST] S4-U136 PASS heading wrap uses shortest turn, no fictitious gyro\n[TEST] S4-U137 PASS missing magnetic sample clears heading validity\n[TEST] S4-U138 PASS datasheet register profile and readback\n[TEST] S4-U139 PASS signed little-endian acceleration in g\n[TEST] S4-U140 PASS magnetic X,Z,Y ordering and unequal axis gains\n[TEST] S4-U141 PASS no stale magnetic sample reuse\n[TEST] S4-U142 PASS no stale acceleration sample reuse\n[TEST] S4-U143 PASS wrong sensor identity rejected\n[TEST] S4-U144 PASS configuration readback mismatch rejected\n[TEST] S4-U145 PASS bus failure propagates without partial sample commit\n[TEST] S4-U146 PASS magnetic overflow invalidates yaw\n[TEST] S4-U147 PASS acceleration saturation cannot look like normal tilt\n[TEST] S4-U148 PASS invalid driver arguments rejected\n[TEST] S4-U163 PASS dynamic acceleration at ascent entry invalidates height\n[TEST] S4-U164 PASS maximum allowed sample gap is inclusive\n[TEST] S4-U165 PASS null processing arguments fail safely\n[TEST] S4-U166 PASS all 4096 signed HR encodings and saturation boundaries\n[TEST] S4-U177 PASS flat acceleration is classified as dynamic\n[TEST] S4-U178 PASS acceleration then braking leaves maximum invalid\n[TEST] S4-U179 PASS one-sample pitch spike fails ascent dwell\n[TEST] S4-U180 PASS stale motion invalidates an entire candidate\n[TEST] S4-U181 PASS unavailable motion cannot preserve candidate validity\n[TEST] S4-U182 PASS reverse speed never counts as forward hump travel\n[TEST] S4-U183 PASS in-place turn cannot create a height maximum\n[TEST] S4-U184 PASS revocation retracts a provisional peak\n[TEST] S4-U185 PASS bad later candidate preserves completed maximum\n[TEST] S4-U186 PASS valid hump after rejected candidate updates maximum\n[TEST] S4-U187 PASS shallow asymmetric descent closes at persistent level\n[TEST] S4-U188 PASS untrusted traction cannot validate height\n[TEST] S4-U189 PASS speed drift outside measured band rejects peak\n[TEST] S4-U176 PASS flat 0.2 g braking cannot create a valid peak\n[TEST] S4-U205 PASS flat accel/brake preserves prior valid maximum\n[TEST] S4-U206 PASS uncalibrated height gate remains closed\n[TEST] buddy4 SUMMARY 0 failures\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wconversion",
+        "-Wshadow",
+        "-pedantic",
+        "-O2",
+        "-DS4_IMU_ENABLE=1",
+        "-IC:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem4\\host\\fake",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem4\\imu_core.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem4\\imu_runtime.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem4\\imu_guard.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem4\\imu_link.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem4\\host\\runtime_fake.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem4\\host\\runtime_main.c",
+        "-lm",
+        "-o",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "149"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U149 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "150"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U150 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "151"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U151 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "152"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U152 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "153"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U153 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "154"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U154 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "155"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U155 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "156"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U156 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "157"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U157 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "158"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U158 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "159"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U159 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "160"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U160 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "161"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U161 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "190"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U190 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "191"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U191 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "192"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U192 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "193"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U193 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "194"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U194 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "195"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U195 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "196"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U196 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "197"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U197 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "198"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U198 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_runtime.exe",
+        "199"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U199 PASS runtime/bridge check\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wconversion",
+        "-Wshadow",
+        "-pedantic",
+        "-O2",
+        "-DS4_IMU_ENABLE=1",
+        "-DTM_WIFI_CYW43=1",
+        "-IC:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem4\\host\\fake",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem4\\drv_imu.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\app_program\\subsystem4\\drv_lsm.c",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem4\\host\\transport_main.c",
+        "-o",
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_transport.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_transport.exe",
+        "202"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U202 PASS bounded I2C transport\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\User\\OneDrive - Singapore Institute Of Technology\\Cloud Computing\\INF2004-Embedded-Systems\\testing\\subsystem5\\build\\precommit_20261021_peers\\s4_transport.exe",
+        "203"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S4-U203 PASS bounded I2C transport\n",
+      "stderr": ""
+    }
+  ]
+}

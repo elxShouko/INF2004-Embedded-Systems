@@ -1,5 +1,11 @@
 # Buddy 5 obstacle subsystem — status and design notes
 
+The [2026-10-21 Tribunal implementation record](TRIBUNAL1_IMPLEMENTATION.md)
+contains the current representation audit, private acquisition/driver changes,
+measured memory evidence, regression results and remaining hardware gates.
+Older placeholder tables below are historical; they do not override the current
+integration status or establish physical calibration.
+
 ## Buddy 5 - Adaptive Ultrasonic Scanning and Obstacle Profiling
 
 The current integrated micro T-Kernel implementation is described first.

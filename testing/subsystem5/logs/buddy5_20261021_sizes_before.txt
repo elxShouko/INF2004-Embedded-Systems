@@ -1,0 +1,150 @@
+git rev-parse HEAD
+d4c91f271c9801802e3994967c96e9ec8fcba38c
+EXIT 0
+git status --short
+?? ../testing/integration/logs/buddy5_20261021_baseline_arm_arm.log
+?? ../testing/integration/logs/buddy5_20261021_baseline_arm_metadata.json
+?? ../testing/integration/logs/buddy5_20261021_baseline_default.log
+?? ../testing/integration/logs/buddy5_20261021_baseline_metadata.json
+?? ../testing/integration/logs/buddy5_20261021_baseline_optimized.log
+?? ../testing/subsystem5/host/measure_representation.c
+?? ../testing/subsystem5/logs/buddy5_20261021_sizes_before.txt
+?? ../testing/subsystem5/measure_representation.py
+EXIT 0
+{
+  "app_program\\subsystem5\\drv_s5.c": "e9ee77127279619cbfd71114970d6e66f47d6f18460cc99665a438f92d7a9402",
+  "app_program\\subsystem5\\drv_s5.h": "619f62ca8c912857e3e9524f954b9ec0bd67d82b93ab2aae12dfb12151d8906e",
+  "app_program\\subsystem5\\s5_acquire.c": "9fc4206c4b44b7985fca3d4b38d1bb666048ee89c3018f12f1fe39e34079bb3e",
+  "app_program\\subsystem5\\s5_acquire.h": "4c322011240d1ad566b4b0e4d8540f00e8bcfeaab3dcaaad650942f4fe6516d1",
+  "app_program\\subsystem5\\s5_live.c": "06bfac04d091c332dd42eb0e3f39ef552017daef4db655d870a1bab3a7387663",
+  "app_program\\subsystem5\\s5_live.h": "4fc5ff703b46ee5f2e011010803beb5e2b1d714aa4547f77d8811c603241b1e1",
+  "app_program\\subsystem5\\s5_obstacle_logic.c": "6fef58044578aec4b40c9268b022449e95a91ccf47b6737378f8cf4db703d306",
+  "app_program\\subsystem5\\s5_obstacle_logic.h": "372986adcfbbb6a958c523dccfd2884ececb15671068572024c9891e62e7a10d",
+  "app_program\\subsystem5\\s5_obstacle_runtime.c": "c236f99f90e1f38b04c2d6cda1436093ca6939c929d3c54c7b48fb3d64e38b95",
+  "app_program\\subsystem5\\s5_obstacle_runtime.h": "dfd234fc684c1b70f77fead43b868b3ee75779f6481d3e5b0163dcb5088449f6",
+  "app_program\\subsystem5\\subsystem5.c": "24228e66ad310d7fe4a5635cb3133f75cfa25aef6814c5dcb0ddbef4111828dd",
+  "app_program\\subsystem5\\subsystem5.h": "e778b1165b1e5de658ae15bdb95da39247cf7c32d4d1e0453da8a6ae69f376a1",
+  "app_program\\subsystem5\\subsystem5_test.c": "f2b6a129143713568b10e03cee63e6027fe7ac827d6722a7fd5a7482355d89d5"
+}
+
+HOST default
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -DVEHICLE_HOST_TEST -include "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\measure_representation.c" -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_20261021_sizes_before\default.exe"
+In file included from <command-line>:
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:10:9: error: unknown type name 'uint8_t'
+   10 | typedef uint8_t UB;
+      |         ^~~~~~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:10:1: note: 'uint8_t' is defined in header '<stdint.h>'; this is probably fixable by adding '#include <stdint.h>'
+    9 | #include "../subsystem2/test_rtos.h"
+  +++ |+#include <stdint.h>
+   10 | typedef uint8_t UB;
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:11:9: error: unknown type name 'int32_t'
+   11 | typedef int32_t PRI;
+      |         ^~~~~~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:11:9: note: 'int32_t' is defined in header '<stdint.h>'; this is probably fixable by adding '#include <stdint.h>'
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:12:18: error: unknown type name 'UW'; did you mean 'UB'?
+   12 | typedef struct { UW spver; UW prver; } T_RVER;
+      |                  ^~
+      |                  UB
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:12:28: error: unknown type name 'UW'; did you mean 'UB'?
+   12 | typedef struct { UW spver; UW prver; } T_RVER;
+      |                            ^~
+      |                            UB
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:19:1: error: unknown type name 'ER'
+   19 | ER tk_dly_tsk (TMO delay);
+      | ^~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:19:16: error: unknown type name 'TMO'
+   19 | ER tk_dly_tsk (TMO delay);
+      |                ^~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:20:1: error: unknown type name 'ER'
+   20 | ER tk_slp_tsk (TMO delay);
+      | ^~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:20:16: error: unknown type name 'TMO'
+   20 | ER tk_slp_tsk (TMO delay);
+      |                ^~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:21:1: error: unknown type name 'ER'
+   21 | ER tk_ref_ver (T_RVER * p_version);
+      | ^~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:22:1: error: unknown type name 'INT'
+   22 | INT tk_get_prc (void);
+      | ^~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:29:1: error: unknown type name 'ER'
+   29 | ER subsystem1_init (void);
+      | ^~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:30:1: error: unknown type name 'ER'
+   30 | ER subsystem3_init (void);
+      | ^~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:31:1: error: unknown type name 'ER'
+   31 | ER subsystem4_init (void);
+      | ^~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:32:1: error: unknown type name 'ER'
+   32 | ER subsystem5_init (void);
+      | ^~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:33:1: error: unknown type name 'ER'
+   33 | ER subsystem1_start (void);
+      | ^~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:34:1: error: unknown type name 'ER'
+   34 | ER subsystem3_start (void);
+      | ^~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:35:1: error: unknown type name 'ER'
+   35 | ER subsystem4_start (void);
+      | ^~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:36:1: error: unknown type name 'ER'
+   36 | ER subsystem5_start (void);
+      | ^~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:37:1: error: unknown type name 'INT'
+   37 | INT usermain (void);
+      | ^~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:38:1: error: unknown type name 'uint32_t'
+   38 | uint32_t test_port_read (uint32_t address);
+      | ^~~~~~~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:38:1: note: 'uint32_t' is defined in header '<stdint.h>'; this is probably fixable by adding '#include <stdint.h>'
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:38:26: error: unknown type name 'uint32_t'
+   38 | uint32_t test_port_read (uint32_t address);
+      |                          ^~~~~~~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:38:26: note: 'uint32_t' is defined in header '<stdint.h>'; this is probably fixable by adding '#include <stdint.h>'
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:39:23: error: unknown type name 'uint32_t'
+   39 | void test_port_write (uint32_t address, uint32_t value);
+      |                       ^~~~~~~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:39:23: note: 'uint32_t' is defined in header '<stdint.h>'; this is probably fixable by adding '#include <stdint.h>'
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:39:41: error: unknown type name 'uint32_t'
+   39 | void test_port_write (uint32_t address, uint32_t value);
+      |                                         ^~~~~~~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:39:41: note: 'uint32_t' is defined in header '<stdint.h>'; this is probably fixable by adding '#include <stdint.h>'
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:40:1: error: unknown type name 'uint32_t'
+   40 | uint32_t test_port_core (void);
+      | ^~~~~~~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:40:1: note: 'uint32_t' is defined in header '<stdint.h>'; this is probably fixable by adding '#include <stdint.h>'
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:41:23: error: unknown type name 'uint32_t'
+   41 | bool test_port_enter (uint32_t * p_saved);
+      |                       ^~~~~~~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:41:23: note: 'uint32_t' is defined in header '<stdint.h>'; this is probably fixable by adding '#include <stdint.h>'
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:42:23: error: unknown type name 'uint32_t'
+   42 | void test_port_leave (uint32_t saved);
+      |                       ^~~~~~~~
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:42:23: note: 'uint32_t' is defined in header '<stdint.h>'; this is probably fixable by adding '#include <stdint.h>'
+C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\integration\test_ports.h:43:43: error: unknown type name 'UINT'
+   43 | bool test_port_install (void (*p_handler)(UINT number));
+      |                                           ^~~~
+In file included from C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\measure_representation.c:2:
+C:/Users/User/OneDrive - Singapore Institute Of Technology/Cloud Computing/INF2004-Embedded-Systems/app_program/subsystem5/s5_live.h:31:1: error: unknown type name 'ER'
+   31 | ER s5_live_init (void);
+      | ^~
+C:/Users/User/OneDrive - Singapore Institute Of Technology/Cloud Computing/INF2004-Embedded-Systems/app_program/subsystem5/s5_live.h:32:1: error: unknown type name 'ER'
+   32 | ER s5_live_start (void);
+      | ^~
+C:/Users/User/OneDrive - Singapore Institute Of Technology/Cloud Computing/INF2004-Embedded-Systems/app_program/subsystem5/s5_live.h:37:1: error: unknown type name 'ER'
+   37 | ER s5_live_configure (s5_live_config_t const * p_config,
+      | ^~
+C:/Users/User/OneDrive - Singapore Institute Of Technology/Cloud Computing/INF2004-Embedded-Systems/app_program/subsystem5/s5_live.h:39:1: error: unknown type name 'ER'
+   39 | ER s5_live_status (s5_live_status_t * p_status);
+      | ^~
+C:/Users/User/OneDrive - Singapore Institute Of Technology/Cloud Computing/INF2004-Embedded-Systems/app_program/subsystem5/s5_live.h:41:1: error: unknown type name 'ER'
+   41 | ER s5_live_recovered (uint64_t scan_id_us);
+      | ^~
+C:/Users/User/OneDrive - Singapore Institute Of Technology/Cloud Computing/INF2004-Embedded-Systems/app_program/subsystem5/s5_live.h:42:1: error: unknown type name 'ER'
+   42 | ER s5_live_fault (void); /* TMO_POL latch read; never clears on read. */
+      | ^~
+C:/Users/User/OneDrive - Singapore Institute Of Technology/Cloud Computing/INF2004-Embedded-Systems/app_program/subsystem5/s5_live.h:44:1: error: unknown type name 'ER'
+   44 | ER s5_live_cancel (void);
+      | ^~
+EXIT 1

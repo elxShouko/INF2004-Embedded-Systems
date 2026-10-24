@@ -17,6 +17,16 @@
 #define S5_SERVO_MASK (1UL << 15U)
 #define S5_OUT_CLR (0xD0000018UL)
 #define S5_OUT_SET (0xD0000014UL)
+#define S5_ECHO_IDLE (0U)
+#define S5_ECHO_ARMED (1U)
+#define S5_ECHO_RISE (2U)
+#define S5_ECHO_COMPLETE (3U)
+#define S5_ECHO_ERROR (4U)
+/* The port's EI uses inline PRIMASK assembly without a memory clobber.
+ * These compiler barriers keep the coherent copy inside IRQ exclusion.
+ * GNU syntax is required by the professor's GNU Make toolchain.
+ */
+#define S5_COMPILER_BARRIER() __asm__ volatile ("" ::: "memory")
 
 static bool drv_s5_open (void * p_context,
     s5_acquire_config_t const * p_config);
@@ -124,10 +134,9 @@ static bool drv_s5_trigger (void * p_context)
     if (!p_driver->b_claimed || (1U != in_w(0xD0000000UL)) ||
         (0U != (in_w(GPIO_IN) & S5_ECHO_MASK))) { return (false); }
     DI(saved);
-    p_driver->b_armed = true;
-    p_driver->b_rise = false;
-    p_driver->b_complete = false;
-    p_driver->b_error = false;
+    S5_COMPILER_BARRIER();
+    p_driver->echo_state = S5_ECHO_ARMED;
+    S5_COMPILER_BARRIER();
     EI(saved);
     out_w(S5_OUT_SET,S5_TRIG_MASK);
     WaitUsec(10U); /* HC-SR04 trigger protocol, NOT an RTOS settle delay. */
@@ -143,11 +152,14 @@ static int32_t drv_s5_echo (void * p_context, uint32_t * p_width,
 
     if (1U != in_w(0xD0000000UL)) { return (-1); }
     DI(saved); /* Same core as ISR, never used as cross-core synchronization. */
-    int32_t result = p_driver->b_error ? -1 :
-        (p_driver->b_complete ? 1 : 0);
+    S5_COMPILER_BARRIER();
+    uint8_t state = p_driver->echo_state;
+    int32_t result = (state >= S5_ECHO_ERROR) ? -1 :
+        ((S5_ECHO_COMPLETE == state) ? 1 : 0);
 
     *p_width = p_driver->width_us;
     *p_capture = p_driver->fall_us;
+    S5_COMPILER_BARRIER();
     EI(saved);
     return (result);
 }
@@ -170,7 +182,7 @@ static void drv_s5_close (void * p_context)
         out_w(PWM_CH7_BASE + PWM_CHx_CC,0U);
         p_driver->b_claimed = false;
     }
-    p_driver->b_armed = false;
+    p_driver->echo_state = S5_ECHO_IDLE;
 }
 
 static void drv_s5_edge (void * p_context, uint32_t events, uint32_t levels)
@@ -178,25 +190,35 @@ static void drv_s5_edge (void * p_context, uint32_t events, uint32_t levels)
     drv_s5_t * p_driver = p_context;
     uint64_t now_us = 0U;
 
-    if (!p_driver->b_armed || (S5_ECHO_MASK != events)) { return; }
-    if (!drv_s5_now(&now_us)) { p_driver->b_error = true; return; }
+    uint8_t state = p_driver->echo_state;
+
+    if (((S5_ECHO_ARMED != state) && (S5_ECHO_RISE != state)) ||
+        (S5_ECHO_MASK != events)) { return; }
+    if (!drv_s5_now(&now_us))
+    {
+        p_driver->echo_state = S5_ECHO_ERROR;
+        return;
+    }
     if (0U != (levels & S5_ECHO_MASK))
     {
-        if (p_driver->b_rise) { p_driver->b_error = true; }
+        if (S5_ECHO_RISE == state)
+        {
+            p_driver->echo_state = S5_ECHO_ERROR;
+            return;
+        }
         p_driver->rise_us = now_us;
-        p_driver->b_rise = true;
+        p_driver->echo_state = S5_ECHO_RISE;
     }
-    else if (!p_driver->b_rise || (now_us <= p_driver->rise_us) ||
+    else if ((S5_ECHO_RISE != state) || (now_us <= p_driver->rise_us) ||
         (now_us - p_driver->rise_us > p_driver->config.echo_timeout_us))
     {
-        p_driver->b_error = true;
+        p_driver->echo_state = S5_ECHO_ERROR;
     }
     else
     {
         p_driver->fall_us = now_us;
         p_driver->width_us = (uint32_t)(now_us - p_driver->rise_us);
-        p_driver->b_complete = true;
-        p_driver->b_armed = false;
+        p_driver->echo_state = S5_ECHO_COMPLETE;
     }
 }
 

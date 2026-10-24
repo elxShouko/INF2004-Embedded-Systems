@@ -37,7 +37,10 @@ ER s5_live_start (void);
 ER s5_live_configure (s5_live_config_t const * p_config,
     drv_encoder_port_t const * p_irq);
 ER s5_live_status (s5_live_status_t * p_status);
-/* Idempotent, bounded recovery acknowledgement for the exact stopped scan. */
+/*
+ * Controller-only resume after bypass/recovery and matched stopped completion.
+ * The exact held-scan ID is required; LINE_FOUND by itself is not a resume.
+ */
 ER s5_live_recovered (uint64_t scan_id_us);
 ER s5_live_fault (void); /* TMO_POL latch read; never clears on read. */
 /* Latch; owner disables outputs on its next cycle; reboot to recover. */

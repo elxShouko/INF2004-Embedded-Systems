@@ -1,0 +1,8 @@
+Windows MSYS GNU Make fallback; WSL contains docker-desktop only, no Ubuntu.
+PICO_SDK_PATH=<unset>
+cwd=build_make C:/msys64/usr/bin/make.exe -j8
+pico_rp2040.mk:151: *** PICO_SDK_PATH is not set. export PICO_SDK_PATH=/path/to/pico-sdk, or build with CONSOLE=uart WIFI=none.  Stop.
+EXIT 2
+cwd=build_make C:/msys64/usr/bin/make.exe TEST=1 -j8
+pico_rp2040.mk:151: *** PICO_SDK_PATH is not set. export PICO_SDK_PATH=/path/to/pico-sdk, or build with CONSOLE=uart WIFI=none.  Stop.
+EXIT 2
