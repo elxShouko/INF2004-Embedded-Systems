@@ -382,3 +382,26 @@ on macOS because it hard-codes a Windows GCC path and requires GCC
 `-fanalyzer`; shared test infrastructure was not changed. No Pico was flashed,
 and physical calibration, hump accuracy, magnetic interference, fault-to-stop
 latency and 20 ms scheduling remain unverified.
+
+### Buddy 4 checklist and cross-subsystem build — 2026-10-24
+
+Tested `buddy4-afterTribunal` at HEAD `730056102a6d60abb22bcb73345393a149692bd4`
+plus the uncommitted Buddy 4 monitor-lock check. The 82 current host cases do
+not execute the retained template monitor; its new lock-failure path was
+inspected and compiled in all integrated profiles, not exercised on target.
+
+| Date | Test ID | Commit | Tester | Result | Log / evidence | Notes |
+|---|---|---|---|---|---|---|
+| 2026-10-24 | S4-U116–U166, U176–U199, U202–U203, U205–U209 | `7300561 + WT` | Codex / Apple Clang 21 | PASS, 82/82 host | [normal](logs/2026-10-24_host_normal.55yVJn/console.txt) | Strict C99/O2; no failures. |
+| 2026-10-24 | Same 82 cases | `7300561 + WT` | Codex / Apple Clang 21 | PASS, 82/82 host with ASan + UBSan | [sanitizer](logs/2026-10-24_host_sanitize.Ex37rH/console.txt) | No sanitizer diagnostics. |
+| 2026-10-24 | Integrated Make profiles | `7300561 + WT` | Codex / Arm GNU 15.3.1 | PASS, compile/link/UF2 | [build](logs/2026-10-24_build.GiW992/console.txt) | Default, TEST=1, S4_IMU=1 and both; no errors or warnings, no flash. |
+
+Checklist inspection: S4 uses no S3 navigation queue or `s3_submit()` call,
+and reads the retained S3 `app_stats` only after confirming `mtx_stats` was
+locked. The lock is released before printing. The compact IMU status remains
+private to S4 and does not change S3's public API. Its minimum-bit table,
+before/after RP2040 and host sizes, and packed-state correctness tests are in
+`docs/buddy4/DATA_REPRESENTATION.md` and S4-U207–U209. The retained template
+monitor still controls Buddy 1's demonstration LED task through IF-05; this
+existing cross-buddy behaviour was not changed or hardware-tested. Physical
+IMU enablement and calibration gates remain pending.
