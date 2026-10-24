@@ -84,9 +84,17 @@ EXPORT void monitor_task(INT stacd, void *exinf)
 
 		/* 3. Copy the stats under subsystem 3's mutex, print outside
 		      it: hold a mutex for as short a time as possible. */
-		tk_loc_mtx(mtx_stats, TMO_FEVR);
+		er = tk_loc_mtx(mtx_stats, TMO_FEVR);
+		if (E_OK != er) {
+			tm_printf((UB*)"monitor: stats lock failed (%d)\n", er);
+			continue;
+		}
 		snap = app_stats;
-		tk_unl_mtx(mtx_stats);
+		er = tk_unl_mtx(mtx_stats);
+		if (E_OK != er) {
+			tm_printf((UB*)"monitor: stats unlock failed (%d)\n", er);
+			continue;
+		}
 
 		tk_get_tim(&now);
 		tk_ref_sem(sem_slots, &rsem);

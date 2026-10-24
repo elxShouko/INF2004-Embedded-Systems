@@ -1,9 +1,16 @@
 # Buddy 4 — current integrated IMU firmware
 
+The Tribunal 1 minimum-bit update is documented in
+[`DATA_REPRESENTATION.md`](DATA_REPRESENTATION.md). The event queue now carries
+a 32-byte explicit mask/shift representation while the existing public runtime
+API, mutex-protected snapshot and independent latched fault flag are preserved.
+Numeric measurement widths remain unchanged until calibrated ranges and
+precision are agreed.
+
 Production code: [`app_program/subsystem4/`](../../app_program/subsystem4/).
 Current tests and results: [`testing/subsystem4/`](../../testing/subsystem4/TEST_LOG.md).
 The [older standalone guide](HISTORICAL_STANDALONE.md) documents a different
-implementation and 113 archived tests. The current host suite has 79 cases.
+implementation and 113 archived tests. The current host suite has 82 cases.
 
 ## Implementation
 
@@ -12,6 +19,8 @@ motion classification, hump states and a provisional maximum at the peak,
 following Week 6. `imu_guard.c` decides whether height is trustworthy.
 `imu_link.c` reads Buddy 2's signed wheel status. `imu_runtime.c` owns the
 sensor/core task, status snapshots, event queue and latched fault flag.
+`imu_packed.c` packs the bounded state, classification, validity, event and
+height-rejection fields with explicit masks for snapshots and queue messages.
 `drv_lsm.c` and `drv_imu.c` own the LSM303DLHC registers and board I2C.
 `subsystem4_test.c` is the template's TEST=1 hook. Make discovers the `.c`
 files at this depth. The LSM303DLHC has no gyro: turn rate is a difference

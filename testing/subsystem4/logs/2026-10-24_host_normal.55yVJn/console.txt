@@ -1,0 +1,189 @@
+Subsystem 4 current host suite: mode=normal
+Temporary artifacts: /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm
+UTC run time: 2026-10-24T05:48:31Z
+Harness/current firmware HEAD: 730056102a6d60abb22bcb73345393a149692bd4
+ M app_program/subsystem4/task_monitor.c
+?? testing/subsystem4/logs/2026-10-24_host_normal.55yVJn/
+Apple clang version 21.0.0 (clang-2100.3.34.2)
+Target: arm64-apple-darwin25.6.0
+Thread model: posix
+InstalledDir: /Library/Developer/CommandLineTools/usr/bin
+91b60a6cfa9461f14231bfe47179a847dd32e553844e0b540cb3934274912dcb  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_guard.c
+4184f6a8fc4352971f09be44c501a46212a193d15f1f1d93b8e7c7da8c32c504  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_config.h
+5857a3e3ab487cf8611213cbc75e6d638d7976b8408a7a4d292b50ea8213beaa  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_lsm.c
+11bcc759082688a0a281b39a863ebc3bb22d9111eaaa1fa6b6d6c7a67f934c51  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_packed.h
+c3624da361740492764e9494396fca88708532a1c3593e8df470fb83e5d9325e  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.h
+16d2206a76f8a6b8a5a9e5b66e3e158b066bae09cca8916e55d34eeac2ad1347  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/subsystem4.c
+9023a343499bef2e012e906814fd0fc601cc73ad5e8744800ae25052fa669e8c  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_runtime.c
+7885024f95a5ceaa1b1b0246c96c9091316385b7645184ebcc4ac1ff468baf0e  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_imu.h
+53ab127c88b456b410afcbf8abfe76a40885df1656e4f8cf9419c155fa69c34e  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/task_monitor.c
+c2b5a21dc126470550c33d5177e7e90417f8e75e0271eeea481e6a498e80e493  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_link.c
+3a001b92df44a3fd8fdf8e80bc26c64fdec1afa4bbbbaec50393a93ca98e2d88  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_guard.h
+41f80cbd0cd44ee3544c07af87aa6ea101a8440d70897fa014700ad7858aa8df  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.c
+d16903d172f252d8e87ab927dc0a0cbe82005ad194ff9bd5473398ba85597ed0  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/subsystem4_test.c
+c58ffd38ae65660ec031b430e944f2448da1ff548fd45a4426c482008e8ddce3  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_packed.c
+d621889734e53726c0f04ca07c3152b0ed40cc8c3acd07fe6ac4278c26cd1759  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_lsm.h
+378a135d747503f788a3e7906e2e0a3f6b8ae4f71982fa00dcdbe6cc416fc9b7  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/subsystem4.h
+06bae18eac5213fe0d1282cf429f5c1bb2ce620d18b93ef52b836f4871f9aed5  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_imu.c
+f5afa78554577dc00eb5de148b8d136986987b053b7cedb78342cb5e0352cf0c  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_link.h
+299d36e1842c58131a67db82936f89a7db23b02bf3ef315ec36eb8a79cc428cf  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_runtime.h
+34ab92f81910720d25823db9d618aba47920dc02b1e49d7e447fe75801877fd5  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/run_builds.sh
+521b3121ebf48d76aa0ece05ee5a9806485c2589bf5d04b8184e6acd135958b3  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/runtime_main.c
+e2752f7b00a09ed55f1cf9678395a4d20599cc554f61d6d921ae41f93589fe05  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/buddy4_cases.h
+09a53c6cd96a01a767df81740a003f07e6923062b875cd19e15357eea1f4894e  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/runtime_fake.c
+7948316e1f810e8c8492749b30e7e2505f8c7297da7ebb9522dc6a48a26dfc00  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/transport_main.c
+848e923a732956324046f54a029ecb66fa8e789df47d21fe797a7d2a68da09d3  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/host_main.c
+29032640e6f86fb915c986065d350a5186cb771aa1fa1f0a0b8defe64dd8d277  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/run_host_tests.sh
+6f956a0fe8329e72870bd33dc948099710cb9ec52ab547b28cfc32814a939243  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/buddy4_cases.c
+40364ccba3ab71955e4978c06661911ce218ac93cf06515267f147a58ed8559f  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/runtime_fake.h
+6224a2434bf38949112345508ffee8f155d458e803c22044f1cfc43f955c636b  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake/hardware/structs/timer.h
+ff77a7e251e5a539ae6fa9f354fe0611bed67509f9c8bb0c40dc1cfd9ca5ecd7  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake/hardware/gpio.h
+cf093a9baac9bb1ff2aedcb4a0e584f34750eb0442c4dca07bfa591cc4eeeef1  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake/hardware/i2c.h
+c3feca7db2b9808bc7ba75bcb4f37840b555508c45a848ae20ae8b2b872a89dd  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake/config_device.h
+336112789429ad7334f8e7cb077b8a82043480f7260a12ea35170b596cf35a2d  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake/tk/tkernel.h
+1b4c6c715dfa5f68fac47d7cbe1c9511e28a8609716fd18dbafb350139290824  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake/tm/tmonitor.h
+049c4da6e921932c8eed50bdc0ea858f9bd9fd1e59c9cb801402ccb872db4cbd  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake/bsp/libbsp.h
+b8aec5365621e00355f6e66e456319543bccc93d7d32fae25d3af2b04230260b  /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/TEST_LOG.md
+
+CURRENT firmware: 82 cases (U116-U166, U176-U199, U202-U203, U205-U209)
++ cc -std=c99 -Wall -Wextra -Werror -Wconversion -Wshadow -pedantic -O2 '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_guard.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_packed.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_lsm.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/buddy4_cases.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/host_main.c' -lm -o /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/current_tests
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/current_tests
+[TEST] S4-U116 PASS invalid config rejected
+[TEST] S4-U117 PASS stationary calibration completes
+[TEST] S4-U118 PASS motion resets calibration window
+[TEST] S4-U119 PASS body-axis pitch is degrees
+[TEST] S4-U120 PASS body-axis roll is degrees
+[TEST] S4-U162 PASS Week 6 highest estimate is published at peak
+[TEST] S4-U121 PASS ascent/peak/descent and distance-integrated height
+[TEST] S4-U122 PASS smaller completed hump retains session maximum
+[TEST] S4-U123 PASS larger completed hump updates session maximum
+[TEST] S4-U124 PASS pitch alone is not reported as measured height
+[TEST] S4-U125 PASS missing distance invalidates entire current hump
+[TEST] S4-U126 PASS unfinished hump times out to a latched fault
+[TEST] S4-U127 PASS impact latches fault
+[TEST] S4-U128 PASS good data cannot silently clear fault
+[TEST] S4-U129 PASS duplicate timestamp rejected
+[TEST] S4-U130 PASS monotonic timestamp wraps correctly
+[TEST] S4-U131 PASS stale samples rejected
+[TEST] S4-U132 PASS NaN cannot enter processing
+[TEST] S4-U133 PASS unsupported reverse distance rejected
+[TEST] S4-U134 PASS gravity alone does not prove vehicle is stationary
+[TEST] S4-U135 PASS uncalibrated magnetometer does not claim valid heading
+[TEST] S4-U136 PASS heading wrap uses shortest turn, no fictitious gyro
+[TEST] S4-U137 PASS missing magnetic sample clears heading validity
+[TEST] S4-U138 PASS datasheet register profile and readback
+[TEST] S4-U139 PASS signed little-endian acceleration in g
+[TEST] S4-U140 PASS magnetic X,Z,Y ordering and unequal axis gains
+[TEST] S4-U141 PASS no stale magnetic sample reuse
+[TEST] S4-U142 PASS no stale acceleration sample reuse
+[TEST] S4-U143 PASS wrong sensor identity rejected
+[TEST] S4-U144 PASS configuration readback mismatch rejected
+[TEST] S4-U145 PASS bus failure propagates without partial sample commit
+[TEST] S4-U146 PASS magnetic overflow invalidates yaw
+[TEST] S4-U147 PASS acceleration saturation cannot look like normal tilt
+[TEST] S4-U148 PASS invalid driver arguments rejected
+[TEST] S4-U163 PASS dynamic acceleration at ascent entry invalidates height
+[TEST] S4-U164 PASS maximum allowed sample gap is inclusive
+[TEST] S4-U165 PASS null processing arguments fail safely
+[TEST] S4-U166 PASS all 4096 signed HR encodings and saturation boundaries
+[TEST] S4-U177 PASS flat acceleration is classified as dynamic
+[TEST] S4-U178 PASS acceleration then braking leaves maximum invalid
+[TEST] S4-U179 PASS one-sample pitch spike fails ascent dwell
+[TEST] S4-U180 PASS stale motion invalidates an entire candidate
+[TEST] S4-U181 PASS unavailable motion cannot preserve candidate validity
+[TEST] S4-U182 PASS reverse speed never counts as forward hump travel
+[TEST] S4-U183 PASS in-place turn cannot create a height maximum
+[TEST] S4-U184 PASS revocation retracts a provisional peak
+[TEST] S4-U185 PASS bad later candidate preserves completed maximum
+[TEST] S4-U186 PASS valid hump after rejected candidate updates maximum
+[TEST] S4-U187 PASS shallow asymmetric descent closes at persistent level
+[TEST] S4-U188 PASS untrusted traction cannot validate height
+[TEST] S4-U189 PASS speed drift outside measured band rejects peak
+[TEST] S4-U176 PASS flat 0.2 g braking cannot create a valid peak
+[TEST] S4-U205 PASS flat accel/brake preserves prior valid maximum
+[TEST] S4-U206 PASS uncalibrated height gate remains closed
+[TEST] S4-U207 PASS packed status round-trips every bounded field
+[TEST] S4-U208 PASS host event payload falls from 52 to 32 bytes
+[TEST] S4-U209 PASS reserved bits and invalid states fail closed
+[TEST] buddy4 SUMMARY 0 failures
++ cc -std=c99 -Wall -Wextra -Werror -Wconversion -Wshadow -pedantic -O2 -DS4_IMU_ENABLE=1 '-I/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_core.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_runtime.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_guard.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_link.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/imu_packed.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/runtime_fake.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/runtime_main.c' -lm -o /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 149
+[TEST] S4-U149 PASS runtime/bridge check
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 150
+[TEST] S4-U150 PASS runtime/bridge check
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 151
+[TEST] S4-U151 PASS runtime/bridge check
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 152
+[TEST] S4-U152 PASS runtime/bridge check
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 153
+[TEST] S4-U153 PASS runtime/bridge check
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 154
+[TEST] S4-U154 PASS runtime/bridge check
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 155
+[TEST] S4-U155 PASS runtime/bridge check
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 156
+[TEST] S4-U156 PASS runtime/bridge check
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 157
+[TEST] S4-U157 PASS runtime/bridge check
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 158
+[TEST] S4-U158 PASS runtime/bridge check
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 159
+[TEST] S4-U159 PASS runtime/bridge check
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 160
+[TEST] S4-U160 PASS runtime/bridge check
++ for case_id in '{149..161}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 161
+[TEST] S4-U161 PASS runtime/bridge check
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 190
+[TEST] S4-U190 PASS runtime/bridge check
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 191
+[TEST] S4-U191 PASS runtime/bridge check
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 192
+[TEST] S4-U192 PASS runtime/bridge check
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 193
+[TEST] S4-U193 PASS runtime/bridge check
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 194
+[TEST] S4-U194 PASS runtime/bridge check
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 195
+[TEST] S4-U195 PASS runtime/bridge check
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 196
+[TEST] S4-U196 PASS runtime/bridge check
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 197
+[TEST] S4-U197 PASS runtime/bridge check
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 198
+[TEST] S4-U198 PASS runtime/bridge check
++ for case_id in '{190..199}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/runtime_tests 199
+[TEST] S4-U199 PASS runtime/bridge check
++ cc -std=c99 -Wall -Wextra -Werror -Wconversion -Wshadow -pedantic -O2 -DS4_IMU_ENABLE=1 -DTM_WIFI_CYW43=1 '-I/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/fake' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_imu.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/app_program/subsystem4/drv_lsm.c' '/Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/host/transport_main.c' -o /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/transport_tests
++ for case_id in '{202..203}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/transport_tests 202
+[TEST] S4-U202 PASS bounded I2C transport
++ for case_id in '{202..203}'
++ /var/folders/91/63vmrnjd5dx64g3hw4vht1yc0000gn/T//subsystem4-host.busbVm/transport_tests 203
+[TEST] S4-U203 PASS bounded I2C transport
++ set +x
+
+Requested suite completed successfully.
+Saved evidence: /Users/eddy/school/Y2/Embedded Systems Programming/Project/INF2004-Embedded-Systems/testing/subsystem4/logs/2026-10-24_host_normal.55yVJn/console.txt

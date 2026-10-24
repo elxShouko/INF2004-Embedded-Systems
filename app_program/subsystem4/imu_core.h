@@ -48,16 +48,16 @@ typedef struct
     float32_t mag_gauss[3];
     uint32_t  time_ms;          /**< Monotonic modulo 2^32 milliseconds. */
     float32_t distance_mm;      /**< Forward path since previous sample. */
-    bool      b_distance_valid;
-    bool      b_mag_valid;
     float32_t speed_mm_s;       /**< Signed mean wheel speed; never abs(). */
     float32_t wheel_delta_mm_s; /**< Absolute left/right speed difference. */
     uint32_t  motion_time_ms;   /**< Source clock; used only for differences. */
     uint32_t  motion_age_ms;    /**< Age checked in the source clock. */
     uint32_t  motion_epoch;     /**< Changes on explicit trust revocation. */
-    bool      b_motion_valid;
-    bool      b_straight;
-    bool      b_traction_trusted;
+    uint8_t   b_distance_valid : 1;
+    uint8_t   b_mag_valid : 1;
+    uint8_t   b_motion_valid : 1;
+    uint8_t   b_straight : 1;
+    uint8_t   b_traction_trusted : 1;
 } imu_core_sample_t;
 
 typedef struct
@@ -71,7 +71,6 @@ typedef struct
     uint32_t  calibration_samples;
     uint32_t  maximum_gap_ms;
     uint32_t  maximum_hump_ms;
-    bool      b_mag_calibrated;
     /* Measured operating envelope. Zero/default means height is disabled. */
     float32_t maximum_accel_mm_s2;
     float32_t speed_band_mm_s;
@@ -80,26 +79,27 @@ typedef struct
     uint32_t  settle_ms;
     uint32_t  ascent_ms;
     uint32_t  level_ms;
-    bool      b_height_calibrated;
+    uint8_t   b_mag_calibrated : 1;
+    uint8_t   b_height_calibrated : 1;
 } imu_core_config_t;
 
 typedef struct
 {
-    imu_core_phase_t  phase;
-    imu_core_motion_t motion;
     uint32_t          time_ms;
-    uint32_t          events;  /**< Transitions from this update only. */
     float32_t         pitch_deg;
     float32_t         roll_deg;
     float32_t         heading_deg;
     float32_t         turn_dps;
     float32_t         hump_peak_mm;
     float32_t         highest_hump_mm;
-    bool              b_heading_valid;
-    bool              b_height_valid;
-    bool              b_highest_valid;
-    uint32_t          height_reasons;
-    bool              b_peak_provisional;
+    uint32_t          phase : 3;
+    uint32_t          motion : 3;
+    uint32_t          b_heading_valid : 1;
+    uint32_t          b_height_valid : 1;
+    uint32_t          b_highest_valid : 1;
+    uint32_t          b_peak_provisional : 1;
+    uint32_t          events : 9; /**< Transitions from this update only. */
+    uint32_t          height_reasons : 8;
 } imu_core_status_t;
 
 typedef struct
@@ -115,9 +115,6 @@ typedef struct
     uint32_t          count;
     uint32_t          hump_start_ms;
     uint32_t          heading_time_ms;
-    bool              b_time_valid;
-    bool              b_previous_heading;
-    bool              b_hump_height_valid;
     float32_t         previous_speed;
     float32_t         stable_speed;
     float32_t         saved_highest_mm;
@@ -125,11 +122,14 @@ typedef struct
     uint32_t          previous_motion_epoch;
     uint32_t          stable_since_ms;
     uint32_t          level_since_ms;
-    bool              b_motion_baseline;
-    bool              b_motion_stable;
-    bool              b_level_pending;
-    bool              b_saved_highest_valid;
-    bool              b_peak_recorded;
+    uint8_t           b_time_valid : 1;
+    uint8_t           b_previous_heading : 1;
+    uint8_t           b_hump_height_valid : 1;
+    uint8_t           b_motion_baseline : 1;
+    uint8_t           b_motion_stable : 1;
+    uint8_t           b_level_pending : 1;
+    uint8_t           b_saved_highest_valid : 1;
+    uint8_t           b_peak_recorded : 1;
 } imu_core_t;
 
 #define IMU_HEIGHT_UNCALIBRATED 0x001u

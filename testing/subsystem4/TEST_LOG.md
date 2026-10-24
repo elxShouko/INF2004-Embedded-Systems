@@ -3,7 +3,7 @@
 **Subsystem:** Buddy 4 · **Code:** `app_program/subsystem4/`
 
 See `testing/README.md` for the shared convention. This is the single registry
-for the 79 current-firmware host cases, retained monitor checks and pending
+for the 82 current-firmware host cases, retained monitor checks and pending
 hardware checks. Historical IDs S4-U003–S4-U115 are retired/reserved and are
 not reused. S4-U167–S4-U169 remain unassigned.
 
@@ -24,7 +24,7 @@ bash testing/subsystem4/host/run_host_tests.sh sanitize
 bash testing/subsystem4/host/run_builds.sh
 ```
 
-Both host commands run all **79 current-firmware cases**: 54 core/driver
+Both host commands run all **82 current-firmware cases**: 57 core/driver
 checks, 23 runtime/bridge checks and 2 transport checks. No legacy sources
 or cases
 are built or extracted.
@@ -126,6 +126,9 @@ Historical result rows below are retained as records, not current coverage.
 | S4-U203 | Initialization write timeout | Current SDK transport | auto (host) | [transport_main.c](host/transport_main.c), fake SDK | SDK write failure prevents open; configured 2 ms timeout is passed. |
 | S4-U205 | Flat acceleration then braking after valid hump | Current height guard | auto (host, target) | [buddy4_cases.c](host/buddy4_cases.c); eight 20 ms intervals each at +0.2 g and -0.2 g | False ascent reaches PEAK but is invalid; prior 10 mm synthetic maximum stays valid through return to MONITORING. |
 | S4-U206 | Separate height enable gate | Current height guard | auto (host, target) | [buddy4_cases.c](host/buddy4_cases.c); default config, valid forward/trusted synthetic input | No valid maximum while height calibration remains false. |
+| S4-U207 | Packed status round trip | Tribunal 1 minimum-bit representation | auto (host, target) | Encode and decode maximum bounded fields and all validity flags | Every public field survives unchanged. |
+| S4-U208 | Status representation size | Tribunal 1 minimum-bit representation | auto (host, target) | Compile-time 32-byte checks plus historical host-size comparison | Core and explicit packed status are 32 bytes; host payload falls from 52 bytes. |
+| S4-U209 | Packed status validation | Tribunal 1 minimum-bit representation | auto (host, target) | Inject reserved bits, invalid phase and null inputs | Decoder/encoder reject invalid representations without publishing them. |
 | S4-U170 | Inspect exact breakout, supply and bus pull-ups; verify GP16/17 and axis mapping with power safely isolated | Hardware acceptance | manual (pending) | Authorized physical trial; record conditions and measured errors | Correct part, exclusive pins, common ground, compatible 3.3 V logic; save wiring record |
 | S4-U171 | Stationary calibration, moved startup, known positive/negative tilt fixtures | Hardware acceptance | manual (pending) | Authorized physical trial; record conditions and measured errors | Calibration only under intended stationary conditions; measured bias/noise and tilt error within team-approved limits |
 | S4-U172 | Repeated known humps with differing heights, lengths and slopes at measured speeds | Hardware acceptance | manual (pending) | Authorized physical trial; record conditions and measured errors | Correct highest physical hump, peak-time event, recorded height errors within agreed limits; invalid estimates clearly flagged |
@@ -358,3 +361,47 @@ wiring, pull-ups, mounting, calibration, slip discrimination, physical height
 error, SMP timing and fault-to-motor-stop latency remain unverified. Both
 `S4_MAG_CALIBRATED` and `S4_HEIGHT_CALIBRATED` remain false; no hardware was
 accessed or enabled.
+
+### Tribunal 1 minimum-bit representation — 2026-10-21
+
+Subject: `buddy4-afterTribunal`, HEAD
+`d4c91f271c9801802e3994967c96e9ec8fcba38c` plus the Buddy 4 firmware, test
+and documentation changes recorded in each console. The registry now has 82
+cases. S4-U207–U209 cover round-trip correctness, the 32-byte representation
+and rejection of invalid packed states.
+
+| Date | Test ID | Commit | Tester | Result | Log / evidence | Notes |
+|---|---|---|---|---|---|---|
+| 2026-10-21 | S4-U116–U166, U176–U199, U202–U203, U205–U209 | `d4c91f2 + WT` | Apple Clang 21 | PASS, 82/82 host | [normal](logs/2026-10-21_host_normal.9WshOY/console.txt) | Strict C99/O2; zero failed cases. |
+| 2026-10-21 | Same 82 cases | `d4c91f2 + WT` | Apple Clang 21 | PASS, 82/82, ASan + UBSan | [sanitizer](logs/2026-10-21_host_sanitize.6HWd3X/console.txt) | No sanitizer diagnostics. |
+| 2026-10-21 | Four integrated GNU Make profiles | `d4c91f2 + WT` | Arm GNU 15.3.1 | PASS, compile/link/UF2 | [build](logs/2026-10-21_build.YKRfk8/console.txt) | Default, TEST=1, S4_IMU=1 and both; no flashing. |
+
+The shared ARM integration compiler check also passed all four single/SMP and
+normal/TEST combinations (44 objects total). Its host runner was unavailable
+on macOS because it hard-codes a Windows GCC path and requires GCC
+`-fanalyzer`; shared test infrastructure was not changed. No Pico was flashed,
+and physical calibration, hump accuracy, magnetic interference, fault-to-stop
+latency and 20 ms scheduling remain unverified.
+
+### Buddy 4 checklist and cross-subsystem build — 2026-10-24
+
+Tested `buddy4-afterTribunal` at HEAD `730056102a6d60abb22bcb73345393a149692bd4`
+plus the uncommitted Buddy 4 monitor-lock check. The 82 current host cases do
+not execute the retained template monitor; its new lock-failure path was
+inspected and compiled in all integrated profiles, not exercised on target.
+
+| Date | Test ID | Commit | Tester | Result | Log / evidence | Notes |
+|---|---|---|---|---|---|---|
+| 2026-10-24 | S4-U116–U166, U176–U199, U202–U203, U205–U209 | `7300561 + WT` | Codex / Apple Clang 21 | PASS, 82/82 host | [normal](logs/2026-10-24_host_normal.55yVJn/console.txt) | Strict C99/O2; no failures. |
+| 2026-10-24 | Same 82 cases | `7300561 + WT` | Codex / Apple Clang 21 | PASS, 82/82 host with ASan + UBSan | [sanitizer](logs/2026-10-24_host_sanitize.Ex37rH/console.txt) | No sanitizer diagnostics. |
+| 2026-10-24 | Integrated Make profiles | `7300561 + WT` | Codex / Arm GNU 15.3.1 | PASS, compile/link/UF2 | [build](logs/2026-10-24_build.GiW992/console.txt) | Default, TEST=1, S4_IMU=1 and both; no errors or warnings, no flash. |
+
+Checklist inspection: S4 uses no S3 navigation queue or `s3_submit()` call,
+and reads the retained S3 `app_stats` only after confirming `mtx_stats` was
+locked. The lock is released before printing. The compact IMU status remains
+private to S4 and does not change S3's public API. Its minimum-bit table,
+before/after RP2040 and host sizes, and packed-state correctness tests are in
+`docs/buddy4/DATA_REPRESENTATION.md` and S4-U207–U209. The retained template
+monitor still controls Buddy 1's demonstration LED task through IF-05; this
+existing cross-buddy behaviour was not changed or hardware-tested. Physical
+IMU enablement and calibration gates remain pending.
