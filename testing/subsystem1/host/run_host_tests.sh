@@ -55,11 +55,25 @@ FLAGS="-std=c99 -Wall -Wextra -Wshadow -Wundef -Wswitch-default -Wfloat-equal"
 LWIP_DIR=$ROOT/lib/liblwip/sysdepend/pico_rp2040
 WIFI_DIR=$ROOT/lib/libwifi/sysdepend/pico_rp2040
 APP=$ROOT/app_program/subsystem1
+NAVMAP=$ROOT/app_program/subsystem3/drv_navigation_map.c # Buddy 3's nav_update_parse(), used by s1_net.c
 
 echo "--- 1. pure logic: codec, backoff, MQTT client"
 run $CC $FLAGS -o "$OUT/codec$EXE" test_codec_host.c $APP/s1_codec.c && run "$OUT/codec$EXE"
+run $CC $FLAGS -o "$OUT/bits$EXE" test_bits_host.c && run "$OUT/bits$EXE"
+run $CC $FLAGS -o "$OUT/codecbin$EXE" test_codec_bin_host.c $APP/s1_codec.c && run "$OUT/codecbin$EXE"
 run $CC $FLAGS -o "$OUT/backoff$EXE" test_backoff_host.c && run "$OUT/backoff$EXE"
 run $CC $FLAGS -Imocks -I$LWIP_DIR -o "$OUT/mqtt$EXE" test_mqtt_host.c $LWIP_DIR/mqtt_utk.c && run "$OUT/mqtt$EXE"
+
+echo
+echo "--- 1b. independent decoder/oracle (Python, written from the document): selftest + 4000-frame cross-check"
+if command -v python3 >/dev/null 2>&1; then
+    run python3 ../tools/s1_wire.py --selftest
+    run $CC -std=c99 -Wall -Wextra -o "$OUT/dumpframes$EXE" dump_frames_host.c $APP/s1_codec.c
+    echo "+ $OUT/dumpframes | python3 ../tools/s1_crosscheck.py"
+    "$OUT/dumpframes$EXE" | python3 ../tools/s1_crosscheck.py || { echo "!! cross-check failed"; FAILED=$((FAILED + 1)); }
+else
+    echo "NOTE: python3 not found: the independent cross-check was skipped"
+fi
 
 echo
 echo "--- 2. Wi-Fi service task (cyw43_utk.c) against a scripted driver"
@@ -82,12 +96,34 @@ else
 fi
 # PROHIBIT_DEF_SIZE_T: the kernel headers must not define size_t themselves,
 # because a hosted libc (MinGW on Windows) already does, with another type.
-KFLAGS="-std=gnu11 -Wall -Wextra -Wno-int-to-pointer-cast -DPROHIBIT_DEF_SIZE_T -include stddef.h -DAPP_TEST=1 -D_PICO_RP2040_ -DS1_SIMULATE_TELEMETRY=0 -DTM_MQTT=0 -DS1_TEST_HOST_FAULTS=1"
+KFLAGS="-std=gnu11 -Wall -Wextra -Wno-int-to-pointer-cast -DPROHIBIT_DEF_SIZE_T -include stddef.h -DAPP_TEST=1 -D_PICO_RP2040_ -DS1_SIMULATE_TELEMETRY=0 -DTM_MQTT=0 -DS1_TEST_HOST_FAULTS=1 -DS1_WIRE_JSON=1"
 run $CC -std=gnu11 -Wall -Wextra $THREADS -c -o "$OUT/host_sync.o" host_sync.c
 run $CC $KFLAGS -I$ROOT/include -I$ROOT/config -I$ROOT/app_program \
     -o "$OUT/target$EXE" kernel_emulation.c "$OUT/host_sync.o" target_main.c \
-    $APP/s1_net.c $APP/s1_codec.c $APP/s1_sim.c $APP/subsystem1_test.c $THREADS $SERIAL \
+    $APP/s1_net.c $APP/s1_codec.c $APP/s1_sim.c $APP/subsystem1_test.c $NAVMAP $THREADS $SERIAL \
     && run "$OUT/target$EXE"
+
+echo
+echo "--- 3b. binary wire format (the default build) through s1_net.c"
+BINFLAGS=$(echo "$KFLAGS" | sed 's/ -DS1_WIRE_JSON=1//')
+run $CC $BINFLAGS -I$ROOT/include -I$ROOT/config -I$ROOT/app_program \
+    -o "$OUT/netbin$EXE" kernel_emulation.c "$OUT/host_sync.o" test_net_bin_host.c \
+    $APP/s1_net.c $APP/s1_codec.c $NAVMAP $THREADS $SERIAL \
+    && run "$OUT/netbin$EXE"
+
+echo
+echo "--- 3c. the same on-target tests with the binary wire format (the default build)"
+run $CC $BINFLAGS -I$ROOT/include -I$ROOT/config -I$ROOT/app_program \
+    -o "$OUT/target_bin$EXE" kernel_emulation.c "$OUT/host_sync.o" target_main.c \
+    $APP/s1_net.c $APP/s1_codec.c $APP/s1_sim.c $APP/subsystem1_test.c $NAVMAP $THREADS $SERIAL \
+    && run "$OUT/target_bin$EXE"
+
+echo
+echo "--- 3d. mapping-update gateway: robot/cmd text -> nav_update_parse -> s3_submit (mock) -> reply -> heartbeat"
+run $CC $BINFLAGS -I$ROOT/include -I$ROOT/config -I$ROOT/app_program \
+    -o "$OUT/mapgw$EXE" kernel_emulation.c "$OUT/host_sync.o" test_map_host.c \
+    $APP/s1_net.c $APP/s1_codec.c $APP/s1_map.c $NAVMAP $THREADS $SERIAL \
+    && run "$OUT/mapgw$EXE"
 
 echo
 echo "--- 4. structure: application code never touches the radio or lwIP"
@@ -103,11 +139,11 @@ echo
 echo "--- 5. optional: the same harness built for Windows (MinGW cross compiler, run under wine if present)"
 WCC=x86_64-w64-mingw32-gcc
 if command -v $WCC >/dev/null 2>&1 && [ "$CC" != "$WCC" ]; then
-    WKFLAGS="-std=gnu11 -Wall -Wextra -Wno-int-to-pointer-cast -DPROHIBIT_DEF_SIZE_T -include stddef.h -DAPP_TEST=1 -D_PICO_RP2040_ -DS1_SIMULATE_TELEMETRY=0 -DTM_MQTT=0 -DS1_TEST_HOST_FAULTS=1 -DS1_TEST_SERIAL_HOST=1 -DS1_TEST_REQUIRE_OVERLAP=0"
+    WKFLAGS="-std=gnu11 -Wall -Wextra -Wno-int-to-pointer-cast -DPROHIBIT_DEF_SIZE_T -include stddef.h -DAPP_TEST=1 -D_PICO_RP2040_ -DS1_SIMULATE_TELEMETRY=0 -DTM_MQTT=0 -DS1_TEST_HOST_FAULTS=1 -DS1_WIRE_JSON=1 -DS1_TEST_SERIAL_HOST=1 -DS1_TEST_REQUIRE_OVERLAP=0"
     run $WCC -std=gnu11 -Wall -Wextra -c -o "$OUT/host_sync_win.o" host_sync.c
     run $WCC $WKFLAGS -I$ROOT/include -I$ROOT/config -I$ROOT/app_program \
         -o "$OUT/target_win.exe" kernel_emulation.c "$OUT/host_sync_win.o" target_main.c \
-        $APP/s1_net.c $APP/s1_codec.c $APP/s1_sim.c $APP/subsystem1_test.c
+        $APP/s1_net.c $APP/s1_codec.c $APP/s1_sim.c $APP/subsystem1_test.c $NAVMAP
     if command -v wine >/dev/null 2>&1; then
         run env WINEDEBUG=-all wine "$OUT/target_win.exe"
     else

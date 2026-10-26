@@ -1,3 +1,5 @@
+> **PostTri1 update:** the default wire format is now the compact binary layout in `MINIMUM_BIT_REPRESENTATION.md` (telemetry 29 B, heartbeat 8 B, command 1 B). The JSON v2 description below applies only to builds with `S1_WIRE_JSON=1`.
+
 # Buddy 1 telemetry and command contract
 
 ## Production version 2 (approved for implementation, 2026-10-15)
