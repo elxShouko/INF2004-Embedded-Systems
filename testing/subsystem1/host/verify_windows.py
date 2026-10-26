@@ -22,7 +22,10 @@ def main():
         'status': subprocess.check_output(['git', 'status', '--short'], text=True),
         'scope': 'Host simulation; no real radio, RTOS scheduling or robot',
         'sha256': {p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                   for p in list(app.glob('*.c')) + list(app.glob('*.h')) + [Path(__file__)]},
+                   for p in list(app.glob('*.c')) + list(app.glob('*.h')) +
+                   list(host.glob('*.c')) +
+                   [root / 'app_program/subsystem3/drv_navigation_map.c',
+                    Path(__file__)]},
         'checks': checks}
 
     def run(command):
@@ -44,6 +47,8 @@ def main():
         flags = [gcc, '-std=c99', '-Wall', '-Wextra', '-Wshadow', '-Wundef']
         suites = {
             'codec': ['test_codec_host.c', app / 's1_codec.c'],
+            'bits': ['test_bits_host.c'],
+            'codecbin': ['test_codec_bin_host.c', app / 's1_codec.c'],
             'backoff': ['test_backoff_host.c'],
             'mqtt': ['-Imocks', '-I' + str(lwip), 'test_mqtt_host.c', lwip / 'mqtt_utk.c'],
             'wifi': ['-DTM_NET_LWIP=1', '-DTM_MQTT=1', '-DCNF_SMP=1',
@@ -56,7 +61,6 @@ def main():
         sync = temp / 'host_sync.o'
         run([gcc, '-std=gnu11', '-Wall', '-Wextra', '-DHOST_THREADS=1',
              '-pthread', '-c', 'host_sync.c', '-o', sync])
-        exe = temp / 'target.exe'
         command = [gcc, '-std=gnu11', '-Wall', '-Wextra', '-pthread',
                    '-Wno-int-to-pointer-cast', '-DPROHIBIT_DEF_SIZE_T',
                    '-include', 'stddef.h', '-DAPP_TEST=1', '-D_PICO_RP2040_',
@@ -64,10 +68,19 @@ def main():
                    '-DS1_TEST_HOST_FAULTS=1', '-DHOST_THREADS=1',
                    '-I' + str(root / 'include'), '-I' + str(root / 'config'),
                    '-I' + str(root / 'app_program'), 'kernel_emulation.c', sync,
-                   'target_main.c', app / 's1_net.c', app / 's1_codec.c',
-                   app / 's1_sim.c', app / 'subsystem1_test.c', '-o', exe]
-        if run(command):
-            run([exe])
+                   app / 's1_net.c', app / 's1_codec.c',
+                   root / 'app_program/subsystem3/drv_navigation_map.c']
+        kernel_suites = {
+            'target_json': ['-DS1_WIRE_JSON=1', 'target_main.c',
+                            app / 's1_sim.c', app / 'subsystem1_test.c'],
+            'target_bin': ['target_main.c', app / 's1_sim.c',
+                           app / 'subsystem1_test.c'],
+            'netbin': ['test_net_bin_host.c'],
+            'mapgw': ['test_map_host.c', app / 's1_map.c']}
+        for name, sources in kernel_suites.items():
+            exe = temp / (name + '.exe')
+            if run(command + sources + ['-o', exe]):
+                run([exe])
     report['passed'] = all(check['exit'] == 0 for check in checks)
     args.log.write_text(json.dumps(report, indent=2) + '\n')
     return 0 if report['passed'] else 1

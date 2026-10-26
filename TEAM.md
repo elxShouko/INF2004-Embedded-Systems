@@ -366,11 +366,15 @@ physical accuracy, target synchronization timing or autonomous completion.
 
 ## Barcode demo interface update - 2026-10-26
 
-The user approved changes in S1, S3 and the shared controller on the current
-branch. See [barcode demo contract](docs/barcode-demo.md). S1 copies four
-validated runtime letters; the controller forwards a complete S3 map using
-request ID UINT32_MAX. S3 starts with no actions and retains a decoded letter
-until a confirmed junction. BARCODE_VALID is observation only; actionable
-JUNCTION owns the existing manoeuvre-completion handshake. Buddy 2 alone
-continues to actuate motors. All consumers must rebuild with current headers.
-The 2026-10-26 junction rule supersedes the recorded 2026-10-21 immediate rule.
+The user approved changes in S1, S3 and the shared controller. The subsequent
+user-authorized overlap cleanup on main retains Buddy 1's `s1_map` gateway as
+the single runtime mapping transport. See [barcode demo contract](docs/barcode-demo.md).
+S1 parses/copies a typed update into its dedicated map buffer; the controller
+pumps that gateway and reports S3 replies through the binary heartbeat. The
+duplicate four-letter command payload, codec parser and UINT32_MAX controller
+path are retired. S3 still starts with no actions, requires a complete four-letter
+map and retains a decoded instruction until a confirmed junction. BARCODE_VALID
+is observation only; actionable JUNCTION owns the existing manoeuvre-completion
+handshake. Buddy 2 alone continues to actuate motors. All consumers must rebuild
+with current headers. The 2026-10-26 junction rule supersedes the recorded
+2026-10-21 immediate rule.

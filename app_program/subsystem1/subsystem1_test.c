@@ -196,7 +196,7 @@ drain_telemetry(void)
 static void
 drain_commands(void)
 {
-    s1_codec_command_t command = {S1_CMD_NONE, 0u, {0}};
+    s1_codec_command_t command = {S1_CMD_NONE, 0u};
 
     while (E_OK == s1_net_command_receive(&command, TMO_POL))
     {
@@ -362,12 +362,6 @@ test_telemetry_buffer(void)
 static void
 test_command_path(void)
 {
-    s1_codec_command_t    command = {S1_CMD_NONE, 0u, {0}};
-    s1_net_stats_t        before  = {0};
-    s1_net_stats_t        after   = {0};
-    UINT                  flags   = 0u;
-    ER                    result  = E_OK;
-    uint32_t              index   = 0u;
     s1_codec_command_t command = {S1_CMD_NONE, 0u};
     s1_net_stats_t before = {0};
     s1_net_stats_t after = {0};
@@ -811,15 +805,6 @@ estop_caller_task(INT stacd, void *p_exinf)
 static void
 test_estop_with_held_mutex(void)
 {
-    s1_codec_command_t command  = {S1_CMD_NONE, 0u, {0}};
-    s1_net_stats_t     stats    = {0};
-    UINT               pattern  = 0u;
-    UINT               flags    = 0u;
-    bool               b_early  = false;
-    bool               b_pulse  = false;
-    bool               b_wait   = false;
-    ER                 stat_err = E_OK;
-    int                waited   = 0;
     s1_codec_command_t command = {S1_CMD_NONE, 0u};
     s1_net_stats_t stats = {0};
     UINT pattern = 0u;
@@ -850,8 +835,6 @@ test_estop_with_held_mutex(void)
     estop_reset();
     ctl_flag_create();
     {
-        s1_codec_command_t pause = {S1_CMD_PAUSE, 0u, {0}};
-        uint32_t           index = 0u;
         s1_codec_command_t pause = {S1_CMD_PAUSE, 0u};
         uint32_t index = 0u;
 
@@ -913,11 +896,6 @@ test_estop_with_held_mutex(void)
 static void
 test_estop_latch(void)
 {
-    s1_codec_command_t command = {S1_CMD_NONE, 0u, {0}};
-    s1_net_stats_t     stats   = {0};
-    SYSTIM             time    = {0};
-    UINT               flags   = 0u;
-    uint32_t           index   = 0u;
     s1_codec_command_t command = {S1_CMD_NONE, 0u};
     s1_net_stats_t stats = {0};
     SYSTIM time = {0};
@@ -981,10 +959,6 @@ test_estop_latch(void)
 static void
 test_estop_post_failure(void)
 {
-    s1_codec_command_t command = {S1_CMD_NONE, 0u, {0}};
-    s1_net_stats_t     before  = {0};
-    s1_net_stats_t     after   = {0};
-    SYSTIM             time    = {0};
     s1_codec_command_t command = {S1_CMD_NONE, 0u};
     s1_net_stats_t before = {0};
     s1_net_stats_t after = {0};
@@ -1036,14 +1010,6 @@ test_estop_post_failure(void)
 static void
 test_command_validation(void)
 {
-    s1_codec_command_t command = {S1_CMD_EMERGENCY_STOP, 1u, {0}};
-    s1_codec_command_t bad = {
-        (s1_codec_command_id_t) BAD_COMMAND_ID, 0u, {0}};
-    s1_codec_command_t fresh   = {S1_CMD_PAUSE, 0u, {0}};
-    s1_net_stats_t     before  = {0};
-    s1_net_stats_t     after   = {0};
-    SYSTIM             time    = {0};
-    ER                 result  = E_OK;
     s1_codec_command_t command = {S1_CMD_EMERGENCY_STOP, 1u};
     s1_codec_command_t bad = {(s1_codec_command_id_t)BAD_COMMAND_ID, 0u};
     s1_codec_command_t fresh = {S1_CMD_PAUSE, 0u};
@@ -1138,48 +1104,6 @@ test_simulator(void)
     TEST_SUMMARY("subsystem1 simulator");
 }
 
-/** @brief Exercise the actual bounded MQTT hook and copied mapping queue. */
-static void test_mapping_command (void)
-{
-    static const char text[] = "MAP W=FORWARD X=UTURN Y=LEFT Z=RIGHT";
-    static const char * const invalid[] = {
-        "MAP W=FORWARD W=UTURN Y=LEFT Z=RIGHT",
-        "MAP W=FORWARD X=UTURN Y=LEFT Z=LEFT",
-        "MAP W=FORWARD X=UTURN Y=LEFT",
-        "MAP w=FORWARD X=UTURN Y=LEFT Z=RIGHT",
-        "MAP W=FORWARD X=UTURN Y=LEFT Z=RIGHT junk"};
-    s1_codec_command_t command = {0};
-    SYSTIM time = {0};
-    bool b_ok = true;
-    TEST_INIT();
-    while (E_OK == s1_net_command_receive(&command, TMO_POL))
-    {
-        /* Drain test traffic before examining one complete transaction. */
-    }
-    tk_get_otm(&time);
-    s1_net_hook_on_command(text, sizeof(text) - 1U, time.lo);
-    b_ok = (E_OK == s1_net_command_receive(&command, TMO_POL)) &&
-        (S1_CMD_MAPPING == command.command_id) &&
-        (time.lo == command.rx_timestamp_ms) &&
-        ('Y' == command.mapping_letters[0]) &&
-        ('Z' == command.mapping_letters[1]) &&
-        ('W' == command.mapping_letters[2]) &&
-        ('X' == command.mapping_letters[3]);
-    for (uint32_t index = 0U; index < sizeof(invalid) / sizeof(invalid[0]);
-         ++index)
-    {
-        uint32_t length = 0U;
-        while (invalid[index][length] != '\0')
-        {
-            ++length;
-        }
-        s1_net_hook_on_command(invalid[index], length, time.lo);
-        b_ok = (E_TMOUT == s1_net_command_receive(&command, TMO_POL)) && b_ok;
-    }
-    TEST_CHECK("S1-U23", b_ok, "four-letter MQTT mapping accepted atomically");
-    TEST_SUMMARY("subsystem1 mapping");
-}
-
 #if !S1_WIRE_JSON
 /* ---- Binary wire format and fault mask (S1-U23, S1-U24, S1-U25) ------- */
 
@@ -1575,450 +1499,32 @@ test_map_path(void)
     estop_reset();
     TEST_SUMMARY("subsystem1 mapping update path");
 }
-#endif /* !S1_WIRE_JSON */
 
-<<<<<<< HEAD
-/** @brief Exercise the actual bounded MQTT hook and copied mapping queue. */
-static void test_mapping_command (void)
+/** @brief Full demo mapping uses only the dedicated copied map buffer. */
+static void test_demo_map(void)
 {
     static const char text[] = "MAP W=FORWARD X=UTURN Y=LEFT Z=RIGHT";
-    static const char * const invalid[] = {
-        "MAP W=FORWARD W=UTURN Y=LEFT Z=RIGHT",
-        "MAP W=FORWARD X=UTURN Y=LEFT Z=LEFT",
-        "MAP W=FORWARD X=UTURN Y=LEFT",
-        "MAP w=FORWARD X=UTURN Y=LEFT Z=RIGHT",
-        "MAP W=FORWARD X=UTURN Y=LEFT Z=RIGHT junk"};
+    s1_net_map_request_t request = {0};
     s1_codec_command_t command = {0};
-    SYSTIM time = {0};
-    bool b_ok = true;
-    TEST_INIT();
-    while (E_OK == s1_net_command_receive(&command, TMO_POL))
-    {
-        /* Drain test traffic before examining one complete transaction. */
-    }
-    tk_get_otm(&time);
-    s1_net_hook_on_command(text, sizeof(text) - 1U, time.lo);
-    b_ok = (E_OK == s1_net_command_receive(&command, TMO_POL)) &&
-        (S1_CMD_MAPPING == command.command_id) &&
-        (time.lo == command.rx_timestamp_ms) &&
-        ('Y' == command.mapping_letters[0]) &&
-        ('Z' == command.mapping_letters[1]) &&
-        ('W' == command.mapping_letters[2]) &&
-        ('X' == command.mapping_letters[3]);
-    for (uint32_t index = 0U; index < sizeof(invalid) / sizeof(invalid[0]);
-         ++index)
-    {
-        uint32_t length = 0U;
-        while (invalid[index][length] != '\0')
-        {
-            ++length;
-        }
-        s1_net_hook_on_command(invalid[index], length, time.lo);
-        b_ok = (E_TMOUT == s1_net_command_receive(&command, TMO_POL)) && b_ok;
-    }
-    TEST_CHECK("S1-U23", b_ok, "four-letter MQTT mapping accepted atomically");
-    TEST_SUMMARY("subsystem1 mapping");
-}
-
-=======
-#if !S1_WIRE_JSON
-/* ---- Binary wire format and fault mask (S1-U23, S1-U24, S1-U25) ------- */
-
-#define FAULT_ROUNDS 20000u
-#define FAULT_HELD_BIT S1_FAULT_LINE_SENSOR
-#define FAULT_TEST_BITS                                           \
-    (S1_FAULT_MOTOR_STALL | S1_FAULT_IMU | S1_FAULT_LINE_SENSOR | \
-     S1_FAULT_BARCODE)
-#define BIN_BYTES S1_CODEC_TELEMETRY_BIN_BYTES
-
-static ID g_fault_flag_id = 0;
-static volatile uint32_t g_fault_violations_a = 0u;
-static volatile uint32_t g_fault_violations_b = 0u;
-
-/* A frame whose every group is in range. */
-static s1_codec_frame_t
-good_frame(uint32_t timestamp)
-{
-    s1_codec_frame_t frame = {0};
-
-    frame.timestamp_ms = timestamp;
-    frame.robot_state = S1_ROBOT_STATE_OPERATIONAL;
-    frame.line_status = 3u;
-    frame.motor_speed_left = 100;
-    frame.motor_speed_right = -100;
-    frame.encoder_generation = 1u;
-    frame.encoder_timestamp_us = ((uint64_t)timestamp * 1000u) - 2000u;
-    frame.hump_peak_x10 = 50;
-    frame.obstacle_distance_x10 = 300;
-    frame.sensor_age_us[0] = 5000u;
-    frame.sensor_age_us[1] = 6000u;
-    frame.sensor_age_us[2] = 7000u;
-    frame.validity = S1_VALID_ALL;
-    frame.schema_version = 2u;
-    return frame;
-}
-
-/* Pull one message and decode it. */
-static bool
-pull_decoded(s1_codec_bin_telemetry_t *p_decoded)
-{
-    char text[TEXT_CAPACITY] = {0};
-    uint32_t length = s1_net_hook_pull_telemetry(text, sizeof(text));
-
-    return (BIN_BYTES == length) &&
-           s1_codec_decode_telemetry_bin((const uint8_t *)text, length,
-                                         p_decoded);
-}
-
-static void
-test_binary_wire(void)
-{
-    char text[TEXT_CAPACITY] = {0};
-    s1_codec_frame_t frame = {0};
-    s1_codec_bin_telemetry_t decoded = {0};
-    s1_codec_command_t command = {S1_CMD_NONE, 0u};
-    s1_net_stats_t before = {0};
-    s1_net_stats_t after = {0};
-    SYSTIM time = {0};
-    uint32_t length = 0u;
-    uint32_t uptime = 0u;
-    bool b_latch = false;
+    nav_map_t map = {0};
     bool b_ok = false;
-    uint8_t bytes[2] = {0u, 0u};
     TEST_INIT();
-
-    s1_sim_set_enabled(false);
-    drain_telemetry();
-    estop_reset();
-    /* Earlier link tests left the "link was lost" bit set. Send one frame so
-     * it is reported and cleared; the checks below then start clean. */
-    frame = good_frame(MARKER - 1u);
-    s1_net_telemetry_send(&frame);
-    pull_decoded(&decoded);
-
-    /* S1-U23a: a frame goes in as a struct and comes out as 29 packed bytes. */
-    frame = good_frame(MARKER);
-    b_ok = (E_OK == s1_net_telemetry_send(&frame)) && pull_decoded(&decoded);
-    TEST_CHECK("S1-U23a",
-               b_ok && (MARKER == decoded.timestamp_ms) &&
-                   (100 == decoded.speed_left) &&
-                   (-100 == decoded.speed_right) &&
-                   (300u == decoded.obstacle_x10) &&
-                   (S1_VALID_ALL == decoded.validity) &&
-                   (0u == decoded.fault_mask),
-               "telemetry is 29 packed bytes that decode to the same values");
-
-    /* S1-U23b: an out-of-range value clears its validity bit, is counted,
-     * and the rest of the frame is still sent. */
-    s1_net_get_stats(&before);
-    frame = good_frame(MARKER + 1u);
-    frame.obstacle_distance_x10 = 5;
-    b_ok = (E_OK == s1_net_telemetry_send(&frame)) && pull_decoded(&decoded);
-    s1_net_get_stats(&after);
-    TEST_CHECK("S1-U23b",
-               b_ok && (0u == (decoded.validity & S1_VALID_OBSTACLE)) &&
-                   (0u != (decoded.validity & S1_VALID_SPEED)) &&
-                   (1u == (after.telemetry_out_of_range -
-                           before.telemetry_out_of_range)),
-               "out-of-range obstacle: validity bit cleared, counted, rest kept");
-
-    /* S1-U23c: a robot state that needs more than 3 bits is refused. */
-    frame = good_frame(MARKER + 2u);
-    frame.robot_state = 9u;
-    TEST_CHECK("S1-U23c",
-               (E_PAR == s1_net_telemetry_send(&frame)) &&
-                   (0u == s1_net_hook_pull_telemetry(text, sizeof(text))),
-               "robot_state 9 is refused and never buffered");
-
-    /* S1-U23d: commands are exactly one byte; text and bad bytes are
-     * rejected; EMERGENCY_STOP still latches. */
     drain_commands();
-    tk_get_otm(&time);
-    s1_net_get_stats(&before);
-    hook_command(S1_CMD_PAUSE, time.lo);
-    b_ok = (E_OK == s1_net_command_receive(&command, TMO_POL)) &&
-           (S1_CMD_PAUSE == command.command_id);
-    s1_net_hook_on_command("EMERGENCY_STOP", 14u, time.lo); /* old text */
-    bytes[0] = 0x01u;
-    bytes[1] = 0x00u;
-    s1_net_hook_on_command((const char *)bytes, 2u, time.lo); /* length 2 */
-    bytes[0] = 0x81u;
-    s1_net_hook_on_command((const char *)bytes, 1u, time.lo); /* reserved */
-    hook_bad_command(time.lo);
-    s1_net_get_stats(&after);
-    TEST_CHECK("S1-U23d",
-               b_ok && !s1_net_estop_latched() &&
-                   (4u == (after.commands_rejected - before.commands_rejected)) &&
-                   (E_TMOUT == s1_net_command_receive(&command, TMO_POL)),
-               "1-byte command works; text, 2 bytes, reserved bits, id 7 rejected");
-    hook_command(S1_CMD_EMERGENCY_STOP, time.lo);
-    TEST_CHECK("S1-U23e", s1_net_estop_latched(),
-               "byte 0x01 latches the emergency stop");
-
-    /* S1-U23f: the heartbeat is 8 bytes and shows the latch. */
-    length = s1_net_hook_make_heartbeat(text, sizeof(text), 777u);
-    b_ok = s1_codec_decode_heartbeat_bin((const uint8_t *)text, length,
-                                         &uptime, &b_latch, NULL);
-    TEST_CHECK("S1-U23f",
-               b_ok && (8u == length) && (777u == uptime) && b_latch,
-               "heartbeat is 8 bytes with uptime and the latch");
-    estop_reset();
-    TEST_SUMMARY("subsystem1 binary wire format");
-}
-
-static void
-test_fault_mask(void)
-{
-    s1_codec_frame_t frame = {0};
-    s1_codec_bin_telemetry_t decoded = {0};
-    SYSTIM time = {0};
-    bool b_ok = false;
-    TEST_INIT();
-
-    drain_telemetry();
-    estop_reset();
-    s1_net_fault_clear(S1_FAULT_ALL & ~S1_FAULT_OWNED_BY_S1);
-    frame = good_frame(MARKER + 10u);
-
-    /* S1-U24a: owners set their bits; the next frame carries them. */
-    b_ok = (E_OK == s1_net_fault_set(S1_FAULT_MOTOR_STALL | S1_FAULT_IMU)) &&
-           (E_OK == s1_net_telemetry_send(&frame)) && pull_decoded(&decoded);
-    TEST_CHECK("S1-U24a",
-               b_ok && (0x05u == s1_net_fault_get()) &&
-                   (0x05u == decoded.fault_mask),
-               "two bits set: mask 0x05, carried in the frame");
-
-    /* S1-U24b: clearing one bit leaves the other; a zero mask does nothing. */
-    TEST_CHECK("S1-U24b",
-               (E_OK == s1_net_fault_clear(S1_FAULT_MOTOR_STALL)) &&
-                   (E_OK == s1_net_fault_set(0u)) &&
-                   (E_OK == s1_net_fault_clear(0u)) &&
-                   (S1_FAULT_IMU == s1_net_fault_get()),
-               "clearing one bit keeps the other");
-
-    /* S1-U24c: other subsystems may not touch the Buddy 1 bits. */
-    TEST_CHECK("S1-U24c",
-               (E_PAR == s1_net_fault_set(S1_FAULT_WIFI_LOSS)) &&
-                   (E_PAR == s1_net_fault_set(S1_FAULT_ESTOP_LATCHED |
-                                              S1_FAULT_BARCODE)) &&
-                   (E_PAR == s1_net_fault_clear(S1_FAULT_ESTOP_LATCHED)) &&
-                   (S1_FAULT_IMU == s1_net_fault_get()),
-               "setting or clearing a Buddy 1 bit is refused, nothing changes");
-
-    /* S1-U24d: bit 5 is the emergency latch itself. */
-    tk_get_otm(&time);
-    hook_command(S1_CMD_EMERGENCY_STOP, time.lo);
-    b_ok = (0u != (s1_net_fault_get() & S1_FAULT_ESTOP_LATCHED));
-    s1_net_telemetry_send(&frame);
-    b_ok = b_ok && pull_decoded(&decoded) &&
-           ((S1_FAULT_IMU | S1_FAULT_ESTOP_LATCHED) == decoded.fault_mask);
-    estop_reset();
-    TEST_CHECK("S1-U24d",
-               b_ok && (0u == (s1_net_fault_get() & S1_FAULT_ESTOP_LATCHED)),
-               "bit 5 follows the emergency latch, set and cleared");
-
-    /* S1-U24e: a lost link is reported once, in the first frame after it
-     * returns, and other owners' bits are not disturbed. */
-    s1_net_hook_on_event(S1_NET_EVENT_CONNECTED, 0u);
-    b_ok = (0u == (s1_net_fault_get() & S1_FAULT_WIFI_LOSS));
-    s1_net_hook_on_event(S1_NET_EVENT_DISCONNECTED, 0u);
-    b_ok = b_ok && (0u != (s1_net_fault_get() & S1_FAULT_WIFI_LOSS));
-    s1_net_hook_on_event(S1_NET_EVENT_CONNECTED, 0u);
-    s1_net_telemetry_send(&frame);
-    b_ok = b_ok && pull_decoded(&decoded) &&
-           (0u != (decoded.fault_mask & S1_FAULT_WIFI_LOSS)) &&
-           (0u != (decoded.fault_mask & S1_FAULT_IMU));
-    s1_net_telemetry_send(&frame);
-    b_ok = b_ok && pull_decoded(&decoded) &&
-           (0u == (decoded.fault_mask & S1_FAULT_WIFI_LOSS)) &&
-           (0u != (decoded.fault_mask & S1_FAULT_IMU));
-    TEST_CHECK("S1-U24e", b_ok,
-               "Wi-Fi loss bit: reported once after the outage, IMU bit kept");
-    s1_net_fault_clear(S1_FAULT_ALL & ~S1_FAULT_OWNED_BY_S1);
-    TEST_SUMMARY("subsystem1 fault mask");
-}
-
-/* Two tasks on different cores each toggle their own bit thousands of times
- * while checking that a third bit, set once, is never seen cleared. A
- * read-modify-write implementation can lose that third bit. */
-static void
-fault_task_a(INT stacd, void *p_exinf)
-{
-    uint32_t round = 0u;
-
-    (void)stacd;   /* Cast is safe: discards an unused task parameter. */
-    (void)p_exinf; /* Cast is safe: discards an unused task parameter. */
-    for (round = 0u; round < FAULT_ROUNDS; round++)
-    {
-        s1_net_fault_set(S1_FAULT_MOTOR_STALL);
-        if (0u == (s1_net_fault_get() & FAULT_HELD_BIT))
-        {
-            g_fault_violations_a++;
-        }
-        s1_net_fault_clear(S1_FAULT_MOTOR_STALL);
-        if (0u == (s1_net_fault_get() & FAULT_HELD_BIT))
-        {
-            g_fault_violations_a++;
-        }
-    }
-    s1_net_fault_set(S1_FAULT_MOTOR_STALL);
-    tk_set_flg(g_fault_flag_id, FLAG_WRITER_DONE);
-    tk_ext_tsk();
-}
-
-static void
-fault_task_b(INT stacd, void *p_exinf)
-{
-    uint32_t round = 0u;
-
-    (void)stacd;   /* Cast is safe: discards an unused task parameter. */
-    (void)p_exinf; /* Cast is safe: discards an unused task parameter. */
-    for (round = 0u; round < FAULT_ROUNDS; round++)
-    {
-        s1_net_fault_set(S1_FAULT_IMU);
-        if (0u == (s1_net_fault_get() & FAULT_HELD_BIT))
-        {
-            g_fault_violations_b++;
-        }
-        s1_net_fault_clear(S1_FAULT_IMU);
-        if (0u == (s1_net_fault_get() & FAULT_HELD_BIT))
-        {
-            g_fault_violations_b++;
-        }
-    }
-    s1_net_fault_set(S1_FAULT_IMU);
-    tk_set_flg(g_fault_flag_id, FLAG_READER_DONE);
-    tk_ext_tsk();
-}
-
-static void
-test_fault_two_core(void)
-{
-    T_CFLG flag_info = {0};
-    UINT pattern = 0u;
-    ER result = E_OK;
-    TEST_INIT();
-
-    s1_net_fault_clear(S1_FAULT_ALL & ~S1_FAULT_OWNED_BY_S1);
-    s1_net_fault_set(FAULT_HELD_BIT);
-    g_fault_violations_a = 0u;
-    g_fault_violations_b = 0u;
-    flag_info.flgatr = TA_TFIFO | TA_WMUL;
-    g_fault_flag_id = tk_cre_flg(&flag_info);
-
-    app_start_task(fault_task_a, S1_PRI_SIM, TP_PRC2, "s1_t_fault_a");
-    app_start_task(fault_task_b, S1_PRI_SIM, TP_PRC1, "s1_t_fault_b");
-    result = tk_wai_flg(g_fault_flag_id, FLAG_WRITER_DONE | FLAG_READER_DONE,
-                        TWF_ANDW, &pattern, STATUS_WAIT_MS);
-
-    TEST_CHECK("S1-U25a", E_OK == result,
-               "both fault tasks finished (no deadlock)");
-    TEST_CHECK("S1-U25b",
-               (0u == g_fault_violations_a) && (0u == g_fault_violations_b) &&
-                   ((FAULT_HELD_BIT | S1_FAULT_MOTOR_STALL | S1_FAULT_IMU) ==
-                    s1_net_fault_get()),
-               "two cores toggling their own bits: the third bit is never lost");
-    tm_printf((UB *)"s1: S1-U25 violations a=%d b=%d final=0x%x\n",
-              (int)g_fault_violations_a, (int)g_fault_violations_b,
-              (unsigned)s1_net_fault_get());
-    s1_net_fault_clear(S1_FAULT_ALL & ~S1_FAULT_OWNED_BY_S1);
-    TEST_SUMMARY("subsystem1 fault mask, two cores");
-}
-
-/* ---- Mapping update path (S1-U26) ---------------------------------------- */
-
-static void
-map_hook(const char *text)
-{
-    uint32_t length = 0u;
-
-    while ('\0' != text[length])
-    {
-        length++;
-    }
-    s1_net_hook_on_command(text, length, 0u);
-}
-
-static s1_codec_map_ack_t
-map_heartbeat_ack(void)
-{
-    char text[S1_CODEC_HEARTBEAT_JSON_CAPACITY] = {0};
-    s1_codec_map_ack_t ack = {99u, 99u, 99u};
-    uint32_t uptime = 0u;
-    bool b_latch = false;
-    uint32_t length = s1_net_hook_make_heartbeat(text, sizeof(text), 1u);
-
-    if (!s1_codec_decode_heartbeat_bin((const uint8_t *)text, length, &uptime,
-                                       &b_latch, &ack))
-    {
-        ack.result = 99u;
-    }
-    return ack;
-}
-
-static void
-test_map_path(void)
-{
-    s1_net_map_request_t request = {{0u, {0u}}, 0u, 0u};
-    s1_net_stats_t before = {0};
-    s1_net_stats_t after = {0};
-    s1_codec_map_ack_t ack = {0u, 0u, 0u};
-    bool b_ok = false;
-    TEST_INIT();
-
-    /* S1-U26a: text is parsed by nav_update_parse() and queued as a binary update. */
-    map_hook("MAP A=FORWARD B=LEFT");
+    s1_net_hook_on_command(text, sizeof(text) - 1u, 123u);
     b_ok = (E_OK == s1_net_map_receive(&request, TMO_POL)) &&
-           (3u == request.update.selected) &&
-           (NAV_COMMAND_STRAIGHT ==
-            nav_action_get(request.update.actions, 0u)) &&
-           (NAV_COMMAND_LEFT == nav_action_get(request.update.actions, 1u));
-    TEST_CHECK("S1-U26a", b_ok,
-               "MAP text becomes a binary update read with nav_action_get()");
-
-    /* S1-U26b: bad text is rejected before Buddy 3 and reported. */
-    s1_net_get_stats(&before);
-    map_hook("MAP A=SIDEWAYS");
-    s1_net_get_stats(&after);
-    ack = map_heartbeat_ack();
-    TEST_CHECK("S1-U26b",
-               (E_TMOUT == s1_net_map_receive(&request, TMO_POL)) &&
-                   (1u == (after.map_rejected - before.map_rejected)) &&
-                   ((uint8_t)S1_MAP_RESULT_REJECTED == ack.result),
-               "bad MAP text: nothing queued, counted, heartbeat says REJECTED");
-
-    /* S1-U26c: only a reply makes an update ACCEPTED; an older report never
-     * overwrites a newer one. */
-    TEST_CHECK("S1-U26c",
-               (E_OK == s1_net_map_report(request.seq + 5u,
-                                          S1_MAP_RESULT_ACCEPTED, 261u)) &&
-                   (E_OK == s1_net_map_report(request.seq,
-                                              S1_MAP_RESULT_QUEUED, 0u)) &&
-                   ((uint8_t)S1_MAP_RESULT_ACCEPTED ==
-                    map_heartbeat_ack().result) &&
-                   (5u == map_heartbeat_ack().revision) &&
-                   (E_PAR == s1_net_map_report(1u, S1_MAP_RESULT_NONE, 0u)),
-               "ACCEPTED from the reply is kept (revision low 8 bits); stale report ignored");
-
-    /* S1-U26d: map traffic never delays an emergency stop. */
-    for (before.map_dropped = 0u; before.map_dropped < 6u;
-         before.map_dropped++)
-    {
-        map_hook("MAP G=LEFT");
-    }
-    hook_command(S1_CMD_EMERGENCY_STOP, 0u);
-    TEST_CHECK("S1-U26d", s1_net_estop_latched(),
-               "EMERGENCY_STOP latches at once behind a flood of MAP updates");
-    while (E_OK == s1_net_map_receive(&request, TMO_POL))
-    {
-        /* Drain the updates left in the buffer. */
-    }
-    estop_reset();
-    TEST_SUMMARY("subsystem1 mapping update path");
+        (123u == request.rx_ms) &&
+        (E_TMOUT == s1_net_command_receive(&command, TMO_POL)) &&
+        nav_map_install(&map, &request.update) &&
+        (NAV_COMMAND_STRAIGHT == nav_map_lookup(&map, 'W')) &&
+        (NAV_COMMAND_U_TURN == nav_map_lookup(&map, 'X')) &&
+        (NAV_COMMAND_LEFT == nav_map_lookup(&map, 'Y')) &&
+        (NAV_COMMAND_RIGHT == nav_map_lookup(&map, 'Z'));
+    TEST_CHECK("S1-U27", b_ok,
+               "demo map copied through dedicated buffer, command queue empty");
+    TEST_SUMMARY("subsystem1 consolidated demo mapping");
 }
 #endif /* !S1_WIRE_JSON */
 
->>>>>>> main
 /* Entry point called by usermain() in a TEST=1 build. */
 void subsystem1_test(void)
 {
@@ -2033,12 +1539,12 @@ void subsystem1_test(void)
     test_estop_latch();
     test_estop_post_failure();
     test_command_validation();
-    test_mapping_command();
 #if !S1_WIRE_JSON
     test_binary_wire();
     test_fault_mask();
     test_fault_two_core();
     test_map_path();
+    test_demo_map();
 #endif
     test_simulator();
     test_sim_switch();

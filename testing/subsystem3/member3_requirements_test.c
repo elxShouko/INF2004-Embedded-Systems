@@ -1,21 +1,12 @@
 /* Requirement regressions: real S3 owner, sampled signals, no hardware. */
 #define S3_PRODUCTION_MAIN retained_production_main
 #include "member3_production_test.c"
-#include "../../app_program/subsystem1/s1_codec.h"
 
 static void install_pc_map(s3_context_t *context, const char *text)
 {
-    s1_codec_command_t command = {0};
-    assert(s1_codec_parse_mapping(text, (uint32_t)strlen(text), &command));
     s3_input_t request = {0};
     request.kind = S3_INPUT_MAPPING;
-    for (uint32_t slot = 0U; slot < 4U; ++slot)
-    {
-        const uint32_t index = (uint32_t)(command.mapping_letters[slot] - 'A');
-        request.value.mapping.selected |= 1UL << index;
-        assert(nav_action_set(request.value.mapping.actions, index,
-            (nav_command_t)(slot + 1U)));
-    }
+    assert(nav_update_parse(&request.value.mapping, text));
     input(context, &request, context->status.raw.timestamp_us);
     assert(g_outputs[g_count - 1U].accepted);
 }

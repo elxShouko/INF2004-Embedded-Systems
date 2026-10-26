@@ -843,3 +843,70 @@ Command: `python testing/integration/verify_integration.py --label barcode_20261
 Build evidence and exact profiles: [barcode verification](../../docs/barcode-verification-2026-10-26.md).
 
 | 2026-10-26 | Default, TEST=1, MQTT normal and MQTT TEST=1 Make profiles | PASS, compilation/link/UF2 only | logs/barcode_20261026_build_metadata.json | Installed SDK 2.3.1; placeholder-only build header for MQTT; no flash or target execution. Initial older-SDK/stale-object failures retained in raw logs. |
+
+
+## Mapping overlap cleanup on main - 2026-10-26
+
+Revision: HEAD `7a61d829d8d88f0759e74968cfeb1ef9d25a33b2` plus uncommitted
+cleanup. INT-83/84 now link the real Buddy 1 `s1_map.c`, with S1 transport and
+S3 queue/reply fakes. INT-83 retains its queue-full retry expectation; INT-84
+also checks the gateway's REJECTED report without a vehicle fault. INT-82/85
+retain barcode-observation/junction precedence checks. Source metadata and
+saved outputs accompany each run. No hardware or real RTOS timing evidence.
+
+
+Commands used from repository root (bundled Python runtime):
+
+```text
+python testing/integration/verify_integration.py --label overlap_20261026_final
+python testing/subsystem1/host/verify_windows.py --log testing/subsystem1/logs/2026-10-26_overlap_final.json
+python testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-26_overlap_2.json
+```
+
+| Date | Checks | Result | Evidence |
+|---|---|---|---|
+| 2026-10-26 | Initial integration compilation | FAIL: policy still referenced the retired S1_CMD_MAPPING maximum; restored S1_CMD_RESUME bound | logs/overlap_20261026_1_default.log |
+| 2026-10-26 | Integration after all retired API references fixed | PASS, 82 groups per profile | logs/overlap_20261026_2_default.log; logs/overlap_20261026_2_optimized.log |
+| 2026-10-26 | Final integration run | PASS, 82 groups in each default and optimized/fshort-enums profile; eight deliberate safety/telemetry/route mutations detected in each; TEST=1 startup isolation and existing S5 regressions also pass | logs/overlap_20261026_final_default.log; logs/overlap_20261026_final_optimized.log; logs/overlap_20261026_final_metadata.json |
+| 2026-10-26 | Default, TEST=1, MQTT normal and MQTT TEST=1 GNU Make profiles | PASS, compile/link/UF2 only | logs/overlap_20261026_default_build.log; logs/overlap_20261026_test_build.log; logs/overlap_20261026_mqtt_build.log; logs/overlap_20261026_mqtt_test_build.log; logs/overlap_20261026_build_metadata.json |
+
+Firmware commands from build_make (installed MSYS GNU Make, because MSYS could
+not initialize inside the sandbox; authorized builds ran outside it):
+
+```sh
+make -j8
+make TEST=1 -j8
+make NET=lwip MQTT=1 "INCPATH=-I../include -I../config -I../kernel/knlinc -I../build/barcode-build-config" -j8
+make NET=lwip MQTT=1 TEST=1 "INCPATH=-I../include -I../config -I../kernel/knlinc -I../build/barcode-build-config" -j8
+```
+
+Common profile: SMP=1, CONSOLE=usb_cdc, WIFI=cyw43, CRASH_REPORT=0,
+S4_IMU=0; NET=none/MQTT=0 unless explicitly overridden. Installed SDK 2.3.1
+and the Arm toolchain path are recorded in build metadata. The pre-existing
+ignored build-only wifi_secrets.h was checked byte-for-byte against the public
+example before network compilation; no real credentials/network were used.
+The first default build invocation used Bash login mode, which changed its
+working directory and failed to open the output log before running Make;
+non-login mode fixed the invocation. No dependencies were installed/fetched.
+
+The final source hashes match current application sources. Existing S4 packed
+conversion warnings remain visible and out of scope. `git diff --check` passes;
+no committed conflict markers remain under app_program. S3 production sources,
+motor ownership, pins, gains and startup ordering are unchanged. All source
+edits and results remain uncommitted; no stage/commit/push, flash or hardware
+test was performed. Physical barcode/junction calibration, actual MQTT delivery,
+measured controller/stop latency and target SMP timing remain unverified.
+
+
+## Joint Tribunal 1 / barcode preservation review - 2026-10-26
+
+Compared both dc1a2cf and 3d3ca8d against main HEAD 7a61d82 plus the same
+uncommitted cleanup. Both commits remain ancestors of main. The complete S3
+production folder equals 3d3ca8d; vehicle.c differs only in the ordinary-command
+ID upper bound required by consolidating mapping into Buddy 1's dedicated buffer.
+Buddy 1 codec/bit/fault/header files checked against dc1a2cf are unchanged
+apart from documented whitespace. All previously recorded final S1/S3/integration
+and firmware source fingerprints match current inputs, including S3 file_sha256.
+No additional production edits or firmware builds were necessary in this review.
+Requirement-by-requirement outcomes and policy differences:
+[Joint reconciliation review](../../docs/tribunal1-barcode-reconciliation.md).

@@ -1,0 +1,245 @@
+{
+  "reviewed_commit": "dc1a2cf2846dcb36dc036b12a0ad590c6590f3a4",
+  "head": "7a61d829d8d88f0759e74968cfeb1ef9d25a33b2",
+  "branch": "main",
+  "utc": "2026-10-26T08:15:47.328375+00:00",
+  "scope": "Static preservation audit plus independent protocol oracle; no production source edits in this audit.",
+  "files": [
+    {
+      "path": "app_program/subsystem1/s1_bits.h",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "f9050470ab81cdffb54cded4457c3208ff925d7f1944958c9cef6eabdd6682b6"
+    },
+    {
+      "path": "app_program/subsystem1/s1_codec.c",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "02a4735a70ff02565c9469821f7c52ae556796a39d093f3bfb6ff4d78ad7afa7"
+    },
+    {
+      "path": "app_program/subsystem1/s1_codec.h",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": false,
+      "sha256_current": "967a736c1bfa951a21b830e28c0cc4e602d7a8e8e1f1fbd41049b0d04e1a50dc"
+    },
+    {
+      "path": "app_program/subsystem1/s1_fault.h",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "0a13da0d5e7efc15bede5cc6507c08c176b1c1870d26959e76f7c5659a83899b"
+    },
+    {
+      "path": "app_program/subsystem1/s1_map.c",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": false,
+      "sha256_current": "281a0959f83b63b3fd6325240a014f2bb3a3bb68d2f3455b4ae40f2901d3e1b0"
+    },
+    {
+      "path": "app_program/subsystem1/s1_map.h",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": false,
+      "sha256_current": "041a9d03b13eeaf0ac1f826babd681231f5d7ea99ac8fb17a25e9d7d9776f8d0"
+    },
+    {
+      "path": "app_program/subsystem1/s1_net.c",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": false,
+      "sha256_current": "45f44705ae6e52a5cf3f675039c15dddfbcc26a4f0d48ffc161eb08b99ebb3fc"
+    },
+    {
+      "path": "app_program/subsystem1/s1_net.h",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "5da10ceb62ebd293b0bc9a03aea41b8fe9e3ffd8f6c00abb55b413b05ca86183"
+    },
+    {
+      "path": "app_program/subsystem1/subsystem1_test.c",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": false,
+      "sha256_current": "2b0f591443f86a959e9ec84ce80b63f781baa08d623aebc9cf1ceb4656c14ce4"
+    },
+    {
+      "path": "app_program/vehicle_rt.c",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": false,
+      "sha256_current": "ae8fd44575dd7075c80ecc779b11b069c8b7c8b21eb6b75162cd5c2ea1468422"
+    },
+    {
+      "path": "docs/buddy1/BUDDY1.md",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "cc963d0d9e232f5d3625095c9763ec95a31ba6275f45e8f5528c5fe4866f28d8"
+    },
+    {
+      "path": "docs/buddy1/MINIMUM_BIT_REPRESENTATION.md",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": false,
+      "sha256_current": "7820bf9a282ae4e1a9d0627e3094e3a1f963fbbbebdc84897bbcec085f4edbb8"
+    },
+    {
+      "path": "docs/buddy1/TELEMETRY_COMMAND_CONTRACT.md",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "fa30cbd856ff4c8e85f9579ac495e64d6d2b3251ab04b3f92b3f68aa938990d7"
+    },
+    {
+      "path": "testing/subsystem1/TEST_LOG.md",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": false,
+      "sha256_current": "0ab6ffd55dfe69daa98cb3a379538ce6b02784eec96432af14630ae0bf130b5c"
+    },
+    {
+      "path": "testing/subsystem1/host/dump_frames_host.c",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "6ab23d2bc0e02441720ce252a04be681464b680754f7b820fb8adf61bcbb656f"
+    },
+    {
+      "path": "testing/subsystem1/host/measure_sizes_host.c",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "8334a7cbdc50550f1bd2562129a04fb90e3f2cf1a66b1150b7d1c1f15b991dbb"
+    },
+    {
+      "path": "testing/subsystem1/host/run_host_tests.sh",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "fc3df972879cd8bc3836f9c2b9310afa7deebb6a5f54a33133f70abf5858a92b"
+    },
+    {
+      "path": "testing/subsystem1/host/target_main.c",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "1548e789f5121561461d366fddd8390e0cc2c0d2e420ebfb338da9475c79c809"
+    },
+    {
+      "path": "testing/subsystem1/host/test_bits_host.c",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "50c151b441d15fc54003a022073cd9945e2503b7728ee002894f2eb8b5b23fa9"
+    },
+    {
+      "path": "testing/subsystem1/host/test_codec_bin_host.c",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "ed79bedc7c0d6c4a9553f3c3d734bba0dcb435ee8d8f7b7454065e42b32a1ae3"
+    },
+    {
+      "path": "testing/subsystem1/host/test_map_host.c",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": false,
+      "sha256_current": "769bcbadd7944d1c1627420af5a5ae2cec6e681533d28c2ee3eb60cd9e90f764"
+    },
+    {
+      "path": "testing/subsystem1/host/test_net_bin_host.c",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "2b50bcaf4eef928c4ff3e31fc00d4f4738feea3ade53f573fa3b3d93048942c9"
+    },
+    {
+      "path": "testing/subsystem1/logs/host_run_6d225bf.txt",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "abc77388cbd21ca3ebd00abf1bf6373415c9b4f2565d695038b63e3869e7694e"
+    },
+    {
+      "path": "testing/subsystem1/logs/host_run_posttri1.txt",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "a4ed991c5ccfe60196434996de3ffc2ba121a3c406055fb7caeac4d1a1d4e77a"
+    },
+    {
+      "path": "testing/subsystem1/logs/minimum_bit_evidence.txt",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "ac97fd44367486d2531e2e5db2bd46fe56e6574c4b60d582c92a1928cd8b88b4"
+    },
+    {
+      "path": "testing/subsystem1/tools/measure_representation.sh",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "76e4d9c4c538cc61ffefc2ff246d832d0c79465b1ef1ffd0689f5c40da1464c9"
+    },
+    {
+      "path": "testing/subsystem1/tools/s1_crosscheck.py",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "650e08009024ab068aa1346e467ee04c7811d9c08775ed232d8164355e562f31"
+    },
+    {
+      "path": "testing/subsystem1/tools/s1_monitor.py",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "8d7dd7f02d0fd5110508509cdc17be0cbda6588a357ea5ff85883039d1cd12d7"
+    },
+    {
+      "path": "testing/subsystem1/tools/s1_wire.py",
+      "exists": true,
+      "identical_ignoring_line_endings_and_final_newline": true,
+      "sha256_current": "cf3435e5a43537d0837a2ed432c2d74077292829b0d2ae048e739e039522d296"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "C:\\Users\\linco\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "testing/subsystem1/tools/s1_wire.py",
+        "--selftest"
+      ],
+      "exit": 0,
+      "stdout": "s1_wire selftest: 11 checks passed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "testing/subsystem1/host/dump_frames_host.c",
+        "app_program/subsystem1/s1_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\tribunal1-audit\\tmphgbu133t\\dumpframes.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "testing/subsystem1/tools/s1_crosscheck.py"
+      ],
+      "exit": 0,
+      "stdout": "crosscheck: 4000 frames, C bytes == Python oracle bytes, 2220 had a group rejected as out of range\n",
+      "stderr": ""
+    }
+  ],
+  "original_s1_test_source_preserved_with_only_additional_test_and_spacing": true,
+  "ancestor_of_main": true,
+  "unchanged_other_subsystem_production": true,
+  "existing_verification_hash_checks": [
+    {
+      "evidence": "testing/subsystem1/logs/2026-10-26_overlap_final.json",
+      "mismatches": []
+    },
+    {
+      "evidence": "testing/integration/logs/overlap_20261026_final_metadata.json",
+      "mismatches": []
+    },
+    {
+      "evidence": "testing/integration/logs/overlap_20261026_build_metadata.json",
+      "mismatches": []
+    }
+  ],
+  "dump_frames_exit": 0,
+  "dump_frames_output_sha256": "318c4810f4335710533999998c76c72e6bbad7e4ffe24dd0020c1867a0eae916",
+  "intentional_differences": [
+    "S1 gateway retries S3 queue-full until original receive age exceeds 1000 ms, instead of immediate REJECTED; stale/future timestamps rejected.",
+    "Existing barcode commit requires complete four-letter maps in S3 and triggers movement at a junction; this cleanup leaves S3 production unchanged.",
+    "Controller retains barcode-event precedence and removes non-C pasted text; Buddy 1 fault reporting, gateway pumping and reply acknowledgements remain.",
+    "S1 tests are original Tribunal 1 source plus new S1-U27 and spacing; only duplicate merge copies were removed."
+  ],
+  "passed": true
+}

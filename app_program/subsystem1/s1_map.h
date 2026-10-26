@@ -40,8 +40,10 @@
 /**
  * @brief Move one update forward: retry an unsent report, time out a request
  * with no reply, or take the next parsed update and submit it to Buddy 3.
- * Never blocks (TMO_POL). Call once per controller cycle.
- * @param now_ms Milliseconds, any monotonic wrapping clock.
+ * A full S3 queue is retried once per cycle until the original receive age
+ * exceeds S1_NET_COMMAND_MAX_AGE_MS. Expired/future requests are rejected.
+ * Queue operations use TMO_POL; reporting uses S1's bounded status lock.
+ * @param now_ms Kernel operating-time milliseconds, matching request.rx_ms.
  */
 void s1_map_pump(uint32_t now_ms);
 

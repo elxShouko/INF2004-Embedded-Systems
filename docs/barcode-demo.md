@@ -6,6 +6,11 @@ Vehicle Controller. Buddy 2 continues to own every DC motor output.
 
 ## PC mapping message
 
+The 2026-10-26 overlap cleanup retains Buddy 1's `s1_map` gateway as the
+only transport. This section supersedes the original separate command-queue
+path and its no-ack description. Use the default binary wire profile
+(`S1_WIRE_JSON=0`); legacy JSON mode does not receive runtime MAP messages.
+
 Publish a plain text payload on the existing MQTT command topic, `robot/cmd`
 (unless the build overrides `MQTT_UTK_TOPIC_COMMAND`):
 
@@ -15,12 +20,17 @@ MAP W=FORWARD X=UTURN Y=LEFT Z=RIGHT
 
 This is an example supplied at runtime, not a built-in letter assignment.
 Pairs can appear in any order. Use four different uppercase A-Z letters and
-exactly one each of `FORWARD`, `UTURN`, `LEFT` and `RIGHT`. The payload must be
-at most 47 bytes (the existing MQTT receive limit); spaces are accepted between
-pairs and at the end. JSON,
-lowercase, duplicate letters/actions, partial maps, extra pairs, embedded NULs
-and trailing newlines are rejected. The entire transaction is accepted or
-rejected; no partial update is installed.
+exactly one each of `FORWARD`, `UTURN`, `LEFT` and `RIGHT`. The gateway itself
+accepts at most 120 bytes (`S1_NET_MAP_TEXT_MAX`), but the
+unchanged MQTT service accepts only 47 bytes (48-byte receive buffer including
+NUL space). Keep PC payloads within 47 bytes. Spaces are accepted between pairs
+and at the end. S1 uses S3's `nav_update_parse()` to
+validate text syntax and copies a typed update into its dedicated map buffer.
+S3 applies the stricter demo rule: exactly four different letters, one per
+movement. Partial maps, repeated actions or NONE assignments may pass syntax
+validation but are rejected by S3 without modifying the installed map. JSON,
+lowercase, duplicate letters, embedded NULs and trailing newlines fail syntax
+validation. The entire installation is atomic.
 
 For example, from a PC with Mosquitto tools installed:
 
@@ -34,20 +44,27 @@ S3's `map_revision`. The map lives in RAM; resend it after a reboot. A Wi-Fi
 reconnect does not itself erase it. A map is rejected while a decoded
 instruction or an issued manoeuvre is pending, preserving that instruction.
 
-The radio service remains the sole network owner. It validates and copies four
-letters into the existing S1 command queue. The controller constructs a typed
-S3 mapping request; a full S3 queue is retried on later controller cycles until
-the original command's one-second age limit. Emergency stop still uses its
-independent latch before ordinary command processing. Ordinary command-queue
-overflow keeps the existing drop policy; the PC must retry a dropped update.
+The radio service remains the sole network owner. S1 copies the parsed update,
+sequence and kernel receive timestamp into its dedicated two-entry map buffer.
+The controller calls `s1_map_pump()` to submit at most one request per cycle.
+A full S3 queue is retried until the original receive age exceeds one second;
+stale/future requests and other submit failures are rejected. One admitted
+request uses a one-second reply timeout, checked each controller cycle. Buffer overflow
+keeps the existing drop-and-report policy; the PC must retry a dropped update.
+Emergency stop uses its independent latch before ordinary command processing;
+map queue congestion does not block the ordinary START/PAUSE/RESUME queue.
 
-Queue admission is not acknowledgement of installation. The S3 reply carries
-`accepted` and `map_revision`; `s3_get_status()` exposes the applied revision
-and table. Mapping replies use reserved request ID `UINT32_MAX` in the shared
-adapter. Rejected remote mappings preserve the previous map and do not become
-vehicle faults. There is currently no MQTT application-level mapping ACK topic;
-MQTT publish success alone does not prove the map was applied. Check the S3
-status/reply during commissioning before starting the demo.
+Queue admission is not acknowledgement of installation. The binary heartbeat
+reports NONE, QUEUED, ACCEPTED or REJECTED plus the low eight bits of the map
+sequence and applied revision. Only S3's matching accepted reply produces
+ACCEPTED. Requests use Buddy 1's `S1_MAP_REQUEST_ID_FLAG | sequence`; there is
+no second reserved `UINT32_MAX` adapter path. A rejected remote mapping
+preserves the previous map and does not become a vehicle fault. Fault-bearing
+replies still follow the controller's stop policy.
+
+There is no separate MQTT mapping ACK topic: use the existing binary heartbeat
+and S3 status during commissioning. MQTT publish success alone does not prove
+installation. Legacy JSON heartbeats do not expose mapping acknowledgements.
 
 ## Scan, wait, junction, movement, repeat
 
@@ -100,17 +117,18 @@ required physical cross-junction or that the car turns at its centre.
 
 ## Verification
 
-New stable cases: `S1-U23` (actual copied MQTT hook), `S3-U38` (empty startup and
-complete replacement), `S3-U39` (four actions, both directions, junction wait
-and repetition), `INT-82` (controller trigger), `INT-83` (mapping queue retry)
-`INT-84` (mapping rejection) and `INT-85` (event-drain precedence). Existing A-Z decoder and safety tests remain.
-Exact commands, revisions, outcomes and limitations are recorded under
-`testing/subsystem1/`, `testing/subsystem3/` and `testing/integration/`.
+Current cases: S1-U27 (complete demo map through the dedicated copied buffer),
+S1-U26a-d (gateway syntax/ack/emergency path), S3-U38/39 (empty startup,
+replacement, four actions, junction wait and repetition), INT-82 (controller
+trigger), INT-83 (gateway queue retry), INT-84 (gateway rejection) and INT-85
+(event-drain precedence). The former standalone S1-U23 mapping-command test is
+retired with its duplicate transport; previous results remain in the logs.
 
-The S1 internal copied command grows by four bytes for the four letters; queue
-depth is unchanged. S3's public wire layouts are unchanged. Rebuild all owners
-with the current headers. Legacy `src/` standalone programs are bench tools,
-not the integrated firmware or the demo's mission contract.
+The S1 ordinary command structure again contains only command ID and timestamp.
+S3's public wire layouts are unchanged. Rebuild all owners with current headers.
+Legacy `src/` programs remain bench tools. Cleanup evidence is appended to the
+subsystem and integration test logs; earlier verification describes the original
+pre-merge barcode change, not this working tree.
 
 Historical equivalence scripts (`verify_barr_refactor.py` and
 `verify_feedback.py`) compare against the former behaviour and are not

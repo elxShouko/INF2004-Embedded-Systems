@@ -1,5 +1,9 @@
 # Barcode change verification - 2026-10-26
 
+> Historical pre-merge evidence. The subsequent overlap cleanup on main is
+> recorded in the appended subsystem/integration test logs. The current
+> transport contract is [barcode-demo.md](barcode-demo.md).
+
 Working branch: `buddy3-barcode`. Base HEAD:
 `6d225bfa818dd31d8c5ff5f1351c434326c470d3`, with uncommitted changes.
 No staging, commit, push, dependency download, flashing or hardware access.

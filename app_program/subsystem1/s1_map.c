@@ -7,6 +7,8 @@
 
 typedef struct
 {
+    bool b_waiting; /* Copied request waiting for S3 queue admission. */
+    s1_net_map_request_t waiting;
     bool b_pending; /* Submitted, reply not yet seen. */
     uint32_t pending_seq;
     uint32_t submitted_ms;
@@ -29,7 +31,6 @@ map_report(uint32_t seq, s1_codec_map_result_t result, uint32_t revision)
 
 void s1_map_pump(uint32_t now_ms)
 {
-    s1_net_map_request_t request = {{0u, {0u}}, 0u, 0u};
     s3_input_t input = {0};
     ER result = E_OK;
 
@@ -46,24 +47,43 @@ void s1_map_pump(uint32_t now_ms)
             map_report(g_s1_map.pending_seq, S1_MAP_RESULT_REJECTED, 0u);
         }
     }
-    else if (!g_s1_map.b_unreported &&
-             (E_OK == s1_net_map_receive(&request, TMO_POL)))
+    else if (!g_s1_map.b_unreported)
     {
+        if (!g_s1_map.b_waiting)
+        {
+            g_s1_map.b_waiting = (E_OK ==
+                s1_net_map_receive(&g_s1_map.waiting, TMO_POL));
+        }
+        if (!g_s1_map.b_waiting)
+        {
+            return;
+        }
+        /* Preserve the original receive time across queue-full retries.
+         * Unsigned subtraction also rejects future timestamps.
+         */
+        if ((now_ms - g_s1_map.waiting.rx_ms) > S1_NET_COMMAND_MAX_AGE_MS)
+        {
+            g_s1_map.b_waiting = false;
+            map_report(g_s1_map.waiting.seq, S1_MAP_RESULT_REJECTED, 0u);
+            return;
+        }
         input.kind = S3_INPUT_MAPPING;
-        input.request_id = S1_MAP_REQUEST_ID_FLAG | request.seq;
-        input.value.mapping = request.update;
+        input.request_id = S1_MAP_REQUEST_ID_FLAG | g_s1_map.waiting.seq;
+        input.value.mapping = g_s1_map.waiting.update;
         result = s3_submit(&input, TMO_POL);
         if (E_OK == result)
         {
             /* Queued only. Not validated, not applied. */
+            g_s1_map.b_waiting = false;
             g_s1_map.b_pending = true;
-            g_s1_map.pending_seq = request.seq;
+            g_s1_map.pending_seq = g_s1_map.waiting.seq;
             g_s1_map.submitted_ms = now_ms;
-            map_report(request.seq, S1_MAP_RESULT_QUEUED, 0u);
+            map_report(g_s1_map.waiting.seq, S1_MAP_RESULT_QUEUED, 0u);
         }
-        else
+        else if (E_TMOUT != result)
         {
-            map_report(request.seq, S1_MAP_RESULT_REJECTED, 0u);
+            g_s1_map.b_waiting = false;
+            map_report(g_s1_map.waiting.seq, S1_MAP_RESULT_REJECTED, 0u);
         }
     }
 }

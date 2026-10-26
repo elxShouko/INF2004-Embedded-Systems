@@ -1,0 +1,384 @@
+{
+  "head": "7a61d829d8d88f0759e74968cfeb1ef9d25a33b2",
+  "status": " M TEAM.md\n M app_program/subsystem1/s1_codec.c\n M app_program/subsystem1/s1_codec.h\n M app_program/subsystem1/s1_map.c\n M app_program/subsystem1/s1_map.h\n M app_program/subsystem1/s1_net.c\n M app_program/subsystem1/subsystem1_test.c\n M app_program/vehicle.c\n M app_program/vehicle_rt.c\n M docs/barcode-demo.md\n M docs/barcode-verification-2026-10-26.md\n M docs/buddy1/MINIMUM_BIT_REPRESENTATION.md\n M testing/integration/TEST_LOG.md\n M testing/integration/test_vehicle.c\n M testing/integration/verify_integration.py\n M testing/subsystem1/TEST_LOG.md\n M testing/subsystem1/host/test_map_host.c\n M testing/subsystem1/host/verify_windows.py\n M testing/subsystem3/TEST_LOG.md\n M testing/subsystem3/member3_requirements_test.c\n M testing/subsystem3/verify_production_timing.py\n?? testing/integration/logs/overlap_20261026_1_default.log\n?? testing/integration/logs/overlap_20261026_1_metadata.json\n?? testing/integration/logs/overlap_20261026_2_default.log\n?? testing/integration/logs/overlap_20261026_2_metadata.json\n?? testing/integration/logs/overlap_20261026_2_optimized.log\n?? testing/integration/logs/overlap_20261026_default_build.log\n?? testing/integration/logs/overlap_20261026_final_metadata.json\n?? testing/integration/logs/overlap_20261026_test_build.log\n?? testing/subsystem1/logs/2026-10-26_overlap_1.json\n?? testing/subsystem1/logs/2026-10-26_overlap_2.json\n?? testing/subsystem3/logs/2026-10-26_overlap_1.json\n?? testing/subsystem3/logs/2026-10-26_overlap_2.json\n",
+  "scope": "Host simulation; no real radio, RTOS scheduling or robot",
+  "sha256": {
+    "app_program/subsystem1/s1_codec.c": "02a4735a70ff02565c9469821f7c52ae556796a39d093f3bfb6ff4d78ad7afa7",
+    "app_program/subsystem1/s1_led_legacy.c": "421b5877aa7bdeceda913c437b782628a953c70b58264ff0fe34324a637c3f14",
+    "app_program/subsystem1/s1_map.c": "281a0959f83b63b3fd6325240a014f2bb3a3bb68d2f3455b4ae40f2901d3e1b0",
+    "app_program/subsystem1/s1_net.c": "45f44705ae6e52a5cf3f675039c15dddfbcc26a4f0d48ffc161eb08b99ebb3fc",
+    "app_program/subsystem1/s1_sim.c": "f4505cf5ca3a10c96ddc1c85cc3adbd8525adf4b29866a16cf88befdde7c7736",
+    "app_program/subsystem1/subsystem1.c": "eaf7b436041a067eade15592e3eb45c87836d0b8fb06123e490643cc5150459c",
+    "app_program/subsystem1/subsystem1_test.c": "2b0f591443f86a959e9ec84ce80b63f781baa08d623aebc9cf1ceb4656c14ce4",
+    "app_program/subsystem1/task_led.c": "6b2405b92b3692d92174e381dd167c8c88cd81062c5afa2405268b11a45ba85d",
+    "app_program/subsystem1/s1_bits.h": "f9050470ab81cdffb54cded4457c3208ff925d7f1944958c9cef6eabdd6682b6",
+    "app_program/subsystem1/s1_codec.h": "967a736c1bfa951a21b830e28c0cc4e602d7a8e8e1f1fbd41049b0d04e1a50dc",
+    "app_program/subsystem1/s1_fault.h": "0a13da0d5e7efc15bede5cc6507c08c176b1c1870d26959e76f7c5659a83899b",
+    "app_program/subsystem1/s1_led_legacy.h": "9007dc0d6c563c404ab115c19b0f2abb9016c1cb2f4580c5a678644e283dcb21",
+    "app_program/subsystem1/s1_map.h": "041a9d03b13eeaf0ac1f826babd681231f5d7ea99ac8fb17a25e9d7d9776f8d0",
+    "app_program/subsystem1/s1_net.h": "5da10ceb62ebd293b0bc9a03aea41b8fe9e3ffd8f6c00abb55b413b05ca86183",
+    "app_program/subsystem1/s1_sim.h": "cea8a85856d7f029198e44d38d38654e9391606630f21ea8636c7790b5fb48b0",
+    "app_program/subsystem1/subsystem1.h": "3e2441e22bc6438750f57551ae2ca9f6669b93c4f259bd0751d54e1703fab5b9",
+    "testing/subsystem1/host/dump_frames_host.c": "6ab23d2bc0e02441720ce252a04be681464b680754f7b820fb8adf61bcbb656f",
+    "testing/subsystem1/host/host_sync.c": "34cd61dcc46e69bcb1a020f3748ae94e1b8c60277633834d73127906ca72e9bf",
+    "testing/subsystem1/host/kernel_emulation.c": "5633d83aaadab1f329cac9403b986c7287318bb87a4d75e54c7179b81df486ff",
+    "testing/subsystem1/host/measure_sizes_host.c": "8334a7cbdc50550f1bd2562129a04fb90e3f2cf1a66b1150b7d1c1f15b991dbb",
+    "testing/subsystem1/host/target_main.c": "1548e789f5121561461d366fddd8390e0cc2c0d2e420ebfb338da9475c79c809",
+    "testing/subsystem1/host/test_backoff_host.c": "5f8722f9e62a56b7924694d2a6f5d0dec7bd807deedd2e4aa4dd1dc97fd1ca32",
+    "testing/subsystem1/host/test_bits_host.c": "50c151b441d15fc54003a022073cd9945e2503b7728ee002894f2eb8b5b23fa9",
+    "testing/subsystem1/host/test_codec_bin_host.c": "ed79bedc7c0d6c4a9553f3c3d734bba0dcb435ee8d8f7b7454065e42b32a1ae3",
+    "testing/subsystem1/host/test_codec_host.c": "f7fa298893840e826a376747a5b0e83637ef3b2ca0df0fd5bcf6733b2e5f0370",
+    "testing/subsystem1/host/test_map_host.c": "769bcbadd7944d1c1627420af5a5ae2cec6e681533d28c2ee3eb60cd9e90f764",
+    "testing/subsystem1/host/test_mqtt_host.c": "0ec2cc1719d12f7ed86b2ffecce5b0ea59644cf9544f2006427399c7a4c0ac87",
+    "testing/subsystem1/host/test_net_bin_host.c": "2b50bcaf4eef928c4ff3e31fc00d4f4738feea3ade53f573fa3b3d93048942c9",
+    "testing/subsystem1/host/test_wifi_host.c": "fe5ed4b5862a5508975ab5c16084be655344511e84d77f3f2228d5ba8c0b50a0",
+    "app_program/subsystem3/drv_navigation_map.c": "436d8448381e12d16dbed976025be1d94646b833fa492e5da41893a7797bcbb2",
+    "testing/subsystem1/host/verify_windows.py": "8bf8a9b295da9c433e0f32f7136756f57b6eb1550e39337ecaf5bff3a4c5dfd3"
+  },
+  "checks": [
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_codec_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\codec.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\codec.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-codec-1 typical: {\"seq\":7,\"timestamp\":123456,\"robot_state\":2,\"left_motor_speed\":120,\"right_motor_speed\":-120,\"left_encoder_count\":1234567,\"right_encoder_count\":1234560,\"line_status\":2,\"hump_peak\":1.2,\"obstacle_distance\":45.5}\nT-codec-2 worst case (243 bytes): {\"seq\":4294967295,\"timestamp\":4294967295,\"robot_state\":255,\"left_motor_speed\":-32768,\"right_motor_speed\":-32768,\"left_encoder_count\":4294967295,\"right_encoder_count\":4294967295,\"line_status\":255,\"hump_peak\":-9999.9,\"obstacle_distance\":-9999.9}\nT-codec-3 heartbeat: {\"status\":\"ALIVE\",\"uptime_ms\":74829}\nT-codec-v2 maximum across validity masks: 239 bytes\n\n41 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_bits_host.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\bits.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\bits.exe"
+      ],
+      "exit": 0,
+      "stdout": "\n34 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_codec_bin_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\codecbin.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\codecbin.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-codec-bin tests\ncodec_bin: 133 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_backoff_host.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\backoff.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\backoff.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-backoff-1 sequence: 1000 -> 2000 -> 4000 -> 8000 -> 8000 -> 8000\n\n15 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "-Imocks",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040",
+        "test_mqtt_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040\\mqtt_utk.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\mqtt.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\mqtt.exe"
+      ],
+      "exit": 0,
+      "stdout": "T1 connect, subscribe, CONNECTED event\nT2 backoff 1,2,4,8,8 s while the broker refuses, then reset after success (FR19)\n  gap 1 = 1000 ms (expected 1000)\n  gap 2 = 2000 ms (expected 2000)\n  gap 3 = 4000 ms (expected 4000)\n  gap 4 = 8000 ms (expected 8000)\n  gap 5 = 8000 ms (expected 8000)\nT3 connect timeout (no answer) after 5 s\nT4 subscribe failure -> backoff\nT5 dead link from publish failures: 10 in a row yes, a 4-frame stall no\nT6 Wi-Fi link loss: no backoff, discards frames, reconnects at once when the link returns\nT7 commands: fragments, wrong topic, oversize\nT8 cadence: telemetry 100 +/- 10 ms, heartbeat 1000 +/- 50 ms, for several poll intervals\n  poll every  3 ms: telemetry frames 600, worst period error  3 ms | heartbeat worst error  3 ms\n  poll every  5 ms: telemetry frames 600, worst period error  0 ms | heartbeat worst error  0 ms\n  poll every 12 ms: telemetry frames 600, worst period error  8 ms | heartbeat worst error  8 ms\n  poll every 20 ms: telemetry frames 600, worst period error  0 ms | heartbeat worst error  0 ms\n\n33 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "-DTM_NET_LWIP=1",
+        "-DTM_MQTT=1",
+        "-DCNF_SMP=1",
+        "-Imocks_wifi",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\libwifi\\sysdepend\\pico_rp2040",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040",
+        "test_wifi_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\libwifi\\sysdepend\\pico_rp2040\\cyw43_utk.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\wifi.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\wifi.exe"
+      ],
+      "exit": 0,
+      "stdout": "\nW1: first join request fails immediately, second succeeds\n  ok:   two join requests were made (got 2)\n  ok:   retry came after the 1 s backoff (1000 ms)\n  ok:   radio reported ready, init_result 0\n  ok:   task entered the poll loop (2500 polls)\n  ok:   link up, MQTT polled with link up\n  ok:   no delay longer than 2 ms in the task (max 2)\n\nW2: every join request fails immediately -> 1,2,4,8,8,8 s\n  ok:   at least 7 requests in 40 s (got 8)\n        gap 0: 1000 ms (want 1000)\n        gap 1: 2000 ms (want 2000)\n        gap 2: 4000 ms (want 4000)\n        gap 3: 8000 ms (want 8000)\n        gap 4: 8000 ms (want 8000)\n        gap 5: 8000 ms (want 8000)\n  ok:   gaps follow 1,2,4,8,8,8 s (FR19)\n  ok:   never blocks longer than 2 ms (max 2)\n\nW3: link established, then lost -> rejoin after 1 s again\n  ok:   a rejoin request followed the loss (4 requests)\n  ok:   the link was lost at 3100 ms\n  ok:   rejoin came 1 s after the loss, not at the old 4 s step (1000 ms)\n\nW4: radio/interface bring-up failure is NOT retried\n  ok:   no join request when the interface never came up\n  ok:   radio not ready, init_result -5\n  ok:   network service is not polled\n\nW5: interface disappears during a retry -> stop, report not ready\n  ok:   exactly two requests, then no more (got 2)\n  ok:   radio reported not ready after the interface was lost\n\n17 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-DHOST_THREADS=1",
+        "-pthread",
+        "-c",
+        "host_sync.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\host_sync.o"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\host_sync.o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "-DS1_WIRE_JSON=1",
+        "target_main.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_sim.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\target_json.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\target_json.exe"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S1-U01 PASS  telemetry JSON has all FR17 fields\n[TEST] S1-U02 PASS  worst-case JSON is under 256 bytes\n[TEST] S1-U05 PASS  heartbeat is {status ALIVE, uptime_ms}\n[TEST] subsystem1 codec SUMMARY 3 passed, 0 failed\n[TEST] S1-U03 PASS  command parser accepts the four commands, rejects junk\n[TEST] S1-U04 PASS  backoff 1,2,4,8 then capped at 8 s\n[TEST] subsystem1 commands and backoff SUMMARY 2 passed, 0 failed\n[TEST] S1-U06 PASS  telemetry frames keep their order\n[TEST] S1-U07a PASS  every send into a full buffer succeeds (drop-oldest)\n[TEST] S1-U07 PASS  oldest frames are dropped, the newest frame is kept\n[TEST] S1-U07c PASS  each dropped frame is counted in telemetry_overwritten\n[TEST] S1-U07b PASS  buffer accepts frames again after it is drained\n[TEST] subsystem1 telemetry buffer SUMMARY 5 passed, 0 failed\n[TEST] S1-U08a PASS  EMERGENCY_STOP sets the E-STOP event flag\n[TEST] S1-U08b PASS  EMERGENCY_STOP delivered, forwarded in under 50 ms\n[TEST] S1-U09 PASS  unknown command is rejected and not queued\n[TEST] S1-U10 PASS  EMERGENCY_STOP evicts the oldest command when full\n[TEST] subsystem1 command path SUMMARY 4 passed, 0 failed\n[TEST] S1-U11a PASS  CONNECTED flushes stale telemetry\n[TEST] S1-U11b PASS  CONNECTED raises the link-changed flag\n[TEST] S1-U11c PASS  DISCONNECTED clears the connected state\n[TEST] subsystem1 link events SUMMARY 3 passed, 0 failed\n[TEST] S1-U13a PASS  start connected; initial notification consumed\n[TEST] S1-U13b PASS  BACKOFF clears connected and raises link-changed\n[TEST] S1-U13c PASS  BACKOFF is counted and the disconnect is counted once\n[TEST] S1-U13d PASS  repeat BACKOFF / DISCONNECTED while down: no new notification\n[TEST] S1-U13e PASS  DISCONNECTED (without BACKOFF first) still notifies once\n[TEST] subsystem1 backoff notification SUMMARY 5 passed, 0 failed\n[TEST] S1-U14a PASS  writer and reader tasks finished (no deadlock)\n[TEST] S1-U14b PASS  every concurrent snapshot was coherent\n[TEST] S1-U14c PASS  reader saw both states while the writer ran\n[TEST] S1-U14d PASS  no update was lost under contention\ns1: S1-U14 reads=17729 violations=0 seen_up=17397 seen_down=332\n[TEST] subsystem1 concurrent status SUMMARY 4 passed, 0 failed\n[TEST] S1-U16a PASS  latch and pulse published while the hook is still blocked on the held mutex\n[TEST] S1-U16b PASS  readers stay bounded: get_stats times out, latch and link reads never block\n[TEST] S1-U16c PASS  after the mutex is released the hook finishes and counts it\n[TEST] S1-U16d PASS  EMERGENCY_STOP also reaches the queue (full of PAUSE)\n[TEST] subsystem1 emergency with held mutex SUMMARY 4 passed, 0 failed\n[TEST] S1-U17a PASS  an ordinary command does not latch an emergency\n[TEST] S1-U17b PASS  EMERGENCY_STOP sets the latch and the pulse flag\n[TEST] S1-U18a PASS  RESUME, START_RUN, PAUSE, reconnects and draining the queue leave the latch set\n[TEST] S1-U19a PASS  s1_net_estop_clear() releases the latch\n[TEST] S1-U19b PASS  after the clear, RESUME does not latch again\n[TEST] S1-U19c PASS  a new EMERGENCY_STOP latches again; no post failures counted\n[TEST] subsystem1 emergency latch SUMMARY 6 passed, 0 failed\n[TEST] S1-U20a PASS  one failed flag post is retried; the latch is set\n[TEST] S1-U20b PASS  a persistent post failure is counted and the queued command still delivers the emergency\n[TEST] subsystem1 emergency post failure SUMMARY 2 passed, 0 failed\n[TEST] S1-U21a PASS  truncated message: E_SYS, output zeroed, counted\n[TEST] S1-U21b PASS  unknown command id: E_SYS, output zeroed\n[TEST] S1-U21c PASS  empty queue returns the kernel's E_TMOUT unchanged\n[TEST] S1-U21d PASS  a good message after a bad one is delivered\n[TEST] S1-U22a PASS  a 2 s old PAUSE is discarded, the fresh RESUME is delivered\n[TEST] S1-U22b PASS  an old EMERGENCY_STOP is still delivered\n[TEST] S1-U22c PASS  only a stale command queued: nothing is delivered\n[TEST] subsystem1 command validation SUMMARY 7 passed, 0 failed\n[TEST] subsystem1 simulator SUMMARY 0 passed, 0 failed\n[TEST] subsystem1 simulator switch SUMMARY 0 passed, 0 failed\nHOST-RUN: 45 passed, 0 failed, threads=1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\host_sync.o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "target_main.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_sim.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\target_bin.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\target_bin.exe"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S1-U01 PASS  telemetry JSON has all FR17 fields\n[TEST] S1-U02 PASS  worst-case JSON is under 256 bytes\n[TEST] S1-U05 PASS  heartbeat is {status ALIVE, uptime_ms}\n[TEST] subsystem1 codec SUMMARY 3 passed, 0 failed\n[TEST] S1-U03 PASS  command parser accepts the four commands, rejects junk\n[TEST] S1-U04 PASS  backoff 1,2,4,8 then capped at 8 s\n[TEST] subsystem1 commands and backoff SUMMARY 2 passed, 0 failed\n[TEST] S1-U06 PASS  telemetry frames keep their order\n[TEST] S1-U07a PASS  every send into a full buffer succeeds (drop-oldest)\n[TEST] S1-U07 PASS  oldest frames are dropped, the newest frame is kept\n[TEST] S1-U07c PASS  each dropped frame is counted in telemetry_overwritten\n[TEST] S1-U07b PASS  buffer accepts frames again after it is drained\n[TEST] subsystem1 telemetry buffer SUMMARY 5 passed, 0 failed\n[TEST] S1-U08a PASS  EMERGENCY_STOP sets the E-STOP event flag\n[TEST] S1-U08b PASS  EMERGENCY_STOP delivered, forwarded in under 50 ms\n[TEST] S1-U09 PASS  unknown command is rejected and not queued\n[TEST] S1-U10 PASS  EMERGENCY_STOP evicts the oldest command when full\n[TEST] subsystem1 command path SUMMARY 4 passed, 0 failed\n[TEST] S1-U11a PASS  CONNECTED flushes stale telemetry\n[TEST] S1-U11b PASS  CONNECTED raises the link-changed flag\n[TEST] S1-U11c PASS  DISCONNECTED clears the connected state\n[TEST] subsystem1 link events SUMMARY 3 passed, 0 failed\n[TEST] S1-U13a PASS  start connected; initial notification consumed\n[TEST] S1-U13b PASS  BACKOFF clears connected and raises link-changed\n[TEST] S1-U13c PASS  BACKOFF is counted and the disconnect is counted once\n[TEST] S1-U13d PASS  repeat BACKOFF / DISCONNECTED while down: no new notification\n[TEST] S1-U13e PASS  DISCONNECTED (without BACKOFF first) still notifies once\n[TEST] subsystem1 backoff notification SUMMARY 5 passed, 0 failed\n[TEST] S1-U14a PASS  writer and reader tasks finished (no deadlock)\n[TEST] S1-U14b PASS  every concurrent snapshot was coherent\n[TEST] S1-U14c PASS  reader saw both states while the writer ran\n[TEST] S1-U14d PASS  no update was lost under contention\ns1: S1-U14 reads=18241 violations=0 seen_up=18103 seen_down=138\n[TEST] subsystem1 concurrent status SUMMARY 4 passed, 0 failed\n[TEST] S1-U16a PASS  latch and pulse published while the hook is still blocked on the held mutex\n[TEST] S1-U16b PASS  readers stay bounded: get_stats times out, latch and link reads never block\n[TEST] S1-U16c PASS  after the mutex is released the hook finishes and counts it\n[TEST] S1-U16d PASS  EMERGENCY_STOP also reaches the queue (full of PAUSE)\n[TEST] subsystem1 emergency with held mutex SUMMARY 4 passed, 0 failed\n[TEST] S1-U17a PASS  an ordinary command does not latch an emergency\n[TEST] S1-U17b PASS  EMERGENCY_STOP sets the latch and the pulse flag\n[TEST] S1-U18a PASS  RESUME, START_RUN, PAUSE, reconnects and draining the queue leave the latch set\n[TEST] S1-U19a PASS  s1_net_estop_clear() releases the latch\n[TEST] S1-U19b PASS  after the clear, RESUME does not latch again\n[TEST] S1-U19c PASS  a new EMERGENCY_STOP latches again; no post failures counted\n[TEST] subsystem1 emergency latch SUMMARY 6 passed, 0 failed\n[TEST] S1-U20a PASS  one failed flag post is retried; the latch is set\n[TEST] S1-U20b PASS  a persistent post failure is counted and the queued command still delivers the emergency\n[TEST] subsystem1 emergency post failure SUMMARY 2 passed, 0 failed\n[TEST] S1-U21a PASS  truncated message: E_SYS, output zeroed, counted\n[TEST] S1-U21b PASS  unknown command id: E_SYS, output zeroed\n[TEST] S1-U21c PASS  empty queue returns the kernel's E_TMOUT unchanged\n[TEST] S1-U21d PASS  a good message after a bad one is delivered\n[TEST] S1-U22a PASS  a 2 s old PAUSE is discarded, the fresh RESUME is delivered\n[TEST] S1-U22b PASS  an old EMERGENCY_STOP is still delivered\n[TEST] S1-U22c PASS  only a stale command queued: nothing is delivered\n[TEST] subsystem1 command validation SUMMARY 7 passed, 0 failed\n[TEST] S1-U23a PASS  telemetry is 29 packed bytes that decode to the same values\n[TEST] S1-U23b PASS  out-of-range obstacle: validity bit cleared, counted, rest kept\n[TEST] S1-U23c PASS  robot_state 9 is refused and never buffered\n[TEST] S1-U23d PASS  1-byte command works; text, 2 bytes, reserved bits, id 7 rejected\n[TEST] S1-U23e PASS  byte 0x01 latches the emergency stop\n[TEST] S1-U23f PASS  heartbeat is 8 bytes with uptime and the latch\n[TEST] subsystem1 binary wire format SUMMARY 6 passed, 0 failed\n[TEST] S1-U24a PASS  two bits set: mask 0x05, carried in the frame\n[TEST] S1-U24b PASS  clearing one bit keeps the other\n[TEST] S1-U24c PASS  setting or clearing a Buddy 1 bit is refused, nothing changes\n[TEST] S1-U24d PASS  bit 5 follows the emergency latch, set and cleared\n[TEST] S1-U24e PASS  Wi-Fi loss bit: reported once after the outage, IMU bit kept\n[TEST] subsystem1 fault mask SUMMARY 5 passed, 0 failed\n[TEST] S1-U25a PASS  both fault tasks finished (no deadlock)\n[TEST] S1-U25b PASS  two cores toggling their own bits: the third bit is never lost\ns1: S1-U25 violations a=0 b=0 final=0x45\n[TEST] subsystem1 fault mask, two cores SUMMARY 2 passed, 0 failed\n[TEST] S1-U26a PASS  MAP text becomes a binary update read with nav_action_get()\n[TEST] S1-U26b PASS  bad MAP text: nothing queued, counted, heartbeat says REJECTED\n[TEST] S1-U26c PASS  ACCEPTED from the reply is kept (revision low 8 bits); stale report ignored\n[TEST] S1-U26d PASS  EMERGENCY_STOP latches at once behind a flood of MAP updates\n[TEST] subsystem1 mapping update path SUMMARY 4 passed, 0 failed\n[TEST] S1-U27 PASS  demo map copied through dedicated buffer, command queue empty\n[TEST] subsystem1 consolidated demo mapping SUMMARY 1 passed, 0 failed\n[TEST] subsystem1 simulator SUMMARY 0 passed, 0 failed\n[TEST] subsystem1 simulator switch SUMMARY 0 passed, 0 failed\nHOST-RUN: 63 passed, 0 failed, threads=1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\host_sync.o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "test_net_bin_host.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\netbin.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\netbin.exe"
+      ],
+      "exit": 0,
+      "stdout": "net_bin: 68 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\host_sync.o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "test_map_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_map.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\mapgw.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-zngcgfcs\\mapgw.exe"
+      ],
+      "exit": 0,
+      "stdout": "map: 43 checks, 0 failed\n",
+      "stderr": ""
+    }
+  ],
+  "passed": true
+}

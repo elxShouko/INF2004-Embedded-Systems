@@ -1,0 +1,354 @@
+{
+  "head": "7a61d829d8d88f0759e74968cfeb1ef9d25a33b2",
+  "status": " M app_program/subsystem1/s1_codec.c\n M app_program/subsystem1/s1_codec.h\n M app_program/subsystem1/s1_map.c\n M app_program/subsystem1/s1_net.c\n M app_program/subsystem1/subsystem1_test.c\n M app_program/vehicle_rt.c\n M testing/integration/test_vehicle.c\n M testing/integration/verify_integration.py\n M testing/subsystem1/host/test_map_host.c\n M testing/subsystem1/host/verify_windows.py\n?? testing/integration/logs/overlap_20261026_1_metadata.json\n",
+  "scope": "Host simulation; no real radio, RTOS scheduling or robot",
+  "sha256": {
+    "app_program/subsystem1/s1_codec.c": "02a4735a70ff02565c9469821f7c52ae556796a39d093f3bfb6ff4d78ad7afa7",
+    "app_program/subsystem1/s1_led_legacy.c": "421b5877aa7bdeceda913c437b782628a953c70b58264ff0fe34324a637c3f14",
+    "app_program/subsystem1/s1_map.c": "281a0959f83b63b3fd6325240a014f2bb3a3bb68d2f3455b4ae40f2901d3e1b0",
+    "app_program/subsystem1/s1_net.c": "45f44705ae6e52a5cf3f675039c15dddfbcc26a4f0d48ffc161eb08b99ebb3fc",
+    "app_program/subsystem1/s1_sim.c": "f4505cf5ca3a10c96ddc1c85cc3adbd8525adf4b29866a16cf88befdde7c7736",
+    "app_program/subsystem1/subsystem1.c": "eaf7b436041a067eade15592e3eb45c87836d0b8fb06123e490643cc5150459c",
+    "app_program/subsystem1/subsystem1_test.c": "984e7354e02523310b966e7f9ff571ed7ed6553f99f2a4591cff32f7970630aa",
+    "app_program/subsystem1/task_led.c": "6b2405b92b3692d92174e381dd167c8c88cd81062c5afa2405268b11a45ba85d",
+    "app_program/subsystem1/s1_bits.h": "f9050470ab81cdffb54cded4457c3208ff925d7f1944958c9cef6eabdd6682b6",
+    "app_program/subsystem1/s1_codec.h": "967a736c1bfa951a21b830e28c0cc4e602d7a8e8e1f1fbd41049b0d04e1a50dc",
+    "app_program/subsystem1/s1_fault.h": "0a13da0d5e7efc15bede5cc6507c08c176b1c1870d26959e76f7c5659a83899b",
+    "app_program/subsystem1/s1_led_legacy.h": "9007dc0d6c563c404ab115c19b0f2abb9016c1cb2f4580c5a678644e283dcb21",
+    "app_program/subsystem1/s1_map.h": "98d5a760141f1163dba8b7e634f44542ce0219cf0ece32e68bebfe0516ad3edb",
+    "app_program/subsystem1/s1_net.h": "5da10ceb62ebd293b0bc9a03aea41b8fe9e3ffd8f6c00abb55b413b05ca86183",
+    "app_program/subsystem1/s1_sim.h": "cea8a85856d7f029198e44d38d38654e9391606630f21ea8636c7790b5fb48b0",
+    "app_program/subsystem1/subsystem1.h": "3e2441e22bc6438750f57551ae2ca9f6669b93c4f259bd0751d54e1703fab5b9",
+    "testing/subsystem1/host/verify_windows.py": "7dc54e1b3a1e2171d2dd5c83bc7f20c5ba8d64855cf19baab6bcc0c7a03f36cd"
+  },
+  "checks": [
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_codec_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\codec.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\codec.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-codec-1 typical: {\"seq\":7,\"timestamp\":123456,\"robot_state\":2,\"left_motor_speed\":120,\"right_motor_speed\":-120,\"left_encoder_count\":1234567,\"right_encoder_count\":1234560,\"line_status\":2,\"hump_peak\":1.2,\"obstacle_distance\":45.5}\nT-codec-2 worst case (243 bytes): {\"seq\":4294967295,\"timestamp\":4294967295,\"robot_state\":255,\"left_motor_speed\":-32768,\"right_motor_speed\":-32768,\"left_encoder_count\":4294967295,\"right_encoder_count\":4294967295,\"line_status\":255,\"hump_peak\":-9999.9,\"obstacle_distance\":-9999.9}\nT-codec-3 heartbeat: {\"status\":\"ALIVE\",\"uptime_ms\":74829}\nT-codec-v2 maximum across validity masks: 239 bytes\n\n41 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_bits_host.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\bits.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\bits.exe"
+      ],
+      "exit": 0,
+      "stdout": "\n34 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_codec_bin_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\codecbin.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\codecbin.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-codec-bin tests\ncodec_bin: 133 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_backoff_host.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\backoff.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\backoff.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-backoff-1 sequence: 1000 -> 2000 -> 4000 -> 8000 -> 8000 -> 8000\n\n15 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "-Imocks",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040",
+        "test_mqtt_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040\\mqtt_utk.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\mqtt.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\mqtt.exe"
+      ],
+      "exit": 0,
+      "stdout": "T1 connect, subscribe, CONNECTED event\nT2 backoff 1,2,4,8,8 s while the broker refuses, then reset after success (FR19)\n  gap 1 = 1000 ms (expected 1000)\n  gap 2 = 2000 ms (expected 2000)\n  gap 3 = 4000 ms (expected 4000)\n  gap 4 = 8000 ms (expected 8000)\n  gap 5 = 8000 ms (expected 8000)\nT3 connect timeout (no answer) after 5 s\nT4 subscribe failure -> backoff\nT5 dead link from publish failures: 10 in a row yes, a 4-frame stall no\nT6 Wi-Fi link loss: no backoff, discards frames, reconnects at once when the link returns\nT7 commands: fragments, wrong topic, oversize\nT8 cadence: telemetry 100 +/- 10 ms, heartbeat 1000 +/- 50 ms, for several poll intervals\n  poll every  3 ms: telemetry frames 600, worst period error  3 ms | heartbeat worst error  3 ms\n  poll every  5 ms: telemetry frames 600, worst period error  0 ms | heartbeat worst error  0 ms\n  poll every 12 ms: telemetry frames 600, worst period error  8 ms | heartbeat worst error  8 ms\n  poll every 20 ms: telemetry frames 600, worst period error  0 ms | heartbeat worst error  0 ms\n\n33 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "-DTM_NET_LWIP=1",
+        "-DTM_MQTT=1",
+        "-DCNF_SMP=1",
+        "-Imocks_wifi",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\libwifi\\sysdepend\\pico_rp2040",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040",
+        "test_wifi_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\libwifi\\sysdepend\\pico_rp2040\\cyw43_utk.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\wifi.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\wifi.exe"
+      ],
+      "exit": 0,
+      "stdout": "\nW1: first join request fails immediately, second succeeds\n  ok:   two join requests were made (got 2)\n  ok:   retry came after the 1 s backoff (1000 ms)\n  ok:   radio reported ready, init_result 0\n  ok:   task entered the poll loop (2500 polls)\n  ok:   link up, MQTT polled with link up\n  ok:   no delay longer than 2 ms in the task (max 2)\n\nW2: every join request fails immediately -> 1,2,4,8,8,8 s\n  ok:   at least 7 requests in 40 s (got 8)\n        gap 0: 1000 ms (want 1000)\n        gap 1: 2000 ms (want 2000)\n        gap 2: 4000 ms (want 4000)\n        gap 3: 8000 ms (want 8000)\n        gap 4: 8000 ms (want 8000)\n        gap 5: 8000 ms (want 8000)\n  ok:   gaps follow 1,2,4,8,8,8 s (FR19)\n  ok:   never blocks longer than 2 ms (max 2)\n\nW3: link established, then lost -> rejoin after 1 s again\n  ok:   a rejoin request followed the loss (4 requests)\n  ok:   the link was lost at 3100 ms\n  ok:   rejoin came 1 s after the loss, not at the old 4 s step (1000 ms)\n\nW4: radio/interface bring-up failure is NOT retried\n  ok:   no join request when the interface never came up\n  ok:   radio not ready, init_result -5\n  ok:   network service is not polled\n\nW5: interface disappears during a retry -> stop, report not ready\n  ok:   exactly two requests, then no more (got 2)\n  ok:   radio reported not ready after the interface was lost\n\n17 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-DHOST_THREADS=1",
+        "-pthread",
+        "-c",
+        "host_sync.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\host_sync.o"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\host_sync.o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "-DS1_WIRE_JSON=1",
+        "target_main.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_sim.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\target_json.exe"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c: In function 'test_command_path':\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:371:24: error: redefinition of 'command'\n  371 |     s1_codec_command_t command = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:365:27: note: previous definition of 'command' with type 's1_codec_command_t'\n  365 |     s1_codec_command_t    command = {S1_CMD_NONE, 0u};\n      |                           ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:372:20: error: redefinition of 'before'\n  372 |     s1_net_stats_t before = {0};\n      |                    ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:366:27: note: previous definition of 'before' with type 's1_net_stats_t'\n  366 |     s1_net_stats_t        before  = {0};\n      |                           ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:373:20: error: redefinition of 'after'\n  373 |     s1_net_stats_t after = {0};\n      |                    ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:367:27: note: previous definition of 'after' with type 's1_net_stats_t'\n  367 |     s1_net_stats_t        after   = {0};\n      |                           ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:374:10: error: redefinition of 'flags'\n  374 |     UINT flags = 0u;\n      |          ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:368:27: note: previous definition of 'flags' with type 'UINT' {aka 'unsigned int'}\n  368 |     UINT                  flags   = 0u;\n      |                           ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:375:8: error: redefinition of 'result'\n  375 |     ER result = E_OK;\n      |        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:369:27: note: previous definition of 'result' with type 'ER' {aka 'int'}\n  369 |     ER                    result  = E_OK;\n      |                           ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:376:14: error: redefinition of 'index'\n  376 |     uint32_t index = 0u;\n      |              ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:370:27: note: previous definition of 'index' with type 'uint32_t' {aka 'unsigned int'}\n  370 |     uint32_t              index   = 0u;\n      |                           ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c: In function 'test_estop_with_held_mutex':\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:823:24: error: redefinition of 'command'\n  823 |     s1_codec_command_t command = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:814:24: note: previous definition of 'command' with type 's1_codec_command_t'\n  814 |     s1_codec_command_t command  = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:824:20: error: redefinition of 'stats'\n  824 |     s1_net_stats_t stats = {0};\n      |                    ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:815:24: note: previous definition of 'stats' with type 's1_net_stats_t'\n  815 |     s1_net_stats_t     stats    = {0};\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:825:10: error: redefinition of 'pattern'\n  825 |     UINT pattern = 0u;\n      |          ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:816:24: note: previous definition of 'pattern' with type 'UINT' {aka 'unsigned int'}\n  816 |     UINT               pattern  = 0u;\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:826:10: error: redefinition of 'flags'\n  826 |     UINT flags = 0u;\n      |          ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:817:24: note: previous definition of 'flags' with type 'UINT' {aka 'unsigned int'}\n  817 |     UINT               flags    = 0u;\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:827:10: error: redefinition of 'b_early'\n  827 |     bool b_early = false;\n      |          ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:818:24: note: previous definition of 'b_early' with type '_Bool'\n  818 |     bool               b_early  = false;\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:828:10: error: redefinition of 'b_pulse'\n  828 |     bool b_pulse = false;\n      |          ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:819:24: note: previous definition of 'b_pulse' with type '_Bool'\n  819 |     bool               b_pulse  = false;\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:829:10: error: redefinition of 'b_wait'\n  829 |     bool b_wait = false;\n      |          ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:820:24: note: previous definition of 'b_wait' with type '_Bool'\n  820 |     bool               b_wait   = false;\n      |                        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:830:8: error: redefinition of 'stat_err'\n  830 |     ER stat_err = E_OK;\n      |        ^~~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:821:24: note: previous definition of 'stat_err' with type 'ER' {aka 'int'}\n  821 |     ER                 stat_err = E_OK;\n      |                        ^~~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:831:9: error: redefinition of 'waited'\n  831 |     int waited = 0;\n      |         ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:822:24: note: previous definition of 'waited' with type 'int'\n  822 |     int                waited   = 0;\n      |                        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:855:28: error: redefinition of 'pause'\n  855 |         s1_codec_command_t pause = {S1_CMD_PAUSE, 0u};\n      |                            ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:853:28: note: previous definition of 'pause' with type 's1_codec_command_t'\n  853 |         s1_codec_command_t pause = {S1_CMD_PAUSE, 0u};\n      |                            ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:856:18: error: redefinition of 'index'\n  856 |         uint32_t index = 0u;\n      |                  ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:854:28: note: previous definition of 'index' with type 'uint32_t' {aka 'unsigned int'}\n  854 |         uint32_t           index = 0u;\n      |                            ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c: In function 'test_estop_latch':\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:921:24: error: redefinition of 'command'\n  921 |     s1_codec_command_t command = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:916:24: note: previous definition of 'command' with type 's1_codec_command_t'\n  916 |     s1_codec_command_t command = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:922:20: error: redefinition of 'stats'\n  922 |     s1_net_stats_t stats = {0};\n      |                    ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:917:24: note: previous definition of 'stats' with type 's1_net_stats_t'\n  917 |     s1_net_stats_t     stats   = {0};\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:923:12: error: redefinition of 'time'\n  923 |     SYSTIM time = {0};\n      |            ^~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:918:24: note: previous definition of 'time' with type 'SYSTIM' {aka 'struct systim'}\n  918 |     SYSTIM             time    = {0};\n      |                        ^~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:924:10: error: redefinition of 'flags'\n  924 |     UINT flags = 0u;\n      |          ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:919:24: note: previous definition of 'flags' with type 'UINT' {aka 'unsigned int'}\n  919 |     UINT               flags   = 0u;\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:925:14: error: redefinition of 'index'\n  925 |     uint32_t index = 0u;\n      |              ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:920:24: note: previous definition of 'index' with type 'uint32_t' {aka 'unsigned int'}\n  920 |     uint32_t           index   = 0u;\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c: In function 'test_estop_post_failure':\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:988:24: error: redefinition of 'command'\n  988 |     s1_codec_command_t command = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:984:24: note: previous definition of 'command' with type 's1_codec_command_t'\n  984 |     s1_codec_command_t command = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:989:20: error: redefinition of 'before'\n  989 |     s1_net_stats_t before = {0};\n      |                    ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:985:24: note: previous definition of 'before' with type 's1_net_stats_t'\n  985 |     s1_net_stats_t     before  = {0};\n      |                        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:990:20: error: redefinition of 'after'\n  990 |     s1_net_stats_t after = {0};\n      |                    ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:986:24: note: previous definition of 'after' with type 's1_net_stats_t'\n  986 |     s1_net_stats_t     after   = {0};\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:991:12: error: redefinition of 'time'\n  991 |     SYSTIM time = {0};\n      |            ^~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:987:24: note: previous definition of 'time' with type 'SYSTIM' {aka 'struct systim'}\n  987 |     SYSTIM             time    = {0};\n      |                        ^~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c: In function 'test_command_validation':\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1047:24: error: redefinition of 'command'\n 1047 |     s1_codec_command_t command = {S1_CMD_EMERGENCY_STOP, 1u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1039:24: note: previous definition of 'command' with type 's1_codec_command_t'\n 1039 |     s1_codec_command_t command = {S1_CMD_EMERGENCY_STOP, 1u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1048:24: error: redefinition of 'bad'\n 1048 |     s1_codec_command_t bad = {(s1_codec_command_id_t)BAD_COMMAND_ID, 0u};\n      |                        ^~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1040:24: note: previous definition of 'bad' with type 's1_codec_command_t'\n 1040 |     s1_codec_command_t bad = {\n      |                        ^~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1049:24: error: redefinition of 'fresh'\n 1049 |     s1_codec_command_t fresh = {S1_CMD_PAUSE, 0u};\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1042:24: note: previous definition of 'fresh' with type 's1_codec_command_t'\n 1042 |     s1_codec_command_t fresh   = {S1_CMD_PAUSE, 0u};\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1050:20: error: redefinition of 'before'\n 1050 |     s1_net_stats_t before = {0};\n      |                    ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1043:24: note: previous definition of 'before' with type 's1_net_stats_t'\n 1043 |     s1_net_stats_t     before  = {0};\n      |                        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1051:20: error: redefinition of 'after'\n 1051 |     s1_net_stats_t after = {0};\n      |                    ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1044:24: note: previous definition of 'after' with type 's1_net_stats_t'\n 1044 |     s1_net_stats_t     after   = {0};\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1052:12: error: redefinition of 'time'\n 1052 |     SYSTIM time = {0};\n      |            ^~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1045:24: note: previous definition of 'time' with type 'SYSTIM' {aka 'struct systim'}\n 1045 |     SYSTIM             time    = {0};\n      |                        ^~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1053:8: error: redefinition of 'result'\n 1053 |     ER result = E_OK;\n      |        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1046:24: note: previous definition of 'result' with type 'ER' {aka 'int'}\n 1046 |     ER                 result  = E_OK;\n      |                        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c: At top level:\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1562:2: error: #endif without #if\n 1562 | #endif /* APP_TEST */\n      |  ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1476:1: warning: 'test_map_path' defined but not used [-Wunused-function]\n 1476 | test_map_path(void)\n      | ^~~~~~~~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1411:1: warning: 'test_fault_two_core' defined but not used [-Wunused-function]\n 1411 | test_fault_two_core(void)\n      | ^~~~~~~~~~~~~~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1286:1: warning: 'test_fault_mask' defined but not used [-Wunused-function]\n 1286 | test_fault_mask(void)\n      | ^~~~~~~~~~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1190:1: warning: 'test_binary_wire' defined but not used [-Wunused-function]\n 1190 | test_binary_wire(void)\n      | ^~~~~~~~~~~~~~~~\n"
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\host_sync.o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "target_main.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_sim.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\target_bin.exe"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c: In function 'test_command_path':\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:371:24: error: redefinition of 'command'\n  371 |     s1_codec_command_t command = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:365:27: note: previous definition of 'command' with type 's1_codec_command_t'\n  365 |     s1_codec_command_t    command = {S1_CMD_NONE, 0u};\n      |                           ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:372:20: error: redefinition of 'before'\n  372 |     s1_net_stats_t before = {0};\n      |                    ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:366:27: note: previous definition of 'before' with type 's1_net_stats_t'\n  366 |     s1_net_stats_t        before  = {0};\n      |                           ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:373:20: error: redefinition of 'after'\n  373 |     s1_net_stats_t after = {0};\n      |                    ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:367:27: note: previous definition of 'after' with type 's1_net_stats_t'\n  367 |     s1_net_stats_t        after   = {0};\n      |                           ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:374:10: error: redefinition of 'flags'\n  374 |     UINT flags = 0u;\n      |          ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:368:27: note: previous definition of 'flags' with type 'UINT' {aka 'unsigned int'}\n  368 |     UINT                  flags   = 0u;\n      |                           ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:375:8: error: redefinition of 'result'\n  375 |     ER result = E_OK;\n      |        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:369:27: note: previous definition of 'result' with type 'ER' {aka 'int'}\n  369 |     ER                    result  = E_OK;\n      |                           ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:376:14: error: redefinition of 'index'\n  376 |     uint32_t index = 0u;\n      |              ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:370:27: note: previous definition of 'index' with type 'uint32_t' {aka 'unsigned int'}\n  370 |     uint32_t              index   = 0u;\n      |                           ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c: In function 'test_estop_with_held_mutex':\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:823:24: error: redefinition of 'command'\n  823 |     s1_codec_command_t command = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:814:24: note: previous definition of 'command' with type 's1_codec_command_t'\n  814 |     s1_codec_command_t command  = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:824:20: error: redefinition of 'stats'\n  824 |     s1_net_stats_t stats = {0};\n      |                    ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:815:24: note: previous definition of 'stats' with type 's1_net_stats_t'\n  815 |     s1_net_stats_t     stats    = {0};\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:825:10: error: redefinition of 'pattern'\n  825 |     UINT pattern = 0u;\n      |          ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:816:24: note: previous definition of 'pattern' with type 'UINT' {aka 'unsigned int'}\n  816 |     UINT               pattern  = 0u;\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:826:10: error: redefinition of 'flags'\n  826 |     UINT flags = 0u;\n      |          ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:817:24: note: previous definition of 'flags' with type 'UINT' {aka 'unsigned int'}\n  817 |     UINT               flags    = 0u;\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:827:10: error: redefinition of 'b_early'\n  827 |     bool b_early = false;\n      |          ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:818:24: note: previous definition of 'b_early' with type '_Bool'\n  818 |     bool               b_early  = false;\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:828:10: error: redefinition of 'b_pulse'\n  828 |     bool b_pulse = false;\n      |          ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:819:24: note: previous definition of 'b_pulse' with type '_Bool'\n  819 |     bool               b_pulse  = false;\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:829:10: error: redefinition of 'b_wait'\n  829 |     bool b_wait = false;\n      |          ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:820:24: note: previous definition of 'b_wait' with type '_Bool'\n  820 |     bool               b_wait   = false;\n      |                        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:830:8: error: redefinition of 'stat_err'\n  830 |     ER stat_err = E_OK;\n      |        ^~~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:821:24: note: previous definition of 'stat_err' with type 'ER' {aka 'int'}\n  821 |     ER                 stat_err = E_OK;\n      |                        ^~~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:831:9: error: redefinition of 'waited'\n  831 |     int waited = 0;\n      |         ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:822:24: note: previous definition of 'waited' with type 'int'\n  822 |     int                waited   = 0;\n      |                        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:855:28: error: redefinition of 'pause'\n  855 |         s1_codec_command_t pause = {S1_CMD_PAUSE, 0u};\n      |                            ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:853:28: note: previous definition of 'pause' with type 's1_codec_command_t'\n  853 |         s1_codec_command_t pause = {S1_CMD_PAUSE, 0u};\n      |                            ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:856:18: error: redefinition of 'index'\n  856 |         uint32_t index = 0u;\n      |                  ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:854:28: note: previous definition of 'index' with type 'uint32_t' {aka 'unsigned int'}\n  854 |         uint32_t           index = 0u;\n      |                            ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c: In function 'test_estop_latch':\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:921:24: error: redefinition of 'command'\n  921 |     s1_codec_command_t command = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:916:24: note: previous definition of 'command' with type 's1_codec_command_t'\n  916 |     s1_codec_command_t command = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:922:20: error: redefinition of 'stats'\n  922 |     s1_net_stats_t stats = {0};\n      |                    ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:917:24: note: previous definition of 'stats' with type 's1_net_stats_t'\n  917 |     s1_net_stats_t     stats   = {0};\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:923:12: error: redefinition of 'time'\n  923 |     SYSTIM time = {0};\n      |            ^~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:918:24: note: previous definition of 'time' with type 'SYSTIM' {aka 'struct systim'}\n  918 |     SYSTIM             time    = {0};\n      |                        ^~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:924:10: error: redefinition of 'flags'\n  924 |     UINT flags = 0u;\n      |          ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:919:24: note: previous definition of 'flags' with type 'UINT' {aka 'unsigned int'}\n  919 |     UINT               flags   = 0u;\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:925:14: error: redefinition of 'index'\n  925 |     uint32_t index = 0u;\n      |              ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:920:24: note: previous definition of 'index' with type 'uint32_t' {aka 'unsigned int'}\n  920 |     uint32_t           index   = 0u;\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c: In function 'test_estop_post_failure':\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:988:24: error: redefinition of 'command'\n  988 |     s1_codec_command_t command = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:984:24: note: previous definition of 'command' with type 's1_codec_command_t'\n  984 |     s1_codec_command_t command = {S1_CMD_NONE, 0u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:989:20: error: redefinition of 'before'\n  989 |     s1_net_stats_t before = {0};\n      |                    ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:985:24: note: previous definition of 'before' with type 's1_net_stats_t'\n  985 |     s1_net_stats_t     before  = {0};\n      |                        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:990:20: error: redefinition of 'after'\n  990 |     s1_net_stats_t after = {0};\n      |                    ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:986:24: note: previous definition of 'after' with type 's1_net_stats_t'\n  986 |     s1_net_stats_t     after   = {0};\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:991:12: error: redefinition of 'time'\n  991 |     SYSTIM time = {0};\n      |            ^~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:987:24: note: previous definition of 'time' with type 'SYSTIM' {aka 'struct systim'}\n  987 |     SYSTIM             time    = {0};\n      |                        ^~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c: In function 'test_command_validation':\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1047:24: error: redefinition of 'command'\n 1047 |     s1_codec_command_t command = {S1_CMD_EMERGENCY_STOP, 1u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1039:24: note: previous definition of 'command' with type 's1_codec_command_t'\n 1039 |     s1_codec_command_t command = {S1_CMD_EMERGENCY_STOP, 1u};\n      |                        ^~~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1048:24: error: redefinition of 'bad'\n 1048 |     s1_codec_command_t bad = {(s1_codec_command_id_t)BAD_COMMAND_ID, 0u};\n      |                        ^~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1040:24: note: previous definition of 'bad' with type 's1_codec_command_t'\n 1040 |     s1_codec_command_t bad = {\n      |                        ^~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1049:24: error: redefinition of 'fresh'\n 1049 |     s1_codec_command_t fresh = {S1_CMD_PAUSE, 0u};\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1042:24: note: previous definition of 'fresh' with type 's1_codec_command_t'\n 1042 |     s1_codec_command_t fresh   = {S1_CMD_PAUSE, 0u};\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1050:20: error: redefinition of 'before'\n 1050 |     s1_net_stats_t before = {0};\n      |                    ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1043:24: note: previous definition of 'before' with type 's1_net_stats_t'\n 1043 |     s1_net_stats_t     before  = {0};\n      |                        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1051:20: error: redefinition of 'after'\n 1051 |     s1_net_stats_t after = {0};\n      |                    ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1044:24: note: previous definition of 'after' with type 's1_net_stats_t'\n 1044 |     s1_net_stats_t     after   = {0};\n      |                        ^~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1052:12: error: redefinition of 'time'\n 1052 |     SYSTIM time = {0};\n      |            ^~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1045:24: note: previous definition of 'time' with type 'SYSTIM' {aka 'struct systim'}\n 1045 |     SYSTIM             time    = {0};\n      |                        ^~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1053:8: error: redefinition of 'result'\n 1053 |     ER result = E_OK;\n      |        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1046:24: note: previous definition of 'result' with type 'ER' {aka 'int'}\n 1046 |     ER                 result  = E_OK;\n      |                        ^~~~~~\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c: At top level:\nC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c:1562:2: error: #endif without #if\n 1562 | #endif /* APP_TEST */\n      |  ^~~~~\n"
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\host_sync.o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "test_net_bin_host.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\netbin.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\netbin.exe"
+      ],
+      "exit": 0,
+      "stdout": "net_bin: 68 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\host_sync.o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "test_map_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_map.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\mapgw.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-z0a_khni\\mapgw.exe"
+      ],
+      "exit": 0,
+      "stdout": "map: 43 checks, 0 failed\n",
+      "stderr": ""
+    }
+  ],
+  "passed": false
+}

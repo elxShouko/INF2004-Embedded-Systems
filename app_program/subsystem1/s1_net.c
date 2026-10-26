@@ -270,9 +270,7 @@ ER s1_net_command_receive(s1_codec_command_t *p_command, TMO timeout)
         }
         else if ((sizeof(message) != (uint32_t)size) ||
                  (message.command_id <= S1_CMD_NONE) ||
-                 (message.command_id > S1_CMD_MAPPING) ||
-                 ((S1_CMD_MAPPING == message.command_id) &&
-                  !s1_codec_mapping_valid(&message)))
+                 (message.command_id > S1_CMD_RESUME))
         {
             status_count_nowait(&g_s1_net.stats.commands_bad_size);
             message = (s1_codec_command_t){S1_CMD_NONE, 0u};

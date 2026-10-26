@@ -75,8 +75,6 @@ def main():
             command += ["-O2", "-Wconversion", "-Wsign-conversion",
                         "-pedantic", "-fanalyzer"]
         command += [source / f"drv_{module}.c" for module in modules]
-        if suite == "requirements":
-            command += [root / "app_program/subsystem1/s1_codec.c"]
         command += ["-o", executable]
         compiled = run(command)
         report["checks"].append(compiled)

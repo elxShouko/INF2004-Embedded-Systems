@@ -126,3 +126,65 @@ Host script PASS: 62 on-target-emulated checks (incl. new S1-U26a-d map path),
 code +641 B. Not run on hardware: NFR7/NFR8/NFR9, on-target two-core tests.
 Evidence: logs/host_run_posttri1.txt, logs/minimum_bit_evidence.txt;
 description: ../../docs/buddy1/MINIMUM_BIT_REPRESENTATION.md.
+
+## Mapping overlap cleanup on main - 2026-10-26
+
+Revision: HEAD `7a61d829d8d88f0759e74968cfeb1ef9d25a33b2` plus uncommitted
+cleanup. This user request authorizes S1/shared overlap repair on main.
+S1-U23's old mapping-command case is retired; its historic results remain above.
+S1-U23a-f binary cases retain their original meanings.
+
+| ID | Method | Expected result |
+|---|---|---|
+| S1-U27 | Real MQTT hook/map buffer and S3 map logic in kernel host harness; also compiled in TEST=1 | Complete four-action map and receive timestamp copied through map buffer; ordinary command queue stays empty |
+| S1 gateway M5/M10 | Real S1 gateway with S3 submit/reply fake | Full queue retries same request; stale/future timestamps rejected; retry age does not reset; wrap-safe fresh update accepted |
+
+No target execution. Final command (bundled Python runtime):
+`python testing/subsystem1/host/verify_windows.py --log testing/subsystem1/logs/2026-10-26_overlap_final.json`.
+
+| Date | Test | Result | Evidence |
+|---|---|---|---|
+| 2026-10-26 | Initial cleanup host harness | FAIL, compilation; remaining duplicate declarations and missing preprocessor guard in committed merge were repaired against Buddy 1's original test definitions | logs/2026-10-26_overlap_1.json |
+| 2026-10-26 | Binary/JSON host suites, S1-U27 and gateway M5/M10 | PASS, host | logs/2026-10-26_overlap_2.json |
+| 2026-10-26 | Final native runner, with source/test hashes | PASS: 63 binary and 45 JSON emulated-kernel checks (threads enabled), 43 gateway checks, 68 binary network checks; codec/bits/backoff/MQTT/Wi-Fi suites also pass | logs/2026-10-26_overlap_final.json |
+
+The native runner now includes Buddy 1's binary and gateway suites alongside
+legacy JSON. Gateway tests cover retry, original receive expiry, future time,
+clock wrap, matching ACK, overflow and independent emergency stop. These do
+not establish radio delivery, actual kernel SMP timing or hardware safety.
+
+
+## Tribunal 1 preservation audit - 2026-10-26
+
+Compared Buddy 1 commit `dc1a2cf2846dcb36dc036b12a0ad590c6590f3a4` against
+local main HEAD `7a61d829d8d88f0759e74968cfeb1ef9d25a33b2` plus the uncommitted
+cleanup. The commit is an ancestor of main. All 29 affected files remain;
+20 are identical ignoring line endings/final newline. Codec header changes
+are whitespace only. The original S1 test source is preserved exactly after
+excluding the additional S1-U27 test/call and its extra blank line.
+
+Preserved: the 29-byte binary telemetry codec, 8-byte heartbeat, 1-byte
+commands, explicit bit packing, fault flag API/ownership restrictions, Wi-Fi
+loss and emergency bits, IMU/line fault adapter hooks, dedicated map buffer,
+S3 gateway pumping/reply correlation/heartbeat ACK, original binary/fault/map
+tests, all decoder/monitor/measurement tools and earlier evidence.
+
+Explicit differences: queue-full gateway admission now retries within the
+original one-second receive age instead of immediately reporting REJECTED;
+stale/future updates are rejected. Complete four-letter replacement and
+junction-triggered navigation come from the barcode commit and remain in S3;
+the cleanup did not edit S3 production code. The gateway's partial syntax
+support remains, but S3 may reject an incomplete demo map. Pasted non-C text
+and duplicated merge copies were removed; functional Tribunal 1 features
+were not removed. The pre-existing duplicated error assignments in s1_net.c
+remain harmless and were not changed during this audit.
+
+| Date | Check | Result | Evidence |
+|---|---|---|---|
+| 2026-10-26 | 29-file static comparison, original S1 tests, prior test/build source-hash matching | PASS, static inspection | logs/2026-10-26_tribunal1_preservation_audit.json |
+| 2026-10-26 | Original s1_wire.py selftest and C dump_frames_host encoder against original independent Python oracle | PASS: 11 selfchecks and 4000 matching frames (2220 out-of-range-group cases) | logs/2026-10-26_tribunal1_preservation_audit.json |
+
+Exact compiler/Python commands and outputs are in the JSON. No production
+source changed in this audit, so prior matching-source build/test results
+remain applicable. No new firmware builds, hardware access or flash; no
+stage/commit/push. All cleanup changes still reside in the local main working tree.

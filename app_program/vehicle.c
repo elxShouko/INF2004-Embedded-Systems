@@ -55,7 +55,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         ((uint32_t)p_input->line_state > LINE_STATE_FAULT_REPORTED) ||
         ((uint32_t)p_input->line_mode > LINE_MODE_RECOVERY) ||
         ((uint32_t)p_input->navigation.kind > NAV_EVENT_FAULT) ||
-        ((uint32_t)p_input->remote.command_id > S1_CMD_MAPPING) ||
+        ((uint32_t)p_input->remote.command_id > S1_CMD_RESUME) ||
         ((uint32_t)p_input->imu.phase > IMU_FAULT))
     {
         vehicle_fault(p_vehicle, p_output);

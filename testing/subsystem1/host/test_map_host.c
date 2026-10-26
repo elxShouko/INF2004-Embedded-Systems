@@ -8,6 +8,7 @@
 
 #include "../../../app_program/subsystem1/s1_map.h"
 
+static uint32_t now = 1000u;
 static int g_checks = 0, g_failures = 0;
 static void check(int ok, const char *name)
 {
@@ -34,7 +35,7 @@ ER s3_submit(const s3_input_t *p_input, TMO timeout)
 
 static void hook(const char *text)
 {
-    s1_net_hook_on_command(text, (uint32_t)strlen(text), 0u);
+    s1_net_hook_on_command(text, (uint32_t)strlen(text), now);
 }
 
 static s1_codec_map_ack_t heartbeat_ack(void)
@@ -67,7 +68,6 @@ int main(void)
     s1_codec_map_ack_t a;
     s3_output_t r;
     s1_net_stats_t st;
-    uint32_t now = 1000u;
     char big[200];
     int i;
 
@@ -150,17 +150,16 @@ int main(void)
         check(g_submits == before, "M4 embedded zero and over-long payloads never reach S3");
     }
 
-    /* M5: the S3 queue is full: reported as REJECTED, next update still works. */
+    /* M5: retain one copied request and retry queue admission next cycle. */
     g_submit_result = E_TMOUT;
     hook("MAP D=LEFT");
     s1_map_pump(now += 10u);
     a = heartbeat_ack();
-    check(a.result == S1_MAP_RESULT_REJECTED, "M5 s3_submit() failure is REJECTED, not QUEUED");
+    check(a.result != S1_MAP_RESULT_QUEUED, "M5 queue-full is not reported as QUEUED");
     g_submit_result = E_OK;
-    hook("MAP D=LEFT");
     s1_map_pump(now += 10u);
     a = heartbeat_ack();
-    check(a.result == S1_MAP_RESULT_QUEUED, "M5 next update is queued normally");
+    check(a.result == S1_MAP_RESULT_QUEUED, "M5 same update is queued on retry");
 
     /* M6: no reply from Buddy 3 within the timeout. */
     s1_map_pump(now + S1_MAP_REPLY_TIMEOUT_MS - 1u);
@@ -189,6 +188,33 @@ int main(void)
         check(s1_map_on_reply(&r), "M7 second reply consumed");
         a = heartbeat_ack();
         check(a.result == S1_MAP_RESULT_ACCEPTED && a.revision == 10u, "M7 heartbeat shows the newest result");
+    }
+
+    /* M10: reject stale/future requests without submitting, including after
+     * repeated queue-full returns. Accept a fresh timestamp across wrap. */
+    {
+        int before = g_submits;
+        s1_net_hook_on_command("MAP A=LEFT", 10u,
+                              now - S1_NET_COMMAND_MAX_AGE_MS - 1u);
+        s1_map_pump(now);
+        check(g_submits == before && heartbeat_ack().result == S1_MAP_RESULT_REJECTED,
+              "M10 stale map never submitted");
+        s1_net_hook_on_command("MAP A=LEFT", 10u, now + 1u);
+        s1_map_pump(now);
+        check(g_submits == before, "M10 future map never submitted");
+        g_submit_result = E_TMOUT;
+        hook("MAP A=LEFT");
+        s1_map_pump(now);
+        s1_map_pump(now + S1_NET_COMMAND_MAX_AGE_MS + 1u);
+        check(g_submits == before + 1 && heartbeat_ack().result == S1_MAP_RESULT_REJECTED,
+              "M10 retry expires at original receive age");
+        g_submit_result = E_OK;
+        now = 5u;
+        s1_net_hook_on_command("MAP A=LEFT", 10u, UINT32_MAX - 4u);
+        s1_map_pump(now);
+        check(g_submits == before + 2, "M10 fresh map crosses clock wrap");
+        r = reply(g_last_input.request_id, true, 11u);
+        check(s1_map_on_reply(&r), "M10 wrap reply consumed");
     }
 
     /* M8: a flood of updates cannot delay or hide an emergency stop. */

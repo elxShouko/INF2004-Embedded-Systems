@@ -21,7 +21,6 @@
 
 /** Size that is enough for any heartbeat message. */
 #define S1_CODEC_HEARTBEAT_JSON_CAPACITY 48u
-#define S1_CODEC_MAPPING_MAX_BYTES 47u /* Existing MQTT RX buffer is 48. */
 
 /** Values for s1_codec_frame_t.robot_state (Section 5 statechart). */
 typedef enum
@@ -43,8 +42,7 @@ typedef enum
     S1_CMD_EMERGENCY_STOP,
     S1_CMD_START_RUN,
     S1_CMD_PAUSE,
-    S1_CMD_RESUME,
-    S1_CMD_MAPPING
+    S1_CMD_RESUME
 } s1_codec_command_id_t;
 
 /** Indexes of s1_codec_frame_t.sensor_age_us (raw-source ages in us). */
@@ -100,15 +98,7 @@ typedef struct
 {
     s1_codec_command_id_t command_id;
     uint32_t              rx_timestamp_ms; /**< Arrival at Buddy 1. */
-    /* Mapping slots: LEFT, RIGHT, FORWARD, UTURN. Copied, never pointers. */
-    char                  mapping_letters[4];
 } s1_codec_command_t;
-
-/** @brief Parse a bounded MAP payload; preserve output on any error. */
-bool s1_codec_parse_mapping (const char * p_payload, uint32_t length,
-                             s1_codec_command_t * p_command);
-/** @brief Validate four distinct uppercase letters in a mapping command. */
-bool s1_codec_mapping_valid (const s1_codec_command_t * p_command);
 
 /**
  * @brief Encode a telemetry frame as a JSON object (FR17).

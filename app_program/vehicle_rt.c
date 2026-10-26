@@ -1,6 +1,3 @@
-Claude
-
-    Vehicle rt · C
 /** @file vehicle_rt.c @brief Bounded API adapter, no fake production sources. */
 #include <stddef.h>
 #define PROHIBIT_DEF_SIZE_T 1
@@ -19,7 +16,6 @@ Claude
 #define VEHICLE_PERIOD_MS (10U) /* Service polling, not motor control timing. */
 #define VEHICLE_PRIORITY (16)
 #define VEHICLE_STACK (8192U)
-#define VEHICLE_MAPPING_REQUEST_ID (UINT32_MAX)
 static uint64_t g_vehicle_stack[VEHICLE_STACK / sizeof(uint64_t)];
 static ID g_vehicle_mutex;
 static ID g_vehicle_task;
@@ -31,8 +27,6 @@ static vehicle_t g_vehicle_owner;
 static vehicle_t g_vehicle_published;
 static s5_clearance_t g_vehicle_clearance;
 static gpio_bank_t g_vehicle_bank;
-static s1_codec_command_t g_vehicle_mapping;
-static bool g_vehicle_mapping_pending;
 
 static void vehicle_task (INT code, void * p_context);
 static void vehicle_irq (UINT number);
@@ -46,41 +40,6 @@ static void vehicle_irq_fault (void);
 static void vehicle_release (void * p_context, uint32_t mask);
 static void vehicle_collect (vehicle_input_t * p_input);
 static void vehicle_apply (vehicle_output_t const * p_output);
-
-/** @brief Retry copied mapping admission without blocking the safety path. */
-static ER vehicle_mapping_send (uint64_t now_us)
-{
-    static const nav_command_t actions[4] = {NAV_COMMAND_LEFT,
-        NAV_COMMAND_RIGHT, NAV_COMMAND_STRAIGHT, NAV_COMMAND_U_TURN};
-    if (!g_vehicle_mapping_pending)
-    {
-        return (E_OK);
-    }
-    const uint32_t age = (uint32_t)(now_us / 1000U) -
-        g_vehicle_mapping.rx_timestamp_ms;
-    if (age > S1_NET_COMMAND_MAX_AGE_MS)
-    {
-        g_vehicle_mapping_pending = false;
-        return (E_OK);
-    }
-    s3_input_t request = {0};
-    request.kind = S3_INPUT_MAPPING;
-    request.request_id = VEHICLE_MAPPING_REQUEST_ID;
-    for (uint32_t slot = 0U; slot < 4U; ++slot)
-    {
-        const uint32_t index =
-            (uint32_t)(g_vehicle_mapping.mapping_letters[slot] - 'A');
-        request.value.mapping.selected |= 1UL << index;
-        (void)nav_action_set(request.value.mapping.actions, index,
-                             actions[slot]);
-    }
-    ER error = s3_submit(&request, TMO_POL);
-    if (E_OK == error)
-    {
-        g_vehicle_mapping_pending = false;
-    }
-    return (error);
-}
 
 ER vehicle_runtime_init(void)
 {
@@ -444,10 +403,7 @@ static void vehicle_collect(vehicle_input_t *p_input)
     }
     if (0U != (g_vehicle_started_mask & 1U))
     {
-        ER mapping_error = vehicle_mapping_send(p_input->now_us);
-        p_input->b_provider_fault = p_input->b_provider_fault ||
-            ((E_OK != mapping_error) && (E_TMOUT != mapping_error));
-        for (uint32_t n = 0U; (n < 8U) && !g_vehicle_mapping_pending; ++n)
+        for (uint32_t n = 0U; n < 8U; ++n)
         {
             s1_codec_command_t command = {0};
             ER error = s1_net_command_receive(&command, TMO_POL);
@@ -457,24 +413,10 @@ static void vehicle_collect(vehicle_input_t *p_input)
                 break;
             }
             if ((E_OK != error) ||
-                ((uint32_t)command.command_id > S1_CMD_MAPPING))
+                ((uint32_t)command.command_id > S1_CMD_RESUME))
             {
                 p_input->b_provider_fault = true;
                 break;
-            }
-            if (S1_CMD_MAPPING == command.command_id)
-            {
-                if (!s1_codec_mapping_valid(&command))
-                {
-                    p_input->b_provider_fault = true;
-                    break;
-                }
-                g_vehicle_mapping = command;
-                g_vehicle_mapping_pending = true;
-                mapping_error = vehicle_mapping_send(p_input->now_us);
-                p_input->b_provider_fault = p_input->b_provider_fault ||
-                    ((E_OK != mapping_error) && (E_TMOUT != mapping_error));
-                continue;
             }
             /* Safety precedence within one bounded drain: ESTOP, PAUSE,
              * then the latest START/RESUME. No second queue consumer.
@@ -544,8 +486,7 @@ static void vehicle_collect(vehicle_input_t *p_input)
                 continue;
             }
             if ((S3_FAULT_NONE != event.fault) ||
-                ((S3_OUTPUT_REPLY == event.kind) && !event.accepted &&
-                 (VEHICLE_MAPPING_REQUEST_ID != event.request_id)))
+                ((S3_OUTPUT_REPLY == event.kind) && !event.accepted))
             {
                 p_input->b_provider_fault = true;
             }
@@ -812,5 +753,3 @@ static bool vehicle_install(void)
 }
 #endif
 /*** end of file ***/
-
-Claude finished the response

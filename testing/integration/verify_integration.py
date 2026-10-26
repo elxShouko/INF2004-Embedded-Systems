@@ -12,7 +12,8 @@ PRODUCTION=[BASE/n for n in ['vehicle.c','vehicle_rt.c','gpio_bank.c','app_main.
  'subsystem2/enc_capture.c','subsystem2/wheel_loop.c','subsystem2/move_plan.c',
  'subsystem2/motion_run.c','subsystem3/drv_line_tracking.c',
  'subsystem3/drv_ir_input.c','subsystem3/drv_navigation_map.c',
- 'subsystem4/imu_core.c','subsystem4/imu_guard.c','subsystem5/s5_obstacle_logic.c']]
+ 'subsystem4/imu_core.c','subsystem4/imu_guard.c','subsystem5/s5_obstacle_logic.c',
+ 'subsystem1/s1_map.c']]
 def run(args,log,timeout=120):
     log.write(subprocess.list2cmdline(args)+'\n');log.flush()
     try:r=subprocess.run(args,cwd=ROOT/'build_make',capture_output=True,text=True,timeout=timeout)

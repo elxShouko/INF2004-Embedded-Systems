@@ -3,6 +3,7 @@
 #include "vehicle_rt.h"
 #include "gpio_bank.h"
 #include "subsystem1/s1_net.h"
+#include "subsystem1/s1_map.h"
 #include "subsystem1/s1_sim.h"
 #include "subsystem2/motion_api.h"
 #include "subsystem3/drv_ir_rtos.h"
@@ -182,18 +183,36 @@ ER s1_net_command_receive (s1_codec_command_t * p_cmd, TMO timeout)
         p_cmd->rx_timestamp_ms = 20U;
         return (E_OK);
     }
-    if (((83U == g_case) || (84U == g_case)) && !b_mapping_sent)
+    return (E_TMOUT);
+}
+static s1_codec_map_result_t g_map_result;
+static uint8_t g_fault_bits;
+ER s1_net_fault_set (uint8_t bits)
+{ g_fault_bits |= bits; return (E_OK); }
+ER s1_net_fault_clear (uint8_t bits)
+{ g_fault_bits &= (uint8_t)~bits; return (E_OK); }
+ER s1_net_map_receive (s1_net_map_request_t * p_request, TMO timeout)
+{
+    static bool b_sent;
+    g_ok = (TMO_POL == timeout) && g_ok;
+    if (((83U == g_case) || (84U == g_case)) && !b_sent)
     {
-        static const char text[] = "MAP W=FORWARD X=UTURN Y=LEFT Z=RIGHT";
-        b_mapping_sent = true;
-        if (!s1_codec_parse_mapping(text, sizeof(text) - 1U, p_cmd))
-        {
-            return (E_SYS);
-        }
-        p_cmd->rx_timestamp_ms = 20U;
-        return (E_OK);
+        b_sent = true;
+        *p_request = (s1_net_map_request_t){0};
+        p_request->seq = 1U;
+        p_request->rx_ms = 20U;
+        return (nav_update_parse(&p_request->update,
+            "MAP W=FORWARD X=UTURN Y=LEFT Z=RIGHT") ? E_OK : E_SYS);
     }
     return (E_TMOUT);
+}
+ER s1_net_map_report (uint32_t seq, s1_codec_map_result_t result,
+                      uint32_t revision)
+{
+    (void)revision;
+    g_ok = (1U == seq) && g_ok;
+    g_map_result = result;
+    return (E_OK);
 }
 ER s1_net_telemetry_send (s1_codec_frame_t const * p_frame)
 {
@@ -315,7 +334,7 @@ ER s3_submit (s3_input_t const * p_request, TMO timeout)
     if (S3_INPUT_MAPPING == p_request->kind)
     {
         ++g_mapping_calls;
-        g_ok = (UINT32_MAX == p_request->request_id) &&
+        g_ok = ((S1_MAP_REQUEST_ID_FLAG | 1U) == p_request->request_id) &&
             (NAV_COMMAND_LEFT == nav_action_get(p_request->value.mapping.actions, 24U)) &&
             (NAV_COMMAND_RIGHT == nav_action_get(p_request->value.mapping.actions, 25U)) &&
             (NAV_COMMAND_STRAIGHT == nav_action_get(p_request->value.mapping.actions, 22U)) &&
@@ -347,7 +366,7 @@ ER s3_receive (s3_output_t * p_event, TMO timeout)
         b_sent = true;
         *p_event = (s3_output_t){0};
         p_event->kind = S3_OUTPUT_REPLY;
-        p_event->request_id = UINT32_MAX;
+        p_event->request_id = S1_MAP_REQUEST_ID_FLAG | 1U;
         return (E_OK);
     }
     if ((10U == g_case) && !b_sent)
@@ -560,7 +579,9 @@ static bool test_case (void)
         test_run_owner();
         return ((E_OK == vehicle_runtime_status(&status)) &&
             (VEHICLE_UNCONFIGURED == status.state) && (0U == g_estops) &&
-            (g_mapping_calls == ((83U == g_case) ? 2U : 1U)));
+            (g_mapping_calls == ((83U == g_case) ? 2U : 1U)) &&
+            (g_map_result == ((83U == g_case) ? S1_MAP_RESULT_QUEUED :
+                S1_MAP_RESULT_REJECTED)));
     }
     if (g_case >= 65U) { return (test_route()); }
     if (64U == g_case)

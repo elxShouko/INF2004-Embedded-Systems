@@ -32,6 +32,11 @@ Little-endian bytes; fields packed LSB-first; the first field starts at bit 0 of
 Heartbeat (robot/status): 8 bytes — format (2), estop (1), map result (2: NONE/QUEUED/ACCEPTED/REJECTED), reserved, uptime_ms (32), map seq (8), map revision (8), reserved (8).
 Command (robot/cmd): exactly 1 byte — id in bits 0–2 (1 EMERGENCY_STOP, 2 START_RUN, 3 PAUSE, 4 RESUME), bits 3–7 must be 0.
 Mapping update (robot/cmd): text `MAP A=FORWARD B=LEFT ...`, ≤120 bytes, ASCII, no NUL. First byte `M` (0x4D) can never be a valid command byte, so the two cannot be confused. Parsed with `nav_update_parse()`; accepted only when Buddy 3's reply says so.
+The current barcode demo requires exactly four unique letters, one for each
+movement; partial syntax examples below are gateway tests, not installable demo
+maps. See [barcode demo contract](../barcode-demo.md). Queue-full admission is
+retried within the original one-second receive age; admitted requests use a one-second
+reply timeout checked each controller cycle.
 
 ## 3. Before / after (measured; `logs/minimum_bit_evidence.txt`)
 

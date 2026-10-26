@@ -463,3 +463,19 @@ Each JSON records the source hashes and working-tree status. No target execution
 | 2026-10-26 | Existing algorithm/RTOS/production/feedback/packed/safety suites, S3-U38, S3-U39 | PASS, host | logs/2026-10-26_barcode_requirements_final.json | A-Z both directions; four actions held until junction; completion/recovery and second scan; empty startup/replacement/rejection. Physical scanning and SMP timing untested. |
 
 Command: `python testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-26_barcode_requirements_final.json`.
+
+
+## Mapping overlap cleanup - 2026-10-26
+
+S3 production sources are unchanged. The requirements fixture now uses
+`nav_update_parse()` directly, as the retained S1 gateway does; it no longer
+links the retired S1 codec mapping parser. HEAD `7a61d829d8d88f0759e74968cfeb1ef9d25a33b2`
+plus uncommitted overlap cleanup on main. Command:
+`python testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-26_overlap_2.json`.
+
+| Date | Tests | Result | Evidence |
+|---|---|---|---|
+| 2026-10-26 | Requirements fixture after retired parser removal | FAIL, compilation; fixture still referenced removed API | logs/2026-10-26_overlap_1.json |
+| 2026-10-26 | All production timing/IR/decoder/navigation/RTOS/feedback/packed/safety/requirements suites, including S3-U38/39 | PASS, host only | logs/2026-10-26_overlap_2.json |
+
+No target scheduling, barcode hardware or physical motion checks were run.
