@@ -24,6 +24,12 @@
 
 #include "../app.h"
 #include "s1_codec.h"
+#include "s1_fault.h"
+#include "../subsystem3/drv_navigation_map.h"
+
+#ifndef S1_WIRE_JSON
+#define S1_WIRE_JSON 0
+#endif
 
 /** Event flag: a remote command was queued (read it with
  *  s1_net_command_receive). */
@@ -38,6 +44,15 @@
  *  queue is discarded and counted. EMERGENCY_STOP is never discarded as stale.
  */
 #define S1_NET_COMMAND_MAX_AGE_MS 1000u
+
+/** Depth of the mapping-update buffer (Wi-Fi task -> controller). One update
+ *  is outstanding at a time, so a second slot is enough. */
+#define S1_NET_MAP_DEPTH 2u
+
+/** Longest "MAP ..." text accepted from robot/cmd (bytes, without the NUL).
+ *  A full 26-letter update is 4 + 26 * 3 + 26 * 7 = about 270 only if every
+ *  value were FORWARD, so the limit is a deliberate cap, not the grammar. */
+#define S1_NET_MAP_TEXT_MAX 120u
 
 /** Longest wait for the status mutex by an application task. */
 #define S1_NET_STATUS_LOCK_MS 5
@@ -66,11 +81,11 @@ typedef struct
     uint32_t telemetry_flushed;   /**< Stale frames dropped on reconnect. */
     uint32_t telemetry_oversize;  /**< JSON did not fit, not sent. */
     uint32_t commands_received;
-    uint32_t commands_rejected; /**< Unknown or malformed payload. */
-    uint32_t commands_dropped;  /**< Command buffer full. */
-    uint32_t commands_bad_size; /**< Queued message of the wrong size or id. */
-    uint32_t commands_stale;    /**< Discarded: older than the age limit. */
-    uint32_t estop_received;    /**< EMERGENCY_STOP commands seen. */
+    uint32_t commands_rejected;   /**< Unknown or malformed payload. */
+    uint32_t commands_dropped;    /**< Command buffer full. */
+    uint32_t commands_bad_size;   /**< Queued message of the wrong size or id. */
+    uint32_t commands_stale;      /**< Discarded: older than the age limit. */
+    uint32_t estop_received;      /**< EMERGENCY_STOP commands seen. */
     uint32_t estop_post_failures; /**< Safety flag could not be set. */
     uint32_t telemetry_bad_size;  /**< Queued frame of the wrong size. */
     uint32_t command_forward_max_ms;
@@ -78,15 +93,31 @@ typedef struct
     uint32_t backoff_last_ms;
     uint32_t connects;
     uint32_t disconnects;
-    bool     b_connected;
+    bool b_connected;
+    uint32_t telemetry_out_of_range; /**< Count of frames with out-of-range
+                                        values. */
+    uint32_t telemetry_overwritten;  /**< Count of oldest frames dropped to make
+                                        room. */
+    uint32_t map_received;           /**< "MAP ..." payloads seen. */
+    uint32_t map_rejected;           /**< Bad text, rejected before Buddy 3. */
+    uint32_t map_dropped;            /**< Mapping buffer full, update refused. */
 } s1_net_stats_t;
 
+/** One parsed mapping update on its way to the controller (Buddy 1 internal;
+ *  Buddy 3 receives it through s3_submit(), never as this structure). */
+typedef struct
+{
+    nav_update_t update; /**< Output of nav_update_parse(). */
+    uint32_t seq;        /**< Update counter, 1, 2, ... */
+    uint32_t rx_ms;      /**< Arrival at Buddy 1. */
+} s1_net_map_request_t;
+
 /** @brief Create the kernel objects. Called from subsystem1_init(). */
-ER s1_net_init (void);
+ER s1_net_init(void);
 
 /** @brief Register the hooks with the MQTT client. Called from
  *  subsystem1_start(). Does nothing in a build without MQTT=1. */
-ER s1_net_start (void);
+ER s1_net_start(void);
 
 /**
  * @brief Queue a telemetry frame for publishing. Never blocks.
@@ -95,7 +126,7 @@ ER s1_net_start (void);
  * unreachable the Wi-Fi task discards the oldest frames, so the buffer stays
  * fresh and a full buffer is rare.
  */
-ER s1_net_telemetry_send (const s1_codec_frame_t * p_frame);
+ER s1_net_telemetry_send(const s1_codec_frame_t *p_frame);
 
 /**
  * @brief Take the oldest valid remote command.
@@ -111,7 +142,7 @@ ER s1_net_telemetry_send (const s1_codec_frame_t * p_frame);
  * @return E_OK, E_TMOUT if there was none, E_SYS for a malformed message, or
  * another kernel error.
  */
-ER s1_net_command_receive (s1_codec_command_t * p_command, TMO timeout);
+ER s1_net_command_receive(s1_codec_command_t *p_command, TMO timeout);
 
 /**
  * @brief Wait for any of the event flag bits, then clear the ones that
@@ -121,11 +152,11 @@ ER s1_net_command_receive (s1_codec_command_t * p_command, TMO timeout);
  * @param timeout  TMO_POL, TMO_FEVR, or milliseconds.
  * @return E_OK, or E_TMOUT.
  */
-ER s1_net_events_wait (UINT pattern, UINT * p_flags, TMO timeout);
+ER s1_net_events_wait(UINT pattern, UINT *p_flags, TMO timeout);
 
 /** @brief True while the MQTT session to the broker is open. Never blocks and
  *  takes no mutex. False if the state cannot be read. */
-bool s1_net_is_connected (void);
+bool s1_net_is_connected(void);
 
 /**
  * @brief True from the moment an EMERGENCY_STOP command arrives until
@@ -137,7 +168,7 @@ bool s1_net_is_connected (void);
  * Buddy 1 only DELIVERS the emergency signal. Deciding to inhibit or stop
  * motion belongs to the vehicle controller.
  */
-bool s1_net_estop_latched (void);
+bool s1_net_estop_latched(void);
 
 /**
  * @brief Clear the emergency latch. Only the owner of the safety policy (the
@@ -145,15 +176,53 @@ bool s1_net_estop_latched (void);
  * safe. It does not touch the command queue or the event flags.
  * @return E_OK, or the kernel error.
  */
-ER s1_net_estop_clear (void);
+ER s1_net_estop_clear(void);
+
+/**
+ * @brief Set fault bits owned by other subsystems (S1_FAULT_MOTOR_STALL, ...).
+ * The 8 fault bits live in ONE kernel event flag and are changed only with
+ * tk_set_flg and tk_clr_flg, which are atomic across both cores.
+ * Buddy 1 owns S1_FAULT_WIFI_LOSS and S1_FAULT_ESTOP_LATCHED; asking for
+ * either here is refused.
+ * @return E_OK, E_PAR if the mask contains a Buddy 1 bit, or the kernel error.
+ */
+ER s1_net_fault_set(uint8_t mask);
+
+/** @brief Clear fault bits. Same rules and return values as s1_net_fault_set.
+ */
+ER s1_net_fault_clear(uint8_t mask);
+
+/** @brief The fault mask as it will be sent now. Fail-safe: S1_FAULT_ALL if
+ * unreadable. */
+uint8_t s1_net_fault_get(void);
+
+/**
+ * @brief Take the next parsed mapping update. Used by s1_map_pump() only.
+ * @return E_OK, E_TMOUT if there is none, or another kernel error (the output
+ * is then zeroed).
+ */
+ER s1_net_map_receive(s1_net_map_request_t *p_request, TMO timeout);
+
+/**
+ * @brief Record what happened to update `seq`. The result goes out in the next
+ * heartbeat. An older update never overwrites a newer one. Waits at most
+ * S1_NET_STATUS_LOCK_MS for the status mutex.
+ * @param result   S1_MAP_RESULT_QUEUED (s3_submit() returned E_OK, nothing
+ *                 more), S1_MAP_RESULT_ACCEPTED or S1_MAP_RESULT_REJECTED
+ *                 (only from Buddy 3's reply).
+ * @param revision Buddy 3's map revision (low 8 bits are sent).
+ * @return E_OK, E_PAR for a bad result, or E_TMOUT (call again later).
+ */
+ER s1_net_map_report(uint32_t seq, s1_codec_map_result_t result,
+                     uint32_t revision);
 
 #if APP_TEST
 /** @brief Self-test only: the status mutex, so a test can hold it. */
-ID s1_net_test_status_mutex (void);
+ID s1_net_test_status_mutex(void);
 
 /** @brief Self-test only: the command message buffer, so a test can insert a
  *  malformed message. */
-ID s1_net_test_command_buffer (void);
+ID s1_net_test_command_buffer(void);
 #endif
 
 /**
@@ -162,22 +231,22 @@ ID s1_net_test_command_buffer (void);
  * @return E_OK, or the kernel error (E_TMOUT if the mutex stayed busy for
  * S1_NET_STATUS_LOCK_MS). The wait is bounded; the copy is then zeroed.
  */
-ER s1_net_get_stats (s1_net_stats_t * p_stats);
+ER s1_net_get_stats(s1_net_stats_t *p_stats);
 
 /** @brief Build the next telemetry JSON from the buffer. Returns the length,
  *  or 0 if the buffer was empty. Called by the Wi-Fi task (and by tests). */
-uint32_t s1_net_hook_pull_telemetry (char * p_buffer, uint32_t capacity);
+uint32_t s1_net_hook_pull_telemetry(char *p_buffer, uint32_t capacity);
 
 /** @brief Build the heartbeat JSON. */
-uint32_t s1_net_hook_make_heartbeat (char * p_buffer, uint32_t capacity,
-                                     uint32_t uptime_ms);
+uint32_t s1_net_hook_make_heartbeat(char *p_buffer, uint32_t capacity,
+                                    uint32_t uptime_ms);
 
 /** @brief Handle a complete payload from the command topic. */
-void s1_net_hook_on_command (const char * p_payload, uint32_t length,
-                             uint32_t rx_ms);
+void s1_net_hook_on_command(const char *p_payload, uint32_t length,
+                            uint32_t rx_ms);
 
 /** @brief Handle a connection event (an S1_NET_EVENT_* value). */
-void s1_net_hook_on_event (uint32_t event, uint32_t value);
+void s1_net_hook_on_event(uint32_t event, uint32_t value);
 
 #endif /* S1_NET_H */
 

@@ -93,3 +93,14 @@ remain unchanged. Optional Windows cross-build compiled but not executed
 without wine. Evidence: ../integration/logs/software_completion_evidence.zip,
 route_final_s1.log. No dashboard sources were found; the external contract is
 ../../docs/buddy1/TELEMETRY_COMMAND_CONTRACT.md.
+
+
+## PostTri1 binary wire format and mapping gateway (2026-10-26)
+
+Host script PASS: 62 on-target-emulated checks (incl. new S1-U26a-d map path),
+133 codec, 68 net, 38 map checks; Python independent decoder cross-check of
+4000 frames (C bytes == oracle bytes). Sizes: telemetry 156 B (typical JSON) to
+29 B; heartbeat 38 B to 8 B; command 14 B to 1 B; queue memory -816 B; s1_net
+code +641 B. Not run on hardware: NFR7/NFR8/NFR9, on-target two-core tests.
+Evidence: logs/host_run_posttri1.txt, logs/minimum_bit_evidence.txt;
+description: ../../docs/buddy1/MINIMUM_BIT_REPRESENTATION.md.
