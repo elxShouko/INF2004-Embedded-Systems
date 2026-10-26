@@ -1,0 +1,35 @@
+=== 1. message sizes (host encoders, same code as the firmware)
+telemetry JSON, typical frame (v2)      : 156 bytes
+telemetry JSON, worst-case digits       : 225 bytes (NFR10 limit 256; 0 = did not fit)
+telemetry binary (every frame)          :  29 bytes
+heartbeat JSON                          :  38 bytes
+heartbeat binary                        :   8 bytes
+command JSON/text EMERGENCY_STOP        :  14 bytes
+command binary                          :   1 byte
+telemetry saving vs typical JSON        : 81 %
+MQTT PUBLISH on robot/telemetry (fixed header 2 + topic 2+15 + payload):
+  JSON typical 175 bytes, binary 48 bytes, per second at 10 Hz: 1750 vs 480
+
+=== 2. structure sizes on the Cortex-M0+ (bytes)
+  sz_s1_codec_command_t                  8
+  sz_s1_net_map_request_t               24
+  sz_binary_telemetry_message           29
+  sz_s1_codec_frame_t                   80
+  sz_s1_net_stats_t                    100
+
+=== 3. telemetry queue memory (16 messages, 8 bytes kernel overhead each)
+  before (queue of s1_codec_frame_t): 16 * (80 + 8) = 1408 bytes
+  after  (queue of 29 packed bytes) : 16 * (29 + 8)     = 592 bytes
+  saving                            : 816 bytes
+
+=== 4. code and static data of the Buddy 1 objects (bytes): JSON build vs binary build
+  S1_WIRE_JSON=1 (JSON, the old default)
+       text	   data	    bss	    dec	    hex	filename
+       5075	      0	      0	   5075	   13d3	/tmp/tmp.rOkG3FUNDm/s1_codec_1.o
+       2144	      0	    160	   2304	    900	/tmp/tmp.rOkG3FUNDm/s1_net_1.o
+        332	      0	     28	    360	    168	/tmp/tmp.rOkG3FUNDm/s1_map_1.o
+  S1_WIRE_JSON=0 (binary, the new default)
+       text	   data	    bss	    dec	    hex	filename
+       5075	      0	      0	   5075	   13d3	/tmp/tmp.rOkG3FUNDm/s1_codec_0.o
+       2785	      0	    160	   2945	    b81	/tmp/tmp.rOkG3FUNDm/s1_net_0.o
+        332	      0	     28	    360	    168	/tmp/tmp.rOkG3FUNDm/s1_map_0.o

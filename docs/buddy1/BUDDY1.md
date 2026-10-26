@@ -39,12 +39,12 @@ single coherent copy). Nothing waits and no network call is made while it is hel
 or aligned loads are not used as a synchronisation method.
 
 ## Files
-app_program/subsystem1: s1_codec (JSON), s1_net (buffers/flags), s1_sim, subsystem1*.
+app_program/subsystem1: s1_codec (compact binary v3; legacy JSON with S1_WIRE_JSON=1), s1_map (mapping gateway), s1_net (buffers/flags), s1_sim, subsystem1*.
 lib/liblwip/.../mqtt_utk.c + net_backoff.h (non-blocking MQTT, backoff 1,2,4,8 s),
 lib/libwifi/.../cyw43_utk.c (rejoin with backoff). Host tests: testing/subsystem1/host.
 
 ## Topics
-robot/telemetry (100 ms JSON), robot/status (1 s heartbeat, last will OFFLINE), robot/cmd (in).
+robot/telemetry (100 ms, 29-byte binary), robot/status (1 s, 8-byte binary heartbeat, last will OFFLINE), robot/cmd (in).
 
 ## Build / flash (WSL)
     cp config/wifi_secrets.example.h config/wifi_secrets.h   # edit SSID, password, broker IP

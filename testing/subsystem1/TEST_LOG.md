@@ -115,3 +115,14 @@ barcode changes on `buddy3-barcode`. Native JSON reports include source hashes.
 | 2026-10-26 | Same suites after formatting-only test initializer wrap | PASS, host | logs/2026-10-26_mapping_final2.json | No production behaviour changed after the earlier final run. |
 
 Command: `python testing/subsystem1/host/verify_windows.py --log testing/subsystem1/logs/2026-10-26_mapping_final2.json`.
+
+
+## PostTri1 binary wire format and mapping gateway (2026-10-26)
+
+Host script PASS: 62 on-target-emulated checks (incl. new S1-U26a-d map path),
+133 codec, 68 net, 38 map checks; Python independent decoder cross-check of
+4000 frames (C bytes == oracle bytes). Sizes: telemetry 156 B (typical JSON) to
+29 B; heartbeat 38 B to 8 B; command 14 B to 1 B; queue memory -816 B; s1_net
+code +641 B. Not run on hardware: NFR7/NFR8/NFR9, on-target two-core tests.
+Evidence: logs/host_run_posttri1.txt, logs/minimum_bit_evidence.txt;
+description: ../../docs/buddy1/MINIMUM_BIT_REPRESENTATION.md.
