@@ -441,3 +441,25 @@ network-enabled profile, flashing or actuation is claimed. Buffer readback is
 prepared for a separately authorised idle TEST=1 target session. See
 `docs/buddy3/feedback-audit-and-contract.md` for the complete disposition and
 current sensor/mapping/trigger/recovery/lifetime contract.
+
+
+## Barcode demo requirements - 2026-10-26 (definitions before execution)
+
+| ID | Method | Expected result |
+|---|---|---|
+| S3-U38 | Host, member3_requirements_test.c | Empty startup map; complete four-action replacement; invalid update leaves map unchanged |
+| S3-U39 | Host, member3_requirements_test.c | Both scan directions and all four actions wait for a junction; matching completion and recovery allow a second scan |
+
+
+### 2026-10-26 barcode requirement results
+
+Revision for every run below: `6d225bfa818dd31d8c5ff5f1351c434326c470d3`
+plus uncommitted barcode/MQTT/controller/test changes on `buddy3-barcode`.
+Each JSON records the source hashes and working-tree status. No target execution.
+
+| Date | Test IDs | Outcome | Evidence | Notes |
+|---|---|---|---|---|
+| 2026-10-26 | S3-U02 | FAIL then PASS | logs/2026-10-26_barcode_requirements_1.json; logs/2026-10-26_barcode_requirements_2.json | One new header comment exceeded 80 columns; shortened. All functional suites passed in both runs. |
+| 2026-10-26 | Existing algorithm/RTOS/production/feedback/packed/safety suites, S3-U38, S3-U39 | PASS, host | logs/2026-10-26_barcode_requirements_final.json | A-Z both directions; four actions held until junction; completion/recovery and second scan; empty startup/replacement/rejection. Physical scanning and SMP timing untested. |
+
+Command: `python testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-26_barcode_requirements_final.json`.

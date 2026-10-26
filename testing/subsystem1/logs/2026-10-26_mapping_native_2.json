@@ -1,0 +1,181 @@
+{
+  "head": "6d225bfa818dd31d8c5ff5f1351c434326c470d3",
+  "status": " M app_program/subsystem1/s1_codec.c\n M app_program/subsystem1/s1_codec.h\n M app_program/subsystem1/s1_net.c\n M app_program/subsystem1/subsystem1_test.c\n M app_program/subsystem3/drv_navigation_map.c\n M app_program/subsystem3/drv_navigation_map.h\n M app_program/subsystem3/member3_navigation.c\n M app_program/vehicle.c\n M app_program/vehicle_rt.c\n M testing/integration/TEST_LOG.md\n M testing/integration/test_vehicle.c\n M testing/integration/verify_integration.py\n M testing/subsystem1/TEST_LOG.md\n M testing/subsystem3/TEST_LOG.md\n M testing/subsystem3/member3_feedback_test.c\n M testing/subsystem3/member3_production_test.c\n M testing/subsystem3/member3_rtos_test.c\n M testing/subsystem3/verify_production_timing.py\n?? testing/integration/logs/barcode_20261026_1_default.log\n?? testing/integration/logs/barcode_20261026_1_metadata.json\n?? testing/integration/logs/barcode_20261026_2_default.log\n?? testing/integration/logs/barcode_20261026_2_metadata.json\n?? testing/integration/logs/barcode_20261026_default_build.log\n?? testing/subsystem1/host/verify_windows.py\n?? testing/subsystem1/logs/2026-10-26_mapping_1.txt\n?? testing/subsystem3/logs/2026-10-26_barcode_requirements_1.json\n?? testing/subsystem3/logs/2026-10-26_barcode_requirements_2.json\n?? testing/subsystem3/member3_navigation_test.c\n?? testing/subsystem3/member3_requirements_test.c\n",
+  "scope": "Host simulation; no real radio, RTOS scheduling or robot",
+  "sha256": {
+    "app_program/subsystem1/s1_codec.c": "6918fefbde4acb44a51e1f057e7edfa2a68a23cfad27a0b012fc9afb61a36420",
+    "app_program/subsystem1/s1_led_legacy.c": "421b5877aa7bdeceda913c437b782628a953c70b58264ff0fe34324a637c3f14",
+    "app_program/subsystem1/s1_net.c": "4ef871972b69e5e7537b38c02b5250a19cffa44a1ff9bd44b7b28a5062f5687e",
+    "app_program/subsystem1/s1_sim.c": "f4505cf5ca3a10c96ddc1c85cc3adbd8525adf4b29866a16cf88befdde7c7736",
+    "app_program/subsystem1/subsystem1.c": "eaf7b436041a067eade15592e3eb45c87836d0b8fb06123e490643cc5150459c",
+    "app_program/subsystem1/subsystem1_test.c": "061dd3024aea4175a0fafdc4a5997e42e2e883bfe625c0878d2a9137275410f7",
+    "app_program/subsystem1/task_led.c": "6b2405b92b3692d92174e381dd167c8c88cd81062c5afa2405268b11a45ba85d",
+    "app_program/subsystem1/s1_codec.h": "c94b06c69e4e49ca48f89827b8ffa9512faebdd0ec67848c0f4f2e551ca66d35",
+    "app_program/subsystem1/s1_led_legacy.h": "9007dc0d6c563c404ab115c19b0f2abb9016c1cb2f4580c5a678644e283dcb21",
+    "app_program/subsystem1/s1_net.h": "8ab94d3137f947da8a8981dc31df5c87749c16a26e91ec55c91f3a737201b83d",
+    "app_program/subsystem1/s1_sim.h": "cea8a85856d7f029198e44d38d38654e9391606630f21ea8636c7790b5fb48b0",
+    "app_program/subsystem1/subsystem1.h": "3e2441e22bc6438750f57551ae2ca9f6669b93c4f259bd0751d54e1703fab5b9",
+    "testing/subsystem1/host/verify_windows.py": "72d51ed9b4c38eb606874bf2d3990d71b1b6bb58b6d1f3341962493951cf8169"
+  },
+  "checks": [
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_codec_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-g35otjku\\codec.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-g35otjku\\codec.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-codec-1 typical: {\"seq\":7,\"timestamp\":123456,\"robot_state\":2,\"left_motor_speed\":120,\"right_motor_speed\":-120,\"left_encoder_count\":1234567,\"right_encoder_count\":1234560,\"line_status\":2,\"hump_peak\":1.2,\"obstacle_distance\":45.5}\nT-codec-2 worst case (243 bytes): {\"seq\":4294967295,\"timestamp\":4294967295,\"robot_state\":255,\"left_motor_speed\":-32768,\"right_motor_speed\":-32768,\"left_encoder_count\":4294967295,\"right_encoder_count\":4294967295,\"line_status\":255,\"hump_peak\":-9999.9,\"obstacle_distance\":-9999.9}\nT-codec-3 heartbeat: {\"status\":\"ALIVE\",\"uptime_ms\":74829}\nT-codec-v2 maximum across validity masks: 239 bytes\n\n41 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_backoff_host.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-g35otjku\\backoff.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-g35otjku\\backoff.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-backoff-1 sequence: 1000 -> 2000 -> 4000 -> 8000 -> 8000 -> 8000\n\n15 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "-Imocks",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040",
+        "test_mqtt_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040\\mqtt_utk.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-g35otjku\\mqtt.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-g35otjku\\mqtt.exe"
+      ],
+      "exit": 0,
+      "stdout": "T1 connect, subscribe, CONNECTED event\nT2 backoff 1,2,4,8,8 s while the broker refuses, then reset after success (FR19)\n  gap 1 = 1000 ms (expected 1000)\n  gap 2 = 2000 ms (expected 2000)\n  gap 3 = 4000 ms (expected 4000)\n  gap 4 = 8000 ms (expected 8000)\n  gap 5 = 8000 ms (expected 8000)\nT3 connect timeout (no answer) after 5 s\nT4 subscribe failure -> backoff\nT5 dead link from publish failures: 10 in a row yes, a 4-frame stall no\nT6 Wi-Fi link loss: no backoff, discards frames, reconnects at once when the link returns\nT7 commands: fragments, wrong topic, oversize\nT8 cadence: telemetry 100 +/- 10 ms, heartbeat 1000 +/- 50 ms, for several poll intervals\n  poll every  3 ms: telemetry frames 600, worst period error  3 ms | heartbeat worst error  3 ms\n  poll every  5 ms: telemetry frames 600, worst period error  0 ms | heartbeat worst error  0 ms\n  poll every 12 ms: telemetry frames 600, worst period error  8 ms | heartbeat worst error  8 ms\n  poll every 20 ms: telemetry frames 600, worst period error  0 ms | heartbeat worst error  0 ms\n\n33 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "-DTM_NET_LWIP=1",
+        "-DTM_MQTT=1",
+        "-DCNF_SMP=1",
+        "-Imocks_wifi",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\libwifi\\sysdepend\\pico_rp2040",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040",
+        "test_wifi_host.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\lib\\libwifi\\sysdepend\\pico_rp2040\\cyw43_utk.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-g35otjku\\wifi.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-g35otjku\\wifi.exe"
+      ],
+      "exit": 0,
+      "stdout": "\nW1: first join request fails immediately, second succeeds\n  ok:   two join requests were made (got 2)\n  ok:   retry came after the 1 s backoff (1000 ms)\n  ok:   radio reported ready, init_result 0\n  ok:   task entered the poll loop (2500 polls)\n  ok:   link up, MQTT polled with link up\n  ok:   no delay longer than 2 ms in the task (max 2)\n\nW2: every join request fails immediately -> 1,2,4,8,8,8 s\n  ok:   at least 7 requests in 40 s (got 8)\n        gap 0: 1000 ms (want 1000)\n        gap 1: 2000 ms (want 2000)\n        gap 2: 4000 ms (want 4000)\n        gap 3: 8000 ms (want 8000)\n        gap 4: 8000 ms (want 8000)\n        gap 5: 8000 ms (want 8000)\n  ok:   gaps follow 1,2,4,8,8,8 s (FR19)\n  ok:   never blocks longer than 2 ms (max 2)\n\nW3: link established, then lost -> rejoin after 1 s again\n  ok:   a rejoin request followed the loss (4 requests)\n  ok:   the link was lost at 3100 ms\n  ok:   rejoin came 1 s after the loss, not at the old 4 s step (1000 ms)\n\nW4: radio/interface bring-up failure is NOT retried\n  ok:   no join request when the interface never came up\n  ok:   radio not ready, init_result -5\n  ok:   network service is not polled\n\nW5: interface disappears during a retry -> stop, report not ready\n  ok:   exactly two requests, then no more (got 2)\n  ok:   radio reported not ready after the interface was lost\n\n17 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-DHOST_THREADS=1",
+        "-pthread",
+        "-c",
+        "host_sync.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-g35otjku\\host_sync.o"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-g35otjku\\host_sync.o",
+        "target_main.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_sim.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-g35otjku\\target.exe"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-g35otjku\\cc1hdWMJ.o:subsystem1_tes:(.text+0x34c4): undefined reference to `tk_get_tim'\ncollect2.exe: error: ld returned 1 exit status\n"
+    }
+  ],
+  "passed": false
+}

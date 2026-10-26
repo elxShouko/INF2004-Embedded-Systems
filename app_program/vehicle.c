@@ -55,7 +55,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         ((uint32_t)p_input->line_state > LINE_STATE_FAULT_REPORTED) ||
         ((uint32_t)p_input->line_mode > LINE_MODE_RECOVERY) ||
         ((uint32_t)p_input->navigation.kind > NAV_EVENT_FAULT) ||
-        ((uint32_t)p_input->remote.command_id > S1_CMD_RESUME) ||
+        ((uint32_t)p_input->remote.command_id > S1_CMD_MAPPING) ||
         ((uint32_t)p_input->imu.phase > IMU_FAULT))
     {
         vehicle_fault(p_vehicle, p_output);
@@ -154,7 +154,8 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         return (vehicle_bypass(p_vehicle,p_input,p_output));
     }
     if ((p_input->navigation_id > p_vehicle->last_navigation_id) &&
-        (NAV_EVENT_BARCODE_VALID == p_input->navigation.kind))
+        (NAV_EVENT_JUNCTION == p_input->navigation.kind) &&
+        (NAV_COMMAND_NONE != p_input->navigation.command))
     {
         if ((0U != p_vehicle->navigation_id) ||
             !vehicle_fresh(p_input->raw_now_us,
@@ -568,7 +569,8 @@ static bool vehicle_bypass (vehicle_t * p_vehicle,
 
     if (p_vehicle->b_pause_requested || !p_vehicle->b_run_requested ||
         (0U != p_vehicle->navigation_id) ||
-        (NAV_EVENT_BARCODE_VALID == p_input->navigation.kind))
+        ((NAV_EVENT_JUNCTION == p_input->navigation.kind) &&
+         (NAV_COMMAND_NONE != p_input->navigation.command)))
     {
         vehicle_fault(p_vehicle,p_output); /* No ambiguous partial-route resume. */
         return (true);

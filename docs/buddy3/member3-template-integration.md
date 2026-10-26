@@ -1,5 +1,11 @@
 # Member 3 integration with the professor's template
 
+> Current contract, 2026-10-26: [Barcode demo](../barcode-demo.md) supersedes
+> earlier startup defaults, partial production maps and immediate barcode
+> manoeuvres below. Production starts with no mapping, receives four letters
+> over MQTT, and acts on the next junction. Historical evidence is retained.
+
+
 > Follow-up safety review: see [feedback audit and current contract](feedback-audit-and-contract.md)
 > for checked delay failure, identifier exhaustion, odometry lifetime and current
 > evidence. Earlier size/stack/flash figures below identify the packing release;
@@ -70,12 +76,12 @@ Neither firmware has been flashed or tested on the robot by Codex.
 
 ## Runtime behavior
 
-- Starts paused and uncalibrated, with A=FORWARD, B=LEFT, C=RIGHT, D=UTURN.
+- Starts paused and uncalibrated, with no letter-to-movement assignments.
 - Reads GP2 left, GP4 right and GP27 side through a single owner task.
 - Configuration, mapping, mode and odometry messages are processed serially.
 - Reports filtered line changes, barcode characters and snapshotted actions,
   junctions, line loss, line reacquisition and faults.
-- Barcode actions enter AWAITING_MANOEUVRE; no new actions are generated until
+- Mapped junction actions enter AWAITING_MANOEUVRE; no new actions are generated until
   the controller acknowledges the matching event ID.
 - Manoeuvre completion starts line recovery. Stable BOTH-BLACK emits LINE_FOUND
   and leaves the module paused until the controller explicitly resumes tracking.
@@ -96,8 +102,8 @@ Include `member3_navigation.h` from subsystem3. All APIs are task-context only.
 
 E_OK from submit means enqueued, not validated. S3_OUTPUT_REPLY echoes request_id,
 accepted and map revision. Odometry is high-rate and does not produce per-packet
-replies. Send a complete zero-initialized s3_input_t and a bounded NUL-terminated
-mapping string. Raw network bytes are not a C structure; Member 1 must parse
+replies. Send a complete zero-initialized s3_input_t and a validated binary four-letter
+mapping update. Raw network bytes are not a C structure; Member 1 must parse
 and validate its transport envelope before constructing one.
 
 The status getter requests `TMO_POL`, never `TMO_FEVR`, and never retries
@@ -125,7 +131,7 @@ bypass, send MODE=BYPASS, then MODE=RECOVERY after bypass. Do not reset a latche
 fault by just sending TRACKING: pause and submit validated configuration to
 reset processing. The controller must handle safe stopping; S3 cannot stop motors.
 
-For a BARCODE_VALID event with command != NONE, execute its snapshotted command,
+For a JUNCTION event with command != NONE, execute its snapshotted command,
 then submit MANOEUVRE_DONE with that event_id. Wrong/stale IDs are rejected.
 Completion is accepted only in TRACKING/AWAITING_MANOEUVRE with no fault.
 Pause preserves pending ownership and rejects late DONE; failed/cancelled

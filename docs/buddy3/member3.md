@@ -1,5 +1,11 @@
 # Member 3: IR and barcode navigation algorithms
 
+> Current contract, 2026-10-26: [Barcode demo](../barcode-demo.md) supersedes
+> earlier startup defaults, partial production maps and immediate barcode
+> manoeuvres below. Production starts with no mapping, receives four letters
+> over MQTT, and acts on the next junction. Historical evidence is retained.
+
+
 ## Implemented
 
 - Digital GPIO snapshot driver: GP2 = left line sensor, GP4 = right line sensor,

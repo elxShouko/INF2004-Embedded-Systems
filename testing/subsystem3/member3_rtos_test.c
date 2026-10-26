@@ -116,6 +116,11 @@ static void init_context(s3_context_t *p_context)
     p_context->status.mode = LINE_MODE_PAUSED;
     p_context->status.state = LINE_STATE_CALIBRATING;
     nav_map_init(&p_context->map);
+    /* Explicit synthetic PC mapping; production has no startup defaults. */
+    nav_update_t fixture_map;
+    assert(nav_update_parse(&fixture_map,
+        "MAP A=FORWARD B=LEFT C=RIGHT D=UTURN"));
+    assert(nav_map_install(&p_context->map, &fixture_map));
     s3_config_t config = {0};
     config.calibration = (ir_calibration_t){7U, 7U};
     config.period_ms = 1U;
@@ -154,6 +159,30 @@ static unsigned int events(nav_event_kind_t kind)
     return count;
 }
 
+/* Traverse an independent synthetic transverse stroke with fresh odometry.
+ * Geometry/speeds here are host fixtures, never robot calibration values.
+ */
+static void host_crossing(s3_context_t *context)
+{
+    const junction_config_t config = {
+        9000U, 2500U, 12000U, 22000U, 2000U, 500U,
+        20000U, 1000U, 2000000U};
+    context->config.junction_enabled = true;
+    context->config.junction = config;
+    assert(junction_init(&context->junction, &config));
+    const uint64_t base = context->distance_um;
+    for (uint64_t distance = 0U; distance <= 30000U; distance += 250U)
+    {
+        const uint64_t now = context->status.raw.timestamp_us +
+            context->config.period_ms * 1000U;
+        const s3_odometry_t odometry = {now, base + distance, true};
+        assert(accept_odometry(context, &odometry, now));
+        const bool black = (distance >= 5000U) && (distance < 23000U);
+        const ir_sample_t sample = {now, black ? 7U : 3U};
+        process(context, &sample);
+    }
+}
+
 int main(void)
 {
     assert(s3_navigation_init() == E_OK);
@@ -189,7 +218,8 @@ int main(void)
     init_context(&context);
     request.kind = S3_INPUT_MAPPING;
     request.request_id = 42U;
-    assert(nav_update_parse(&request.value.mapping, "MAP A=RIGHT"));
+    assert(nav_update_parse(&request.value.mapping,
+        "MAP A=RIGHT B=LEFT C=FORWARD D=UTURN"));
     input(&context, &request, 0U);
     assert(g_outputs[g_count - 1U].accepted);
     assert(g_outputs[g_count - 1U].request_id == 42U);
@@ -218,6 +248,10 @@ int main(void)
     }
     for (unsigned int i = 0U; i < 12U; ++i) tick(&context, 3U);
     assert(events(NAV_EVENT_BARCODE_VALID) == 1U);
+    assert(context.status.state == LINE_STATE_TRACKING);
+    assert(context.pending_letter == 'A');
+    assert(context.status.pending_manoeuvre_event_id == 0U);
+    host_crossing(&context);
     assert(context.status.state == LINE_STATE_AWAITING_MANOEUVRE);
     uint32_t pending = context.status.pending_manoeuvre_event_id;
     assert(pending != 0U);
@@ -226,8 +260,10 @@ int main(void)
         if (g_outputs[i].navigation.kind == NAV_EVENT_BARCODE_VALID)
             assert(g_outputs[i].navigation.command == NAV_COMMAND_RIGHT);
     }
-    assert(nav_update_parse(&request.value.mapping, "MAP A=LEFT"));
+    assert(nav_update_parse(&request.value.mapping,
+        "MAP A=LEFT B=RIGHT C=FORWARD D=UTURN"));
     input(&context, &request, context.status.raw.timestamp_us);
+    assert(!g_outputs[g_count - 1U].accepted);
     assert(context.status.pending_manoeuvre_event_id == pending);
     request.kind = S3_INPUT_MANOEUVRE_DONE;
     request.value.manoeuvre_event_id = pending + 1U;

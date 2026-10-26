@@ -38,7 +38,9 @@ bool nav_update_valid (const nav_update_t * p_update);
 /** @brief Commit a validated binary partial map transaction. */
 bool nav_map_commit (nav_map_t * p_map, const nav_update_t * p_update);
 
-/** @brief Install the user-requested startup letter-to-action mapping. */
+/** @brief Install four distinct letters/actions, replacing all slots. */
+bool nav_map_install (nav_map_t * p_map, const nav_update_t * p_update);
+/** @brief Disable every letter at startup; no default movement mapping. */
 void nav_map_init (nav_map_t * p_map);
 /** @brief Return the current action for a supported uppercase letter. */
 nav_command_t nav_map_lookup (const nav_map_t * p_map, char letter);

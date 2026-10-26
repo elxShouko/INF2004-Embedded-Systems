@@ -164,6 +164,7 @@ static void test_cancelled_completion (void)
     s3_context_t context;
     production_init(&context, 10U);
     scan_frame(&context, 60000U, 5000U, false, false);
+    host_crossing(&context);
     const uint32_t pending = context.status.pending_manoeuvre_event_id;
     assert(0U != pending);
     /* Queued/failed motion is not completion: withholding DONE keeps waiting. */

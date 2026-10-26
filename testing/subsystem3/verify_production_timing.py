@@ -60,13 +60,14 @@ def main():
         "feedback": ["ir_input", "line_tracking", "barcode", "navigation_map", "junction"],
         "minbits": ["ir_input", "line_tracking", "barcode", "navigation_map", "junction"],
         "safety": ["ir_input", "line_tracking", "barcode", "navigation_map", "junction"],
+        "requirements": ["ir_input", "line_tracking", "barcode", "navigation_map", "junction"],
     }
     for suite, modules in suites.items():
-        if suite in {"rtos", "production", "feedback", "minbits", "safety"}:
+        if suite in {"rtos", "production", "feedback", "minbits", "safety", "requirements"}:
             modules = modules + ["s3_codec"]
         executable = output / f"{suite}.exe"
         test = root / (f"testing/subsystem3/member3_{suite}_test.c"
-                       if suite in {"rtos", "production", "feedback", "minbits", "safety"} else
+                       if suite in {"rtos", "production", "feedback", "minbits", "safety", "requirements", "navigation"} else
                        f"testing/subsystem3/logs/member3_{suite}_test.c")
         command = [args.gcc, "-std=c99", "-Wall", "-Wextra", "-Werror",
                    "-I" + str(source), test]
@@ -74,6 +75,8 @@ def main():
             command += ["-O2", "-Wconversion", "-Wsign-conversion",
                         "-pedantic", "-fanalyzer"]
         command += [source / f"drv_{module}.c" for module in modules]
+        if suite == "requirements":
+            command += [root / "app_program/subsystem1/s1_codec.c"]
         command += ["-o", executable]
         compiled = run(command)
         report["checks"].append(compiled)

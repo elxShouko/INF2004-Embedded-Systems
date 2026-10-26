@@ -9,17 +9,13 @@
 #include <string.h>
 
 /**
- * @brief Install the user-requested startup letter-to-action mapping.
+ * @brief Start with every letter disabled until a runtime map is received.
  */
 void nav_map_init (nav_map_t * p_map)
 {
     if (p_map != NULL)
     {
         memset(p_map, 0, sizeof(*p_map));
-        nav_action_set(p_map->actions, 0U, NAV_COMMAND_STRAIGHT);
-        nav_action_set(p_map->actions, 1U, NAV_COMMAND_LEFT);
-        nav_action_set(p_map->actions, 2U, NAV_COMMAND_RIGHT);
-        nav_action_set(p_map->actions, 3U, NAV_COMMAND_U_TURN);
     }
 }
 
@@ -223,6 +219,40 @@ bool nav_map_apply (nav_map_t * p_map, const char * p_text)
 {
     nav_update_t update;
     return nav_update_parse(&update, p_text) && nav_map_commit(p_map, &update);
+}
+
+/** @brief Replace the map with exactly one letter for each movement. */
+bool nav_map_install (nav_map_t * p_map, const nav_update_t * p_update)
+{
+    if ((NULL == p_map) || (UINT32_MAX == p_map->revision) ||
+        !nav_update_valid(p_update))
+    {
+        return false;
+    }
+    uint32_t seen = 0U;
+    uint32_t count = 0U;
+    for (uint32_t index = 0U; index < NAV_ALPHABET_SIZE; ++index)
+    {
+        if ((p_update->selected & (1UL << index)) != 0U)
+        {
+            const nav_command_t action = nav_action_get(p_update->actions,
+                                                        index);
+            const uint32_t bit = 1UL << (uint32_t)action;
+            if ((NAV_COMMAND_NONE == action) || ((seen & bit) != 0U))
+            {
+                return false;
+            }
+            seen |= bit;
+            ++count;
+        }
+    }
+    if ((4U != count) || (0x1eU != seen))
+    {
+        return false;
+    }
+    memcpy(p_map->actions, p_update->actions, sizeof(p_map->actions));
+    ++p_map->revision;
+    return true;
 }
 
 /*** End of file. ***/

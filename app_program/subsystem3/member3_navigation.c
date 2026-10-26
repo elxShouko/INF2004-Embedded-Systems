@@ -35,6 +35,8 @@ typedef struct
     uint64_t            odometry_us;
     uint64_t            distance_um;
     uint32_t            event_id;
+    char                pending_letter;
+    nav_command_t       pending_command;
     uint8_t             b_absent : 1;
     uint8_t             b_finding : 1;
     uint8_t             b_recovering : 1;
@@ -416,7 +418,7 @@ static void navigation_event (s3_context_t * p_context, nav_event_kind_t kind,
     output.fault                        = p_context->status.fault;
     emit(p_context, &output);
 
-    if ((NAV_EVENT_BARCODE_VALID == kind) && (command != NAV_COMMAND_NONE) &&
+    if ((NAV_EVENT_JUNCTION == kind) && (command != NAV_COMMAND_NONE) &&
         (S3_FAULT_NONE == p_context->status.fault))
     {
         p_context->status.pending_manoeuvre_event_id = output.event_id;
@@ -497,6 +499,8 @@ static bool configure (s3_context_t * p_context, const s3_config_t * p_config)
     p_context->status.pending_manoeuvre_event_id = 0U;
     p_context->b_have_odometry                   = false;
     p_context->b_odometry_usable                 = false;
+    p_context->pending_letter                    = '\0';
+    p_context->pending_command                   = NAV_COMMAND_NONE;
     reset_processing(p_context);
 
     return true;
@@ -587,8 +591,9 @@ static void input (s3_context_t * p_context, const s3_input_t * p_input,
             b_accepted = configure(p_context, &p_input->value.config);
         break;
         case S3_INPUT_MAPPING:
-            b_accepted = nav_map_commit(&p_context->map,
-                                       &p_input->value.mapping);
+            b_accepted = ('\0' == p_context->pending_letter) &&
+                (0U == p_context->status.pending_manoeuvre_event_id) &&
+                nav_map_install(&p_context->map, &p_input->value.mapping);
         break;
         case S3_INPUT_MODE:
             b_accepted = change_mode(p_context, p_input, now);
@@ -782,9 +787,11 @@ static void process_barcode (s3_context_t * p_context, uint64_t now,
         p_context->last_barcode_us = now;
         nav_command_t command      = nav_map_lookup(&p_context->map, letter);
 
-        if (command != NAV_COMMAND_NONE)
+        if ((command != NAV_COMMAND_NONE) &&
+            ('\0' == p_context->pending_letter))
         {
-            p_context->status.state = LINE_STATE_AWAITING_MANOEUVRE;
+            p_context->pending_letter = letter;
+            p_context->pending_command = command;
         }
 
         navigation_event(p_context, NAV_EVENT_BARCODE_VALID, command, letter);
@@ -821,8 +828,15 @@ static void process_junction (s3_context_t * p_context, uint64_t now,
         if (junction_update(&p_context->junction, &sample,
                             &output.navigation) == JUNCTION_RESULT_DETECTED)
         {
-            output.kind = S3_OUTPUT_NAVIGATION;
-            emit(p_context, &output);
+            const char letter = p_context->pending_letter;
+            const nav_command_t command = p_context->pending_command;
+            if ('\0' != letter)
+            {
+                p_context->status.state = LINE_STATE_AWAITING_MANOEUVRE;
+            }
+            navigation_event(p_context, NAV_EVENT_JUNCTION, command, letter);
+            p_context->pending_letter = '\0';
+            p_context->pending_command = NAV_COMMAND_NONE;
         }
     }
 }

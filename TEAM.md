@@ -362,3 +362,15 @@ kernel/template/Makefile patch, flash or physical actuation was performed.
 Exact source hashes, commands, results, evidence and artifact identities are in
 testing/integration/TEST_LOG.md. Host fakes and successful linking do not prove
 physical accuracy, target synchronization timing or autonomous completion.
+
+
+## Barcode demo interface update - 2026-10-26
+
+The user approved changes in S1, S3 and the shared controller on the current
+branch. See [barcode demo contract](docs/barcode-demo.md). S1 copies four
+validated runtime letters; the controller forwards a complete S3 map using
+request ID UINT32_MAX. S3 starts with no actions and retains a decoded letter
+until a confirmed junction. BARCODE_VALID is observation only; actionable
+JUNCTION owns the existing manoeuvre-completion handshake. Buddy 2 alone
+continues to actuate motors. All consumers must rebuild with current headers.
+The 2026-10-26 junction rule supersedes the recorded 2026-10-21 immediate rule.

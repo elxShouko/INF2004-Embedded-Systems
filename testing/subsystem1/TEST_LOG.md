@@ -93,3 +93,25 @@ remain unchanged. Optional Windows cross-build compiled but not executed
 without wine. Evidence: ../integration/logs/software_completion_evidence.zip,
 route_final_s1.log. No dashboard sources were found; the external contract is
 ../../docs/buddy1/TELEMETRY_COMMAND_CONTRACT.md.
+
+
+## Barcode mapping - 2026-10-26 (definitions before execution)
+
+| ID | Method | Expected result |
+|---|---|---|
+| S1-U23 | Host/on-target copied command hook | Complete four-letter MAP accepted, malformed/duplicate/partial payload rejected; timestamp and copied letters survive queue |
+
+
+### 2026-10-26 mapping results
+
+All runs: HEAD `6d225bfa818dd31d8c5ff5f1351c434326c470d3` plus uncommitted
+barcode changes on `buddy3-barcode`. Native JSON reports include source hashes.
+
+| Date | Test | Outcome | Evidence | Notes |
+|---|---|---|---|---|
+| 2026-10-26 | Host runner | BLOCKED by environment | logs/2026-10-26_mapping_1.txt | Sandbox prevented MSYS initialization; native runner used instead. |
+| 2026-10-26 | S1-U23 build | FAIL, link | logs/2026-10-26_mapping_native_2.json | New fixture used tk_get_tim; changed to existing operating-clock API tk_get_otm. |
+| 2026-10-26 | Existing codec/backoff/MQTT/Wi-Fi suites and S1-U23 | PASS, host | logs/2026-10-26_mapping_native_3.json; logs/2026-10-26_mapping_final.json | Actual mapping hook/queue passed; 44 emulated-kernel checks, zero failures, pthread tests enabled. Radio and real SMP not exercised. |
+| 2026-10-26 | Same suites after formatting-only test initializer wrap | PASS, host | logs/2026-10-26_mapping_final2.json | No production behaviour changed after the earlier final run. |
+
+Command: `python testing/subsystem1/host/verify_windows.py --log testing/subsystem1/logs/2026-10-26_mapping_final2.json`.

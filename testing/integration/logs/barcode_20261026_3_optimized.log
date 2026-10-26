@@ -1,0 +1,501 @@
+C:/msys64/ucrt64/bin/gcc.exe --version
+gcc.exe (Rev2, Built by MSYS2 project) 14.2.0
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\vehicle.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_0.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\vehicle_rt.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_1.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\gpio_bank.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_2.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\app_main.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_3.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -Wno-error=conversion -Wno-error=sign-conversion -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_4.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\motion_config.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_5.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\motion_quad.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_6.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\motion_estimator.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_7.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\motion_pid.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_8.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\drv_motor.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_9.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\enc_capture.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_10.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\wheel_loop.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_11.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\move_plan.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_12.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\motion_run.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_13.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem3\drv_line_tracking.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_14.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem3\drv_ir_input.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_15.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem3\drv_navigation_map.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_16.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -Wno-error=conversion -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem4\imu_core.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_17.o
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem4\imu_core.c: In function 'hump_update':
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem4\imu_core.c:310:36: warning: conversion from 'uint32_t' {aka 'unsigned int'} to 'unsigned char' may change value [-Wconversion]
+  310 |         p_status->height_reasons = reasons;
+      |                                    ^~~~~~~
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem4\imu_core.c:332:37: warning: conversion from 'uint32_t' {aka 'unsigned int'} to 'unsigned char' may change value [-Wconversion]
+  332 |         p_status->height_reasons |= reasons;
+      |                                     ^~~~~~~
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem4\imu_guard.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_18.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_19.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_vehicle.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_20.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_0.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_1.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_2.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_3.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_4.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_5.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_6.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_7.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_8.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_9.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_10.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_11.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_12.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_13.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_14.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_15.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_16.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_17.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_18.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_19.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_20.o -lm -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 3
+[TEST] INT-03 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 4
+[TEST] INT-04 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 5
+[TEST] INT-05 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 6
+[TEST] INT-06 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 7
+[TEST] INT-07 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 8
+[TEST] INT-08 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 9
+[TEST] INT-09 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 10
+[TEST] INT-10 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 11
+[TEST] INT-11 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 12
+[TEST] INT-12 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 13
+[TEST] INT-13 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 14
+[TEST] INT-14 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 15
+[TEST] INT-15 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 16
+[TEST] INT-16 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 17
+[TEST] INT-17 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 18
+[TEST] INT-18 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 19
+[TEST] INT-19 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 20
+[TEST] INT-20 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 21
+[TEST] INT-21 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 22
+[TEST] INT-22 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 23
+[TEST] INT-23 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 24
+[TEST] INT-24 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 25
+[TEST] INT-25 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 26
+[TEST] INT-26 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 27
+[TEST] INT-27 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 28
+[TEST] INT-28 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 29
+[TEST] INT-29 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 30
+[TEST] INT-30 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 31
+[TEST] INT-31 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 32
+[TEST] INT-32 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 33
+[TEST] INT-33 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 34
+[TEST] INT-34 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 35
+[TEST] INT-35 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 36
+[TEST] INT-36 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 37
+[TEST] INT-37 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 38
+[TEST] INT-38 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 39
+[TEST] INT-39 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 40
+[TEST] INT-40 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 41
+[TEST] INT-41 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 42
+[TEST] INT-42 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 43
+[TEST] INT-43 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 44
+[TEST] INT-44 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 45
+[TEST] INT-45 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 46
+[TEST] INT-46 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 47
+[TEST] INT-47 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 48
+[TEST] INT-48 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 49
+[TEST] INT-49 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 50
+[TEST] INT-50 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 51
+[TEST] INT-51 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 52
+[TEST] INT-52 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 53
+[TEST] INT-53 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 54
+[TEST] INT-54 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 55
+[TEST] INT-55 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 56
+[TEST] INT-56 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 57
+[TEST] INT-57 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 58
+[TEST] INT-58 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 59
+[TEST] INT-59 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 60
+[TEST] INT-60 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 61
+[TEST] INT-61 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 62
+[TEST] INT-62 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 64
+[TEST] INT-64 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 65
+[TEST] INT-65 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 66
+[TEST] INT-66 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 67
+[TEST] INT-67 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 68
+[TEST] INT-68 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 69
+[TEST] INT-69 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 70
+[TEST] INT-70 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 71
+[TEST] INT-71 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 72
+[TEST] INT-72 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 73
+[TEST] INT-73 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 74
+[TEST] INT-74 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 75
+[TEST] INT-75 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 76
+[TEST] INT-76 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 77
+[TEST] INT-77 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 78
+[TEST] INT-78 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 79
+[TEST] INT-79 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 80
+[TEST] INT-80 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 81
+[TEST] INT-81 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 82
+[TEST] INT-82 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 83
+[TEST] INT-83 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized.exe 84
+[TEST] INT-84 PASS shared production integration
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -DAPP_TEST=1 -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\vehicle_rt.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_test_1.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -DAPP_TEST=1 -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\app_main.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_test_3.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_0.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_test_1.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_2.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_test_3.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_4.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_5.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_6.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_7.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_8.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_9.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_10.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_11.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_12.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_13.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_14.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_15.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_16.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_17.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_18.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_19.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_20.o -lm -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\test_startup.exe
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\test_startup.exe 63
+[TEST] INT-63 PASS shared production integration
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5 -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_0.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_2.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_3.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_4.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_5.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_6.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_7.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_8.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_9.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_10.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_11.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_12.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_13.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_14.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_15.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_16.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_17.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_18.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_19.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_20.o -lm -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutant.exe
+EXIT 0
+MUTATION INT-48
+[TEST] INT-48 FAIL shared production integration
+EXPECTED EXIT 1; EXIT 1
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5 -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_0.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_2.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_3.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_4.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_5.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_6.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_7.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_8.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_9.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_10.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_11.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_12.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_13.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_14.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_15.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_16.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_17.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_18.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_19.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_20.o -lm -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutant.exe
+EXIT 0
+MUTATION INT-49
+[TEST] INT-49 FAIL shared production integration
+EXPECTED EXIT 1; EXIT 1
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5 -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_0.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_2.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_3.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_4.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_5.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_6.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_7.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_8.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_9.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_10.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_11.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_12.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_13.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_14.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_15.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_16.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_17.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_18.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_19.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_20.o -lm -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutant.exe
+EXIT 0
+MUTATION INT-52
+[TEST] INT-52 FAIL shared production integration
+EXPECTED EXIT 1; EXIT 1
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5 -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_0.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_2.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_3.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_4.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_5.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_6.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_7.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_8.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_9.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_10.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_11.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_12.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_13.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_14.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_15.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_16.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_17.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_18.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_19.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_20.o -lm -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutant.exe
+EXIT 0
+MUTATION INT-54
+[TEST] INT-54 FAIL shared production integration
+EXPECTED EXIT 1; EXIT 1
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5 -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_1.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_2.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_3.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_4.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_5.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_6.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_7.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_8.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_9.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_10.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_11.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_12.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_13.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_14.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_15.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_16.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_17.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_18.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_19.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_20.o -lm -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutant.exe
+EXIT 0
+MUTATION INT-61
+[TEST] INT-61 FAIL shared production integration
+EXPECTED EXIT 1; EXIT 1
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5 -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_0.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_1.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_2.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_3.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_4.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_5.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_6.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_7.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_8.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_9.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_10.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_11.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_12.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_13.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_14.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_15.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_16.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_17.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_18.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_20.o -lm -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutant.exe
+EXIT 0
+MUTATION INT-67
+[TEST] INT-67 FAIL shared production integration
+EXPECTED EXIT 1; EXIT 1
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5 -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_1.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_2.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_3.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_4.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_5.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_6.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_7.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_8.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_9.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_10.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_11.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_12.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_13.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_14.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_15.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_16.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_17.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_18.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_19.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_20.o -lm -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutant.exe
+EXIT 0
+MUTATION INT-72
+[TEST] INT-72 FAIL shared production integration
+EXPECTED EXIT 1; EXIT 1
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5 -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutated_runtime.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_1.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_2.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_3.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_4.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_5.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_6.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_7.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_8.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_9.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_10.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_11.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_12.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_13.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_14.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_15.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_16.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_17.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_18.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_19.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\optimized_20.o -lm -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\mutant.exe
+EXIT 0
+MUTATION INT-77
+[TEST] INT-77 FAIL shared production integration
+EXPECTED EXIT 1; EXIT 1
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums -DS5_LIVE_HOST_TEST C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\subsystem5\host\test_obstacle_runtime.c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5\s5_acquire.c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_runtime.c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5\s5_live.c -lm -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_live.exe
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_live.exe
+[TEST] S5-U24 PASS  runtime rejects missing timeout configuration
+[TEST] S5-U25 PASS  invalid forward sample requests stop and latches fault
+[TEST] S5-U26 PASS  distinct confirmed proximity samples request a stop
+[TEST] S5-U27 PASS  a full scan is requested only after stopped acknowledgement
+[TEST] S5-U28 PASS  missing stopped acknowledgement fails closed on timeout
+[TEST] S5-U29 PASS  cancelled scan requests stop and latches fault
+[TEST] S5-U30 PASS  vehicle movement during a full scan fails closed
+[TEST] S5-U31 PASS  unfinished full scan fails closed at configured timeout
+[TEST] S5-U32 PASS  echo acquisition failure cannot produce a profile or route
+[TEST] S5-U33 PASS  valid scan without measured clearance never emits bypass
+[TEST] S5-U34 PASS  status snapshot copies scan completion and acquisition fault
+[TEST] S5-U35 PASS  latched fault keeps requesting stop and fault handling
+[TEST] S5-U36 PASS  invalid runtime input requests a safe stop and latches fault
+[TEST] S5-U37 PASS  stale forward sample cannot maintain motion monitoring
+[TEST] S5-U38 PASS  backwards runtime clock fails closed
+[TEST] S5-U39 PASS  valid runtime timestamp wrap is accepted
+[TEST] S5-U40 PASS  scan startup grace is bounded by the full-scan timeout
+[TEST] S5-U41 PASS  bypass completion requests line recovery
+[TEST] S5-U42 PASS  bypass acknowledgement timeout fails closed
+[TEST] S5-U43 PASS  LINE_FOUND returns the policy to forward monitoring
+[TEST] S5-U44 PASS  line reacquisition timeout fails closed
+[TEST] S5-U45 PASS  renewed forward obstacle during bypass fails closed
+[TEST] S5-U46 PASS  stop request remains asserted until stopped acknowledgement
+[TEST] S5-U47 PASS  stop request remains asserted throughout stationary scanning
+[TEST] S5-U48 PASS  unconfirmed calibration cannot open outputs
+[TEST] S5-U49 PASS  single open and duplicate lifecycle rejection
+[TEST] S5-U50 PASS  capture after clock read defers, then preserves range/time
+[TEST] S5-U51 PASS  moving vehicle cannot begin scan
+[TEST] S5-U52 PASS  bounded coarse/fine scan returns sensor forward
+[TEST] S5-U53 PASS  close is idempotent
+[TEST] S5-U54 PASS  echo deadline fails closed exactly at boundary
+[TEST] S5-U55 PASS  motion during scan closes acquisition
+[TEST] S5-U56 PASS  clock regression fails closed
+[TEST] S5-U57 PASS  explicit cancellation disables outputs
+[TEST] S5-U83 PASS  controller-owned valid scan holds real profile without invented clearance
+[TEST] S5-U84 PASS  correlated recovery input rearms monitoring without stale scan
+[TEST] S5-U85 PASS  held scan still faults on missing forward sensing
+[TEST] S5-U89 PASS  a stopped sample from before the stop request is rejected
+[TEST] S5-U90 PASS  stale stopped status fails closed during a scan
+[TEST] S5-U91 PASS  pre-request bypass completion cannot advance the state
+[TEST] S5-U92 PASS  pre-request LINE_FOUND cannot resume monitoring
+[TEST] S5-U93 PASS  bypass acknowledgement at its deadline times out
+[TEST] S5-U94 PASS  runtime rejects missing acknowledgement freshness limit
+[TEST] S5-U95 PASS  completed but malformed scan is reported complete and invalid
+[TEST] S5-U96 PASS  a new scan request clears stale scan timestamps and faults
+[TEST] S5-U97 PASS  faulted stale forward status is no longer marked valid
+[TEST] S5-U98 PASS  scan request retries until the scan owner reports busy
+[TEST] S5-U99 PASS  bypass request retries until completion acknowledgement
+[TEST] S5-U100 PASS  line-recovery request retries until LINE_FOUND
+[TEST] subsystem5 runtime failures: 0
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -O2 -fshort-enums C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\subsystem5\host\test_obstacle_logic.c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_logic.exe
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_logic.exe
+[TEST] S5-U02 PASS  coarse and fine angles are bounded and edge-clamped
+[TEST] S5-U03 PASS  profile reports nearest point, geometry, width and side ranges
+[TEST] S5-U11 PASS  profiles off-axis scans centred at coarse directions
+[TEST] S5-U04 PASS  left range candidate is not emitted as an executable route
+[TEST] S5-U05 PASS  reverse remains an advisory candidate, never an action
+[TEST] S5-U06 PASS  missing range candidates are not misreported as proven unsafe
+[TEST] S5-U07 PASS  malformed scan is rejected and output is cleared
+[TEST] S5-U08 PASS  right range candidate is not emitted as an executable route
+[TEST] S5-U09 PASS  too few valid fine readings cannot produce a profile
+[TEST] S5-U12 PASS  cancelled scan is rejected and profile cleared
+[TEST] S5-U13 PASS  echo timeout or unsettled servo rejects scan
+[TEST] S5-U14 PASS  partial or moving-vehicle scan is rejected
+[TEST] S5-U15 PASS  scan exceeding supplied maximum duration is rejected
+[TEST] S5-U16 PASS  non-monotonic sample times are rejected
+[TEST] S5-U17 PASS  range jumps over supplied consistency limit are rejected
+[TEST] S5-U18 PASS  scan older than configured maximum age is rejected
+[TEST] S5-U19 PASS  late sample beyond scan completion is rejected
+[TEST] S5-U20 PASS  trigger, echo, and servo faults reject profile creation
+[TEST] S5-U21 PASS  missing scan-validation configuration is rejected
+[TEST] S5-U22 PASS  out-of-range measurement is rejected
+[TEST] S5-U23 PASS  valid scan across millisecond-counter wrap is accepted
+[TEST] S5-U10 PASS  a profile that was not successfully built cannot create a plan
+[TEST] S5-U73 PASS  configured left geometry and exact um conversion
+[TEST] S5-U74 PASS  right route mirrors turns and clearance
+[TEST] S5-U75 PASS  unverified evidence clears previously executable output
+[TEST] S5-U76 PASS  different scan frame rejected
+[TEST] S5-U77 PASS  evidence predating completed scan rejected
+[TEST] S5-U78 PASS  future evidence rejected
+[TEST] S5-U79 PASS  certificate must cover entire route deadline
+[TEST] S5-U80 PASS  one micrometre swept corridor undercoverage rejects
+[TEST] S5-U81 PASS  claimed free box contradicting bounded obstacle rejects
+[TEST] S5-U87 PASS  free space without original-line identity cannot authorize recovery
+[TEST] S5-U88 PASS  legacy lateral sign maps into robot frame
+[TEST] S5-U82 PASS  missing stopping calibration and clock overflow reject
+[TEST] subsystem5 host failures: 0
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_live.exe 58
+[TEST] S5-U58 PASS  partial resource cleanup preserves identities and original error
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_live.exe 59
+[TEST] S5-U59 PASS  real live owner: startup, timestamp, latch, bounded status or retry
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_live.exe 60
+[TEST] S5-U60 PASS  real live owner: startup, timestamp, latch, bounded status or retry
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_live.exe 61
+[TEST] S5-U61 PASS  real live owner: startup, timestamp, latch, bounded status or retry
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_live.exe 62
+[TEST] S5-U62 PASS  real live owner: startup, timestamp, latch, bounded status or retry
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_live.exe 63
+[TEST] S5-U63 PASS  real live owner: startup, timestamp, latch, bounded status or retry
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_live.exe 86
+[TEST] S5-U86 PASS  real live owner: startup, timestamp, latch, bounded status or retry
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DS5_DRIVER_HOST_TEST -D_PICO_RP2040_ -DCNF_SMP=1 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\include -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\config -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\subsystem5\host -O2 -fshort-enums C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5\s5_acquire.c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\subsystem5\host\test_s5_port.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_port.exe
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_wgawobjs\s5_port.exe
+[TEST] S5-U64 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U65 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U66 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U67 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U68 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U69 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U70 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U71 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U72 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U107 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U108 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U109 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U110 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U111 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U112 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U113 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U114 PASS real GPIO/PWM/IRQ adapter
+EXIT 0

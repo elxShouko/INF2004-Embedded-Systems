@@ -100,7 +100,7 @@ int main(void)
     printf("b: capture ALL sensors on black; w: ALL on white; r: reset\n");
     printf("Each capture takes 20 samples (about 2 seconds).\n");
     printf("Runtime mapping: MAP A=FORWARD Z=UTURN W=LEFT F=RIGHT then Enter\n");
-    printf("Defaults: A=FORWARD B=LEFT C=RIGHT D=UTURN; others NONE.\n");
+    printf("Startup: all letters NONE; supply a runtime mapping.\n");
     printf("timestamp_us,raw_left,raw_right,raw_barcode,black_mask,valid_mask,line_observation,map_revision\n");
 
     while (true)

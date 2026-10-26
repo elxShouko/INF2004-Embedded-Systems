@@ -813,3 +813,33 @@ Exact final uncommitted inventory: 28 modified tracked paths + 10 new paths.
 - testing/subsystem5/host/test_obstacle_runtime.c
 - testing/subsystem5/host/test_s5_port.c (new)
 - testing/subsystem5/host/test_s5_port.h (new)
+
+
+## Barcode junction/MQTT changes - 2026-10-26 (definitions before execution)
+
+| ID | Method | Expected result |
+|---|---|---|
+| INT-82 | Real controller with provider fakes | Barcode event continues line following; subsequent actionable junction requests manoeuvre |
+| INT-83 | Real runtime with provider fakes | PC mapping forwarded to S3; a full queue retries on next cycle |
+| INT-84 | Real runtime with provider fakes | Rejected mapping does not create a vehicle fault |
+| INT-85 | Real runtime with provider fakes | An actionable junction survives later barcode observations in the same bounded event drain |
+
+
+### 2026-10-26 barcode integration results
+
+All runs: HEAD `6d225bfa818dd31d8c5ff5f1351c434326c470d3` plus uncommitted
+barcode/MQTT/controller changes on `buddy3-barcode`. Per-run metadata records
+all application hashes and test-source hashes. No hardware was accessed.
+
+| Date | Tests | Outcome | Evidence | Notes |
+|---|---|---|---|---|
+| 2026-10-26 | Existing host runner | BLOCKED at compilation | logs/barcode_20261026_1_default.log | Existing S4 packed height-reason narrowing warnings were promoted to errors; S4 source unchanged. Scoped nonfatal conversion warning exception keeps these visible. |
+| 2026-10-26 | Existing invalid-enum fixture | FAIL, compilation | logs/barcode_20261026_2_default.log | Existing 255 value overflows the three-bit IMU phase fixture; use representable invalid value 7. |
+| 2026-10-26 | Existing groups plus INT-82..84 | PASS, host | logs/barcode_20261026_3_default.log; logs/barcode_20261026_3_optimized.log | 81 groups per profile; eight intentional safety/telemetry/route mutations detected per profile. |
+| 2026-10-26 | INT-85 | FAIL, host fixture | logs/barcode_20261026_final_default.log | New fake omitted obstacle provider from started mask; fixed fixture to provide all mandatory providers. |
+| 2026-10-26 | Existing groups plus INT-82..85 | PASS, host | logs/barcode_20261026_final2_default.log; logs/barcode_20261026_final2_optimized.log | 82 groups in default and optimized/fshort-enums profiles; eight mutations detected each; TEST=1 queue isolation and S5 regression groups also pass. |
+
+Command: `python testing/integration/verify_integration.py --label barcode_20261026_final2`.
+Build evidence and exact profiles: [barcode verification](../../docs/barcode-verification-2026-10-26.md).
+
+| 2026-10-26 | Default, TEST=1, MQTT normal and MQTT TEST=1 Make profiles | PASS, compilation/link/UF2 only | logs/barcode_20261026_build_metadata.json | Installed SDK 2.3.1; placeholder-only build header for MQTT; no flash or target execution. Initial older-SDK/stale-object failures retained in raw logs. |

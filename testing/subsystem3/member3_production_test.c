@@ -44,6 +44,10 @@ static void production_init (s3_context_t * p_context, uint32_t period_ms)
     memset(p_context, 0, sizeof(*p_context));
     p_context->status.mode = LINE_MODE_PAUSED;
     nav_map_init(&p_context->map);
+    nav_update_t fixture_map;
+    assert(nav_update_parse(&fixture_map,
+        "MAP A=FORWARD B=LEFT C=RIGHT D=UTURN"));
+    assert(nav_map_install(&p_context->map, &fixture_map));
     s3_config_t config = production_config(period_ms);
     assert(configure(p_context, &config));
     s3_input_t request = {0};
@@ -127,6 +131,11 @@ static void scan_frame (s3_context_t * p_context, uint32_t narrow_us,
 {
     uint64_t edges[BARCODE_RUN_COUNT + 1U] = {0};
     const uint32_t count = frame_edges(edges, narrow_us, phase_us, b_reverse);
+    const uint64_t origin = p_context->status.raw.timestamp_us;
+    for (uint32_t index = 0U; index < count; ++index)
+    {
+        edges[index] += origin;
+    }
     uint32_t edge = 0U;
     uint32_t sample_index = 0U;
     bool b_black = false;
@@ -345,6 +354,8 @@ static void test_handoffs (void)
     s3_context_t context;
     production_init(&context, 10U);
     scan_frame(&context, 60000U, 5000U, false, false);
+    assert(0U == context.status.pending_manoeuvre_event_id);
+    host_crossing(&context);
     const uint32_t pending = context.status.pending_manoeuvre_event_id;
     assert(0U != pending);
     s3_input_t request = {0};

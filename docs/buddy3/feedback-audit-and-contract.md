@@ -1,5 +1,11 @@
 # Buddy 3 feedback audit and current navigation contract
 
+> Current contract, 2026-10-26: [Barcode demo](../barcode-demo.md) supersedes
+> earlier startup defaults, partial production maps and immediate barcode
+> manoeuvres below. Production starts with no mapping, receives four letters
+> over MQTT, and acts on the next junction. Historical evidence is retained.
+
+
 This review checks the supplied follow-up feedback against the uncommitted
 minimum-bit implementation on `d4c91f2`. It distinguishes existing work, new
 fixes, current controller behaviour and work requiring physical measurements

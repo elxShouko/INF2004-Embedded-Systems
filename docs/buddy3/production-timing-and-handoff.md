@@ -1,5 +1,11 @@
 # Buddy 3 production timing and controller handoff
 
+> Current contract, 2026-10-26: see [Barcode demo](../barcode-demo.md).
+> This supersedes earlier startup defaults, partial production mappings and
+> immediate barcode manoeuvres below. The current trigger is the next
+> confirmed junction after a stored mapped letter; earlier evidence remains.
+
+
 > Trigger confirmed by the user on 2026-10-21: after full barcode validation,
 > coordinate the controller stop/manoeuvre handshake without waiting for a
 > junction. Retain freshness and stop/fault/obstacle arbitration. See the

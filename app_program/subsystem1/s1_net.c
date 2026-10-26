@@ -163,7 +163,7 @@ s1_net_telemetry_send (const s1_codec_frame_t * p_frame)
 ER
 s1_net_command_receive (s1_codec_command_t * p_command, TMO timeout)
 {
-    s1_codec_command_t message = {S1_CMD_NONE, 0u};
+    s1_codec_command_t message = {0};
     TMO                wait    = timeout;
     ER                 result  = E_TMOUT;
     bool               b_done  = false;
@@ -185,10 +185,12 @@ s1_net_command_receive (s1_codec_command_t * p_command, TMO timeout)
         }
         else if ((sizeof(message) != (uint32_t) size) ||
                  (message.command_id <= S1_CMD_NONE) ||
-                 (message.command_id > S1_CMD_RESUME))
+                 (message.command_id > S1_CMD_MAPPING) ||
+                 ((S1_CMD_MAPPING == message.command_id) &&
+                  !s1_codec_mapping_valid(&message)))
         {
             status_count_nowait(&g_s1_net.stats.commands_bad_size);
-            message = (s1_codec_command_t){S1_CMD_NONE, 0u};
+            message = (s1_codec_command_t){0};
             result  = E_SYS; /* Never hand out a partly filled command. */
             b_done  = true;
         }
@@ -197,7 +199,7 @@ s1_net_command_receive (s1_codec_command_t * p_command, TMO timeout)
                  (age_ms < S1_NET_CLOCK_HALF_RANGE))
         {
             status_count_nowait(&g_s1_net.stats.commands_stale);
-            message = (s1_codec_command_t){S1_CMD_NONE, 0u};
+            message = (s1_codec_command_t){0};
             result  = E_TMOUT; /* Stale: look at the next one, if any. */
         }
         else
@@ -331,9 +333,13 @@ s1_net_hook_make_heartbeat (char * p_buffer, uint32_t capacity,
 void
 s1_net_hook_on_command (const char * p_payload, uint32_t length, uint32_t rx_ms)
 {
-    s1_codec_command_t command = {S1_CMD_NONE, 0u};
+    s1_codec_command_t command = {0};
 
     command.command_id      = s1_codec_parse_command(p_payload, length);
+    if (S1_CMD_NONE == command.command_id)
+    {
+        (void)s1_codec_parse_mapping(p_payload, length, &command);
+    }
     command.rx_timestamp_ms = rx_ms;
 
     if (S1_CMD_EMERGENCY_STOP == command.command_id)

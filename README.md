@@ -11,6 +11,9 @@ Build the integrated firmware from **build_make/** using **make**, as described 
 - Existing **src/**, **include/line/** and **CMakeLists.txt** are preserved for
   the earlier standalone Pico SDK programs. They are not the integrated RTOS build.
 
+See [Barcode demo mapping and junction flow](docs/barcode-demo.md) for the
+current runtime MQTT mapping, prerequisites and acceptance sequence.
+
 See [Buddy 3 documentation](docs/buddy3/README.md) and
 [Member 3 integration and API](docs/buddy3/member3-template-integration.md).
 The previous Member 5 standalone README is preserved in

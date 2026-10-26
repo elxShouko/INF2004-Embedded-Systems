@@ -111,7 +111,7 @@ drain_telemetry (void)
 static void
 drain_commands (void)
 {
-    s1_codec_command_t command = {S1_CMD_NONE, 0u};
+    s1_codec_command_t command = {S1_CMD_NONE, 0u, {0}};
 
     while (E_OK == s1_net_command_receive(&command, TMO_POL))
     {
@@ -254,7 +254,7 @@ test_telemetry_buffer (void)
 static void
 test_command_path (void)
 {
-    s1_codec_command_t    command = {S1_CMD_NONE, 0u};
+    s1_codec_command_t    command = {S1_CMD_NONE, 0u, {0}};
     s1_net_stats_t        before  = {0};
     s1_net_stats_t        after   = {0};
     UINT                  flags   = 0u;
@@ -699,7 +699,7 @@ estop_caller_task (INT stacd, void * p_exinf)
 static void
 test_estop_with_held_mutex (void)
 {
-    s1_codec_command_t command  = {S1_CMD_NONE, 0u};
+    s1_codec_command_t command  = {S1_CMD_NONE, 0u, {0}};
     s1_net_stats_t     stats    = {0};
     UINT               pattern  = 0u;
     UINT               flags    = 0u;
@@ -729,7 +729,7 @@ test_estop_with_held_mutex (void)
     estop_reset();
     ctl_flag_create();
     {
-        s1_codec_command_t pause = {S1_CMD_PAUSE, 0u};
+        s1_codec_command_t pause = {S1_CMD_PAUSE, 0u, {0}};
         uint32_t           index = 0u;
 
         for (index = 0u; index < PAUSE_FILL; index++)
@@ -791,7 +791,7 @@ test_estop_with_held_mutex (void)
 static void
 test_estop_latch (void)
 {
-    s1_codec_command_t command = {S1_CMD_NONE, 0u};
+    s1_codec_command_t command = {S1_CMD_NONE, 0u, {0}};
     s1_net_stats_t     stats   = {0};
     SYSTIM             time    = {0};
     UINT               flags   = 0u;
@@ -854,7 +854,7 @@ test_estop_latch (void)
 static void
 test_estop_post_failure (void)
 {
-    s1_codec_command_t command = {S1_CMD_NONE, 0u};
+    s1_codec_command_t command = {S1_CMD_NONE, 0u, {0}};
     s1_net_stats_t     before  = {0};
     s1_net_stats_t     after   = {0};
     SYSTIM             time    = {0};
@@ -905,9 +905,10 @@ test_estop_post_failure (void)
 static void
 test_command_validation (void)
 {
-    s1_codec_command_t command = {S1_CMD_EMERGENCY_STOP, 1u};
-    s1_codec_command_t bad     = {(s1_codec_command_id_t) BAD_COMMAND_ID, 0u};
-    s1_codec_command_t fresh   = {S1_CMD_PAUSE, 0u};
+    s1_codec_command_t command = {S1_CMD_EMERGENCY_STOP, 1u, {0}};
+    s1_codec_command_t bad = {
+        (s1_codec_command_id_t) BAD_COMMAND_ID, 0u, {0}};
+    s1_codec_command_t fresh   = {S1_CMD_PAUSE, 0u, {0}};
     s1_net_stats_t     before  = {0};
     s1_net_stats_t     after   = {0};
     SYSTIM             time    = {0};
@@ -999,6 +1000,48 @@ test_simulator (void)
     TEST_SUMMARY("subsystem1 simulator");
 }
 
+/** @brief Exercise the actual bounded MQTT hook and copied mapping queue. */
+static void test_mapping_command (void)
+{
+    static const char text[] = "MAP W=FORWARD X=UTURN Y=LEFT Z=RIGHT";
+    static const char * const invalid[] = {
+        "MAP W=FORWARD W=UTURN Y=LEFT Z=RIGHT",
+        "MAP W=FORWARD X=UTURN Y=LEFT Z=LEFT",
+        "MAP W=FORWARD X=UTURN Y=LEFT",
+        "MAP w=FORWARD X=UTURN Y=LEFT Z=RIGHT",
+        "MAP W=FORWARD X=UTURN Y=LEFT Z=RIGHT junk"};
+    s1_codec_command_t command = {0};
+    SYSTIM time = {0};
+    bool b_ok = true;
+    TEST_INIT();
+    while (E_OK == s1_net_command_receive(&command, TMO_POL))
+    {
+        /* Drain test traffic before examining one complete transaction. */
+    }
+    tk_get_otm(&time);
+    s1_net_hook_on_command(text, sizeof(text) - 1U, time.lo);
+    b_ok = (E_OK == s1_net_command_receive(&command, TMO_POL)) &&
+        (S1_CMD_MAPPING == command.command_id) &&
+        (time.lo == command.rx_timestamp_ms) &&
+        ('Y' == command.mapping_letters[0]) &&
+        ('Z' == command.mapping_letters[1]) &&
+        ('W' == command.mapping_letters[2]) &&
+        ('X' == command.mapping_letters[3]);
+    for (uint32_t index = 0U; index < sizeof(invalid) / sizeof(invalid[0]);
+         ++index)
+    {
+        uint32_t length = 0U;
+        while (invalid[index][length] != '\0')
+        {
+            ++length;
+        }
+        s1_net_hook_on_command(invalid[index], length, time.lo);
+        b_ok = (E_TMOUT == s1_net_command_receive(&command, TMO_POL)) && b_ok;
+    }
+    TEST_CHECK("S1-U23", b_ok, "four-letter MQTT mapping accepted atomically");
+    TEST_SUMMARY("subsystem1 mapping");
+}
+
 /* Entry point called by usermain() in a TEST=1 build. */
 void
 subsystem1_test (void)
@@ -1014,6 +1057,7 @@ subsystem1_test (void)
     test_estop_latch();
     test_estop_post_failure();
     test_command_validation();
+    test_mapping_command();
     test_simulator();
     test_sim_switch();
 }

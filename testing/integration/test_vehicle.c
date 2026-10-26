@@ -38,6 +38,7 @@ static uint32_t g_telemetry;
 static uint32_t g_delays;
 static uint32_t g_self_tests;
 static uint32_t g_s5_configures;
+static uint32_t g_mapping_calls;
 static bool g_exit;
 static bool g_late_sample;
 static bool g_ok = true;
@@ -122,7 +123,8 @@ ER tk_dly_tsk (TMO delay)
     g_ok = (10 == delay) && g_ok;
     if (9U == g_case) { return (E_SYS); }
     ++g_delays;
-    if ((62U == g_case) && (g_delays < 22U)) { return (E_OK); }
+    if (((62U == g_case) && (g_delays < 22U)) ||
+        ((83U == g_case) && (g_delays < 2U))) { return (E_OK); }
     longjmp(g_end, 1); /* End host observation, not production task behaviour. */
 }
 void tk_ext_tsk (void) { g_exit = true; longjmp(g_end, 1); }
@@ -170,8 +172,27 @@ bool s1_net_estop_latched (void)
 bool s1_net_is_connected (void) { return (true); }
 ER s1_net_command_receive (s1_codec_command_t * p_cmd, TMO timeout)
 {
-    (void)p_cmd;
+    static bool b_mapping_sent;
     g_ok = (TMO_POL == timeout) && g_ok;
+    if ((85U == g_case) && !b_mapping_sent)
+    {
+        b_mapping_sent = true;
+        *p_cmd = (s1_codec_command_t){0};
+        p_cmd->command_id = S1_CMD_START_RUN;
+        p_cmd->rx_timestamp_ms = 20U;
+        return (E_OK);
+    }
+    if (((83U == g_case) || (84U == g_case)) && !b_mapping_sent)
+    {
+        static const char text[] = "MAP W=FORWARD X=UTURN Y=LEFT Z=RIGHT";
+        b_mapping_sent = true;
+        if (!s1_codec_parse_mapping(text, sizeof(text) - 1U, p_cmd))
+        {
+            return (E_SYS);
+        }
+        p_cmd->rx_timestamp_ms = 20U;
+        return (E_OK);
+    }
     return (E_TMOUT);
 }
 ER s1_net_telemetry_send (s1_codec_frame_t const * p_frame)
@@ -199,7 +220,7 @@ ER s5_live_status (s5_live_status_t * p_status)
 {
     *p_status = (s5_live_status_t){0};
     if (58U == g_case) { return (E_TMOUT); }
-    if ((g_case >= 59U) && (g_case <= 61U))
+    if (((g_case >= 59U) && (g_case <= 61U)) || (85U == g_case))
     {
         p_status->b_configured = true;
         p_status->b_forward_valid = true;
@@ -227,6 +248,7 @@ bool motion_api_now (uint64_t * p_now)
 motion_api_result_t motion_api_status (motion_run_status_t * p_status)
 {
     *p_status = (motion_run_status_t){0};
+    if (85U == g_case) { *p_status = test_input().motion; }
     if (44U == g_case)
     {
         *p_status = test_input().motion;
@@ -252,7 +274,11 @@ motion_api_result_t motion_api_configure (wheel_loop_config_t const * p_config,
     (void)p_config; (void)p_port; ++g_submits; return (MOTION_API_QUEUED);
 }
 motion_api_result_t motion_api_submit (move_plan_command_t const * p_cmd)
-{ (void)p_cmd; ++g_submits; return (MOTION_API_QUEUED); }
+{
+    if (85U == g_case) { g_ok = (MOVE_PLAN_LEFT == p_cmd->kind) && g_ok; }
+    ++g_submits;
+    return (MOTION_API_QUEUED);
+}
 motion_api_result_t motion_api_stop (void) { return (MOTION_API_QUEUED); }
 motion_api_result_t motion_api_ack (uint32_t id)
 { (void)id; return (MOTION_API_QUEUED); }
@@ -265,7 +291,7 @@ ER s3_get_status (s3_status_t * p_status)
     if ((57U == g_case) && (0U == g_estops)) { g_ok = false; }
     if (50U == g_case) { return (E_TMOUT); }
     *p_status = (s3_status_t){0};
-    if ((49U == g_case) || (51U == g_case) || (53U == g_case) || (56U == g_case) || ((g_case >= 58U) && (g_case <= 61U)))
+    if ((49U == g_case) || (51U == g_case) || (53U == g_case) || (56U == g_case) || (85U == g_case) || ((g_case >= 58U) && (g_case <= 61U)))
     {
         p_status->calibrated = true;
         p_status->line_valid = true;
@@ -274,17 +300,56 @@ ER s3_get_status (s3_status_t * p_status)
         p_status->black_mask = 3U;
         p_status->state = LINE_STATE_TRACKING;
         p_status->mode = LINE_MODE_TRACKING;
+        if (85U == g_case)
+        {
+            p_status->state = LINE_STATE_AWAITING_MANOEUVRE;
+            p_status->pending_manoeuvre_event_id = 11U;
+        }
         if (51U == g_case) { p_status->fault = S3_FAULT_DRIVER; }
     }
     return (E_OK);
 }
 ER s3_submit (s3_input_t const * p_request, TMO timeout)
-{ (void)p_request; g_ok = (TMO_POL == timeout) && g_ok; return (E_OK); }
+{
+    g_ok = (TMO_POL == timeout) && g_ok;
+    if (S3_INPUT_MAPPING == p_request->kind)
+    {
+        ++g_mapping_calls;
+        g_ok = (UINT32_MAX == p_request->request_id) &&
+            (NAV_COMMAND_LEFT == nav_action_get(p_request->value.mapping.actions, 24U)) &&
+            (NAV_COMMAND_RIGHT == nav_action_get(p_request->value.mapping.actions, 25U)) &&
+            (NAV_COMMAND_STRAIGHT == nav_action_get(p_request->value.mapping.actions, 22U)) &&
+            (NAV_COMMAND_U_TURN == nav_action_get(p_request->value.mapping.actions, 23U)) && g_ok;
+        if ((83U == g_case) && (1U == g_mapping_calls)) { return (E_TMOUT); }
+    }
+    return (E_OK);
+}
 ER s3_receive (s3_output_t * p_event, TMO timeout)
 {
     static bool b_sent;
+    static uint32_t observations;
 
     g_ok = (TMO_POL == timeout) && g_ok;
+    if ((85U == g_case) && (observations < 2U))
+    {
+        *p_event = (s3_output_t){0};
+        p_event->kind = S3_OUTPUT_NAVIGATION;
+        p_event->event_id = 11U + observations;
+        p_event->navigation.timestamp_us = 1020000U;
+        p_event->navigation.kind = (0U == observations) ?
+            NAV_EVENT_JUNCTION : NAV_EVENT_BARCODE_VALID;
+        p_event->navigation.command = NAV_COMMAND_LEFT;
+        ++observations;
+        return (E_OK);
+    }
+    if ((84U == g_case) && !b_sent)
+    {
+        b_sent = true;
+        *p_event = (s3_output_t){0};
+        p_event->kind = S3_OUTPUT_REPLY;
+        p_event->request_id = UINT32_MAX;
+        return (E_OK);
+    }
     if ((10U == g_case) && !b_sent)
     {
         b_sent = true;
@@ -316,7 +381,7 @@ ER imu_runtime_get_status (imu_runtime_status_t * p_status)
         g_ok = (g_estops > 0U) && g_ok; /* Stop posted before bounded getter. */
     }
     *p_status = (imu_runtime_status_t){0};
-    if ((60U == g_case) || (61U == g_case))
+    if ((60U == g_case) || (61U == g_case) || (85U == g_case))
     {
         p_status->b_enabled = true;
         p_status->sensing.phase = IMU_MONITORING;
@@ -473,6 +538,30 @@ static void test_run_owner (void)
 }
 static bool test_case (void)
 {
+    if (85U == g_case)
+    {
+        vehicle_setup_t setup = {0};
+        vehicle_t status;
+        setup.mission = test_config();
+        setup.motion = test_motion_config();
+        if ((E_OK != vehicle_runtime_init()) ||
+            (E_OK != vehicle_runtime_setup(&setup)) ||
+            (E_OK != vehicle_runtime_start(31U))) { return (false); }
+        test_run_owner();
+        return ((E_OK == vehicle_runtime_status(&status)) &&
+            (VEHICLE_MANOEUVRE == status.state) &&
+            (11U == status.navigation_id) && (0U == g_estops));
+    }
+    if ((83U == g_case) || (84U == g_case))
+    {
+        vehicle_t status;
+        if ((E_OK != vehicle_runtime_init()) ||
+            (E_OK != vehicle_runtime_start(5U))) { return (false); }
+        test_run_owner();
+        return ((E_OK == vehicle_runtime_status(&status)) &&
+            (VEHICLE_UNCONFIGURED == status.state) && (0U == g_estops) &&
+            (g_mapping_calls == ((83U == g_case) ? 2U : 1U)));
+    }
     if (g_case >= 65U) { return (test_route()); }
     if (64U == g_case)
     {
@@ -619,6 +708,38 @@ static bool test_case (void)
     vehicle_t vehicle = {0};
     vehicle_config_t cfg = test_config();
     vehicle_input_t input = test_input();
+    if (82U == g_case)
+    {
+        vehicle_config_t config = test_config();
+        vehicle_output_t result;
+        if (!vehicle_init(&vehicle, &config)) { return (false); }
+        vehicle.b_run_requested = true;
+        input.navigation.kind = NAV_EVENT_BARCODE_VALID;
+        input.navigation.command = NAV_COMMAND_LEFT;
+        input.navigation.timestamp_us = input.raw_now_us;
+        input.navigation_id = 1U;
+        if (!vehicle_step(&vehicle, &input, &result) || !result.b_command ||
+            (MOVE_PLAN_SPEED != result.command.kind) ||
+            (0U != vehicle.navigation_id)) { return (false); }
+        input.motion.active_id = result.command.id;
+        input.motion.state = MOTION_RUN_ACTIVE;
+        input.navigation.kind = NAV_EVENT_JUNCTION;
+        input.navigation_id = 2U;
+        input.pending_navigation_id = 2U;
+        input.line_state = LINE_STATE_AWAITING_MANOEUVRE;
+        if (!vehicle_step(&vehicle, &input, &result) || !result.b_stop ||
+            result.b_command) { return (false); }
+        input.motion.active_id = 0U;
+        input.motion.terminal_id = vehicle.active_id;
+        input.motion.terminal_result = MOTION_RUN_STOPPED;
+        input.motion.state = MOTION_RUN_READY;
+        if (!vehicle_step(&vehicle, &input, &result) ||
+            (0U == result.acknowledge_id)) { return (false); }
+        input.motion.terminal_id = 0U;
+        return (vehicle_step(&vehicle, &input, &result) && result.b_command &&
+            (MOVE_PLAN_LEFT == result.command.kind) &&
+            (VEHICLE_MANOEUVRE == vehicle.state));
+    }
     vehicle_output_t output;
 
     if (43U == g_case)
@@ -755,7 +876,7 @@ static bool test_case (void)
     {
         if (!vehicle_init(&vehicle, &cfg)) { return (false); }
         vehicle.b_line_found = true;
-        input.navigation.kind = NAV_EVENT_BARCODE_VALID;
+        input.navigation.kind = NAV_EVENT_JUNCTION;
         input.navigation.command = NAV_COMMAND_RIGHT;
         input.navigation.timestamp_us = input.raw_now_us;
         input.navigation_id = 2U;
@@ -817,7 +938,8 @@ static bool test_case (void)
                 case 2U: input.line_mode = (line_mode_t)255; break;
                 case 3U: input.navigation.kind = (nav_event_kind_t)255; break;
                 case 4U: input.remote.command_id = (s1_codec_command_id_t)255; break;
-                default: input.imu.phase = (imu_core_phase_t)255; break;
+                /* Packed phase has three bits; 7 is representable/invalid. */
+                default: input.imu.phase = 7U; break;
             }
             if (!vehicle_step(&vehicle, &input, &output) || !output.b_estop)
             { return (false); }
@@ -859,7 +981,7 @@ static bool test_case (void)
         nav_map_init(&map);
         if (!nav_map_apply(&map, "MAP A=LEFT")) { return (false); }
         input.navigation.command = nav_map_lookup(&map, 'A');
-        input.navigation.kind = NAV_EVENT_BARCODE_VALID;
+        input.navigation.kind = NAV_EVENT_JUNCTION;
         input.navigation.timestamp_us = input.raw_now_us;
         input.navigation_id = 10U;
         input.pending_navigation_id = 10U;

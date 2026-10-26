@@ -1,0 +1,304 @@
+C:/msys64/ucrt64/bin/gcc.exe --version
+gcc.exe (Rev2, Built by MSYS2 project) 14.2.0
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\vehicle.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_0.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\vehicle_rt.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_1.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\gpio_bank.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_2.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\app_main.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_3.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -Wno-error=conversion -Wno-error=sign-conversion -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem1\s1_codec.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_4.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\motion_config.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_5.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\motion_quad.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_6.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\motion_estimator.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_7.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\motion_pid.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_8.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\drv_motor.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_9.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\enc_capture.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_10.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\wheel_loop.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_11.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\move_plan.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_12.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem2\motion_run.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_13.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem3\drv_line_tracking.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_14.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem3\drv_ir_input.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_15.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem3\drv_navigation_map.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_16.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -Wno-error=conversion -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem4\imu_core.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_17.o
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem4\imu_core.c: In function 'hump_update':
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem4\imu_core.c:310:36: warning: conversion from 'uint32_t' {aka 'unsigned int'} to 'unsigned char' may change value [-Wconversion]
+  310 |         p_status->height_reasons = reasons;
+      |                                    ^~~~~~~
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem4\imu_core.c:332:37: warning: conversion from 'uint32_t' {aka 'unsigned int'} to 'unsigned char' may change value [-Wconversion]
+  332 |         p_status->height_reasons |= reasons;
+      |                                     ^~~~~~~
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem4\imu_guard.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_18.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_19.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DVEHICLE_HOST_TEST -DMOTION_CONFIG_HOST_TEST -DMOTION_RTOS_HOST_TEST -DAPP_TEST=0 -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\app_program -IC:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration -include C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_ports.h -c C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\test_vehicle.c -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_20.o
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_0.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_1.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_2.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_3.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_4.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_5.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_6.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_7.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_8.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_9.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_10.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_11.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_12.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_13.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_14.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_15.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_16.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_17.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_18.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_19.o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default_20.o -lm -o C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 3
+[TEST] INT-03 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 4
+[TEST] INT-04 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 5
+[TEST] INT-05 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 6
+[TEST] INT-06 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 7
+[TEST] INT-07 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 8
+[TEST] INT-08 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 9
+[TEST] INT-09 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 10
+[TEST] INT-10 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 11
+[TEST] INT-11 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 12
+[TEST] INT-12 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 13
+[TEST] INT-13 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 14
+[TEST] INT-14 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 15
+[TEST] INT-15 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 16
+[TEST] INT-16 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 17
+[TEST] INT-17 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 18
+[TEST] INT-18 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 19
+[TEST] INT-19 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 20
+[TEST] INT-20 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 21
+[TEST] INT-21 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 22
+[TEST] INT-22 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 23
+[TEST] INT-23 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 24
+[TEST] INT-24 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 25
+[TEST] INT-25 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 26
+[TEST] INT-26 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 27
+[TEST] INT-27 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 28
+[TEST] INT-28 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 29
+[TEST] INT-29 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 30
+[TEST] INT-30 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 31
+[TEST] INT-31 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 32
+[TEST] INT-32 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 33
+[TEST] INT-33 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 34
+[TEST] INT-34 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 35
+[TEST] INT-35 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 36
+[TEST] INT-36 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 37
+[TEST] INT-37 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 38
+[TEST] INT-38 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 39
+[TEST] INT-39 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 40
+[TEST] INT-40 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 41
+[TEST] INT-41 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 42
+[TEST] INT-42 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 43
+[TEST] INT-43 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 44
+[TEST] INT-44 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 45
+[TEST] INT-45 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 46
+[TEST] INT-46 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 47
+[TEST] INT-47 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 48
+[TEST] INT-48 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 49
+[TEST] INT-49 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 50
+[TEST] INT-50 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 51
+[TEST] INT-51 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 52
+[TEST] INT-52 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 53
+[TEST] INT-53 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 54
+[TEST] INT-54 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 55
+[TEST] INT-55 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 56
+[TEST] INT-56 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 57
+[TEST] INT-57 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 58
+[TEST] INT-58 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 59
+[TEST] INT-59 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 60
+[TEST] INT-60 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 61
+[TEST] INT-61 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 62
+[TEST] INT-62 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 64
+[TEST] INT-64 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 65
+[TEST] INT-65 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 66
+[TEST] INT-66 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 67
+[TEST] INT-67 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 68
+[TEST] INT-68 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 69
+[TEST] INT-69 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 70
+[TEST] INT-70 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 71
+[TEST] INT-71 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 72
+[TEST] INT-72 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 73
+[TEST] INT-73 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 74
+[TEST] INT-74 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 75
+[TEST] INT-75 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 76
+[TEST] INT-76 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 77
+[TEST] INT-77 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 78
+[TEST] INT-78 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 79
+[TEST] INT-79 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 80
+[TEST] INT-80 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 81
+[TEST] INT-81 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 82
+[TEST] INT-82 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 83
+[TEST] INT-83 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 84
+[TEST] INT-84 PASS shared production integration
+EXIT 0
+C:\Users\linco\OneDrive\Documents\GitHub\Embedded-System\INF2004-Embedded-Systems\testing\integration\build\integration_cebhf0_y\default.exe 85
+[TEST] INT-85 FAIL shared production integration
+EXIT 1
