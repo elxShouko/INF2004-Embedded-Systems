@@ -188,3 +188,25 @@ original route. Junction detection retains the documented side-width limitations
 Pending: live consumers/producers in Members 1/2/5 and the Mission Controller,
 on-board RTOS/scheduling tests and hardware calibration. Their files have not
 been edited to create these connections. The integration supplies the S3 side.
+
+
+## Buddy 1 mapping reply contract - 2026-10-26
+
+For every processed S3_INPUT_MAPPING request, S3 emits S3_OUTPUT_REPLY with
+exactly the incoming 32-bit request_id. Buddy 1 uses `0x80000000 | seq`;
+S3 preserves the high bit and sequence, without replacing them with event_id.
+The packed input and reply formats both carry all 32 bits. S3 treats this ID
+as an opaque correlation value and does not construct Buddy 1 sequences.
+
+The reply's accepted flag reports whether installation succeeded, and
+map_revision identifies the resulting installed revision. Invalid/incomplete
+maps and maps blocked by a pending barcode/manoeuvre receive accepted=0 with
+the original request ID and unchanged map/revision. Buddy 1 remains responsible
+for reporting ACCEPTED/REJECTED to the dashboard from that reply; successful
+queue admission alone does not confirm installation. S3's existing output-full
+fault/drop policy still applies if a reply cannot be queued.
+
+S3-U40 tests IDs 0x80000000, 0x80000001, 0x80123456 and 0xffffffff through the
+public submit/receive packed transports and real S3 owner dispatch, including
+accepted maps, incomplete-map rejection and pending-instruction rejection.
+This S3-only update changes no wire layout, Buddy 1 code or shared controller.

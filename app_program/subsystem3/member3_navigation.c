@@ -635,6 +635,10 @@ static void input (s3_context_t * p_context, const s3_input_t * p_input,
     {
         s3_output_t reply = {0};
         reply.kind        = S3_OUTPUT_REPLY;
+        /* Echo all 32 bits, including Buddy 1's 0x80000000 | seq map ID.
+         * Accepted and rejected updates both use this reply; queue admission
+         * alone is not confirmation that a map was installed.
+         */
         reply.request_id  = p_input->request_id;
         reply.accepted    = b_accepted;
         emit(p_context, &reply);

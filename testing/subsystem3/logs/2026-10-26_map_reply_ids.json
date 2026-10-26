@@ -1,0 +1,333 @@
+{
+  "tested_head": "ec043602598c14d8d6c8c81abafb39b088e18338",
+  "status": " M app_program/subsystem3/member3_navigation.c\n M docs/buddy3/member3-template-integration.md\n M testing/subsystem3/TEST_LOG.md\n M testing/subsystem3/member3_minbits_test.c\n",
+  "production_tick_ms": 10,
+  "file_sha256": {
+    "app_program/subsystem3/drv_barcode.c": "e91c3a1678a9cadfc3e00facc47c23800dbd1d6dc78c62c187528f8f1c3690a1",
+    "app_program/subsystem3/drv_barcode.h": "e6e488a9dc980f64cee9074fb4e3d78331fc8899e0365614e7e2a3c6eb80b1d6",
+    "app_program/subsystem3/drv_ir_input.c": "10a47ec5a69fc603178b72c2c03100d9aae2913ce9b595117305764da6eedb3a",
+    "app_program/subsystem3/drv_ir_input.h": "6fc5051272fefbea87ccdc62e24864c0af130c7bb8a08dd460c9a673f9db7553",
+    "app_program/subsystem3/drv_ir_rtos.c": "08faa16db40db5be97caf14e2d445836bfb1e54dd967d0ee31cef071cc089c17",
+    "app_program/subsystem3/drv_ir_rtos.h": "e7861627aac9cdd86b4178376e69b67c252436ce72e960e6fe76fa18083c810f",
+    "app_program/subsystem3/drv_junction.c": "343fcd196c5c13ac9e50bdd9cebfcfc28e99becf89abe295c50756e2561c0bcc",
+    "app_program/subsystem3/drv_junction.h": "a91841ad034b568bd8c7cdf8bdd118c864d410b1077e74add40d167d146f2c90",
+    "app_program/subsystem3/drv_line_tracking.c": "07c4e33ad582fae671b072bb0f95dc74aaf99587e0919adcbfde6c48984a04bb",
+    "app_program/subsystem3/drv_line_tracking.h": "7cea5536e37736b09d91985c2be1e502d529061a5aa228ec875743c4be28abd9",
+    "app_program/subsystem3/drv_navigation_map.c": "436d8448381e12d16dbed976025be1d94646b833fa492e5da41893a7797bcbb2",
+    "app_program/subsystem3/drv_navigation_map.h": "e040275542c7e897153548267f53dec3a0bc06d9987d361f95f2a88830105f9a",
+    "app_program/subsystem3/drv_s3_codec.c": "49fd1d80aebea25f3797682f542bea8b2d503f4ced5d70cbec944d0d9a74a912",
+    "app_program/subsystem3/drv_s3_codec.h": "5b187848ce57d02be5cdbece6b9219aaa969f476e9c5b0d55b947cf621a48a56",
+    "app_program/subsystem3/line/barcode.h": "ab212e59f98f27ecfa84dffb32a2bf7eefd91dfb187a3fdc18cd6c428e01da34",
+    "app_program/subsystem3/line/ir_input.h": "6471d99464baf0354bb7bf0b90f5df8cde978853649908cb670b3edfb3778ea7",
+    "app_program/subsystem3/line/junction.h": "1373bf9beea78161dd1d4bb451589441331da701cc9dafd04dbab0f89ce72dab",
+    "app_program/subsystem3/line/line_tracking.h": "c160d3a21c35eacd701fe63798e28d2c7cd5ab9b00f61436a74ff987d4ec77a2",
+    "app_program/subsystem3/line/navigation_map.h": "ddd7a671ae38c0238669cc3432e54953815b6e7f8e852b7fa5308efeac7eae9e",
+    "app_program/subsystem3/line/navigation_types.h": "40dbf2c2d297e83c4522d0a98e330122e86204f64ee97ff83180cbc30128e1dd",
+    "app_program/subsystem3/member3_data.h": "eee9d579ac2a3b620108ab80524394c898f0ee0686018a673c0716e30b9ea0e2",
+    "app_program/subsystem3/member3_navigation.c": "ba5bc10ea686c1d8a79f0aa875dfaf2fed72917f291841cf9769cb092b4726b5",
+    "app_program/subsystem3/member3_navigation.h": "7c65ababd565ef6a1e423e8ba4dd9d57d08efa89199dbde5b72b970e1fbe7a46",
+    "app_program/subsystem3/subsystem3.c": "cca893fd28b6e7072102c59a7f00209e6657c33694d6f4670acc85f4b19802a7",
+    "app_program/subsystem3/subsystem3.h": "3eaf75c622e511d1025065480a18cf4fa5a4c70589b2ed3637ed72d11c4afe4c",
+    "app_program/subsystem3/subsystem3_test.c": "5dcb8352ffcb4f68368da02e0bd31627064cb6e6c4ec67c812afc508f6afbd2e",
+    "app_program/subsystem3/subsystem3_test.h": "161a8a02e37fb370a5260d266ce1ba7d766e825d98a7f26bf65eb88cf27bb76a",
+    "app_program/subsystem3/task_consumer.c": "a808eb4106320bf3ff99c3ddd58a205a2fb310665cbb6227fa0d0d9457375fe7",
+    "app_program/subsystem3/task_consumer.h": "be130b3eb210b599cd3a2da1071fe4ae08772961240cf31d91672aacfd6c6d39",
+    "config/config.h": "9cef5523540899c40568b9a7a690606c5a0e4ce65bb9ce61b9ef12a9b0ad9576",
+    "testing/subsystem3/diagnostics/member3_ir_diagnostic.c": "82bd7f0bb1f6a4b3edae0e6424481a10ad0576fe04ca377b2d03cf6443a8b577",
+    "testing/subsystem3/logs/member3_ir_test.c": "a3b998b5de1076739680bc46b74706c422eab06cd40063dcee0db72ca8ffb873",
+    "testing/subsystem3/logs/member3_junction_test.c": "c817f86f3c238a57dda8877722a74d356821f5c0df7c75a1c216aed251a6a1d6",
+    "testing/subsystem3/logs/member3_navigation_test.c": "d0d6b384959d30c2360f2e498daa19329ab4e9dec819907b67fc3a4a731ef9c0",
+    "testing/subsystem3/logs/member3_rtos_test.c": "f29eb88dbb0d6e778bee48b0e83973e469a80c35a04e54cadab750054a5fdfd9",
+    "testing/subsystem3/member3_feedback_test.c": "e73731504fd8bbb83be5ecfe71d4c5a9724793c0196d385dabada5a856de0b48",
+    "testing/subsystem3/member3_minbits_test.c": "a4602952775ee82a12ed2c1e34c34569c970596700e81917740d33a07f4809c9",
+    "testing/subsystem3/member3_navigation_test.c": "7d94c5bf8135ccb2cc02ae55ac599a684a618cad14caa7a560967a5e5d06637b",
+    "testing/subsystem3/member3_production_test.c": "0e82b09f3f50350705afb0a492889f30f0664679d31cf8250cae4552fb002347",
+    "testing/subsystem3/member3_requirements_test.c": "eab209049a2c2d258edb628fbc4daf581bfffb70453e7af0a54edcb2cdf7a78b",
+    "testing/subsystem3/member3_rtos_test.c": "846286ccc462bddc56d57fd041a86f47bcdce2d5b76525236be3a5d9937235ed",
+    "testing/subsystem3/member3_safety_test.c": "bdd425c07610c4001531109931462b6f81b4b15328e35e5dc76c576735bab4eb",
+    "testing/subsystem3/verify_production_timing.py": "de324f7b80061ce1b923647556449319ee90e1c4ebb2eeac99a78057066da218"
+  },
+  "scope": "Host simulation only; no target scheduling or physical proof",
+  "checks": [
+    {
+      "command": [
+        "C:\\Users\\linco\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\check_barr_style.py"
+      ],
+      "exit": 0,
+      "stdout": "Checked 29 Member 3 C/header files; longest function: 88 lines.\nPASS: checked rules\nFull conformance remains conditional on manual review and exception approval.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\logs\\member3_ir_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\ir.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\ir.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 IR tests passed.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_navigation_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\navigation.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\navigation.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 navigation tests passed: A-Z both directions, capture, mapping, line rules.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\logs\\member3_junction_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\junction.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\junction.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 junction tests passed: crossing geometry, barcodes, noise, timing and line filtering.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_rtos_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\rtos.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\rtos.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 RTOS owner tests passed: mapping, barcode-to-command, recovery, modes, faults.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_production_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\production.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\production.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U10 PASS: 10..100 ms multiples; unsupported periods rejected\nS3-U11 PASS: sampled *A*, forward/reverse, phase sweep, 10/20 ms\nS3-U12 PASS: allowed jitter, excessive gap and reversed clock\nS3-U13 PASS: undersampled frame rejected; hidden pulse unobservable\nS3-U14 PASS: four inputs/cycle; reads continue\nS3-U15 PASS: output overload latches; reads continue\nS3-U16 PASS: completion correlation, stable found, explicit resume\nS3-U17 PASS: bypass, recovery timeout, invalid sensor payload\nS3-U18 PASS: raw interruption restarts stable found interval\nHost simulation only: no RTOS scheduling or physical speed proof.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_feedback_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\feedback.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\feedback.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U20 PASS: polling timeout/errors, coherent fields, read != sample\nS3-U21 PASS: unchanged-line freshness, raw/filter lag, sample gap\nS3-U14 PASS: four inputs/cycle; reads continue\nS3-U14 PASS: four inputs/cycle; reads continue\nS3-U22 PASS: contended publication skips; sampling continues\nS3-U23 PASS: paused completion cannot release pending manoeuvre\nS3-U24 PASS: barcode noise rejected; front sensing continues\nS3-U25 PASS: config/map reply IDs and rejected updates preserved\nS3-U16 PASS: completion correlation, stable found, explicit resume\nS3-U18 PASS: raw interruption restarts stable found interval\nHost fakes only; no real mutex latency/SMP/hardware claim.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_minbits_test.c",
+        "-O2",
+        "-Wconversion",
+        "-Wsign-conversion",
+        "-pedantic",
+        "-fanalyzer",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\minbits.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\minbits.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U26 PASS: every action/slot; neighbours and padding preserved\nS3-U27 PASS: input lengths, round trips, truncation and padding\nS3-U28 PASS: output kinds/letters; numeric limits; malformed frames\nS3-U29 PASS: rejection replies, transactionality, receive preservation\nS3-U40 PASS: full gateway IDs echoed in accepted/rejected replies\nsizes: map=16 status=48 output=48 input_adapter=96\nHost simulation only; no physical or SMP timing claim.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_safety_test.c",
+        "-O2",
+        "-Wconversion",
+        "-Wsign-conversion",
+        "-pedantic",
+        "-fanalyzer",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\safety.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\safety.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U32 PASS: first failed delay faults/exits; no retry or busy loop\nS3-U33 PASS: final ID is a fault; no wrap/reuse; drops saturate\nS3-U34 PASS: age boundary, no re-stamp, duplicates and 64-bit limits\nS3-U35 PASS: 64-bit time and same-update confirmation event\nHost simulation only; target latency remains unmeasured.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_requirements_test.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\requirements.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\linco\\OneDrive\\Documents\\GitHub\\Embedded-System\\INF2004-Embedded-Systems\\build\\member3-production\\requirements.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U38 PASS: no startup actions; complete maps replace old letters\nS3-U39 PASS: both directions, four actions, wait for junction, repeat\n",
+      "stderr": ""
+    }
+  ],
+  "passed": true
+}

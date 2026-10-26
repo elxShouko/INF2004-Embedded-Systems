@@ -233,6 +233,64 @@ static void test_rejection (void)
     puts("S3-U29 PASS: rejection replies, transactionality, receive preservation");
 }
 
+/** @brief Follow the public packed input/output path through the S3 owner. */
+static s3_output_t map_reply (s3_context_t * p_context,
+                              const s3_input_t * p_request)
+{
+    s3_input_t decoded = {0};
+    s3_output_t reply = {0};
+    const unsigned int before = g_count;
+    assert(E_OK == s3_submit(p_request, TMO_POL));
+    assert(s3_input_decode(g_submitted_input, g_submitted_size, &decoded));
+    assert(p_request->request_id == decoded.request_id);
+    input(p_context, &decoded, 0U);
+    assert(before + 1U == g_count);
+    g_receive_size = (INT)s3_output_encode(&g_outputs[before],
+                                           g_receive_bytes);
+    assert(E_OK == s3_receive(&reply, TMO_POL));
+    assert(S3_OUTPUT_REPLY == reply.kind);
+    assert(p_request->request_id == reply.request_id);
+    assert(p_request->request_id != reply.event_id);
+    assert(p_context->map.revision == reply.map_revision);
+    return reply;
+}
+
+/** @brief Preserve Buddy 1 map correlation on acceptance and rejection. */
+static void test_gateway_reply (void)
+{
+    static const uint32_t sequences[] = {0U, 1U, 0x123456U, 0x7fffffffU};
+    for (uint32_t index = 0U;
+         index < sizeof(sequences) / sizeof(sequences[0]); ++index)
+    {
+        s3_context_t context;
+        init_context(&context);
+        s3_input_t request = {0};
+        request.kind = S3_INPUT_MAPPING;
+        request.request_id = 0x80000000U | sequences[index];
+        assert(nav_update_parse(&request.value.mapping,
+            "MAP W=FORWARD X=UTURN Y=LEFT Z=RIGHT"));
+        const uint32_t revision = context.map.revision;
+        s3_output_t reply = map_reply(&context, &request);
+        assert(reply.accepted);
+        assert(revision + 1U == reply.map_revision);
+        const nav_map_t installed = context.map;
+
+        assert(nav_update_parse(&request.value.mapping, "MAP A=LEFT"));
+        reply = map_reply(&context, &request);
+        assert(!reply.accepted);
+        assert(0 == memcmp(&installed, &context.map, sizeof(installed)));
+
+        assert(nav_update_parse(&request.value.mapping,
+            "MAP A=LEFT B=RIGHT C=FORWARD D=UTURN"));
+        context.pending_letter = 'W';
+        context.pending_command = NAV_COMMAND_STRAIGHT;
+        reply = map_reply(&context, &request);
+        assert(!reply.accepted);
+        assert(0 == memcmp(&installed, &context.map, sizeof(installed)));
+    }
+    puts("S3-U40 PASS: full gateway IDs echoed in accepted/rejected replies");
+}
+
 int main (void)
 {
     assert(E_OK == s3_navigation_init());
@@ -248,6 +306,7 @@ int main (void)
     test_inputs();
     test_outputs();
     test_rejection();
+    test_gateway_reply();
     printf("sizes: map=%zu status=%zu output=%zu input_adapter=%zu\n",
            sizeof(nav_map_t), sizeof(s3_status_t), sizeof(s3_output_t),
            sizeof(s3_input_t));

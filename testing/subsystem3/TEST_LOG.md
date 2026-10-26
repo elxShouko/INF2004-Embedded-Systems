@@ -479,3 +479,31 @@ plus uncommitted overlap cleanup on main. Command:
 | 2026-10-26 | All production timing/IR/decoder/navigation/RTOS/feedback/packed/safety/requirements suites, including S3-U38/39 | PASS, host only | logs/2026-10-26_overlap_2.json |
 
 No target scheduling, barcode hardware or physical motion checks were run.
+
+
+## Buddy 1 high-bit mapping correlation - 2026-10-26
+
+Base revision: main HEAD `ec043602598c14d8d6c8c81abafb39b088e18338`, plus
+uncommitted S3-only comment, test and documentation changes. The existing
+owner already echoes every request_id; no runtime policy or layout change.
+
+| ID | Method | Expected result |
+|---|---|---|
+| S3-U40 | Real s3_submit/input dispatch/s3_receive and packed codecs with kernel queue fakes | All 32 request ID bits survive accepted, incomplete-map rejected and pending-instruction rejected updates; response carries installed revision; rejected updates preserve map |
+
+IDs exercised: 0x80000000, 0x80000001, 0x80123456, 0xffffffff. These are request
+correlation IDs, separate from S3's independently generated event IDs. Existing
+queue-full fault/drop semantics remain in effect. No hardware/real SMP claim.
+
+
+Command (bundled Python runtime, native GCC):
+`python testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-26_map_reply_ids.json`.
+
+| Date | Test IDs | Result | Evidence |
+|---|---|---|---|
+| 2026-10-26 | S3-U40 plus all existing IR/decoder/navigation/junction/owner/production/feedback/packed/safety/requirements suites | PASS, host simulation | logs/2026-10-26_map_reply_ids.json |
+
+The log records source fingerprints, exact compiler commands and working-tree
+status. `git diff --check` passes. Only S3 source comments, S3 tests and S3 docs
+were edited. The production change is comment-only, so no firmware rebuild
+was needed; no flash, hardware access, staging, commit or push was performed.
