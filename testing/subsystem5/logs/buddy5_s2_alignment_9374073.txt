@@ -1,0 +1,138 @@
+git rev-parse HEAD
+93740736dd1c3407eaf7f496089a096cee70c140
+EXIT 0
+git status --short
+?? testing/integration/logs/buddy5_s2_alignment_9374073_metadata.json
+?? testing/subsystem5/logs/buddy5_s2_alignment_9374073.txt
+EXIT 0
+{
+  "app_program\\subsystem5\\drv_s5.c": "a88bd397a709e13d0c0d2795ab6396505bffa5c72b62773d22d329931d50d8a9",
+  "app_program\\subsystem5\\drv_s5.h": "b790cf3867dfa6ff061324fb97373239449b51b2cff9e235faba808db3b35535",
+  "app_program\\subsystem5\\s5_acquire.c": "c407cdc4e2ccef14eb0f468fd20f603f26162db4a09db45dc4c94508d25b4717",
+  "app_program\\subsystem5\\s5_acquire.h": "f81c1d2d305b53d9bea849b7b167c384731287aeeec553c2487804a9b0542db7",
+  "app_program\\subsystem5\\s5_live.c": "06bfac04d091c332dd42eb0e3f39ef552017daef4db655d870a1bab3a7387663",
+  "app_program\\subsystem5\\s5_live.h": "b943548e28edd9f2752e1947647263de4df25157fd9b6e3dfb2ad9ea4498eb6e",
+  "app_program\\subsystem5\\s5_obstacle_logic.c": "6fef58044578aec4b40c9268b022449e95a91ccf47b6737378f8cf4db703d306",
+  "app_program\\subsystem5\\s5_obstacle_logic.h": "372986adcfbbb6a958c523dccfd2884ececb15671068572024c9891e62e7a10d",
+  "app_program\\subsystem5\\s5_obstacle_runtime.c": "c236f99f90e1f38b04c2d6cda1436093ca6939c929d3c54c7b48fb3d64e38b95",
+  "app_program\\subsystem5\\s5_obstacle_runtime.h": "dfd234fc684c1b70f77fead43b868b3ee75779f6481d3e5b0163dcb5088449f6",
+  "app_program\\subsystem5\\subsystem5.c": "24228e66ad310d7fe4a5635cb3133f75cfa25aef6814c5dcb0ddbef4111828dd",
+  "app_program\\subsystem5\\subsystem5.h": "e778b1165b1e5de658ae15bdb95da39247cf7c32d4d1e0453da8a6ae69f376a1",
+  "app_program\\subsystem5\\subsystem5_test.c": "f2b6a129143713568b10e03cee63e6027fe7ac827d6722a7fd5a7482355d89d5",
+  "testing\\subsystem5\\host\\measure_representation.c": "862db63ed50a8ef3ddcbc784c43d55bd223107b10abff129d6995714ad4cffd7",
+  "testing\\subsystem5\\host\\test_obstacle_logic.c": "f49cbd5b815fbc59d03e95b5a3b96dc3444d80381834085f8486a69e997c52a3",
+  "testing\\subsystem5\\host\\test_obstacle_runtime.c": "24710da96919fe213375d6a9b80397793f2dbbe078ea09e60fcbd444d90f0f99",
+  "testing\\subsystem5\\host\\test_representation.c": "de5fa2e4336a37bb51b65b630d6cffd75ffda6283245e6e84678a577b1979010",
+  "testing\\subsystem5\\host\\test_s5_port.c": "a332ac0bb3fc1103ce4164428bffbdd06148a7222befd0a63f233b74f7c278cf",
+  "testing\\subsystem5\\host\\test_s5_port.h": "a50c99252224ed26732fc4aeded2bc306243d3e0078f7bd55288deace6d3d0ed",
+  "testing\\subsystem5\\verify_representation.py": "2c2b657c693ece5f196d805ce17e3be912dcda51e135003c7a453c5bebf22f91"
+}
+C:/msys64/ucrt64/bin/gcc.exe --version
+gcc.exe (Rev2, Built by MSYS2 project) 14.2.0
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\test_representation.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_acquire.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c" -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\default.exe"
+EXIT 0
+"C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\default.exe"
+[TEST] S5-U101 PASS representation and timing bounds
+[TEST] S5-U102 PASS representation and timing bounds
+[TEST] S5-U103 PASS representation and timing bounds
+[TEST] S5-U104 PASS representation and timing bounds
+[TEST] S5-U105 PASS representation and timing bounds
+[TEST] S5-U106 PASS representation and timing bounds
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -DS5_DRIVER_HOST_TEST -D_PICO_RP2040_ -DCNF_SMP=1 "-IC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\include" "-IC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\config" "-IC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\test_s5_port.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_acquire.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c" -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\default_port.exe"
+EXIT 0
+"C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\default_port.exe"
+[TEST] S5-U64 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U65 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U66 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U67 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U68 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U69 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U70 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U71 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U72 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U107 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U108 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U109 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U110 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U111 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U112 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U113 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U114 PASS real GPIO/PWM/IRQ adapter
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer "-IC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\test_representation.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\mutated_0.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c" -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\default.exe"
+EXIT 0
+"C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\default.exe"
+[TEST] S5-U101 FAIL representation and timing bounds
+[TEST] S5-U102 FAIL representation and timing bounds
+[TEST] S5-U103 PASS representation and timing bounds
+[TEST] S5-U104 PASS representation and timing bounds
+[TEST] S5-U105 PASS representation and timing bounds
+[TEST] S5-U106 PASS representation and timing bounds
+EXIT 1
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer "-IC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\test_representation.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\mutated_1.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c" -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\default.exe"
+EXIT 0
+"C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\default.exe"
+[TEST] S5-U101 PASS representation and timing bounds
+[TEST] S5-U102 PASS representation and timing bounds
+[TEST] S5-U103 PASS representation and timing bounds
+[TEST] S5-U104 PASS representation and timing bounds
+[TEST] S5-U105 FAIL representation and timing bounds
+[TEST] S5-U106 PASS representation and timing bounds
+EXIT 1
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -O2 -fshort-enums "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\test_representation.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_acquire.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c" -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\optimized.exe"
+EXIT 0
+"C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\optimized.exe"
+[TEST] S5-U101 PASS representation and timing bounds
+[TEST] S5-U102 PASS representation and timing bounds
+[TEST] S5-U103 PASS representation and timing bounds
+[TEST] S5-U104 PASS representation and timing bounds
+[TEST] S5-U105 PASS representation and timing bounds
+[TEST] S5-U106 PASS representation and timing bounds
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -O2 -fshort-enums -DS5_DRIVER_HOST_TEST -D_PICO_RP2040_ -DCNF_SMP=1 "-IC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\include" "-IC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\config" "-IC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\test_s5_port.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\drv_s5.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_acquire.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c" -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\optimized_port.exe"
+EXIT 0
+"C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\optimized_port.exe"
+[TEST] S5-U64 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U65 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U66 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U67 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U68 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U69 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U70 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U71 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U72 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U107 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U108 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U109 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U110 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U111 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U112 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U113 PASS real GPIO/PWM/IRQ adapter
+[TEST] S5-U114 PASS real GPIO/PWM/IRQ adapter
+EXIT 0
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -O2 -fshort-enums "-IC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\test_representation.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\mutated_0.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c" -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\optimized.exe"
+EXIT 0
+"C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\optimized.exe"
+[TEST] S5-U101 FAIL representation and timing bounds
+[TEST] S5-U102 FAIL representation and timing bounds
+[TEST] S5-U103 PASS representation and timing bounds
+[TEST] S5-U104 PASS representation and timing bounds
+[TEST] S5-U105 PASS representation and timing bounds
+[TEST] S5-U106 PASS representation and timing bounds
+EXIT 1
+C:/msys64/ucrt64/bin/gcc.exe -std=c99 -Wall -Wextra -Werror -pedantic -Wconversion -Wsign-conversion -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wformat=2 -Wdouble-promotion -Wundef -fanalyzer -O2 -fshort-enums "-IC:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\host\test_representation.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\mutated_1.c" "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\app_program\subsystem5\s5_obstacle_logic.c" -o "C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\optimized.exe"
+EXIT 0
+"C:\Users\User\OneDrive - Singapore Institute Of Technology\Cloud Computing\INF2004-Embedded-Systems\testing\subsystem5\build\buddy5_s2_alignment_9374073\optimized.exe"
+[TEST] S5-U101 PASS representation and timing bounds
+[TEST] S5-U102 PASS representation and timing bounds
+[TEST] S5-U103 PASS representation and timing bounds
+[TEST] S5-U104 PASS representation and timing bounds
+[TEST] S5-U105 FAIL representation and timing bounds
+[TEST] S5-U106 PASS representation and timing bounds
+EXIT 1
