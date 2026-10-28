@@ -1,0 +1,97 @@
+[vehicle] state=7 blockers=0x00 blocked(line=0 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=145 last=40 from core 1
+monitor: t=3355814496 ms  samples=145  min=0 max=100 avg=48  free slots=4  free blocks=4
+[vehicle] state=7 blockers=0x00 blocked(line=0 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=150 last=90 from core 1
+monitor: t=3355816046 ms  samples=150  min=0 max=100 avg=49  free slots=4  free blocks=4
+monitor: LED task paused, state=WAIT+SUSPEND, pri=13
+[vehicle] state=7 blockers=0x00 blocked(line=0 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=7 blockers=0x00 blocked(line=0 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=155 last=60 from core 1
+monitor: t=3355817596 ms  samples=155  min=0 max=100 avg=50  free slots=4  free blocks=4
+[vehicle] state=7 blockers=0x00 blocked(line=0 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=160 last=10 from core 1
+monitor: t=3355819146 ms  samples=160  min=0 max=100 avg=50  free slots=4  free blocks=4
+[vehicle] state=7 blockers=0x00 blocked(line=0 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=1 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=1 linevalid=1 IRcal=1 motionstate=0 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=165 last=40 from core 1
+monitor: t=3355820696 ms  samples=165  min=0 max=100 avg=49  free slots=4  free blocks=4
+[vehicle] state=7 blockers=0x00 blocked(line=0 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=170 last=90 from core 1
+monitor: t=3355822246 ms  samples=170  min=0 max=100 avg=49  free slots=4  free blocks=4
+[vehicle] state=1 blockers=0x00 blocked(line=0 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=7 blockers=0x00 blocked(line=0 imu=0 obstacle=0 motion=0 power=0) IRraw=2 linevalid=1 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=175 last=60 from core 1
+monitor: t=3355823796 ms  samples=175  min=0 max=100 avg=50  free slots=4  free blocks=4
+[vehicle] state=1 blockers=0x01 blocked(line=1 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=0 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=180 last=10 from core 1
+monitor: t=3355825346 ms  samples=180  min=0 max=100 avg=50  free slots=4  free blocks=4
+monitor: LED task resumed, state=RUN, pri=12
+[vehicle] state=1 blockers=0x01 blocked(line=1 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=0 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=7 blockers=0x00 blocked(line=0 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=185 last=40 from core 1
+monitor: t=3355826896 ms  samples=185  min=0 max=100 avg=49  free slots=4  free blocks=4
+[vehicle] state=7 blockers=0x00 blocked(line=0 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=7 blockers=0x00 blocked(line=0 imu=0 obstacle=0 motion=0 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=3 motionfault=0 providerfault=0 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=190 last=90 from core 1
+monitor: t=3355828446 ms  samples=190  min=0 max=100 avg=49  free slots=4  free blocks=4
+[vehicle] state[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=525 last=40 from core 1
+monitor: t=3355932296 ms  samples=525  min=0 max=100 avg=49  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=2 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=530 last=90 from core 1
+monitor: t=3355933846 ms  samples=530  min=0 max=100 avg=49  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=535 last=60 from core 1
+monitor: t=3355935396 ms  samples=535  min=0 max=100 avg=50  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=540 last=10 from core 1
+monitor: t=3355936946 ms  samples=540  min=0 max=100 avg=50  free slots=4  free blocks=4
+monitor: LED task resumed, state=RUN, pri=12
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=545 last=40 from core 1
+monitor: t=3355938496 ms  samples=545  min=0 max=100 avg=49  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=550 last=90 from core 1
+monitor: t=3355940046 ms  samples=550  min=0 max=100 avg=49  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=2 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=555 last=60 from core 1
+monitor: t=3355941596 ms  samples=555  min=0 max=100 avg=50  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=560 last=10 from core 1
+monitor: t=3355943146 ms  samples=560  min=0 max=100 avg=50  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=565 last=40 from core 1
+monitor: t=3355944696 ms  samples=565  min=0 max=100 avg=49  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=570 last=90 from core 1
+monitor: t=3355946246 ms  samples=570  min=0 max=100 avg=49  free slots=4  free blocks=4
+monitor: LED task paused, state=WAIT+SUSPEND, pri=13
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=3 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=575 last=60 from core 1
+monitor: t=3355947796 ms  samples=575  min=0 max=100 avg=50  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=580 last=10 from core 1
+monitor: t=3355949346 ms  samples=580  min=0 max=100 avg=50  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=585 last=40 from core 1
+monitor: t=3355950896 ms  samples=585  min=0 max=100 avg=49  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=590 last=90 from core 1
+monitor: t=3355952446 ms  samples=590  min=0 max=100 avg=49  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=595 last=60 from core 1
+monitor: t=3355953996 ms  samples=595  min=0 max=100 avg=50  free slots=4  free blocks=4
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+[vehicle] state=9 blockers=0x08 blocked(line=0 imu=0 obstacle=0 motion=1 power=0) IRraw=0 linevalid=1 IRcal=1 motionstate=6 motionfault=8 providerfault=1 estop=0 IMUavailable=1 obstacleavailable=0
+monitor: batch  n=600 last=10 from core 1
+monitor: t=3355955546 ms  samples=600  min=0 max=100 avg=50  free slots=4  free blocks=4
+monitor: LED task resumed, state=RUN, pri=12

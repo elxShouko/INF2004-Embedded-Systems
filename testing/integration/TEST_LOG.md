@@ -1112,3 +1112,113 @@ Rebuilt firmware: build_make/mtk3pico_smp1_usb_cdc_wifi_imu.uf2
 SHA256: 1c817f8e449357ec5a06323f50dfa336c879680e48c39fc0eb2e02e737b9f402
 Not flashed by Codex; user must reload and repeat the real attempt. Existing
 25 percent duty, three-second held request and stop behavior are unchanged.
+
+
+### Post-GPIO-fix GP20 capture - 2026-10-28
+
+User reloaded the corrected firmware and requested another GP20 attempt.
+Read-only COM7 capture (115200 8N1, DTR enabled, 25 seconds, no serial
+commands) saved at logs/2026-10-28_gp20_after_gpio_fix.log. Repository HEAD
+is now 5010bb72478279fdff95544e2f4a99fac9c5b845, clean before this record.
+Flashed hash was not queried from hardware; user loaded the named UF2.
+
+Observed: no hard-fault message in this capture; S2 advances from CONFIGURED
+(state 1) to READY (state 3), fault_result 0, while other core tasks continue
+reporting. Controller later shows PAUSED (7), transient STOPPING (4) and
+line-blocked states. This supports successful progression past the original
+motor-prepare crash. It is not proof of physical wheel rotation or complete
+mission success. User movement observation is pending.
+
+IRraw is often 0 during the attempt, also showing 1 and 2 in the capture.
+With the current unverified black=HIGH setting, 0 is interpreted as no front
+black detection. Actual black/white surface correspondence and whether the
+front sensors straddle the tape are not yet established. Asked user for those
+physical observations before changing polarity or line interpretation. No
+firmware behavior was changed from this capture alone.
+
+
+### Repeat capture and user movement feedback - 2026-10-28
+
+Read-only repeat COM7 capture saved at
+logs/2026-10-28_gp20_after_gpio_fix_retry.log. Captured S2 READY followed
+by latched FAULT: controller state 9, motion state 6, motionfault 8,
+providerfault 1, motion blocker 0x08. No CPU hard fault is present in this
+capture. Arrival includes buffered data; transition timing is not measured.
+
+User reports the FIRST post-fix attempt physically moved but kept turning
+left with the front IR sensors left/right within the black line. Whether
+both wheels turned is unknown. SECOND attempt produced no movement.
+Thus first movement is user-observed, but forward accuracy/steering/wheel
+polarity remain unverified. Subsequent refusal is consistent with the latched
+fault, not proof of a second motor hardware failure.
+
+MOTION_RUN_OUTPUT (8) is an umbrella: wheel_loop_drive failure can include
+no-progress timeout, PID/motor result or reversal timeout. The capture does
+not distinguish these causes. Reboot and stopped white/black IR observation
+requested before changing polarity, steering or duty. No new firmware change
+was made solely from this feedback. Current HEAD 5010bb72478279fdff95544e2f4a99fac9c5b845.
+
+
+### Stopped front-IR white reference - 2026-10-28
+
+User confirmed reboot, both front sensors over plain white, GP20 unpressed.
+Read-only COM7 capture saved at logs/2026-10-28_ir_white_baseline.log. The
+stream includes old buffered startup data; use its latest tail for the user-
+labelled surface. Latest 10 reported IRraw masks are all 0: front left/right
+LOW on white in this observation. Motors remained CONFIGURED, no motion
+request transmitted by Codex. Black reference requested at the same mounting
+height with both sensor heads directly over black; no polarity change made
+until black is observed. Side sensor reference is not established.
+
+
+### Stopped front-IR black reference - 2026-10-28
+
+User confirmed both front heads directly over black tape at the same height,
+GP20 unpressed. Read-only COM7 capture saved at
+logs/2026-10-28_ir_black_baseline.log. Latest 10 reported masks all equal 3,
+versus the earlier white-reference tail of 0. Thus front left/right are both
+LOW over white, HIGH over black at this mounting/lighting in these stopped
+observations. Existing front polarity is correct; no polarity inversion made.
+The side channel is not calibrated by this experiment. No motion claimed.
+An additional short held-GP20 run with both front heads starting over black
+is being captured to distinguish wheel-drive asymmetry from line placement.
+
+
+### Both-black forward capture window - 2026-10-28
+
+COM7 was opened before instructing the user to hold GP20 for approximately
+one second and release, starting with both front heads over black. Port
+reported CAPTURE_ARMED before the instruction; no serial commands transmitted.
+50-second capture saved at logs/2026-10-28_both_black_forward_capture.log.
+All reported controller/IR/motion combinations are READY(2)/3/CONFIGURED(1).
+No motor-enable transition, fault line or hard fault was captured. This does
+not prove a button press was received or a drive command executed. User's
+physical button/movement observation is pending. No firmware changes made.
+
+
+### Clarification of previous capture - 2026-10-28
+
+User explicitly clarified that GP20 was NOT pressed during the prior
+both-black capture. Therefore its stationary READY/CONFIGURED result is
+expected and is not a failed movement attempt. A new COM7 window is armed
+before a distinct "Press now" cue, with a request for actual button and wheel
+observations. No code or configuration change is justified by the idle capture.
+
+
+### Confirmed GP20 press: right wheel only - 2026-10-28
+
+After the explicit final-message press cue, user confirmed GP20 was pressed
+and only the physical RIGHT wheel moved. Live COM7 capture was armed before
+the cue, flushed each line, and transmitted no commands. Snapshot saved as
+logs/2026-10-28_confirmed_press_right_wheel_only.log. After release the
+reported controller is PAUSED (7), S2 READY (3), motionfault/providerfault/
+estop 0, IRraw 3. This is user-observed asymmetric physical motion, not a
+successful straight-line test. The actual active PWM/encoder values were not
+logged by this firmware, so electrical failure, friction/breakaway threshold,
+encoder-channel mismatch and incorrect physical M1/M2 mapping are not resolved.
+
+Static policy: front mask 3 maps to CENTRED; both wheel-speed requests start
+at the same configured 50 mm/s (uncalibrated estimate). This does not prove
+equal physical PWM or wheel speeds under feedback. Asked the user to switch
+power off, trace the stationary left motor to M1/M2 and check terminal security.
+No duty increase, steering polarity change or hardware-test button requested.
