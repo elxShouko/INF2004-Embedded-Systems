@@ -2649,3 +2649,13 @@ Pico. Runtime memory peaks, IRQ/control/emergency timing, electrical operation
 and motion accuracy remain unmeasured. Numeric narrowing, public status/enums,
 fault translation and shared vehicle flags remain open; no complete minimum-bit
 compliance claim. No flashing, network access, installation, staging or commit.
+
+
+## Real GP20 hard-fault correction - 2026-10-28
+
+See the appended integration record "GP20 physical attempt: core-1 hard fault,
+motor driver correction" for the actual COM7 capture and PC/disassembly
+evidence. Fixed the S2 motor-brake GPIO_CTRL compound-argument access using
+a precomputed pin_b, preserving the supplied macro. Full integrated IMU build
+and 76 strict ARM object compilations passed on HEAD 0511f67 plus this fix.
+Post-fix hardware movement remains NOT RUN; no physical PASS is claimed.

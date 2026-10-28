@@ -1069,3 +1069,46 @@ cases added. git diff --check passed.
 Updated diagnostic firmware has NOT been flashed. User must reload it and
 repeat one GP20 attempt with buttons released during reboot. Initial fault
 cause, motor enable and physical line following remain unresolved.
+
+
+### GP20 physical attempt: core-1 hard fault, motor driver correction - 2026-10-28
+
+User requested capture and pressed GP20. Read-only COM7 capture (115200 8N1,
+DTR enabled, 25 seconds, no serial commands) saved in
+logs/2026-10-28_gp20_core1_hardfault.log. It contains buffered startup output
+and a real core-1 hard fault: prc:2 ctxtsk:4, PC 0x10011b00, LR 0x10011aa7,
+r3=0x40014016. No successful physical movement is claimed.
+
+Using the pre-fix ELF, arm-none-eabi-addr2line mapped the PC to in_w and the
+caller to drv_rp2040_brake. Disassembly confirms the faulting instruction is
+a 32-bit load from r3. GPIO_CTRL(n) in supplied sysdef.h expands n*8 without
+parenthesising n. GPIO_CTRL(pin_a + 1U) therefore reads the wrong address;
+for right motor pin_a=10 it produces 0x40014016, which is unaligned. Left
+motor pin_a=8 produces an aligned but incorrect register address.
+
+Fixed only S2 drv_rp2040.c: calculate pin_b first, use GPIO_CTRL(pin_b) and
+the same pin_b for gpio_set_pin. No supplied kernel/template macro changed.
+Pre-fix ELF retained locally at build/run-car-tmp/no-movement-hardfault-before.elf.
+Post-fix disassembly saved at build/run-car-tmp/gp20-hardfault-fixed-disassembly.txt
+shows pin_b shifted by 3 before addition to 0x40014004, yielding aligned
+GP9=0x4001404c and GP11=0x4001405c control addresses. This is binary/static
+verification of the access, not a successful post-fix powered run.
+
+Built working tree HEAD 0511f6772765ba322b16c47437d33730ce833c03 plus the
+single S2 driver fix, using make -C build_make S4_IMU=1 -j8 and the documented
+existing MSYS/toolchain/SDK environment. Profile SMP=1 USB CDC WIFI=cyw43
+NET=none MQTT=0 TEST=0 CRASH_REPORT=0 S4_IMU=1. Build/link/UF2 exit 0; no
+warnings/errors; text/data/bss 373188/1168/45216. Build log is ignored
+build/run-car-tmp/gp20-hardfault-fix-build.log.
+
+python -B testing/subsystem2/verify_motion.py --arm --strict --label gp20_hardfault_fix_20261028
+failed before compilation with sandbox WinError 623 (toolchain DLL relocation).
+Retry outside sandbox with label gp20_hardfault_fix_20261028_retry passed
+19 objects in each SMP0/1 TEST0/1 combination: 76 strict ARM object builds.
+Original and retry logs/metadata are preserved under testing/subsystem2/logs.
+git diff --check passed. No new synthetic test case or alternate build added.
+
+Rebuilt firmware: build_make/mtk3pico_smp1_usb_cdc_wifi_imu.uf2
+SHA256: 1c817f8e449357ec5a06323f50dfa336c879680e48c39fc0eb2e02e737b9f402
+Not flashed by Codex; user must reload and repeat the real attempt. Existing
+25 percent duty, three-second held request and stop behavior are unchanged.

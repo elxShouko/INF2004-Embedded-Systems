@@ -166,6 +166,7 @@ static bool drv_rp2040_brake (drv_rp2040_t * p_backend,
                                    drv_motor_wheel_t wheel)
 {
     uint32_t pin_a = 8U + ((uint32_t)wheel * 2U);
+    uint32_t pin_b = pin_a + 1U;
     uint32_t base = PWM_BASE + ((pin_a >> 1U) * 0x14U);
     bool b_ok;
 
@@ -174,7 +175,7 @@ static bool drv_rp2040_brake (drv_rp2040_t * p_backend,
      */
     out_w(GPIO_OUT_CLR, 3U << pin_a);
     ER error_a = gpio_set_pin(pin_a, GPIO_MODE_OUT);
-    ER error_b = gpio_set_pin(pin_a + 1U, GPIO_MODE_OUT);
+    ER error_b = gpio_set_pin(pin_b, GPIO_MODE_OUT);
 
     out_w(base + PWM_CHx_CSR, 0U);
     out_w(base + PWM_CHx_CC, 0U);
@@ -184,7 +185,11 @@ static bool drv_rp2040_brake (drv_rp2040_t * p_backend,
         (0U == (in_w(DRV_RP2040_OUT) & (3U << pin_a))) &&
         ((3U << pin_a) == (in_w(GPIO_OE) & (3U << pin_a))) &&
         (5U == (in_w(GPIO_CTRL(pin_a)) & 0x1FU)) &&
-        (5U == (in_w(GPIO_CTRL(pin_a + 1U)) & 0x1FU));
+        /* Template GPIO_CTRL does not parenthesise its argument. Passing
+         * pin_a + 1U directly computes the wrong (possibly unaligned) MMIO
+         * address. Use an already evaluated pin index here.
+         */
+        (5U == (in_w(GPIO_CTRL(pin_b)) & 0x1FU));
 
     return (b_ok);
 }
