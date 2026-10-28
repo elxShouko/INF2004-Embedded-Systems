@@ -1028,3 +1028,44 @@ Unknown motor direction, actual counts/revolution and IR polarity can cause a
 short stop/fault, wrong direction or ineffective steering; initial console
 settings and IRraw report these assumptions for adjustment. The 50 mm/s
 request is not a claim of actual calibrated speed.
+
+
+### Real no-movement feedback and COM7 capture - 2026-10-28
+
+User reported no movement after using GP20. Device Manager identifies USB
+Serial Device COM7; COM3 is Intel AMT. Read-only COM7 capture at 115200,
+8N1, DTR enabled, no commands transmitted, saved as
+logs/2026-10-28_no_movement_com7.log. Capture may contain buffered output;
+wall-clock ordering/latency cannot be inferred from arrival time. The exact
+flashed artifact hash was not read from the board. Its banner matches the
+authorised integrated first-attempt firmware. Repository is now clean user
+commit 5777fb3229bfd2eb23bbb0364a17f52cd6f586aa before diagnostic edits.
+
+Observed: controller READY (state 2), blocker mask 0, actual IRraw changes;
+then controller FAULT (state 9) while published motion state remains CONFIGURED
+(1), fault_result 0. GP21 estop activity appears in the capture. This does not
+establish the first fault's cause. No successful motor-enable transition or
+physical movement was observed. Professor monitor sample/batch messages in
+the capture are demonstration data, not actual wheel encoder measurements.
+
+Added one-shot controller fault trace to the same firmware: first policy
+fault source line, last motion API/mode-submit result, requested enable and
+line/nav/provider states. Stops are requested before the diagnostic print;
+no timing, output duty, readiness or emergency behavior was changed.
+
+Actual build: make -C build_make S4_IMU=1 -j8 with previously documented
+installed toolchain/MSYS/PICO_SDK_PATH environment. Build/link/UF2 exit 0,
+text/data/bss 373196/1168/45216, no build warnings/errors. Exact final source
+and artifact hashes: ignored build/run-car-tmp/first-no-movement-trace-sha256.json.
+Firmware SHA256: e61bf740d971cf6d6fb4e31e43c1cdaa9cd1c71300b06f703998d8a80e4e7e29
+Existing integration runner: python -B testing/integration/verify_integration.py
+--label no_movement_trace_20261028. Both profiles passed 82 normal groups, TEST
+startup isolation, eight mutations each and S5 suites. During this run the
+fault wrapper macro was renamed uppercase for Barr-C; diagnostic logic and
+line numbering were unchanged. Final macro spelling was rebuilt successfully;
+runner initial metadata hashes precede that spelling-only edit. No new test
+cases added. git diff --check passed.
+
+Updated diagnostic firmware has NOT been flashed. User must reload it and
+repeat one GP20 attempt with buttons released during reboot. Initial fault
+cause, motor enable and physical line following remain unresolved.

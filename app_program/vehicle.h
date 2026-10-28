@@ -97,6 +97,7 @@ typedef struct
 {
     vehicle_config_t config;
     vehicle_state_t state;
+    uint32_t fault_source_line; /* First policy fault location in vehicle.c. */
     uint32_t blockers;
     uint32_t next_id;
     uint32_t active_id;

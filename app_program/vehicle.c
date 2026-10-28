@@ -7,7 +7,10 @@
 static bool vehicle_bypass (vehicle_t * p_vehicle,
     vehicle_input_t const * p_input, vehicle_output_t * p_output);
 static bool vehicle_fresh (uint64_t now, uint64_t sample, uint32_t age);
-static void vehicle_fault (vehicle_t * p_vehicle, vehicle_output_t * p_output);
+static void vehicle_fault_at (vehicle_t * p_vehicle,
+    vehicle_output_t * p_output, uint32_t source_line);
+#define VEHICLE_FAULT_REPORT(p_vehicle, p_output) \
+    vehicle_fault_at((p_vehicle), (p_output), (uint32_t)__LINE__)
 static bool vehicle_command (vehicle_t * p_vehicle,
     vehicle_input_t const * p_input, vehicle_output_t * p_output);
 
@@ -68,7 +71,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         ((uint32_t)p_input->remote.command_id > S1_CMD_RESUME) ||
         ((uint32_t)p_input->imu.phase > IMU_FAULT))
     {
-        vehicle_fault(p_vehicle, p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle, p_output);
         return (true);
     }
 
@@ -84,7 +87,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         (p_input->now_us < p_vehicle->last_now_us) ||
         (VEHICLE_FAULT == p_vehicle->state))
     {
-        vehicle_fault(p_vehicle, p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle, p_output);
         return (true);
     }
     p_vehicle->last_now_us = p_input->now_us;
@@ -123,7 +126,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
     }
     if (b_live && (0U != p_vehicle->blockers))
     {
-        vehicle_fault(p_vehicle, p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle, p_output);
         return (true);
     }
     if (((0U == p_cfg->required_sensors) ||
@@ -131,13 +134,13 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         ((IMU_FAULT == p_input->imu.phase) ||
          (0U != (p_input->imu.events & (IMU_EVENT_FAULT | IMU_EVENT_IMPACT)))))
     {
-        vehicle_fault(p_vehicle, p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle, p_output);
         return (true);
     }
     /* Emergency bypasses freshness/ordinary command admission. */
     if (S1_CMD_EMERGENCY_STOP == p_input->remote.command_id)
     {
-        vehicle_fault(p_vehicle, p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle, p_output);
         return (true);
     }
     uint32_t age_ms = (uint32_t)(p_input->now_us / 1000U) -
@@ -163,7 +166,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         {
             if (p_vehicle->b_route_active || p_vehicle->b_route_finishing)
             {
-                vehicle_fault(p_vehicle,p_output);
+                VEHICLE_FAULT_REPORT(p_vehicle,p_output);
             }
             return (true);
         }
@@ -179,7 +182,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
             (p_input->navigation.command < NAV_COMMAND_LEFT) ||
             (p_input->navigation.command > NAV_COMMAND_U_TURN))
         {
-            vehicle_fault(p_vehicle, p_output);
+            VEHICLE_FAULT_REPORT(p_vehicle, p_output);
             return (true);
         }
         p_vehicle->b_line_found = false;
@@ -207,7 +210,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         (p_input->now_us - p_vehicle->transition_us >
          p_cfg->transition_timeout_us) && !p_input->b_scan_held)
     {
-        vehicle_fault(p_vehicle,p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle,p_output);
         return (true);
     }
     line_observation_t raw_line = LINE_OBSERVATION_ABSENT;
@@ -218,7 +221,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
     if ((VEHICLE_MANOEUVRE == p_vehicle->state) &&
         (b_near || p_vehicle->b_pause_requested))
     {
-        vehicle_fault(p_vehicle, p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle, p_output);
         return (true);
     }
     if (((VEHICLE_STOPPING == p_vehicle->state) ||
@@ -227,7 +230,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         ((p_input->now_us - p_vehicle->transition_us) >
          p_cfg->transition_timeout_us))
     {
-        vehicle_fault(p_vehicle, p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle, p_output);
         return (true);
     }
     bool b_need_stop = b_near || p_vehicle->b_pause_requested ||
@@ -255,13 +258,13 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
              (MOTION_RUN_STOPPED != p_input->motion.terminal_result) &&
              (MOTION_RUN_CANCELLED != p_input->motion.terminal_result)))
         {
-            vehicle_fault(p_vehicle, p_output);
+            VEHICLE_FAULT_REPORT(p_vehicle, p_output);
             return (true);
         }
         if ((VEHICLE_MANOEUVRE == p_vehicle->state) &&
             (MOTION_RUN_DONE != p_input->motion.terminal_result))
         {
-            vehicle_fault(p_vehicle, p_output);
+            VEHICLE_FAULT_REPORT(p_vehicle, p_output);
             return (true);
         }
         p_output->b_stop = false;
@@ -291,7 +294,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         ((p_input->now_us - p_vehicle->transition_us) >
          p_cfg->transition_timeout_us))
     {
-        vehicle_fault(p_vehicle, p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle, p_output);
         return (true);
     }
     if ((VEHICLE_STOPPING == p_vehicle->state) && b_live)
@@ -306,7 +309,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         if ((p_input->now_us < p_cmd->issued_us) ||
             ((p_input->now_us - p_cmd->issued_us) >= p_cmd->lifetime_us))
         {
-            vehicle_fault(p_vehicle, p_output);
+            VEHICLE_FAULT_REPORT(p_vehicle, p_output);
             return (true);
         }
         if ((p_input->motion.last_request_id == p_cmd->id) &&
@@ -314,7 +317,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         {
             if (!p_input->motion.b_request_accepted)
             {
-                vehicle_fault(p_vehicle, p_output);
+                VEHICLE_FAULT_REPORT(p_vehicle, p_output);
                 return (true);
             }
             p_vehicle->b_pending_command = false;
@@ -330,7 +333,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
     {
         if (VEHICLE_MANOEUVRE == p_vehicle->state)
         {
-            vehicle_fault(p_vehicle, p_output);
+            VEHICLE_FAULT_REPORT(p_vehicle, p_output);
         }
         else if (!b_live)
         {
@@ -402,7 +405,7 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
     }
     if (p_input->motion.active_id != p_vehicle->active_id)
     {
-        vehicle_fault(p_vehicle, p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle, p_output);
         return (true);
     }
     if ((0U != p_vehicle->active_id) &&
@@ -590,7 +593,7 @@ static bool vehicle_bypass (vehicle_t * p_vehicle,
         ((NAV_EVENT_JUNCTION == p_input->navigation.kind) &&
          (NAV_COMMAND_NONE != p_input->navigation.command)))
     {
-        vehicle_fault(p_vehicle,p_output); /* No ambiguous partial-route resume. */
+        VEHICLE_FAULT_REPORT(p_vehicle,p_output); /* No ambiguous partial-route resume. */
         return (true);
     }
     if (p_vehicle->b_route_finishing)
@@ -614,7 +617,7 @@ static bool vehicle_bypass (vehicle_t * p_vehicle,
         if (p_input->now_us - p_vehicle->transition_us >
             p_vehicle->config.transition_timeout_us)
         {
-            vehicle_fault(p_vehicle,p_output);
+            VEHICLE_FAULT_REPORT(p_vehicle,p_output);
         }
         return (true);
     }
@@ -635,7 +638,7 @@ static bool vehicle_bypass (vehicle_t * p_vehicle,
             (p_input->raw_now_us - p_input->scan_completed_us >
              p_vehicle->config.transition_timeout_us))
         {
-            vehicle_fault(p_vehicle,p_output);
+            VEHICLE_FAULT_REPORT(p_vehicle,p_output);
             return (true);
         }
         if (S5_LOGIC_OK != s5_route_plan(&p_input->obstacle,p_config,
@@ -659,7 +662,7 @@ static bool vehicle_bypass (vehicle_t * p_vehicle,
          (p_input->now_us - p_vehicle->transition_us >
           p_config->step_timeout_us)))
     {
-        vehicle_fault(p_vehicle,p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle,p_output);
         return (true);
     }
     const bool b_search = p_vehicle->route_index == 7U;
@@ -672,7 +675,7 @@ static bool vehicle_bypass (vehicle_t * p_vehicle,
     if (b_translation && (0U != p_vehicle->active_id) &&
         (p_input->forward_cm <= p_vehicle->config.obstacle_stop_cm))
     {
-        vehicle_fault(p_vehicle,p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle,p_output);
         return (true);
     }
     if (b_search &&
@@ -694,7 +697,7 @@ static bool vehicle_bypass (vehicle_t * p_vehicle,
     {
         if (0U != p_vehicle->active_id)
         {
-            vehicle_fault(p_vehicle,p_output);
+            VEHICLE_FAULT_REPORT(p_vehicle,p_output);
         }
         else
         {
@@ -720,7 +723,7 @@ static bool vehicle_bypass (vehicle_t * p_vehicle,
 
         if ((p_input->motion.terminal_id != p_vehicle->active_id) || !b_success)
         {
-            vehicle_fault(p_vehicle,p_output);
+            VEHICLE_FAULT_REPORT(p_vehicle,p_output);
             return (true);
         }
         p_vehicle->b_route_terminal = true;
@@ -761,7 +764,7 @@ static bool vehicle_bypass (vehicle_t * p_vehicle,
         {
             if (!p_input->motion.b_request_accepted)
             {
-                vehicle_fault(p_vehicle,p_output);
+                VEHICLE_FAULT_REPORT(p_vehicle,p_output);
                 return (true);
             }
             p_vehicle->b_pending_command = false;
@@ -783,12 +786,12 @@ static bool vehicle_bypass (vehicle_t * p_vehicle,
     if ((MOTION_RUN_READY != p_input->motion.state) ||
         !p_input->motion.b_standstill)
     {
-        vehicle_fault(p_vehicle,p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle,p_output);
         return (true);
     }
     if (UINT32_MAX == p_vehicle->next_id)
     {
-        vehicle_fault(p_vehicle,p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle,p_output);
         return (true);
     }
     move_plan_command_t command = {0};
@@ -815,8 +818,13 @@ static bool vehicle_fresh (uint64_t now, uint64_t sample, uint32_t age)
     return ((now >= sample) && ((now - sample) <= age));
 }
 
-static void vehicle_fault (vehicle_t * p_vehicle, vehicle_output_t * p_output)
+static void vehicle_fault_at (vehicle_t * p_vehicle,
+    vehicle_output_t * p_output, uint32_t source_line)
 {
+    if (VEHICLE_FAULT != p_vehicle->state)
+    {
+        p_vehicle->fault_source_line = source_line;
+    }
     *p_output = (vehicle_output_t){0};
     p_output->b_estop = true;
     p_vehicle->state = VEHICLE_FAULT;
@@ -848,7 +856,7 @@ static bool vehicle_command (vehicle_t * p_vehicle,
     }
     if (b_new && (UINT32_MAX == p_vehicle->next_id))
     {
-        vehicle_fault(p_vehicle, p_output);
+        VEHICLE_FAULT_REPORT(p_vehicle, p_output);
         return (true);
     }
 
@@ -871,7 +879,7 @@ static bool vehicle_command (vehicle_t * p_vehicle,
     {
         if (p_input->pending_navigation_id != p_vehicle->navigation_id)
         {
-            vehicle_fault(p_vehicle, p_output);
+            VEHICLE_FAULT_REPORT(p_vehicle, p_output);
             return (true);
         }
         command.kind = (NAV_COMMAND_LEFT == p_vehicle->navigation) ?

@@ -28,6 +28,8 @@ static vehicle_t g_vehicle_owner;
 static vehicle_t g_vehicle_published;
 static s5_clearance_t g_vehicle_clearance;
 static gpio_bank_t g_vehicle_bank;
+static motion_api_result_t g_vehicle_last_motion_api;
+static ER g_vehicle_last_mode_error;
 #if !defined(VEHICLE_HOST_TEST)
 #define VEHICLE_START_GPIO (20U)
 #define VEHICLE_ESTOP_GPIO (21U)
@@ -261,6 +263,7 @@ static void vehicle_task(INT code, void *p_context)
     bool b_telemetry_sent = false;
     uint64_t console_last_us = 0U;
     bool b_console_sent = false;
+    bool b_fault_reported = false;
     vehicle_odometry_t odometry = {0};
 
     (void)code;
@@ -391,6 +394,29 @@ static void vehicle_task(INT code, void *p_context)
             (void)s1_net_telemetry_send(&frame);
             telemetry_last_us = input.now_us;
             b_telemetry_sent = true;
+        }
+        if (!b_fault_reported && (VEHICLE_FAULT == g_vehicle_owner.state))
+        {
+            /* One-shot task diagnostic AFTER emergency/stop requests, never
+             * an ISR or the S2 motor control task. Preserve the first cause.
+             */
+            tm_printf((UB *)"[vehicle-fault] policy_line=%u api=%u mode_error=%d "
+                            "enable_request=%u motionstate=%u motionfault=%u "
+                            "line_state=%u line_mode=%u nav=%u "
+                            "providerfault=%u estop=%u blockers=0x%02x\n",
+                      (unsigned int)g_vehicle_owner.fault_source_line,
+                      (unsigned int)g_vehicle_last_motion_api,
+                      (int)g_vehicle_last_mode_error,
+                      (unsigned int)output.b_enable,
+                      (unsigned int)input.motion.state,
+                      (unsigned int)input.motion.fault_result,
+                      (unsigned int)input.line_state,
+                      (unsigned int)input.line_mode,
+                      (unsigned int)input.navigation.kind,
+                      (unsigned int)input.b_provider_fault,
+                      (unsigned int)input.b_estop,
+                      (unsigned int)g_vehicle_owner.blockers);
+            b_fault_reported = true;
         }
         if (E_OK == tk_loc_mtx(g_vehicle_mutex, TMO_POL))
         {
@@ -819,6 +845,7 @@ static void vehicle_apply(vehicle_output_t const *p_output)
     {
         result = motion_api_submit(&p_output->command);
     }
+    g_vehicle_last_motion_api = result;
     if ((MOTION_API_ERROR == result) || (MOTION_API_INVALID == result) ||
         (MOTION_API_UNAVAILABLE == result))
     {
@@ -833,6 +860,7 @@ static void vehicle_apply(vehicle_output_t const *p_output)
         request.value.mode = p_output->mode;
         ER error = s3_submit(&request, TMO_POL);
 
+        g_vehicle_last_mode_error = error;
         if ((E_OK != error) && (E_TMOUT != error))
         {
             g_vehicle_owner.state = VEHICLE_FAULT;
