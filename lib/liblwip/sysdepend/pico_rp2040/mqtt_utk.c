@@ -83,84 +83,82 @@ typedef enum
 
 typedef struct
 {
-    mqtt_client_t *        p_client;
-    const mqtt_utk_app_t * p_app;
-    mqtt_utk_state_t       state;
-    bool                   b_rx_accepted;
-    uint8_t                pending_flags;
-    uint16_t               rx_length;
-    uint32_t               backoff_delay_ms;
-    uint32_t               state_entry_ms;
-    uint32_t               next_telemetry_ms;
-    uint32_t               next_heartbeat_ms;
-    uint32_t               publish_fail_streak;
-    uint32_t               rx_arrival_ms;
-    char                   rx_data[MQTT_UTK_RX_DATA_MAX];
+    mqtt_client_t *p_client;
+    const mqtt_utk_app_t *p_app;
+    mqtt_utk_state_t state;
+    bool b_rx_accepted;
+    uint8_t pending_flags;
+    uint16_t rx_length;
+    uint32_t backoff_delay_ms;
+    uint32_t state_entry_ms;
+    uint32_t next_telemetry_ms;
+    uint32_t next_heartbeat_ms;
+    uint32_t publish_fail_streak;
+    uint32_t rx_arrival_ms;
+    char rx_data[MQTT_UTK_RX_DATA_MAX];
 } mqtt_utk_module_t;
 
 /* ---------------------------------------------------------------------- */
 /* File-scope data                                                        */
 /* ---------------------------------------------------------------------- */
 
-static mqtt_utk_module_t g_mqtt = {0};
+static mqtt_utk_module_t g_mqtt = {.backoff_delay_ms = NET_BACKOFF_INITIAL_MS};
 
 /* Last Will: the broker announces the loss even if we cannot (FR20). */
 static const struct mqtt_connect_client_info_t g_mqtt_client_info = {
-    .client_id   = MQTT_CLIENT_ID,
+    .client_id = MQTT_CLIENT_ID,
     .client_user = NULL,
     .client_pass = NULL,
-    .keep_alive  = MQTT_UTK_KEEPALIVE_SECONDS,
-    .will_topic  = MQTT_UTK_TOPIC_STATUS,
-    .will_msg    = MQTT_UTK_WILL_MESSAGE,
-    .will_qos    = MQTT_UTK_QOS_AT_LEAST_ONCE,
+    .keep_alive = MQTT_UTK_KEEPALIVE_SECONDS,
+    .will_topic = MQTT_UTK_TOPIC_STATUS,
+    .will_msg = MQTT_UTK_WILL_MESSAGE,
+    .will_qos = MQTT_UTK_QOS_AT_LEAST_ONCE,
     .will_retain = MQTT_UTK_NO_RETAIN};
 
 /* ---------------------------------------------------------------------- */
 /* Private function prototypes                                            */
 /* ---------------------------------------------------------------------- */
 
-static void log_text (const char * p_text);
-static void log_number (uint32_t value);
-static void report_event (mqtt_utk_event_t event, uint32_t value);
-static bool text_equal (const char * p_first, const char * p_second);
-static bool period_elapsed (uint32_t now_ms, uint32_t * p_next_due_ms,
-                            uint32_t period_ms);
-static void enter_state (mqtt_utk_state_t state, uint32_t now_ms);
-static void enter_backoff (uint32_t now_ms, const char * p_reason);
-static void start_connect (uint32_t now_ms);
-static void handle_events (uint32_t now_ms);
-static void on_connected (uint32_t now_ms);
-static void poll_without_link (uint32_t now_ms);
-static void poll_connecting (uint32_t now_ms);
-static void poll_connected (uint32_t now_ms);
-static void poll_backoff (uint32_t now_ms);
-static void publish_telemetry_tick (uint32_t now_ms);
-static void publish_heartbeat (uint32_t now_ms);
-static void discard_telemetry_tick (uint32_t now_ms);
-static void on_publish_result (void * p_arg, err_t result);
-static void on_subscribe_result (void * p_arg, err_t result);
-static void on_incoming_publish (void * p_arg, const char * p_topic,
-                                 u32_t total_length);
-static void on_incoming_data (void * p_arg, const u8_t * p_data, u16_t length,
-                              u8_t flags);
-static void on_connection_status (mqtt_client_t * p_client, void * p_arg,
-                                  mqtt_connection_status_t status);
+static void log_text(const char *p_text);
+static void log_number(uint32_t value);
+static void report_event(mqtt_utk_event_t event, uint32_t value);
+static bool text_equal(const char *p_first, const char *p_second);
+static bool period_elapsed(uint32_t now_ms, uint32_t *p_next_due_ms,
+                           uint32_t period_ms);
+static void enter_state(mqtt_utk_state_t state, uint32_t now_ms);
+static void enter_backoff(uint32_t now_ms, const char *p_reason);
+static void start_connect(uint32_t now_ms);
+static void handle_events(uint32_t now_ms);
+static void on_connected(uint32_t now_ms);
+static void poll_without_link(uint32_t now_ms);
+static void poll_connecting(uint32_t now_ms);
+static void poll_connected(uint32_t now_ms);
+static void poll_backoff(uint32_t now_ms);
+static void publish_telemetry_tick(uint32_t now_ms);
+static void publish_heartbeat(uint32_t now_ms);
+static void discard_telemetry_tick(uint32_t now_ms);
+static void on_publish_result(void *p_arg, err_t result);
+static void on_subscribe_result(void *p_arg, err_t result);
+static void on_incoming_publish(void *p_arg, const char *p_topic,
+                                u32_t total_length);
+static void on_incoming_data(void *p_arg, const u8_t *p_data, u16_t length,
+                             u8_t flags);
+static void on_connection_status(mqtt_client_t *p_client, void *p_arg,
+                                 mqtt_connection_status_t status);
 
 /* ---------------------------------------------------------------------- */
 /* Public functions                                                       */
 /* ---------------------------------------------------------------------- */
 
 /* Register the application hooks. */
-void
-mqtt_utk_set_app (const mqtt_utk_app_t * p_app)
+void mqtt_utk_set_app(const mqtt_utk_app_t *p_app)
 {
     g_mqtt.p_app = p_app;
 }
 
 /* Run one step of the MQTT state machine. Called on every poll iteration of
  * cyw43_utk_task(). */
-void
-mqtt_utk_poll (bool b_link_up)
+void mqtt_utk_poll(bool b_link_up)
 {
     uint32_t now_ms = sys_now();
 
@@ -206,33 +204,33 @@ mqtt_utk_poll (bool b_link_up)
 
 /* Print a string on the T-Monitor console. */
 static void
-log_text (const char * p_text)
+log_text(const char *p_text)
 {
     /* Cast is safe: tm_putstring only reads the text, and UB is an
      * unsigned 8-bit type with the same size as char. */
-    tm_putstring((const UB *) p_text);
+    tm_putstring((const UB *)p_text);
 }
 
 /* Print an unsigned number in decimal. */
 static void
-log_number (uint32_t value)
+log_number(uint32_t value)
 {
-    char     digits[MQTT_UTK_NUMBER_DIGITS] = {0};
-    uint32_t position                       = MQTT_UTK_NUMBER_DIGITS - 1u;
-    uint32_t remaining                      = value;
+    char digits[MQTT_UTK_NUMBER_DIGITS] = {0};
+    uint32_t position = MQTT_UTK_NUMBER_DIGITS - 1u;
+    uint32_t remaining = value;
 
     do
     {
         position--;
         digits[position] = '0' + (remaining % MQTT_UTK_DECIMAL_BASE);
-        remaining        = remaining / MQTT_UTK_DECIMAL_BASE;
+        remaining = remaining / MQTT_UTK_DECIMAL_BASE;
     } while (remaining > 0u);
     log_text(&digits[position]);
 }
 
 /* Tell the application about an event. */
 static void
-report_event (mqtt_utk_event_t event, uint32_t value)
+report_event(mqtt_utk_event_t event, uint32_t value)
 {
     if (NULL != g_mqtt.p_app->on_event)
     {
@@ -242,10 +240,10 @@ report_event (mqtt_utk_event_t event, uint32_t value)
 
 /* Compare two NUL-terminated strings. */
 static bool
-text_equal (const char * p_first, const char * p_second)
+text_equal(const char *p_first, const char *p_second)
 {
-    const char * p_left  = p_first;
-    const char * p_right = p_second;
+    const char *p_left = p_first;
+    const char *p_right = p_second;
 
     while (('\0' != *p_left) && (*p_left == *p_right))
     {
@@ -260,7 +258,7 @@ text_equal (const char * p_first, const char * p_second)
  * one period behind (a stall), the schedule resynchronises instead of
  * sending a burst. */
 static bool
-period_elapsed (uint32_t now_ms, uint32_t * p_next_due_ms, uint32_t period_ms)
+period_elapsed(uint32_t now_ms, uint32_t *p_next_due_ms, uint32_t period_ms)
 {
     bool b_due = net_backoff_time_reached(now_ms, *p_next_due_ms);
 
@@ -281,9 +279,9 @@ period_elapsed (uint32_t now_ms, uint32_t * p_next_due_ms, uint32_t period_ms)
 
 /* Move to a new state and remember when it was entered. */
 static void
-enter_state (mqtt_utk_state_t state, uint32_t now_ms)
+enter_state(mqtt_utk_state_t state, uint32_t now_ms)
 {
-    g_mqtt.state          = state;
+    g_mqtt.state = state;
     g_mqtt.state_entry_ms = now_ms;
 }
 
@@ -291,7 +289,7 @@ enter_state (mqtt_utk_state_t state, uint32_t now_ms)
  * NOTE: mqtt_disconnect() does not call our callback (checked in the lwIP
  * source), so no event can arrive from this call. */
 static void
-enter_backoff (uint32_t now_ms, const char * p_reason)
+enter_backoff(uint32_t now_ms, const char *p_reason)
 {
     if (NULL != g_mqtt.p_client)
     {
@@ -309,10 +307,10 @@ enter_backoff (uint32_t now_ms, const char * p_reason)
 
 /* Start the asynchronous connection to the broker. */
 static void
-start_connect (uint32_t now_ms)
+start_connect(uint32_t now_ms)
 {
     ip_addr_t broker_address = {0};
-    err_t     result         = ERR_OK;
+    err_t result = ERR_OK;
 
     if (NULL == g_mqtt.p_client)
     {
@@ -347,10 +345,10 @@ start_connect (uint32_t now_ms)
 /* Act on the events recorded by the lwIP callbacks. Loss events take
  * priority over the connected event. */
 static void
-handle_events (uint32_t now_ms)
+handle_events(uint32_t now_ms)
 {
-    uint8_t flags            = g_mqtt.pending_flags;
-    bool    b_session_active = ((MQTT_UTK_STATE_CONNECTING == g_mqtt.state) ||
+    uint8_t flags = g_mqtt.pending_flags;
+    bool b_session_active = ((MQTT_UTK_STATE_CONNECTING == g_mqtt.state) ||
                              (MQTT_UTK_STATE_CONNECTED == g_mqtt.state));
 
     g_mqtt.pending_flags = 0u;
@@ -380,13 +378,13 @@ handle_events (uint32_t now_ms)
 
 /* The broker accepted the connection: start streaming. */
 static void
-on_connected (uint32_t now_ms)
+on_connected(uint32_t now_ms)
 {
     enter_state(MQTT_UTK_STATE_CONNECTED, now_ms);
-    g_mqtt.backoff_delay_ms    = NET_BACKOFF_INITIAL_MS; /* Next: 1 s. */
+    g_mqtt.backoff_delay_ms = NET_BACKOFF_INITIAL_MS; /* Next: 1 s. */
     g_mqtt.publish_fail_streak = 0u;
-    g_mqtt.next_telemetry_ms   = now_ms + MQTT_UTK_TELEMETRY_PERIOD_MS;
-    g_mqtt.next_heartbeat_ms   = now_ms; /* First heartbeat at once. */
+    g_mqtt.next_telemetry_ms = now_ms + MQTT_UTK_TELEMETRY_PERIOD_MS;
+    g_mqtt.next_heartbeat_ms = now_ms; /* First heartbeat at once. */
     log_text("mqtt: connected to " MQTT_BROKER_IP "\n");
     report_event(MQTT_UTK_EVENT_CONNECTED, 0u);
 }
@@ -394,7 +392,7 @@ on_connected (uint32_t now_ms)
 /* The Wi-Fi link is down: drop the session. The Wi-Fi task retries the
  * join with its own backoff, so there is no MQTT delay to apply here. */
 static void
-poll_without_link (uint32_t now_ms)
+poll_without_link(uint32_t now_ms)
 {
     if (MQTT_UTK_STATE_NO_LINK != g_mqtt.state)
     {
@@ -413,7 +411,7 @@ poll_without_link (uint32_t now_ms)
 
 /* CONNECTING: wait for the broker's answer, with our own timeout. */
 static void
-poll_connecting (uint32_t now_ms)
+poll_connecting(uint32_t now_ms)
 {
     if (net_backoff_time_elapsed(now_ms, g_mqtt.state_entry_ms,
                                  MQTT_UTK_CONNECT_TIMEOUT_MS))
@@ -424,7 +422,7 @@ poll_connecting (uint32_t now_ms)
 
 /* CONNECTED: check the session, then publish on the fixed schedules. */
 static void
-poll_connected (uint32_t now_ms)
+poll_connected(uint32_t now_ms)
 {
     if (0u == mqtt_client_is_connected(g_mqtt.p_client))
     {
@@ -448,7 +446,7 @@ poll_connected (uint32_t now_ms)
 
 /* BACKOFF: wait, then double the delay up to the cap and try again. */
 static void
-poll_backoff (uint32_t now_ms)
+poll_backoff(uint32_t now_ms)
 {
     if (net_backoff_time_elapsed(now_ms, g_mqtt.state_entry_ms,
                                  g_mqtt.backoff_delay_ms))
@@ -465,11 +463,11 @@ poll_backoff (uint32_t now_ms)
 /* Publish the telemetry frame that is due. A run of failed publishes is
  * treated as a dead link (about 1 s), well before the keepalive notices. */
 static void
-publish_telemetry_tick (uint32_t now_ms)
+publish_telemetry_tick(uint32_t now_ms)
 {
-    char     json[MQTT_UTK_JSON_CAPACITY] = {0};
+    char json[MQTT_UTK_JSON_CAPACITY] = {0};
     uint32_t length = g_mqtt.p_app->pull_telemetry(json, sizeof(json));
-    err_t    result = ERR_OK;
+    err_t result = ERR_OK;
 
     if (length > 0u)
     {
@@ -496,9 +494,9 @@ publish_telemetry_tick (uint32_t now_ms)
 
 /* Publish the heartbeat (FR20). */
 static void
-publish_heartbeat (uint32_t now_ms)
+publish_heartbeat(uint32_t now_ms)
 {
-    char     json[MQTT_UTK_HEARTBEAT_CAPACITY] = {0};
+    char json[MQTT_UTK_HEARTBEAT_CAPACITY] = {0};
     uint32_t length = g_mqtt.p_app->make_heartbeat(json, sizeof(json), now_ms);
 
     if (length > 0u)
@@ -512,10 +510,10 @@ publish_heartbeat (uint32_t now_ms)
 /* While not connected, throw away one stale frame per period. The buffer
  * then always holds the freshest frames and memory stays bounded. */
 static void
-discard_telemetry_tick (uint32_t now_ms)
+discard_telemetry_tick(uint32_t now_ms)
 {
-    char     json[MQTT_UTK_JSON_CAPACITY] = {0};
-    uint32_t length                       = 0u;
+    char json[MQTT_UTK_JSON_CAPACITY] = {0};
+    uint32_t length = 0u;
 
     if (period_elapsed(now_ms, &g_mqtt.next_telemetry_ms,
                        MQTT_UTK_TELEMETRY_PERIOD_MS))
@@ -535,9 +533,9 @@ discard_telemetry_tick (uint32_t now_ms)
 
 /* A publish finished with an error. */
 static void
-on_publish_result (void * p_arg, err_t result)
+on_publish_result(void *p_arg, err_t result)
 {
-    (void) p_arg; /* Cast is safe: discards an unused callback parameter. */
+    (void)p_arg; /* Cast is safe: discards an unused callback parameter. */
     if (ERR_OK != result)
     {
         g_mqtt.pending_flags |= MQTT_UTK_FLAG_DOWN;
@@ -546,9 +544,9 @@ on_publish_result (void * p_arg, err_t result)
 
 /* The broker answered the subscription request. */
 static void
-on_subscribe_result (void * p_arg, err_t result)
+on_subscribe_result(void *p_arg, err_t result)
 {
-    (void) p_arg; /* Cast is safe: discards an unused callback parameter. */
+    (void)p_arg; /* Cast is safe: discards an unused callback parameter. */
     if (ERR_OK != result)
     {
         g_mqtt.pending_flags |= MQTT_UTK_FLAG_SUBSCRIBE_FAILED;
@@ -557,23 +555,23 @@ on_subscribe_result (void * p_arg, err_t result)
 
 /* Start of an inbound message: remember its arrival time and check it. */
 static void
-on_incoming_publish (void * p_arg, const char * p_topic, u32_t total_length)
+on_incoming_publish(void *p_arg, const char *p_topic, u32_t total_length)
 {
-    (void) p_arg; /* Cast is safe: discards an unused callback parameter. */
+    (void)p_arg; /* Cast is safe: discards an unused callback parameter. */
 
     g_mqtt.rx_arrival_ms = sys_now();
-    g_mqtt.rx_length     = 0u;
+    g_mqtt.rx_length = 0u;
     g_mqtt.b_rx_accepted = (text_equal(p_topic, MQTT_UTK_TOPIC_COMMAND) &&
                             (total_length < MQTT_UTK_RX_DATA_MAX));
 }
 
 /* A message can arrive in several fragments. Act only on the last one. */
 static void
-on_incoming_data (void * p_arg, const u8_t * p_data, u16_t length, u8_t flags)
+on_incoming_data(void *p_arg, const u8_t *p_data, u16_t length, u8_t flags)
 {
     uint32_t position = 0u;
 
-    (void) p_arg; /* Cast is safe: discards an unused callback parameter. */
+    (void)p_arg; /* Cast is safe: discards an unused callback parameter. */
 
     if (g_mqtt.b_rx_accepted &&
         ((g_mqtt.rx_length + length) < MQTT_UTK_RX_DATA_MAX))
@@ -596,19 +594,19 @@ on_incoming_data (void * p_arg, const u8_t * p_data, u16_t length, u8_t flags)
             g_mqtt.p_app->on_command(g_mqtt.rx_data, g_mqtt.rx_length,
                                      g_mqtt.rx_arrival_ms);
         }
-        g_mqtt.rx_length     = 0u;
+        g_mqtt.rx_length = 0u;
         g_mqtt.b_rx_accepted = false;
     }
 }
 
 /* The connection attempt finished, or an open connection was lost. */
 static void
-on_connection_status (mqtt_client_t * p_client, void * p_arg,
-                      mqtt_connection_status_t status)
+on_connection_status(mqtt_client_t *p_client, void *p_arg,
+                     mqtt_connection_status_t status)
 {
     err_t result = ERR_OK;
 
-    (void) p_arg; /* Cast is safe: discards an unused callback parameter. */
+    (void)p_arg; /* Cast is safe: discards an unused callback parameter. */
 
     if (MQTT_CONNECT_ACCEPTED == status)
     {
