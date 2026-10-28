@@ -81,6 +81,14 @@ Buddy 4 sends no motor command. The proposed trust policy and hardware
 acceptance gates are in [`VALIDATION.md`](VALIDATION.md). Fault-to-motor-stop
 latency and ordinary hump-event consumption still need integration validation.
 
+Buddy 1's post-tribunal binary telemetry allocates 12 bits for a highest-hump
+value in whole millimetres (0–4095). Buddy 4 keeps its float-mm estimate and
+validity flags; the shared controller rejects an out-of-range value before
+converting it to the wire integer. It must not clamp or silently truncate
+4095.9 mm to 4095 mm. The controller already sets Buddy 1's named
+`S1_FAULT_IMU` bit from the S4 fault latch; Buddy 4 does not write the same
+shared bit a second time. INT-86 records this handoff boundary.
+
 ## Build and evidence
 
 From the repository root:

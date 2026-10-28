@@ -71,13 +71,21 @@ format.
 
 ## Team agreement still required
 
-The following are cross-buddy contracts and are deliberately not changed here:
+The shared fault map now allocates `S1_FAULT_IMU` to Buddy 4; the Vehicle
+Controller publishes it from the independent S4 fault latch. Buddy 4 must not
+duplicate that writer. Buddy 1's binary hump field is 0–4095 whole mm; the
+Controller rejects values outside that wire range before conversion while S4
+retains its unquantised float-mm measurement and validity flags.
 
-1. Allocate Buddy 4's bit in the shared system fault map and agree whether the
-   Vehicle Controller reports one IMU fault or multiple Buddy 4 cause bits.
-2. Agree angle, turn-rate and hump-height ranges, units and precision before
-   quantising those measurements or placing them in Buddy 1's binary telemetry.
+The following cross-buddy contracts still require agreement or validation:
+
+1. Decide whether telemetry needs more than the one allocated IMU fault bit,
+   without changing the existing bit's ownership or fault-stop path.
+2. Agree measured angle, turn-rate and hump-height precision before narrowing
+   S4 measurements or adding detailed IMU fields to Buddy 1 telemetry.
 3. Define when Buddy 2 and the Vehicle Controller may assert and revoke trusted
    straight, nonslip motion. The current default remains untrusted.
 4. Measure end-to-end IMU-fault-to-stationary latency on hardware while
    preserving Buddy 2's exclusive motor ownership.
+5. Revoke any future traction-trust assertion during Buddy 5's bypass and
+   recovery modes; do not infer trust from matching wheel speeds or `LINE_FOUND`.

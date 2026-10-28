@@ -463,7 +463,9 @@ bool vehicle_frame (vehicle_t const * p_vehicle,
         if (p_input->imu.b_highest_valid &&
             isfinite(p_input->imu.highest_hump_mm) &&
             (p_input->imu.highest_hump_mm >= 0.0F) &&
-            (p_input->imu.highest_hump_mm <= 99999.0F))
+            /* Buddy 1's 12-bit binary hump field is 0..4095 mm. Check
+             * before truncating float to integer; 4095.9 is not valid. */
+            (p_input->imu.highest_hump_mm <= 4095.0F))
         {
             p_frame->validity |= S1_VALID_HUMP;
             p_frame->hump_peak_x10 = (int32_t)p_input->imu.highest_hump_mm;
