@@ -60,37 +60,24 @@
 #include "subsystem2/motion_api.h"
 #include "subsystem1/s1_sim.h"
 
-/* app_program/app_main.c, near the top */
-#include "vehicle_rt.h"
+EXPORT INT usermain(void); /* Kernel initial-task entry. */
 
+/* Bring-up profile for vehicle_runtime_setup(). ROUGH PLACEHOLDER VALUES taken
+ * from the synthetic integration tests: measure the real robot and replace them.
+ * b_calibrated and b_power_authorised stay false, so the mission stays blocked.
+ */
 static ER app_vehicle_profile(void)
 {
     vehicle_setup_t setup = {0};
 
-    /* --- mission: rough values, safe flags --- */
     setup.mission = (vehicle_config_t){
-        100000U,  /* sensor_age_us: 100 ms */
-        300000U,  /* command_ttl_us: 300 ms */
-        2000000U, /* transition_timeout_us: 2 s */
-        100U,     /* remote_age_ms */
-        100,      /* forward_mm_s: slow 100 mm/s */
-        20,       /* correction_mm_s */
-        80,       /* turn_mm_s */
-        100000,   /* straight_um */
-        30U,      /* obstacle_stop_cm */
-        false,    /* b_calibrated: stays false until measured */
-        false,    /* b_power_authorised: stays false until approved */
-        false,    /* b_uturn_right */
-        {0}       /* route disabled */
-    };
+        100000U, 300000U, 2000000U, 100U, 100, 20, 80, 100000, 30U, false, false, false, {0}};
 
-    /* --- Buddy 2 motion: rough values --- */
     setup.motion.geometry.left = (motion_config_wheel_t){
-        1000U,   /* counts_per_wheel_rev: ROUGH, check your encoder disc */
-        100000U, /* wheel_circumference_um: 100 mm, ROUGH (about 32 mm wheel) */
-        MOTION_TYPES_POLARITY_NORMAL, MOTION_TYPES_POLARITY_NORMAL};
+        1000U, 100000U, MOTION_TYPES_POLARITY_NORMAL,
+        MOTION_TYPES_POLARITY_NORMAL};
     setup.motion.geometry.right = setup.motion.geometry.left;
-    setup.motion.geometry.track_width_um = 150000U; /* 150 mm, ROUGH */
+    setup.motion.geometry.track_width_um = 150000U;
     setup.motion.geometry.max_wheel_speed_mm_s = 500;
     setup.motion.geometry.calibration = MOTION_CONFIG_CALIBRATION_CONFIRMED;
     setup.motion.motor = (drv_motor_config_t){125000000U, 20000U, 100U, 1.0F, {MOTION_TYPES_POLARITY_NORMAL, MOTION_TYPES_POLARITY_NORMAL}, DRV_MOTOR_BRAKE, MOTION_CONFIG_CALIBRATION_CONFIRMED, true};
@@ -105,20 +92,22 @@ static ER app_vehicle_profile(void)
     setup.motion.progress_timeout_us = 2000000U;
     setup.motion.overspeed_mm_s = 1000;
 
-    /* --- Buddy 3 navigation: copy production_config() from
-     *     testing/subsystem3/member3_production_test.c (Buddy 3's own values) --- */
-    /* setup.navigation = <Buddy 3's values>; */
+    /* Buddy 3 navigation: values from member3_production_test.c, 10 ms period. */
+    setup.navigation.calibration = (ir_calibration_t){7U, 7U};
+    setup.navigation.period_ms = 10U;
+    setup.navigation.line_stable_us = 20000U;
+    setup.navigation.line_lost_us = 40000U;
+    setup.navigation.line_found_us = 40000U;
+    setup.navigation.recovery_timeout_us = 500000U;
+    setup.navigation.barcode_quiet_us = 250000U;
+    setup.navigation.barcode_timeout_us = 10000000U;
+    setup.navigation.max_sample_gap_us = 20000U;
+    setup.navigation.odometry_stale_us = 100000U;
+    setup.navigation.barcode_rearm_us = 500000U;
 
     setup.b_obstacle_requested = false;
-    return vehicle_runtime_setup(&setup);
+    return (vehicle_runtime_setup(&setup));
 }
-
-/* in app_main(), after vehicle_runtime_init() and before vehicle_runtime_start(): */
-controller_error = app_vehicle_profile();
-CHECK(controller_error, "vehicle setup");
-b_ready = (E_OK == controller_error) && b_ready;
-
-EXPORT INT usermain(void); /* Kernel initial-task entry. */
 
 /*
  * Create and start one task (declared in app.h for every subsystem).
@@ -198,6 +187,10 @@ EXPORT INT usermain(void)
     ER controller_error = vehicle_runtime_init();
 
     CHECK(controller_error, "vehicle init");
+    b_ready = (E_OK == controller_error) && b_ready;
+    /* Pre-start, after the controller task exists and before it starts. */
+    controller_error = app_vehicle_profile();
+    CHECK(controller_error, "vehicle setup");
     b_ready = (E_OK == controller_error) && b_ready;
     if (!b_ready)
     {
