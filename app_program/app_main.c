@@ -60,7 +60,65 @@
 #include "subsystem2/motion_api.h"
 #include "subsystem1/s1_sim.h"
 
-EXPORT INT usermain (void); /* Kernel initial-task entry. */
+/* app_program/app_main.c, near the top */
+#include "vehicle_rt.h"
+
+static ER app_vehicle_profile(void)
+{
+    vehicle_setup_t setup = {0};
+
+    /* --- mission: rough values, safe flags --- */
+    setup.mission = (vehicle_config_t){
+        100000U,  /* sensor_age_us: 100 ms */
+        300000U,  /* command_ttl_us: 300 ms */
+        2000000U, /* transition_timeout_us: 2 s */
+        100U,     /* remote_age_ms */
+        100,      /* forward_mm_s: slow 100 mm/s */
+        20,       /* correction_mm_s */
+        80,       /* turn_mm_s */
+        100000,   /* straight_um */
+        30U,      /* obstacle_stop_cm */
+        false,    /* b_calibrated: stays false until measured */
+        false,    /* b_power_authorised: stays false until approved */
+        false,    /* b_uturn_right */
+        {0}       /* route disabled */
+    };
+
+    /* --- Buddy 2 motion: rough values --- */
+    setup.motion.geometry.left = (motion_config_wheel_t){
+        1000U,   /* counts_per_wheel_rev: ROUGH, check your encoder disc */
+        100000U, /* wheel_circumference_um: 100 mm, ROUGH (about 32 mm wheel) */
+        MOTION_TYPES_POLARITY_NORMAL, MOTION_TYPES_POLARITY_NORMAL};
+    setup.motion.geometry.right = setup.motion.geometry.left;
+    setup.motion.geometry.track_width_um = 150000U; /* 150 mm, ROUGH */
+    setup.motion.geometry.max_wheel_speed_mm_s = 500;
+    setup.motion.geometry.calibration = MOTION_CONFIG_CALIBRATION_CONFIRMED;
+    setup.motion.motor = (drv_motor_config_t){125000000U, 20000U, 100U, 1.0F, {MOTION_TYPES_POLARITY_NORMAL, MOTION_TYPES_POLARITY_NORMAL}, DRV_MOTOR_BRAKE, MOTION_CONFIG_CALIBRATION_CONFIRMED, true};
+    setup.motion.pid[0] = (motion_pid_config_t){0.01F, 0.0F, 0.0F, -1.0F, 1.0F,
+                                                -0.5F, 0.5F, 100000U, MOTION_CONFIG_CALIBRATION_CONFIRMED};
+    setup.motion.pid[1] = setup.motion.pid[0];
+    setup.motion.profile = (move_plan_config_t){1000U, 1000U, 1000U, {1000000U, 1000000U}, 1.0F, 100};
+    setup.motion.period_us = 10000U;
+    setup.motion.sample_limit_us = 100000U;
+    setup.motion.stop_dwell_us = 10000U;
+    setup.motion.stop_timeout_us = 1000000U;
+    setup.motion.progress_timeout_us = 2000000U;
+    setup.motion.overspeed_mm_s = 1000;
+
+    /* --- Buddy 3 navigation: copy production_config() from
+     *     testing/subsystem3/member3_production_test.c (Buddy 3's own values) --- */
+    /* setup.navigation = <Buddy 3's values>; */
+
+    setup.b_obstacle_requested = false;
+    return vehicle_runtime_setup(&setup);
+}
+
+/* in app_main(), after vehicle_runtime_init() and before vehicle_runtime_start(): */
+controller_error = app_vehicle_profile();
+CHECK(controller_error, "vehicle setup");
+b_ready = (E_OK == controller_error) && b_ready;
+
+EXPORT INT usermain(void); /* Kernel initial-task entry. */
 
 /*
  * Create and start one task (declared in app.h for every subsystem).
@@ -68,62 +126,65 @@ EXPORT INT usermain (void); /* Kernel initial-task entry. */
  */
 EXPORT ID app_start_task(FP entry, PRI pri, UW prc, const char *name)
 {
-	T_CTSK	ctsk = {0};
-	ID	tid;
-	ER	er;
+    T_CTSK ctsk = {0};
+    ID tid;
+    ER er;
 
-	ctsk.task    = entry;		/* function the task runs */
-	ctsk.itskpri = pri;		/* initial priority (1 = highest) */
-	ctsk.stksz   = TASK_STACK_SIZE;	/* kernel allocates the stack */
-	ctsk.tskatr  = TA_HLNG		/* written in a high-level language (C) */
-		     | TA_RNG3;		/* runs at user protection level */
+    ctsk.task = entry;            /* function the task runs */
+    ctsk.itskpri = pri;           /* initial priority (1 = highest) */
+    ctsk.stksz = TASK_STACK_SIZE; /* kernel allocates the stack */
+    ctsk.tskatr = TA_HLNG         /* written in a high-level language (C) */
+                  | TA_RNG3;      /* runs at user protection level */
 #if TK_SUPPORT_SMP
-	if (prc != 0) {
-		ctsk.tskatr |= TA_ASSPRC;	/* honour the affinity below */
-		ctsk.assprc  = prc;		/* which core(s) it may run on */
-	}
+    if (prc != 0)
+    {
+        ctsk.tskatr |= TA_ASSPRC; /* honour the affinity below */
+        ctsk.assprc = prc;        /* which core(s) it may run on */
+    }
 #else
-	(void)prc;			/* single-core build: no affinity */
+    (void)prc; /* single-core build: no affinity */
 #endif
 
-	/* tk_cre_tsk: create the task.  It starts in the DORMANT state. */
-	tid = tk_cre_tsk(&ctsk);
-	if (tid < E_OK) {
-		CHECK(tid, name);
-		return tid;
-	}
+    /* tk_cre_tsk: create the task.  It starts in the DORMANT state. */
+    tid = tk_cre_tsk(&ctsk);
+    if (tid < E_OK)
+    {
+        CHECK(tid, name);
+        return tid;
+    }
 
-	/* tk_sta_tsk: DORMANT -> READY.  The int is passed as stacd. */
-	er = tk_sta_tsk(tid, 0);
-	CHECK(er, name);
+    /* tk_sta_tsk: DORMANT -> READY.  The int is passed as stacd. */
+    er = tk_sta_tsk(tid, 0);
+    CHECK(er, name);
     if (er < E_OK)
     {
         CHECK(tk_del_tsk(tid), "failed-start task cleanup");
         return er; /* Never report the dormant task ID as start success. */
     }
-	return tid;
+    return tid;
 }
 
 EXPORT INT usermain(void)
 {
-	T_RVER	ver;
+    T_RVER ver;
 
-	/* tk_ref_ver: ask the kernel who it is */
-	tk_ref_ver(&ver);
-	tm_printf((UB*)"\n=== micro T-Kernel on Raspberry Pi Pico W"
-		  " (spec 0x%04x, product 0x%04x) ===\n", ver.spver, ver.prver);
+    /* tk_ref_ver: ask the kernel who it is */
+    tk_ref_ver(&ver);
+    tm_printf((UB *)"\n=== micro T-Kernel on Raspberry Pi Pico W"
+                    " (spec 0x%04x, product 0x%04x) ===\n",
+              ver.spver, ver.prver);
 #if TK_SUPPORT_SMP
-	tm_printf((UB*)"dual-core (SMP) build, usermain on core %d\n",
-		  tk_get_prc() - 1);	/* tk_get_prc() counts from 1 */
+    tm_printf((UB *)"dual-core (SMP) build, usermain on core %d\n",
+              tk_get_prc() - 1); /* tk_get_prc() counts from 1 */
 #else
-	tm_printf((UB*)"single-core build\n");
+    tm_printf((UB *)"single-core build\n");
 #endif
 
     /* Every object is created before any subsystem task can run on SMP. */
-    ER (* const init[])(void) = {subsystem1_init, subsystem2_init,
-        subsystem3_init, subsystem4_init, subsystem5_init};
-    ER (* const start[])(void) = {subsystem1_start, subsystem2_start,
-        subsystem3_start, subsystem4_start, subsystem5_start};
+    ER (*const init[])(void) = {subsystem1_init, subsystem2_init,
+                                subsystem3_init, subsystem4_init, subsystem5_init};
+    ER (*const start[])(void) = {subsystem1_start, subsystem2_start,
+                                 subsystem3_start, subsystem4_start, subsystem5_start};
     uint32_t started_mask = 0U;
     bool b_ready = true;
 
@@ -140,7 +201,7 @@ EXPORT INT usermain(void)
     b_ready = (E_OK == controller_error) && b_ready;
     if (!b_ready)
     {
-        tm_printf((UB*)"startup blocked: no subsystem tasks started\n");
+        tm_printf((UB *)"startup blocked: no subsystem tasks started\n");
         tk_slp_tsk(TMO_FEVR);
         return 0;
     }
@@ -155,7 +216,10 @@ EXPORT INT usermain(void)
         ER error = start[i]();
 
         CHECK(error, "subsystem start");
-        if (E_OK == error) { started_mask |= 1UL << i; }
+        if (E_OK == error)
+        {
+            started_mask |= 1UL << i;
+        }
         else if (!((4U == i) && (E_NOSPT == error)))
         {
             (void)motion_api_estop();
@@ -167,24 +231,27 @@ EXPORT INT usermain(void)
     }
     controller_error = vehicle_runtime_start(started_mask);
     CHECK(controller_error, "vehicle start");
-    if (E_OK != controller_error) { (void)motion_api_estop(); }
-    tm_printf((UB*)"startup mask 0x%02x; mission remains interlocked\n",
-        started_mask);
+    if (E_OK != controller_error)
+    {
+        (void)motion_api_estop();
+    }
+    tm_printf((UB *)"startup mask 0x%02x; mission remains interlocked\n",
+              started_mask);
 
 #if APP_TEST
-	/* Test build (make TEST=1): run every subsystem's tests in turn,
-	   here in the initial task, while the system is running.  Tests may
-	   call tk_dly_tsk() to let the other tasks work for a while. */
-	tm_printf((UB*)"[TEST] === test run start ===\n");
-	subsystem1_test();
-	subsystem2_test();
-	subsystem3_test();
-	subsystem4_test();
-	subsystem5_test();
-	tm_printf((UB*)"[TEST] === test run end ===\n");
+    /* Test build (make TEST=1): run every subsystem's tests in turn,
+       here in the initial task, while the system is running.  Tests may
+       call tk_dly_tsk() to let the other tasks work for a while. */
+    tm_printf((UB *)"[TEST] === test run start ===\n");
+    subsystem1_test();
+    subsystem2_test();
+    subsystem3_test();
+    subsystem4_test();
+    subsystem5_test();
+    tm_printf((UB *)"[TEST] === test run end ===\n");
 #endif
 
-	/* Sleep forever.  Returning from usermain() would shut down. */
-	tk_slp_tsk(TMO_FEVR);
-	return 0;
+    /* Sleep forever.  Returning from usermain() would shut down. */
+    tk_slp_tsk(TMO_FEVR);
+    return 0;
 }

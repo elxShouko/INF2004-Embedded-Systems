@@ -28,7 +28,7 @@ import s1_wire as w  # noqa: E402
 
 LOCK = threading.Lock()
 STATE = {
-    "telemetry": None, "heartbeat": None, "last_seq": None, "lost": 0,
+    "telemetry": None, "heartbeat": None, "last_seq": None, "last_time": None, "lost": 0,
     "frames": 0, "bad": 0, "last_bad": "", "rx_ms": 0, "hb_ms": 0,
     "offline": False, "log": [], "broker": "",
 }
@@ -48,9 +48,13 @@ def on_telemetry(payload):
             STATE["last_bad"] = "%d bytes: %s" % (len(payload), e)
             note("bad telemetry frame (%s)" % e)
             return
-        if STATE["last_seq"] is not None:
+        restarted = STATE["last_time"] is not None and d["time_ms"] < STATE["last_time"]
+        if restarted:
+            note("robot restarted (time went backwards): sequence check reset")
+        elif STATE["last_seq"] is not None:
             STATE["lost"] += (d["seq"] - STATE["last_seq"] - 1) % 4096
         STATE["last_seq"] = d["seq"]
+        STATE["last_time"] = d["time_ms"]
         STATE["telemetry"] = d
         STATE["frames"] += 1
         STATE["rx_ms"] = int(time.time() * 1000)
@@ -68,7 +72,7 @@ def on_status(payload):
                 STATE["bad"] += 1
                 STATE["last_bad"] = "heartbeat: %s" % e
                 return
-        if payload == b"OFFLINE":
+        if b"OFFLINE" in payload:  # last will: "OFFLINE" or {"status":"OFFLINE"}
             STATE["offline"] = True
             note("robot went OFFLINE (last will)")
         else:
