@@ -59,31 +59,46 @@
 #include "vehicle_rt.h"
 #include "subsystem2/motion_api.h"
 #include "subsystem1/s1_sim.h"
+#include "subsystem4/imu_config.h"
 
 EXPORT INT usermain(void); /* Kernel initial-task entry. */
 
-/* Bring-up profile for vehicle_runtime_setup(). ROUGH PLACEHOLDER VALUES taken
- * from the synthetic integration tests: measure the real robot and replace them.
- * vehicle_init() REQUIRES b_calibrated = true. b_power_authorised stays false, so
- * the mission stays blocked by VEHICLE_BLOCK_POWER and the wheels cannot run.
+/* Existing integrated mission, first physical straight-line runs authorised
+ * by the user on 2026-10-28. Geometry/PID/IR settings are development estimates.
+ * Local GP20 requests are limited to three seconds; boot never starts motion.
  */
 static ER app_vehicle_profile(void)
 {
     vehicle_setup_t setup = {0};
 
-    setup.mission = (vehicle_config_t){
-        100000U, 300000U, 2000000U, 100U, 100, 20, 80, 100000, 30U, true, false, false, {0}}; /* calibrated: required by setup; power NOT authorised */
+    setup.mission.sensor_age_us = 100000U;
+    setup.mission.command_ttl_us = 300000U;
+    setup.mission.transition_timeout_us = 2000000U;
+    setup.mission.remote_age_ms = 100U;
+    setup.mission.forward_mm_s = 50;
+    setup.mission.correction_mm_s = 15;
+    setup.mission.turn_mm_s = 40;
+    setup.mission.straight_um = 100000;
+    setup.mission.obstacle_stop_cm = 30U;
+    setup.mission.b_calibrated = false;
+    setup.mission.b_power_authorised = true;
+    setup.mission.required_sensors = VEHICLE_BLOCK_LINE | VEHICLE_BLOCK_MOTION;
+    setup.mission.b_development_authorised = true;
 
     setup.motion.geometry.left = (motion_config_wheel_t){
-        1000U, 100000U, MOTION_TYPES_POLARITY_NORMAL,
+        1000U, 194779U, MOTION_TYPES_POLARITY_NORMAL,
         MOTION_TYPES_POLARITY_NORMAL};
     setup.motion.geometry.right = setup.motion.geometry.left;
     setup.motion.geometry.track_width_um = 150000U;
     setup.motion.geometry.max_wheel_speed_mm_s = 500;
-    setup.motion.geometry.calibration = MOTION_CONFIG_CALIBRATION_CONFIRMED;
-    setup.motion.motor = (drv_motor_config_t){125000000U, 20000U, 100U, 1.0F, {MOTION_TYPES_POLARITY_NORMAL, MOTION_TYPES_POLARITY_NORMAL}, DRV_MOTOR_BRAKE, MOTION_CONFIG_CALIBRATION_CONFIRMED, true};
-    setup.motion.pid[0] = (motion_pid_config_t){0.01F, 0.0F, 0.0F, -1.0F, 1.0F,
-                                                -0.5F, 0.5F, 100000U, MOTION_CONFIG_CALIBRATION_CONFIRMED};
+    setup.motion.geometry.calibration = MOTION_CONFIG_CALIBRATION_DEVELOPMENT;
+    /* User wheel diameter: 62 mm; circumference rounded from pi * diameter.
+     * Counts/revolution, polarity and PID remain UNMEASURED placeholders.
+     * 25 percent is an initial duty ceiling, not a calibrated speed/current limit.
+     */
+    setup.motion.motor = (drv_motor_config_t){125000000U, 20000U, 100U, 0.25F, {MOTION_TYPES_POLARITY_NORMAL, MOTION_TYPES_POLARITY_NORMAL}, DRV_MOTOR_BRAKE, MOTION_CONFIG_CALIBRATION_DEVELOPMENT, true};
+    setup.motion.pid[0] = (motion_pid_config_t){0.01F, 0.0F, 0.0F, -0.25F, 0.25F,
+                                                -0.125F, 0.125F, 100000U, MOTION_CONFIG_CALIBRATION_DEVELOPMENT};
     setup.motion.pid[1] = setup.motion.pid[0];
     setup.motion.profile = (move_plan_config_t){1000U, 1000U, 1000U, {1000000U, 1000000U}, 1.0F, 100};
     setup.motion.period_us = 10000U;
@@ -102,11 +117,25 @@ static ER app_vehicle_profile(void)
     setup.navigation.recovery_timeout_us = 500000U;
     setup.navigation.barcode_quiet_us = 250000U;
     setup.navigation.barcode_timeout_us = 10000000U;
-    setup.navigation.max_sample_gap_us = 20000U;
+    setup.navigation.max_sample_gap_us = 50000U;
     setup.navigation.odometry_stale_us = 100000U;
     setup.navigation.barcode_rearm_us = 500000U;
 
     setup.b_obstacle_requested = false;
+    setup.b_local_buttons = true;
+    tm_printf((UB *)"vehicle: normal integrated controller; wheel diameter 62 mm\n"
+                    "vehicle: max motor duty 25%%; encoder scale/PID unmeasured\n"
+                    "vehicle: movement AUTHORISED on GP20; line/motion required\n"
+                    "vehicle: IMU/obstacle optional; no obstacle avoidance for this run\n"
+                    "vehicle: IR assumes black=HIGH; speed/distance are provisional estimates\n"
+                    "vehicle: GP20 hold START (max 3 s), release PAUSE; GP21 ESTOP\n"
+                    "vehicle: IMU acquisition compiled %s\n",
+#if S4_IMU_ENABLE
+              "ON"
+#else
+              "OFF"
+#endif
+    );
     return (vehicle_runtime_setup(&setup));
 }
 

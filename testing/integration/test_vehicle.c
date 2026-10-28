@@ -290,7 +290,8 @@ motion_api_result_t motion_api_enable (void)
 motion_api_result_t motion_api_configure (wheel_loop_config_t const * p_config,
     drv_encoder_port_t const * p_port)
 {
-    (void)p_config; (void)p_port; ++g_submits; return (MOTION_API_QUEUED);
+    /* Configuration intake is not a movement command. */
+    (void)p_config; (void)p_port; return (MOTION_API_QUEUED);
 }
 motion_api_result_t motion_api_submit (move_plan_command_t const * p_cmd)
 {
@@ -469,7 +470,7 @@ int main (int argc, char * argv[])
 static vehicle_config_t test_config (void)
 {
     return ((vehicle_config_t){100000U, 300000U, 2000000U, 100U,
-        100, 20, 80, 100000, 30U, true, true, false, {0}});
+        100, 20, 80, 100000, 30U, true, true, false, {0}, 0U, false});
 }
 static vehicle_input_t test_input (void)
 {
@@ -723,7 +724,7 @@ static bool test_case (void)
         return ((0U == g_enables) && (0U == g_submits) && (1U == g_s3_reads) &&
             (((7U == g_case) || (8U == g_case) || (9U == g_case) ||
               (10U == g_case)) ? (g_estops > 0U) :
-                (VEHICLE_UNCONFIGURED == status.state)) &&
+                (VEHICLE_BLOCKED == status.state)) &&
             ((9U != g_case) || (g_exit && (VEHICLE_FAULT == status.state))));
     }
     vehicle_t vehicle = {0};

@@ -36,7 +36,8 @@ motion_config_result_t motion_config_validate (
         result = MOTION_CONFIG_UNCONFIGURED;
     }
     else if ((MOTION_CONFIG_CALIBRATION_UNVERIFIED != p_config->calibration) &&
-             (MOTION_CONFIG_CALIBRATION_CONFIRMED != p_config->calibration))
+             (MOTION_CONFIG_CALIBRATION_CONFIRMED != p_config->calibration) &&
+             (MOTION_CONFIG_CALIBRATION_DEVELOPMENT != p_config->calibration))
     {
         result = MOTION_CONFIG_BAD_CALIBRATION;
     }
@@ -62,7 +63,9 @@ motion_config_result_t motion_config_validate (
     }
     else
     {
-        /* The caller supplied complete values and confirmation evidence. */
+        /* Structurally usable. DEVELOPMENT explicitly has estimates only;
+         * its motor/PID duty limits remain mandatory.
+         */
     }
 
     return (result);

@@ -6,6 +6,46 @@ Host verification and ARM object compilation are distinct from full linking,
 on-target execution and physical validation. No startup path enables motors.
 The Vehicle Controller owns mission decisions; shared interfaces remain provisional.
 
+## Initial physical straight-line operation 2026-10-28
+
+The user explicitly authorised the existing integrated system to attempt
+three-second held-button runs with provisional motion settings. This section
+supersedes the older unconfigured-startup notes below. There is no alternate
+application or trial build. From the root: `make -C build_make S4_IMU=1 -j8`.
+
+`app_main.c` supplies development configuration and permits power, without a
+boot movement request. Release GP20 after boot, then hold GP20 to request START
+through the existing controller and S2 API. Release requests PAUSE; after three
+seconds PAUSE is requested regardless of continued holding. Release and press
+again for another request. A blocked press is consumed. GP21 posts S2 emergency
+before provider waits and latches until reboot. Use the programmable GP20/GP21
+buttons, not the board's full-speed motor buttons. The three-second request
+limit is not a guarantee of physical stopping time.
+
+DEVELOPMENT explicitly labels estimated geometry/PID/motor settings. It does
+not claim CONFIRMED calibration. Motor and PID output ceilings are 25 percent;
+only nonnegative continuous speeds with leases at most 300 ms are accepted.
+Finite travel/turns are rejected. The adapter requires local buttons and blocks
+network START/RESUME from bypassing the local limit. Invalid encoder transitions,
+stale feedback, no-progress faults, line loss and emergency handling remain.
+
+User wheel diameter is 62 mm (approximate circumference 194779 um). Remaining
+assumptions: 1000 counts/revolution, both motor/encoder polarities NORMAL,
+unused track width 150 mm, P=0.01 and I=D=0. Forward request 50 mm/s, steering
+correction 15 mm/s. Actual speed/distance are uncalibrated estimates. IR starts
+with black=HIGH on all channels; USB IRraw shows actual levels for feedback.
+
+Line and motion remain mandatory. IMU acquisition uses confirmed GP16/GP17,
+but IMU/obstacle status are optional for the initial flat, clear track. Missing
+or faulty optional providers are not converted into healthy samples. GP15
+servo signal is confirmed; obstacle acquisition remains unconfigured pending
+voltage, supply and endpoint checks. This run provides no obstacle avoidance
+or collision/hump guarantee. Zero required_sensors preserves the prior
+all-provider policy for other configurations.
+
+Build/host results are appended in the integration log. Physical direction,
+encoder scale, button latency and stopping distance still need real runs.
+
 Historical implementation/verification details remain in MOTOR_DRIVER.md,
 MOTION_FOUNDATION_VERIFICATION.md and the evidence indexed by TEST_LOG.md.
 The superseded combined guide was preserved byte-for-byte as a historical

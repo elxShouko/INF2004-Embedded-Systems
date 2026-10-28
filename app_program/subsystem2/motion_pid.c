@@ -43,7 +43,10 @@ motion_pid_result_t motion_pid_validate (motion_pid_config_t const * p_config)
              (p_config->integral_min <= 0.0F) &&
              (p_config->integral_max >= 0.0F) &&
              (0U != p_config->max_elapsed_us) &&
-             (MOTION_CONFIG_CALIBRATION_CONFIRMED == p_config->calibration))
+             ((MOTION_CONFIG_CALIBRATION_CONFIRMED == p_config->calibration) ||
+              ((MOTION_CONFIG_CALIBRATION_DEVELOPMENT == p_config->calibration) &&
+               (p_config->output_min >= -0.25F) &&
+               (p_config->output_max <= 0.25F))))
     {
         result = MOTION_PID_OK;
     }

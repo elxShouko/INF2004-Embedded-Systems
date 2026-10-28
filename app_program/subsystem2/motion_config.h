@@ -33,7 +33,11 @@ typedef enum
 {
     MOTION_CONFIG_CALIBRATION_UNCONFIGURED = 0,
     MOTION_CONFIG_CALIBRATION_UNVERIFIED,
-    MOTION_CONFIG_CALIBRATION_CONFIRMED
+    MOTION_CONFIG_CALIBRATION_CONFIRMED,
+    /* Authorised development estimates, not measured calibration.
+     * Value 3 remains invalid for existing interface checks.
+     */
+    MOTION_CONFIG_CALIBRATION_DEVELOPMENT = 4
 } motion_config_calibration_t;
 
 typedef struct

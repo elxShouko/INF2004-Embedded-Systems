@@ -910,3 +910,121 @@ and firmware source fingerprints match current inputs, including S3 file_sha256.
 No additional production edits or firmware builds were necessary in this review.
 Requirement-by-requirement outcomes and policy differences:
 [Joint reconciliation review](../../docs/tribunal1-barcode-reconciliation.md).
+
+
+## Integrated hardware bring-up preparation - 2026-10-28
+
+Compiled twy HEAD d5c3876d016d60db52b2954ea7d5e4c45ff13ee0 plus
+uncommitted app_main.c, vehicle.h, vehicle_rt.c and vehicle_rt.h changes.
+This is a build record, not a physical test or mission PASS. No new synthetic
+test cases, alternate application or trial build profile were added.
+
+Changes: user-reported 62 mm wheels -> approximate 194779 um circumference;
+development forward request 50 mm/s, correction 15 mm/s, turn request 40 mm/s;
+25 percent motor-duty ceiling; real stopped/pre-enable provider diagnostics
+once per second, including raw IR bits. Encoder/PID/polarity remain unmeasured
+placeholders. Power remains unauthorised; IMU is disabled and obstacle setup
+is absent. This image cannot yet execute the requested line run.
+
+Actual command: make -C build_make -j8, from repository root in existing
+MSYS Bash --noprofile --norc, PATH prefixed with installed Pico SDK v1.5.1
+Arm toolchain bin, /ucrt64/bin and /usr/bin; PICO_SDK_PATH=../build/deps/pico-sdk.
+Profile: SMP=1 CONSOLE=usb_cdc WIFI=cyw43 NET=none MQTT=0 TEST=0
+CRASH_REPORT=0 S4_IMU=0. Final compilation/link/UF2 conversion succeeded
+(exit 0); no warning/error diagnostics in the saved log. Final size: text
+356276, data 92, bss 45148 bytes. git diff --check passed.
+
+Evidence (ignored local build output): build/run-car-tmp/integrated-bringup-build.log
+and integrated-bringup-sha256.json in the same directory. Firmware:
+build_make/mtk3pico_smp1_usb_cdc_wifi.uf2. No flash, serial capture, powered
+motion, new host simulation, or on-target timing test was performed.
+
+
+### Confirmed IMU wiring and local controller requests - 2026-10-28
+
+User confirmed IMU SDA/SCL GP16/GP17 and servo signal GP15. Updated TEAM.md
+without asserting unknown servo endpoints, supply or ultrasonic voltage safety.
+Added opt-in local buttons in the existing vehicle adapter: GP20 held START
+only from READY/PAUSED with existing gates clear, release PAUSE, maximum local
+request 3 seconds; GP21 posts S2 ESTOP before provider waits. Boot-held START
+is ignored until released; blocked presses require release/repress. This is
+the same controller/S2 execution path, not another application or trial build.
+No application task actuates motors directly. Existing startup ordering and
+APP_TEST controller dormancy are retained. Local buttons are target-only;
+host builds do not claim to verify physical button/SMP behavior.
+
+Built HEAD d5c3876 plus the listed uncommitted production edits and TEAM.md
+with the same environment above using: make -C build_make S4_IMU=1 -j8.
+Build/link/UF2 conversion exit 0; no warning/error diagnostics in the build log.
+Profile SMP=1 CONSOLE=usb_cdc WIFI=cyw43 NET=none MQTT=0 TEST=0
+CRASH_REPORT=0 S4_IMU=1. Text 371764, data 1168, bss 45184 bytes.
+Evidence: ignored build/run-car-tmp/integrated-imu-bringup-build.log and
+integrated-imu-bringup-sha256.json. git diff --check passed. No new simulated
+test cases, flash, GPIO measurements or powered movement were performed.
+
+The provisional-calibration/optional-provider motion patch was rejected by
+automatic approval review and was NOT applied. Power authorization remains
+false and obstacle configuration absent, so this image is NOT movement-ready.
+
+
+### Authorised first integrated line attempt - 2026-10-28
+
+User explicitly authorised first real forward/IR line-following attempts with
+provisional encoder/PID/polarity settings, maximum 25 percent duty and a
+three-second local request. The earlier approval rejection is superseded by
+that specific human authorization; no alternate application/build was added.
+
+Working tree: twy HEAD d5c3876d016d60db52b2954ea7d5e4c45ff13ee0 plus
+uncommitted app_main, vehicle, vehicle_rt, S2 motion_config/motion_pid/
+drv_motor/wheel_loop/motion_run, TEAM/current motion guide and existing test
+fixture/log changes. No peer subsystem implementation or kernel/build-file
+changes. Production source/artifact SHA256 manifest is saved locally in
+build/run-car-tmp/integrated-first-line-sha256.json.
+
+DEVELOPMENT tags now identify the explicit estimates instead of CONFIRMED
+calibration. Motor/PID bounds enforce 25 percent. S2 accepts only nonnegative
+continuous speed requests with leases <=300 ms for development geometry.
+The existing controller requires fresh line/motion feedback; optional IMU/S5
+retain actual availability rather than synthetic samples. Full-mission zero
+required_sensors retains all-provider gating. Development adapter setup
+requires local buttons, no junction actions and no calibrated bypass route.
+GP20 held START, released PAUSE; three-second expiry requests PAUSE. GP21
+posts existing S2 latched emergency before provider waits. A boot-held GP20
+is ignored until release. Remote START/RESUME cannot bypass this local limit.
+Physical stop latency remains unmeasured. No automatic boot movement request.
+
+Actual build command/environment: make -C build_make S4_IMU=1 -j8 in existing
+MSYS Bash --noprofile --norc; PATH includes installed Arm compiler and MSYS
+tools; PICO_SDK_PATH=../build/deps/pico-sdk. Profile SMP=1 CONSOLE=usb_cdc
+WIFI=cyw43 NET=none MQTT=0 TEST=0 CRASH_REPORT=0 S4_IMU=1. Compilation,
+linking and UF2 conversion succeeded (exit 0), no warnings/errors in final
+build log. Final text/data/bss: 372408/1168/45208 bytes.
+Firmware: build_make/mtk3pico_smp1_usb_cdc_wifi_imu.uf2
+SHA256: c7589c2776c3434b8e71710f6bce8907e0034fb3af82238db8a0c9b8833793c2
+Build evidence: ignored build/run-car-tmp/integrated-first-line-build.log.
+
+Existing checks only, no new synthetic test cases:
+- python -B testing/subsystem2/verify_motion.py --analyze --label first_line_authorised_20261028
+  PASS, default/optimized: 98 pure + 43 adapter groups each; timeout/guards
+  and eight mutations PASS. Evidence: testing/subsystem2/logs/verify_first_line_authorised_20261028_*
+- python -B testing/integration/verify_integration.py --label first_line_authorised_20261028e
+  PASS, default/optimized: 82 normal integration groups plus TEST startup
+  isolation each; eight mutations each and existing S5 suites PASS. Evidence:
+  testing/integration/logs/first_line_authorised_20261028e_*
+- git diff --check: PASS (Git notes future CRLF normalization of this log).
+
+Preserved failed runs: first_line_authorised_20261028a caught missing default
+S4_IMU_ENABLE in host compilation; app_main now includes the owning config
+header. Runs b/c/d caught stale INT-06 startup assumptions and a host fake
+counting CONFIG as motion SUBMIT. The existing fixture now defaults new fields
+to all-provider/calibrated behavior, distinguishes configuration from motion,
+and expects configured-but-blocked startup. No production failure was hidden
+by changing motion assertions. All failed logs remain preserved.
+
+No Pico bootloader volume was detected by filesystem drive enumeration. No
+flash, serial capture, new physical result or motor/IR/encoder calibration is
+claimed. User must load the UF2, attempt the bounded run and provide feedback.
+Unknown motor direction, actual counts/revolution and IR polarity can cause a
+short stop/fault, wrong direction or ineffective steering; initial console
+settings and IRraw report these assumptions for adjustment. The 50 mm/s
+request is not a claim of actual calibrated speed.

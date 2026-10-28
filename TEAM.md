@@ -1,5 +1,16 @@
 # Team and subsystems
 
+Current bring-up update (2026-10-28): the user explicitly authorised initial
+three-second straight-line runs in the existing integrated controller, with
+25 percent duty and provisional motion settings. `app_main.c` now supplies
+DEVELOPMENT-tagged geometry/PID settings and power permission; it does not
+request motion at boot. GP20 is held START/released PAUSE, GP21 latched ESTOP.
+Line/motion are required for this first clear-track run; IMU/obstacle status is
+optional and missing values remain unavailable. Obstacle avoidance is not active.
+This supersedes older "no setup caller" notes below. See
+[current motion bring-up](docs/buddy2/MOTION_SYSTEM.md#initial-physical-straight-line-operation-2026-10-28)
+for assumptions, controls and remaining physical checks.
+
 The tables are pre-filled with the **example** in `app_program/` (marked
 *example*). Replace those rows with your own as you replace the example code.
 
@@ -63,13 +74,13 @@ fixed.
 | GP12 | | |
 | GP13 | | |
 | GP14 | | |
-| GP15 | S5 (provisional; unverified) | Possible servo signal only; actual signal GPIO is not confirmed; do not configure |
-| GP16 | S4 | I2C0 SDA, Week 6 design; physical wiring unverified |
-| GP17 | S4 | I2C0 SCL, Week 6 design; physical wiring unverified |
+| GP15 | S5 | Servo signal GPIO user-confirmed 2026-10-28; model, supply and endpoints still unverified |
+| GP16 | S4 | I2C0 SDA, wiring user-confirmed 2026-10-28 |
+| GP17 | S4 | I2C0 SCL, wiring user-confirmed 2026-10-28 |
 | GP18 | | |
 | GP19 | *example:* S1 | external LED (LED + 330 Ω to GND) |
-| GP20 | | |
-| GP21 | | |
+| GP20 | Shared controller | Programmable button: held START, release PAUSE; maximum 3 s local request |
+| GP21 | Shared controller | Programmable button: emergency stop, latched by Buddy 2 until reboot |
 | GP22 | | |
 | GP26 | S5 | Ultrasonic TRIG (user-confirmed); use GPIO/SIO only (PWM5A aliases GP10 motor) |
 | GP27 | S3 | Side IR barcode/junction sensor, digital DOUT |
@@ -77,10 +88,10 @@ fixed.
 
 Current observed Buddy 5 wiring is HC-SR04 VCC to 3V3, GND to GND, GP26 to
 TRIG, and GP6 to ECHO. The module's operating suitability at 3V3, ECHO voltage,
-and any level shifting are unverified. The servo model, signal GPIO, supply,
-and wiring are unconfirmed; GP15 remains only an unverified candidate. GP26
+and any level shifting are unverified. The servo signal is user-confirmed on
+GP15 (2026-10-28); model, supply and mechanical endpoints remain unverified. GP26
 must stay GPIO/SIO-only because it aliases PWM5A with Buddy 2's GP10 motor
-output. These records do not authorize the explicitly configured Buddy 5 driver.
+output. Signal-pin confirmation alone does not establish servo/range calibration.
 
 ## 3. Peripherals
 

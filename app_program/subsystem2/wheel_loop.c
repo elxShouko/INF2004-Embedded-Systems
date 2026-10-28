@@ -46,6 +46,14 @@ bool wheel_loop_validate (wheel_loop_config_t const * p_config)
                 (p_config->pid[wheel].max_elapsed_us >=
                  p_config->sample_limit_us) && b_ok;
         }
+        if (MOTION_CONFIG_CALIBRATION_DEVELOPMENT ==
+            p_config->geometry.calibration)
+        {
+            b_ok = b_ok &&
+                (MOTION_CONFIG_CALIBRATION_DEVELOPMENT == p_config->motor.calibration) &&
+                (MOTION_CONFIG_CALIBRATION_DEVELOPMENT == p_config->pid[0].calibration) &&
+                (MOTION_CONFIG_CALIBRATION_DEVELOPMENT == p_config->pid[1].calibration);
+        }
     }
     return (b_ok);
 }

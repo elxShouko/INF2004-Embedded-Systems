@@ -306,7 +306,9 @@ static bool drv_motor_config_valid (drv_motor_config_t const * p_config)
         (0 != isfinite(p_config->max_duty)) &&
         (p_config->max_duty > 0.0F) && (p_config->max_duty <= 1.0F) &&
         (drv_motor_mode_valid(p_config->zero_mode)) &&
-        (MOTION_CONFIG_CALIBRATION_CONFIRMED == p_config->calibration) &&
+        ((MOTION_CONFIG_CALIBRATION_CONFIRMED == p_config->calibration) ||
+         ((MOTION_CONFIG_CALIBRATION_DEVELOPMENT == p_config->calibration) &&
+          (p_config->max_duty <= 0.25F))) &&
         p_config->b_resources_verified;
 
     for (uint32_t index = 0U; index < DRV_MOTOR_WHEELS; ++index)

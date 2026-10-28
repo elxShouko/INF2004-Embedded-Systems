@@ -13,11 +13,12 @@ typedef struct
     s3_config_t navigation;
     s5_live_config_t obstacle;
     bool b_obstacle_requested;
+    bool b_local_buttons; /* GP20 held start/pause, GP21 latched ESTOP. */
 } vehicle_setup_t;
 
-/* No default calibration or automatic enable. setup is optional, pre-start,
- * copied once and requires a separately authorised hardware procedure. No
- * caller in usermain supplies it. Hardware calibration still gates RUN.
+/* setup is pre-start and copied once. usermain supplies the user-authorised
+ * development settings for bounded local straight-line runs. Placeholder
+ * encoder/PID values are not measured calibration. No automatic boot motion.
  * APP_TEST=1 deliberately leaves the controller dormant to preserve test queues.
  */
 ER vehicle_runtime_init (void);

@@ -27,7 +27,17 @@ bool vehicle_init (vehicle_t * p_vehicle, vehicle_config_t const * p_config)
             (p_config->correction_mm_s >= 0) &&
             (p_config->correction_mm_s < p_config->forward_mm_s) &&
             (p_config->turn_mm_s > 0) && (p_config->straight_um > 0) &&
-            (p_config->obstacle_stop_cm > 0U) && p_config->b_calibrated &&
+            (p_config->obstacle_stop_cm > 0U) &&
+            (p_config->b_calibrated || p_config->b_development_authorised) &&
+            (0U == (p_config->required_sensors &
+                ~(VEHICLE_BLOCK_LINE | VEHICLE_BLOCK_IMU |
+                  VEHICLE_BLOCK_OBSTACLE | VEHICLE_BLOCK_MOTION))) &&
+            ((0U == p_config->required_sensors) ||
+             ((VEHICLE_BLOCK_LINE | VEHICLE_BLOCK_MOTION) ==
+              (p_config->required_sensors &
+               (VEHICLE_BLOCK_LINE | VEHICLE_BLOCK_MOTION)))) &&
+            (!p_config->b_development_authorised ||
+             !p_config->route.b_calibrated) &&
             (!p_config->route.b_calibrated || s5_route_validate(&p_config->route));
         if (b_ok)
         {
@@ -107,13 +117,19 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         (b_obstacle ? 0U : VEHICLE_BLOCK_OBSTACLE) |
         (b_motion ? 0U : VEHICLE_BLOCK_MOTION) |
         (p_cfg->b_power_authorised ? 0U : VEHICLE_BLOCK_POWER);
+    if (0U != p_cfg->required_sensors)
+    {
+        p_vehicle->blockers &= p_cfg->required_sensors | VEHICLE_BLOCK_POWER;
+    }
     if (b_live && (0U != p_vehicle->blockers))
     {
         vehicle_fault(p_vehicle, p_output);
         return (true);
     }
-    if ((IMU_FAULT == p_input->imu.phase) ||
-        (0U != (p_input->imu.events & (IMU_EVENT_FAULT | IMU_EVENT_IMPACT))))
+    if (((0U == p_cfg->required_sensors) ||
+         (0U != (p_cfg->required_sensors & VEHICLE_BLOCK_IMU))) &&
+        ((IMU_FAULT == p_input->imu.phase) ||
+         (0U != (p_input->imu.events & (IMU_EVENT_FAULT | IMU_EVENT_IMPACT)))))
     {
         vehicle_fault(p_vehicle, p_output);
         return (true);
@@ -177,8 +193,8 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         p_vehicle->state = VEHICLE_BLOCKED;
         return (true);
     }
-    bool b_near = p_input->forward_cm <=
-        p_cfg->obstacle_stop_cm;
+    bool b_near = b_obstacle &&
+        (p_input->forward_cm <= p_cfg->obstacle_stop_cm);
     if (b_near && p_vehicle->b_run_requested)
     {
         if (!p_vehicle->b_obstacle_pending)

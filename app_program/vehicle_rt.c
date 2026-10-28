@@ -11,6 +11,7 @@
 #include "subsystem2/motion_api.h"
 #if !defined(VEHICLE_HOST_TEST)
 #include <tk/syslib.h>
+#include <bsp/libbsp.h>
 #endif
 
 #define VEHICLE_PERIOD_MS (10U) /* Service polling, not motor control timing. */
@@ -27,6 +28,19 @@ static vehicle_t g_vehicle_owner;
 static vehicle_t g_vehicle_published;
 static s5_clearance_t g_vehicle_clearance;
 static gpio_bank_t g_vehicle_bank;
+#if !defined(VEHICLE_HOST_TEST)
+#define VEHICLE_START_GPIO (20U)
+#define VEHICLE_ESTOP_GPIO (21U)
+#define VEHICLE_LOCAL_RUN_US (3000000U)
+#define VEHICLE_BUTTON_DEBOUNCE_US (50000U)
+static uint64_t g_vehicle_press_us;
+static bool g_vehicle_buttons_released;
+static bool g_vehicle_button_consumed;
+static bool g_vehicle_local_running;
+static uint64_t g_vehicle_local_start_us;
+static bool vehicle_buttons_init (void);
+static void vehicle_buttons_command (vehicle_input_t * p_input);
+#endif
 
 static void vehicle_task (INT code, void * p_context);
 static void vehicle_irq (UINT number);
@@ -104,6 +118,26 @@ ER vehicle_runtime_setup(vehicle_setup_t const *p_setup)
     {
         return (E_PAR);
     }
+    /* Development estimates are admitted only for the explicitly authorised,
+     * locally held, duty-limited straight-line runs. Existing full missions
+     * retain their calibrated/all-provider policy.
+     */
+    bool b_development = p_setup->mission.b_development_authorised;
+    bool b_motion_development =
+        (MOTION_CONFIG_CALIBRATION_DEVELOPMENT == p_setup->motion.geometry.calibration) ||
+        (MOTION_CONFIG_CALIBRATION_DEVELOPMENT == p_setup->motion.motor.calibration) ||
+        (MOTION_CONFIG_CALIBRATION_DEVELOPMENT == p_setup->motion.pid[0].calibration) ||
+        (MOTION_CONFIG_CALIBRATION_DEVELOPMENT == p_setup->motion.pid[1].calibration);
+
+    if ((b_motion_development && !b_development) ||
+        (b_development && (!p_setup->b_local_buttons ||
+         (p_setup->motion.motor.max_duty > 0.25F) ||
+         (p_setup->mission.required_sensors !=
+          (VEHICLE_BLOCK_LINE | VEHICLE_BLOCK_MOTION)) ||
+         p_setup->navigation.junction_enabled || p_setup->mission.route.b_calibrated)))
+    {
+        return (E_PAR);
+    }
     if (p_setup->mission.route.b_calibrated &&
         (!p_setup->b_obstacle_requested ||
          ((uint64_t)(uint32_t)p_setup->mission.route.half_width_um * 2U <
@@ -136,6 +170,12 @@ ER vehicle_runtime_setup(vehicle_setup_t const *p_setup)
             return (error);
         }
     }
+#if !defined(VEHICLE_HOST_TEST)
+    if (p_setup->b_local_buttons && !vehicle_buttons_init())
+    {
+        return (E_SYS);
+    }
+#endif
     g_vehicle_setup = *p_setup;
     g_vehicle_owner = candidate;
     g_vehicle_have_setup = true;
@@ -219,6 +259,8 @@ static void vehicle_task(INT code, void *p_context)
     uint32_t navigation_done_sent = 0U;
     uint64_t telemetry_last_us = 0U;
     bool b_telemetry_sent = false;
+    uint64_t console_last_us = 0U;
+    bool b_console_sent = false;
     vehicle_odometry_t odometry = {0};
 
     (void)code;
@@ -260,6 +302,42 @@ static void vehicle_task(INT code, void *p_context)
         }
         (void)vehicle_step(&g_vehicle_owner, &input, &output);
         vehicle_apply(&output);
+        /* Bring-up visibility from actual provider snapshots. Print only
+         * before motor enable, at most once per second; no control-loop or
+         * ISR logging and no fabricated readiness/measurements.
+         */
+        if (((MOTION_RUN_UNCONFIGURED == input.motion.state) ||
+             (MOTION_RUN_CONFIGURED == input.motion.state) ||
+             (MOTION_RUN_FAULT == input.motion.state) ||
+             ((MOTION_RUN_READY == input.motion.state) && input.motion.b_standstill)) &&
+            (0U == input.motion.active_id) &&
+            (!b_console_sent || ((input.now_us >= console_last_us) &&
+             (input.now_us - console_last_us >= 1000000U))))
+        {
+            tm_printf((UB *)"[vehicle] state=%u blockers=0x%02x "
+                            "blocked(line=%u imu=%u obstacle=%u motion=%u power=%u) "
+                            "IRraw=%u linevalid=%u IRcal=%u "
+                            "motionstate=%u motionfault=%u providerfault=%u estop=%u "
+                            "IMUavailable=%u obstacleavailable=%u\n",
+                      (unsigned int)g_vehicle_owner.state,
+                      (unsigned int)g_vehicle_owner.blockers,
+                      (unsigned int)(0U != (g_vehicle_owner.blockers & VEHICLE_BLOCK_LINE)),
+                      (unsigned int)(0U != (g_vehicle_owner.blockers & VEHICLE_BLOCK_IMU)),
+                      (unsigned int)(0U != (g_vehicle_owner.blockers & VEHICLE_BLOCK_OBSTACLE)),
+                      (unsigned int)(0U != (g_vehicle_owner.blockers & VEHICLE_BLOCK_MOTION)),
+                      (unsigned int)(0U != (g_vehicle_owner.blockers & VEHICLE_BLOCK_POWER)),
+                      (unsigned int)input.raw_ir_mask,
+                      (unsigned int)input.b_line_valid,
+                      (unsigned int)input.b_line_calibrated,
+                      (unsigned int)input.motion.state,
+                      (unsigned int)input.motion.fault_result,
+                      (unsigned int)input.b_provider_fault,
+                      (unsigned int)input.b_estop,
+                      (unsigned int)input.b_imu_available,
+                      (unsigned int)input.b_obstacle_available);
+            console_last_us = input.now_us;
+            b_console_sent = true;
+        }
         if (g_vehicle_have_setup && (VEHICLE_FAULT != g_vehicle_owner.state) &&
             (0U != (g_vehicle_started_mask & 4U)) &&
             vehicle_odometry(&odometry, &input,
@@ -348,14 +426,122 @@ static void vehicle_fault_bit(uint8_t bit, bool b_on)
     }
 }
 
+#if !defined(VEHICLE_HOST_TEST)
+/* Robo Pico programmable switches, not the full-speed motor-test buttons.
+ * Pins were unassigned in TEAM.md. Configure only these two input pads.
+ */
+static bool vehicle_buttons_init (void)
+{
+    static uint32_t const pins[] = {VEHICLE_START_GPIO, VEHICLE_ESTOP_GPIO};
+
+    for (uint32_t index = 0U; index < sizeof(pins) / sizeof(pins[0]); ++index)
+    {
+        uint32_t pin = pins[index];
+        uint32_t function = in_w(GPIO_CTRL(pin)) & 0x1FU;
+
+        if ((0U != (in_w(GPIO_OE) & (1UL << pin))) ||
+            ((5U != function) && (31U != function)))
+        {
+            return (false);
+        }
+        if (E_OK != gpio_set_pin(pin, GPIO_MODE_IN))
+        {
+            return (false);
+        }
+        clr_w(GPIO(pin), 0x04U); /* No pull-down. */
+        set_w(GPIO(pin), 0x08U); /* Pull-up; switch closes to ground. */
+    }
+    return (true);
+}
+
+/* Local requests enter the existing controller policy and S2 handshake.
+ * No motor outputs here. A blocked press is consumed; release and press
+ * again after readiness, rather than unexpectedly starting when a gate clears.
+ */
+static void vehicle_buttons_command (vehicle_input_t * p_input)
+{
+    if (!g_vehicle_have_setup || !g_vehicle_setup.b_local_buttons)
+    {
+        return;
+    }
+    bool b_pressed = (0U == gpio_get_val(VEHICLE_START_GPIO));
+    bool b_pause = false;
+
+    if (!b_pressed)
+    {
+        g_vehicle_buttons_released = true;
+        g_vehicle_button_consumed = false;
+        g_vehicle_press_us = p_input->now_us;
+        b_pause = g_vehicle_local_running;
+    }
+    else if (g_vehicle_buttons_released && !g_vehicle_button_consumed &&
+             (p_input->now_us >= g_vehicle_press_us) &&
+             (p_input->now_us - g_vehicle_press_us >= VEHICLE_BUTTON_DEBOUNCE_US))
+    {
+        g_vehicle_button_consumed = true;
+        if (!p_input->b_estop && !p_input->b_provider_fault &&
+            (S1_CMD_EMERGENCY_STOP != p_input->remote.command_id) &&
+            (S1_CMD_PAUSE != p_input->remote.command_id) &&
+            (0U == g_vehicle_owner.blockers) &&
+            ((VEHICLE_READY == g_vehicle_owner.state) ||
+             (VEHICLE_PAUSED == g_vehicle_owner.state)))
+        {
+            p_input->remote.command_id = S1_CMD_START_RUN;
+            p_input->remote.rx_timestamp_ms = (uint32_t)(p_input->now_us / 1000U);
+            g_vehicle_local_start_us = p_input->now_us;
+            g_vehicle_local_running = true;
+        }
+    }
+    if (g_vehicle_local_running &&
+        ((p_input->now_us < g_vehicle_local_start_us) ||
+         (p_input->now_us - g_vehicle_local_start_us >= VEHICLE_LOCAL_RUN_US)))
+    {
+        b_pause = true;
+    }
+    if (b_pause)
+    {
+        g_vehicle_local_running = false;
+        if (S1_CMD_EMERGENCY_STOP != p_input->remote.command_id)
+        {
+            p_input->remote.command_id = S1_CMD_PAUSE;
+            p_input->remote.rx_timestamp_ms = (uint32_t)(p_input->now_us / 1000U);
+        }
+    }
+    if (g_vehicle_setup.mission.b_development_authorised &&
+        !g_vehicle_local_running &&
+        ((S1_CMD_START_RUN == p_input->remote.command_id) ||
+         (S1_CMD_RESUME == p_input->remote.command_id)))
+    {
+        /* Network commands cannot bypass the authorised local time limit. */
+        p_input->remote.command_id = S1_CMD_PAUSE;
+        p_input->remote.rx_timestamp_ms = (uint32_t)(p_input->now_us / 1000U);
+    }
+}
+#endif
+
 static void vehicle_collect(vehicle_input_t *p_input)
 {
+    uint32_t required = g_vehicle_have_setup ?
+        g_vehicle_setup.mission.required_sensors : 0U;
+    bool b_require_imu = (0U == required) ||
+        (0U != (required & VEHICLE_BLOCK_IMU));
+    bool b_require_obstacle = (0U == required) ||
+        (0U != (required & VEHICLE_BLOCK_OBSTACLE));
+#if !defined(VEHICLE_HOST_TEST)
+    /* Direct owner emergency request before any provider/status waits. */
+    if (g_vehicle_have_setup && g_vehicle_setup.b_local_buttons &&
+        (0U == gpio_get_val(VEHICLE_ESTOP_GPIO)))
+    {
+        p_input->b_estop = true;
+        (void)motion_api_estop();
+    }
+#endif
     if (0U != (g_vehicle_started_mask & 1U))
     {
         UINT flags = 0U;
         ER error = s1_net_events_wait(S1_NET_FLG_ESTOP, &flags, TMO_POL);
 
-        p_input->b_estop = s1_net_estop_latched() ||
+        p_input->b_estop = p_input->b_estop || s1_net_estop_latched() ||
                            ((E_OK == error) && (0U != flags));
         p_input->b_link_up = s1_net_is_connected();
         p_input->b_provider_fault = (E_OK != error) && (E_TMOUT != error);
@@ -365,7 +551,7 @@ static void vehicle_collect(vehicle_input_t *p_input)
         ER error = imu_runtime_wait_fault(TMO_POL);
 
         p_input->b_provider_fault = p_input->b_provider_fault ||
-                                    (E_TMOUT != error); /* Includes latched fault or API failure. */
+                                    (b_require_imu && (E_TMOUT != error));
         /* Named shared fault bit (Buddy 4's), telemetry only: it never
          * replaces the provider-fault stop above. */
         vehicle_fault_bit(S1_FAULT_IMU, E_TMOUT != error);
@@ -375,7 +561,7 @@ static void vehicle_collect(vehicle_input_t *p_input)
         ER error = s5_live_fault();
 
         p_input->b_provider_fault = p_input->b_provider_fault ||
-                                    (E_TMOUT != error);
+                                    (b_require_obstacle && (E_TMOUT != error));
     }
     if (p_input->b_estop || p_input->b_provider_fault)
     {
@@ -430,6 +616,9 @@ static void vehicle_collect(vehicle_input_t *p_input)
             }
         }
     }
+#if !defined(VEHICLE_HOST_TEST)
+    vehicle_buttons_command(p_input);
+#endif
     if (p_input->b_provider_fault ||
         (S1_CMD_EMERGENCY_STOP == p_input->remote.command_id))
     {
@@ -450,6 +639,7 @@ static void vehicle_collect(vehicle_input_t *p_input)
             p_input->line_state = status.state;
             p_input->line_mode = status.mode;
             p_input->black_mask = status.black_mask;
+            p_input->raw_ir_mask = status.raw.levels;
             p_input->b_line_calibrated = status.calibrated;
             p_input->b_line_valid = status.line_valid;
             p_input->pending_navigation_id = status.pending_manoeuvre_event_id;
@@ -512,7 +702,8 @@ static void vehicle_collect(vehicle_input_t *p_input)
         ER error = imu_runtime_get_status(&status); /* Provider bound: 10 ms. */
 
         p_input->b_provider_fault = p_input->b_provider_fault ||
-                                    ((E_OK != error) && (E_TMOUT != error));
+                                    (b_require_imu &&
+                                     (E_OK != error) && (E_TMOUT != error));
         p_input->b_imu_available = (E_OK == error) && status.b_enabled;
         p_input->imu = status.sensing;
         /* Consume transitions without letting an event backlog starve safety.
@@ -527,8 +718,9 @@ static void vehicle_collect(vehicle_input_t *p_input)
             {
                 break;
             }
-            if ((E_OK != event_error) || (IMU_FAULT == event.phase) ||
-                (0U != (event.events & (IMU_EVENT_FAULT | IMU_EVENT_IMPACT))))
+            if (b_require_imu && ((E_OK != event_error) ||
+                (IMU_FAULT == event.phase) ||
+                (0U != (event.events & (IMU_EVENT_FAULT | IMU_EVENT_IMPACT)))))
             {
                 p_input->b_provider_fault = true;
                 (void)motion_api_estop();
@@ -562,7 +754,9 @@ static void vehicle_collect(vehicle_input_t *p_input)
         p_input->b_scan_held = status.policy.scan_valid &&
                                (S5_RUNTIME_HOLD == status.policy.state);
         p_input->b_provider_fault = p_input->b_provider_fault ||
-                                    ((E_OK != error) && (E_TMOUT != error)) || status.b_fault;
+                                    (b_require_obstacle &&
+                                     (((E_OK != error) && (E_TMOUT != error)) ||
+                                      status.b_fault));
     }
     ER certificate = tk_loc_mtx(g_vehicle_mutex, TMO_POL);
 

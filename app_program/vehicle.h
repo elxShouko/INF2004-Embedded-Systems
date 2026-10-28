@@ -37,6 +37,8 @@ typedef struct
     bool b_power_authorised;
     bool b_uturn_right;
     s5_route_config_t route; /* Optional; all zero means disabled. */
+    uint32_t required_sensors; /* Zero preserves all-provider mission gates. */
+    bool b_development_authorised; /* Explicit estimates, not calibration. */
 } vehicle_config_t;
 
 typedef struct
@@ -53,6 +55,7 @@ typedef struct
     line_state_t line_state;
     line_mode_t line_mode;
     uint8_t black_mask;
+    uint8_t raw_ir_mask; /* Actual S3 digital levels, before normalization. */
     imu_core_status_t imu;
     s5_obstacle_profile_t obstacle; /* Scan diagnostics, not forward readiness. */
     s5_clearance_t clearance;

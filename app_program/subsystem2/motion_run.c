@@ -62,6 +62,19 @@ bool motion_run_command (motion_run_t * p_run,
 
     if (b_ok)
     {
+        if (MOTION_CONFIG_CALIBRATION_DEVELOPMENT ==
+            p_run->loop.config.geometry.calibration)
+        {
+            /* User-authorised initial runs: forward wheel-speed requests
+             * only, with short refresh leases. No uncalibrated finite turns.
+             */
+            b_ok = (MOVE_PLAN_SPEED == p_command->kind) &&
+                (p_command->left_mm_s >= 0) && (p_command->right_mm_s >= 0) &&
+                (p_command->lifetime_us <= 300000U);
+        }
+    }
+    if (b_ok)
+    {
         bool b_new = (MOTION_RUN_READY == p_run->status.state) &&
             (p_command->id > p_run->last_id) && p_run->status.b_standstill;
         bool b_refresh = (MOTION_RUN_ACTIVE == p_run->status.state) &&
