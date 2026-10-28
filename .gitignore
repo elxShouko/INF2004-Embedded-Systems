@@ -32,3 +32,4 @@ config/wifi_secrets.h
 # Windows host-tool executables
 build_make/tools/elf2uf2.exe
 tools/elf2uf2/elf2uf2.exe
+__pycache__/
