@@ -154,6 +154,27 @@ EXPORT ID app_start_task(FP entry, PRI pri, UW prc, const char *name)
     return tid;
 }
 
+#if APP_TEST
+/* Test build (make TEST=1): runs every subsystem's tests in turn, in a task
+ * of its own.  The initial task has only a 1 KB stack, far too small for the
+ * tests, and overflowing it corrupts the kernel heap.  Tests may call
+ * tk_dly_tsk() to let the other tasks work for a while. */
+static void app_test_runner(INT stacd, void *p_exinf)
+{
+    (void)stacd;
+    (void)p_exinf;
+    (void)tk_dly_tsk(8000); /* 8 s: open the terminal now */
+    tm_printf((UB *)"[TEST] === test run start ===\n");
+    subsystem1_test();
+    subsystem2_test();
+    subsystem3_test();
+    subsystem4_test();
+    subsystem5_test();
+    tm_printf((UB *)"[TEST] === test run end ===\n");
+    tk_ext_tsk();
+}
+#endif
+
 EXPORT INT usermain(void)
 {
     T_RVER ver;
@@ -233,18 +254,23 @@ EXPORT INT usermain(void)
               started_mask);
 
 #if APP_TEST
-    /* Test build (make TEST=1): run every subsystem's tests in turn,
-       here in the initial task, while the system is running.  Tests may
-       call tk_dly_tsk() to let the other tasks work for a while. */
-    (void)tk_dly_tsk(8000);
-    (void)tk_chg_pri(TSK_SELF, 10);
-    tm_printf((UB *)"[TEST] === test run start ===\n");
-    subsystem1_test();
-    subsystem2_test();
-    subsystem3_test();
-    subsystem4_test();
-    subsystem5_test();
-    tm_printf((UB *)"[TEST] === test run end ===\n");
+    {
+        /* Priority 10 is below the USB console task (3), so USB can
+         * enumerate and drain output while the tests run. */
+        T_CTSK ctsk = {0};
+        ID tid;
+
+        ctsk.task = (FP)app_test_runner;
+        ctsk.itskpri = 10;
+        ctsk.stksz = 8192;
+        ctsk.tskatr = TA_HLNG | TA_RNG3;
+        tid = tk_cre_tsk(&ctsk);
+        CHECK(tid, "test runner create");
+        if (tid > 0)
+        {
+            CHECK(tk_sta_tsk(tid, 0), "test runner start");
+        }
+    }
 #endif
 
     /* Sleep forever.  Returning from usermain() would shut down. */
