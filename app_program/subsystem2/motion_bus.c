@@ -21,16 +21,18 @@ bool motion_bus_put (motion_bus_t * p_bus,
                     b_ok = (MOTION_RUN_CONFIGURED == p_bus->status.state);
                 break;
                 case MOTION_BUS_ACK:
-                    b_ok = (0U != p_request->ack_id) &&
-                        (p_request->ack_id == p_bus->status.terminal_id);
+                    b_ok = (0U != p_request->payload.ack_id) &&
+                        (p_request->payload.ack_id ==
+                         p_bus->status.terminal_id);
                 break;
                 case MOTION_BUS_COMMAND:
                     b_ok = ((MOTION_RUN_READY == p_bus->status.state) &&
                             (0U == p_bus->status.terminal_id)) ||
                         ((MOTION_RUN_ACTIVE == p_bus->status.state) &&
                          (MOVE_PLAN_SPEED == p_bus->status.active_kind) &&
-                         (MOVE_PLAN_SPEED == p_request->command.kind) &&
-                         (p_request->command.id == p_bus->status.active_id));
+                         (MOVE_PLAN_SPEED == p_request->payload.command.kind) &&
+                         (p_request->payload.command.id ==
+                          p_bus->status.active_id));
                 break;
                 default:
                     b_ok = false;
@@ -72,7 +74,7 @@ bool motion_bus_stop (motion_bus_t * p_bus, bool b_cancel, uint32_t id)
         b_ok = (0U != id) && ((id == p_bus->status.active_id) ||
             ((p_bus->b_pending || p_bus->b_inflight) &&
              (MOTION_BUS_COMMAND == p_bus->request.kind) &&
-             (id == p_bus->request.command.id)));
+             (id == p_bus->request.payload.command.id)));
     }
     if (b_ok)
     {

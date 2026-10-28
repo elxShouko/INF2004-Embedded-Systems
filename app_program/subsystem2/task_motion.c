@@ -152,8 +152,8 @@ motion_api_result_t motion_api_configure (wheel_loop_config_t const * p_config,
         motion_bus_request_t request = {0};
 
         request.kind = MOTION_BUS_CONFIG;
-        request.config = *p_config;
-        request.encoder_port = *p_encoder_port;
+        request.payload.configure.config = *p_config;
+        request.payload.configure.encoder_port = *p_encoder_port;
         result = task_motion_post(&request);
     }
     return (result);
@@ -177,7 +177,7 @@ motion_api_result_t motion_api_submit (move_plan_command_t const * p_command)
         motion_bus_request_t request = {0};
 
         request.kind = MOTION_BUS_COMMAND;
-        request.command = *p_command;
+        request.payload.command = *p_command;
         result = task_motion_post(&request);
     }
     return (result);
@@ -216,7 +216,7 @@ motion_api_result_t motion_api_ack (uint32_t terminal_id)
     motion_bus_request_t request = {0};
 
     request.kind = MOTION_BUS_ACK;
-    request.ack_id = terminal_id;
+    request.payload.ack_id = terminal_id;
     return (task_motion_post(&request));
 }
 
@@ -398,9 +398,10 @@ static void task_motion_process (motion_bus_request_t const * p_request,
             bool b_ok = drv_rp2040_bind(&g_task_motion_backend,
                                        &g_task_motion_raw_io);
 
-            b_ok = (motion_run_init(&g_task_motion_run,&p_request->config,
+            b_ok = (motion_run_init(&g_task_motion_run,
+                &p_request->payload.configure.config,
                                    &io)) && b_ok;
-            g_task_motion_encoder = p_request->encoder_port;
+            g_task_motion_encoder = p_request->payload.configure.encoder_port;
             if (!b_ok)
             {
                 motion_run_emergency(&g_task_motion_run,MOTION_RUN_OUTPUT,
@@ -441,20 +442,22 @@ static void task_motion_process (motion_bus_request_t const * p_request,
         }
         break;
         case MOTION_BUS_COMMAND:
-            if (!motion_run_command(&g_task_motion_run,&p_request->command,
+            if (!motion_run_command(&g_task_motion_run,
+                &p_request->payload.command,
                                     now_us))
             {
                 if ((0U == g_task_motion_run.status.active_id) &&
                     (0U == g_task_motion_run.status.terminal_id))
                 {
-                    g_task_motion_run.status.terminal_id=p_request->command.id;
+                    g_task_motion_run.status.terminal_id=
+                        p_request->payload.command.id;
                     g_task_motion_run.status.terminal_result =
                         MOTION_RUN_REJECTED;
                 }
             }
         break;
         case MOTION_BUS_ACK:
-            (void)motion_run_ack(&g_task_motion_run,p_request->ack_id);
+            (void)motion_run_ack(&g_task_motion_run,p_request->payload.ack_id);
         break;
         default:
             motion_run_emergency(&g_task_motion_run,MOTION_RUN_REJECTED,now_us);

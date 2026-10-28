@@ -1,0 +1,47 @@
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-gcc.exe" --version
+arm-none-eabi-gcc.exe (GNU Arm Embedded Toolchain 10.3-2021.10) 10.3.1 20210824 (release)
+Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-gcc.exe" -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -mcpu=cortex-m0plus -mthumb -ffreestanding -std=gnu11 -O2 -g3 -MMD -MP -mfloat-abi=soft -DCNF_SMP=1 -DAPP_TEST=1 -DTM_CONSOLE_UART=0 -DBOARD_UART0_FREE=1 -DTM_CONSOLE_USB_CDC=1 -DNDEBUG -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/tinyusb/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -DTM_WIFI_CYW43=1 -DCYW43_LWIP=0 -DCYW43_ENABLE_BLUETOOTH=0 -DCYW43_USE_OTP_MAC=1 -DPICO_CYW43_LOGGING_ENABLED=0 -DPICO_RP2040=1 -DPICO_32BIT=1 -DPICO_ON_DEVICE=1 -DPICO_BUILD=1 -DPICO_NO_HARDWARE=0 -DRASPBERRYPI_PICO_W=1 -DCYW43_DEFAULT_PIN_WL_REG_ON=23u -DCYW43_DEFAULT_PIN_WL_DATA_OUT=24u -DCYW43_DEFAULT_PIN_WL_DATA_IN=24u -DCYW43_DEFAULT_PIN_WL_HOST_WAKE=24u -DCYW43_DEFAULT_PIN_WL_CLOCK=29u -DCYW43_DEFAULT_PIN_WL_CS=25u -DNDEBUG -ffunction-sections -fdata-sections -I../lib/libwifi/sysdepend/pico_rp2040 -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/firmware -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_cyw43_driver/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/boards/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/hardware_claim/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_util/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_pio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_gpio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_dma/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_clocks/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -D_PICO_RP2040_ -I../include -I../config -I../kernel/knlinc -MFC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.d -MTC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.o -c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:340:45: error: 'SAMPLE_MSG' undeclared here (not in a function)
+  340 | const unsigned char size__SAMPLE_MSG[sizeof(SAMPLE_MSG)] = {0};
+      |                                             ^~~~~~~~~~
+In file included from C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:1:
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:341:54: error: expected specifier-qualifier-list before 'SAMPLE_MSG'
+  341 | const unsigned char offset__SAMPLE_MSG__hdr[offsetof(SAMPLE_MSG, hdr) + 1U] = {0};
+      |                                                      ^~~~~~~~~~
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:342:65: error: expected expression before ')' token
+  342 | const unsigned char field__SAMPLE_MSG__hdr[sizeof(((SAMPLE_MSG *)0)->hdr)] = {0};
+      |                                                                 ^
+In file included from C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:1:
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:343:54: error: expected specifier-qualifier-list before 'SAMPLE_MSG'
+  343 | const unsigned char offset__SAMPLE_MSG__seq[offsetof(SAMPLE_MSG, seq) + 1U] = {0};
+      |                                                      ^~~~~~~~~~
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:344:65: error: expected expression before ')' token
+  344 | const unsigned char field__SAMPLE_MSG__seq[sizeof(((SAMPLE_MSG *)0)->seq)] = {0};
+      |                                                                 ^
+In file included from C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:1:
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:345:58: error: expected specifier-qualifier-list before 'SAMPLE_MSG'
+  345 | const unsigned char offset__SAMPLE_MSG__time_ms[offsetof(SAMPLE_MSG, time_ms) + 1U] = {0};
+      |                                                          ^~~~~~~~~~
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:346:69: error: expected expression before ')' token
+  346 | const unsigned char field__SAMPLE_MSG__time_ms[sizeof(((SAMPLE_MSG *)0)->time_ms)] = {0};
+      |                                                                     ^
+In file included from C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:1:
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:347:56: error: expected specifier-qualifier-list before 'SAMPLE_MSG'
+  347 | const unsigned char offset__SAMPLE_MSG__value[offsetof(SAMPLE_MSG, value) + 1U] = {0};
+      |                                                        ^~~~~~~~~~
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:348:67: error: expected expression before ')' token
+  348 | const unsigned char field__SAMPLE_MSG__value[sizeof(((SAMPLE_MSG *)0)->value)] = {0};
+      |                                                                   ^
+In file included from C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:1:
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:349:54: error: expected specifier-qualifier-list before 'SAMPLE_MSG'
+  349 | const unsigned char offset__SAMPLE_MSG__prc[offsetof(SAMPLE_MSG, prc) + 1U] = {0};
+      |                                                      ^~~~~~~~~~
+C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_ehd569c4\layout.c:350:65: error: expected expression before ')' token
+  350 | const unsigned char field__SAMPLE_MSG__prc[sizeof(((SAMPLE_MSG *)0)->prc)] = {0};
+      |                                                                 ^
+EXIT 1

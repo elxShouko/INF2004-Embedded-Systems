@@ -1,0 +1,25 @@
+from pathlib import Path
+import subprocess,json,hashlib
+root=Path(__file__).resolve().parents[3]
+build=(root/'build_make').resolve()
+assert build==root/'build_make' and (build/'mtkernel_3').resolve().is_relative_to(root)
+assert hashlib.sha256((root/'build/profiles/wifi_secrets.h').read_bytes()).digest()==hashlib.sha256((root/'config/wifi_secrets.example.h').read_bytes()).digest()
+out=root/'testing/subsystem2/logs/minbits_firmware_20261028_after'
+out.mkdir(exist_ok=False)
+profiles=[('default',[]),('test',['TEST=1']),('imu',['S4_IMU=1']),('imu_test',['S4_IMU=1','TEST=1']),('mqtt',['NET=lwip','MQTT=1','S4_IMU=1']),('mqtt_test',['NET=lwip','MQTT=1','S4_IMU=1','TEST=1'])]
+results=[]
+for name,options in profiles:
+ command=['C:/msys64/usr/bin/bash.exe','--noprofile','--norc',str(root/'testing/subsystem2/build/minbits_make_before.sh'),*options]
+ with (out/(name+'.log')).open('w') as log:
+  log.write(subprocess.list2cmdline(command)+'\n');log.flush()
+  result=subprocess.run(command,cwd=build,stdout=log,stderr=subprocess.STDOUT,timeout=300)
+ entry={'profile':name,'options':options,'exit':result.returncode}
+ if result.returncode==0:
+  base='mtk3pico_smp1_usb_cdc_wifi'+('_lwip_mqtt' if name.startswith('mqtt') else '')+('_test' if 'test' in name else '')+('_imu' if 'S4_IMU=1' in options else '')
+  elf=build/(base+'.elf')
+  size=subprocess.check_output(['C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/gcc-arm-none-eabi/bin/arm-none-eabi-size.exe',str(elf)],text=True)
+  entry.update(size=size,sha256=hashlib.sha256(elf.read_bytes()).hexdigest())
+ results.append(entry)
+ (out/'results.json').write_text(json.dumps(results,indent=2)+'\n')
+ print(name,entry,flush=True)
+ if result.returncode:raise SystemExit(result.returncode)

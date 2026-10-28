@@ -34,9 +34,10 @@ typedef struct
     bool b_quiet[2];
     bool b_standstill[2];
     bool b_tracking[2];
-    bool b_valid;
-    bool b_enabled;
-    bool b_fault;
+    /* Scalar owner flags; indexed wheel arrays above retain their API. */
+    bool b_valid : 1;
+    bool b_enabled : 1;
+    bool b_fault : 1;
 } wheel_loop_t;
 bool wheel_loop_validate (wheel_loop_config_t const * p_config);
 bool wheel_loop_init (wheel_loop_t * p_loop,

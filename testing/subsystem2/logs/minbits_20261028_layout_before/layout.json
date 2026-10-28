@@ -1,0 +1,2992 @@
+{
+  "head": "93740736dd1c3407eaf7f496089a096cee70c140",
+  "status": " M testing/subsystem2/TEST_LOG.md\n?? docs/buddy2/DATA_REPRESENTATION.md\n?? testing/integration/logs/minbits_20261028_before_default.log\n?? testing/integration/logs/minbits_20261028_before_metadata.json\n?? testing/integration/logs/minbits_20261028_before_optimized.log\n?? testing/integration/logs/minbits_before_20261021_arm_arm.log\n?? testing/integration/logs/minbits_before_20261021_arm_metadata.json\n?? testing/integration/logs/minbits_before_20261021_arm_retry_arm.log\n?? testing/integration/logs/minbits_before_20261021_arm_retry_metadata.json\n?? testing/integration/logs/minbits_before_20261021_default.log\n?? testing/integration/logs/minbits_before_20261021_metadata.json\n?? testing/integration/logs/minbits_before_20261021_optimized.log\n?? testing/subsystem2/logs/minbits_20261028_s1_before.json\n?? testing/subsystem2/logs/minbits_20261028_s3_before.json\n?? testing/subsystem2/logs/minbits_environment_20261021.txt\n?? testing/subsystem2/logs/minbits_firmware_20261028_before/\n?? testing/subsystem2/logs/minbits_firmware_before_20261021/\n?? testing/subsystem2/logs/minbits_layout_before_20261021/\n?? testing/subsystem2/logs/minbits_layout_before_20261021_retry/\n?? testing/subsystem2/logs/verify_minbits_20261028_before_arm_arm.log\n?? testing/subsystem2/logs/verify_minbits_20261028_before_arm_metadata.json\n?? testing/subsystem2/logs/verify_minbits_20261028_before_checks.log\n?? testing/subsystem2/logs/verify_minbits_20261028_before_default.log\n?? testing/subsystem2/logs/verify_minbits_20261028_before_metadata.json\n?? testing/subsystem2/logs/verify_minbits_20261028_before_optimized.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_arm_arm.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_arm_metadata.json\n?? testing/subsystem2/logs/verify_minbits_before_20261021_arm_retry_arm.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_arm_retry_metadata.json\n?? testing/subsystem2/logs/verify_minbits_before_20261021_checks.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_default.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_metadata.json\n?? testing/subsystem2/logs/verify_minbits_before_20261021_optimized.log\n?? testing/subsystem2/measure_representation.py\n",
+  "utc": "2026-10-28T01:16:16.134371+00:00",
+  "headers_sha256": {
+    "app_program/subsystem2/drv_encoder.h": "caa9f52de95f0710c6ca86f1e6779171d3dbadc40e447b3c08d6b9b0750ba235",
+    "app_program/subsystem2/drv_motor.h": "931f8c17bd71c9db264623e583e547d4ac52631be8d054f6c504e0b5f463e9eb",
+    "app_program/subsystem2/drv_rp2040.h": "9dbe68c896686d3bc5cefbb8583de035f5dd57a799094973294ea228320b8de8",
+    "app_program/subsystem2/enc_capture.h": "3ee5ff131bd9aa8a545c67f92da8483a83ce878946fb618c132c99cda68e6670",
+    "app_program/subsystem2/motion_api.h": "af67c0f45c0bff11ff979bd9cb1d7c9dcae9638aaf0bc8c3f157572e98af189a",
+    "app_program/subsystem2/motion_bus.h": "8491e984eb398be793d53eedab8bc6b154d36ed5f0d3dd5684b115448b5fa7eb",
+    "app_program/subsystem2/motion_config.h": "9a5bf2808cc2ba6cdf1fb6e14bc8a3a701242f00e29e35b47a4c0592c7d6d1f1",
+    "app_program/subsystem2/motion_estimator.h": "57ae17737f5fe1a7cd801be078ca44c3fcf4f0511c297b337ea1ee9a1c2ca007",
+    "app_program/subsystem2/motion_foundation_test.h": "4fd4f41933462bb72a031625777bbe1f21997b4952cd739226f693140bc24714",
+    "app_program/subsystem2/motion_pid.h": "3a87a82eff68e48c859358ce93207ae822aacbaed6836ac8232a0afbc229a87f",
+    "app_program/subsystem2/motion_quad.h": "f7223016f6b9da1303f3fa95f3e9e34c46cb5666092c432305152650eeeea18a",
+    "app_program/subsystem2/motion_run.h": "ed8cc0b235802a29e3c2c061334154840a35a5316f6585e32fbd0aa228cd8091",
+    "app_program/subsystem2/motion_types.h": "50dfaf032fb691af8f9f268143e64b68a44530a3c2084d104112d1d060e14166",
+    "app_program/subsystem2/move_plan.h": "35b0496acb1def9c86497ff59bbdbdf8138cbcd0c2c2847ec98ee95f274160c9",
+    "app_program/subsystem2/subsystem2.h": "9cfb029c22ea0e4ca6ebe09c6a05c9f431c24f46b4e69943781bcca38d7d4b43",
+    "app_program/subsystem2/task_motion.h": "9522248b2a04fd2843ae0851040d6e32a97e10a725515daa32f038c4a47fdede",
+    "app_program/subsystem2/test_drive.h": "9a83c11b8a5f11bec84f69555dd8582c2ab0a47799c4ec953ee53cdfc8f07256",
+    "app_program/subsystem2/test_motor.h": "b95165552a0d92dd145b34edba36d1444674be88800db344bfcefba22ce266ae",
+    "app_program/subsystem2/wheel_loop.h": "2e79492ffba21a7151f894658a30e10e5a19bf89c6fd58584e8de55046c45d34",
+    "app_program/vehicle.h": "59e93fd84b95c78f698d72974e8eab01548c0a805831130aa253a109b9e22fec",
+    "app_program/vehicle_rt.h": "296db7f9ed80a27bc278d53e06d9b444d68499163d1744c12c69393f08275696",
+    "app_program/gpio_bank.h": "0a499aa68881275a8e36aba22b9adc79db62dbec4ed4975660703eb4672aa8b2"
+  },
+  "measurement_script_sha256": "cead92ec6e88547cecaa19153724e6f1b69d6236ae8307286456f01cbe7a7174",
+  "compiler": "arm-none-eabi-gcc.exe (GNU Arm Embedded Toolchain 10.3-2021.10) 10.3.1 20210824 (release)\nCopyright (C) 2020 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "existing_elf_sections": [
+    {
+      "path": "build_make/mtk3pico_smp1_usb_cdc_wifi_imu.elf",
+      "sha256": "7daa9b36ad513af0426856a5bf32720ffe285db86fc84c6082f8bebf32e00efe",
+      "provenance": "existing artifact; not rebuilt by this tool",
+      "size_output": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 359972\t   1168\t  45168\t 406308\t  63324\tC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build_make\\mtk3pico_smp1_usb_cdc_wifi_imu.elf\n"
+    },
+    {
+      "path": "build_make/mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_imu.elf",
+      "sha256": "eb0f6b73bed5a890ca0f975d96e9512d8535181efdd20427c2965752af90bd2e",
+      "provenance": "existing artifact; not rebuilt by this tool",
+      "size_output": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 419380\t   1176\t 102824\t 523380\t  7fc74\tC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build_make\\mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_imu.elf\n"
+    },
+    {
+      "path": "build_make/mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_test_imu.elf",
+      "sha256": "7bee147dc662cc894344c6aa27e52d2cdb78473c9518fbf40eccb7a3cb854f53",
+      "provenance": "existing artifact; not rebuilt by this tool",
+      "size_output": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 492504\t   1176\t 111668\t 605348\t  93ca4\tC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build_make\\mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_test_imu.elf\n"
+    },
+    {
+      "path": "build_make/mtk3pico_smp1_usb_cdc_wifi_test.elf",
+      "sha256": "0684c60fa438f08d78254d5d14e7162c3e4f80b7c8ba6f97fb81ec8cb18e9c0d",
+      "provenance": "existing artifact; not rebuilt by this tool",
+      "size_output": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 434464\t   1160\t  54004\t 489628\t  7789c\tC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build_make\\mtk3pico_smp1_usb_cdc_wifi_test.elf\n"
+    },
+    {
+      "path": "build_make/mtk3pico_smp1_usb_cdc_wifi_test_imu.elf",
+      "sha256": "94772a54b7c01ca68247e4c9d4f8ad74ccfe799de2b0bda4efac5a49359900fb",
+      "provenance": "existing artifact; not rebuilt by this tool",
+      "size_output": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 437136\t   1168\t  54012\t 492316\t  7831c\tC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build_make\\mtk3pico_smp1_usb_cdc_wifi_test_imu.elf\n"
+    }
+  ],
+  "records": [
+    {
+      "type": "drv_encoder_port_t",
+      "source": "app_program/subsystem2/drv_encoder.h",
+      "fields": [
+        {
+          "name": "p_context",
+          "declaration": "void * p_context",
+          "kind": "field",
+          "range_basis": "ABI pointer/callback; interpretation clarification needed",
+          "arm_offset": 0,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_reserve",
+          "declaration": "bool (*p_reserve)(void * p_context, uint32_t mask, drv_encoder_sink_t p_sink, void * p_sink_context)",
+          "kind": "callback",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 4,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_enable",
+          "declaration": "bool (*p_enable)(void * p_context, uint32_t mask)",
+          "kind": "callback",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 8,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_release",
+          "declaration": "void (*p_release)(void * p_context, uint32_t mask)",
+          "kind": "callback",
+          "range_basis": "ABI pointer/callback; interpretation clarification needed",
+          "arm_offset": 12,
+          "arm_bytes": 4
+        }
+      ],
+      "arm_bytes": 16
+    },
+    {
+      "type": "drv_motor_config_t",
+      "source": "app_program/subsystem2/drv_motor.h",
+      "fields": [
+        {
+          "name": "clock_hz",
+          "declaration": "uint32_t clock_hz",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 4
+        },
+        {
+          "name": "pwm_hz",
+          "declaration": "uint32_t pwm_hz",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 4,
+          "arm_bytes": 4
+        },
+        {
+          "name": "reversal_guard_us",
+          "declaration": "uint32_t reversal_guard_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 8,
+          "arm_bytes": 4
+        },
+        {
+          "name": "max_duty",
+          "declaration": "motion_pid_value_t max_duty",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 12,
+          "arm_bytes": 4
+        },
+        {
+          "name": "polarity",
+          "declaration": "motion_types_polarity_t polarity[DRV_MOTOR_WHEELS]",
+          "kind": "field",
+          "logical_bits_per_element": 2,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 16,
+          "arm_bytes": 2
+        },
+        {
+          "name": "zero_mode",
+          "declaration": "drv_motor_stop_t zero_mode",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 18,
+          "arm_bytes": 1
+        },
+        {
+          "name": "calibration",
+          "declaration": "motion_config_calibration_t calibration",
+          "kind": "field",
+          "logical_bits_per_element": 2,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 19,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_resources_verified",
+          "declaration": "bool b_resources_verified",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 20,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 24
+    },
+    {
+      "type": "drv_motor_io_t",
+      "source": "app_program/subsystem2/drv_motor.h",
+      "fields": [
+        {
+          "name": "p_context",
+          "declaration": "void * p_context",
+          "kind": "field",
+          "range_basis": "ABI pointer/callback; interpretation clarification needed",
+          "arm_offset": 0,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_prepare",
+          "declaration": "bool (*p_prepare)(void * p_context, uint16_t period, uint32_t clock_hz)",
+          "kind": "callback",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 4,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_apply",
+          "declaration": "bool (*p_apply)(void * p_context, drv_motor_wheel_t wheel, uint16_t level_a, uint16_t level_b)",
+          "kind": "callback",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 8,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_stop_all",
+          "declaration": "bool (*p_stop_all)(void * p_context)",
+          "kind": "callback",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 12,
+          "arm_bytes": 4
+        }
+      ],
+      "arm_bytes": 16
+    },
+    {
+      "type": "drv_motor_channel_t",
+      "source": "app_program/subsystem2/drv_motor.h",
+      "fields": [
+        {
+          "name": "state",
+          "declaration": "drv_motor_state_t state",
+          "kind": "field",
+          "logical_bits_per_element": 2,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 0,
+          "arm_bytes": 1
+        },
+        {
+          "name": "last_direction",
+          "declaration": "int8_t last_direction",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 1,
+          "arm_bytes": 1
+        },
+        {
+          "name": "pending_direction",
+          "declaration": "int8_t pending_direction",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 2,
+          "arm_bytes": 1
+        },
+        {
+          "name": "pending_level",
+          "declaration": "uint16_t pending_level",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 4,
+          "arm_bytes": 2
+        },
+        {
+          "name": "neutral_since_us",
+          "declaration": "uint64_t neutral_since_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 8,
+          "arm_bytes": 8
+        },
+        {
+          "name": "b_neutral",
+          "declaration": "bool b_neutral",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 16,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 24
+    },
+    {
+      "type": "drv_motor_t",
+      "source": "app_program/subsystem2/drv_motor.h",
+      "fields": [
+        {
+          "name": "config",
+          "declaration": "drv_motor_config_t config",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 24
+        },
+        {
+          "name": "io",
+          "declaration": "drv_motor_io_t io",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 24,
+          "arm_bytes": 16
+        },
+        {
+          "name": "channel",
+          "declaration": "drv_motor_channel_t channel[DRV_MOTOR_WHEELS]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 40,
+          "arm_bytes": 48
+        },
+        {
+          "name": "last_time_us",
+          "declaration": "uint64_t last_time_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 88,
+          "arm_bytes": 8
+        },
+        {
+          "name": "period",
+          "declaration": "uint16_t period",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 96,
+          "arm_bytes": 2
+        },
+        {
+          "name": "duty_limit",
+          "declaration": "uint16_t duty_limit",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 98,
+          "arm_bytes": 2
+        },
+        {
+          "name": "b_initialised",
+          "declaration": "bool b_initialised",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 100,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_armed",
+          "declaration": "bool b_armed",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 101,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_fault",
+          "declaration": "bool b_fault",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 102,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_prepare_attempted",
+          "declaration": "bool b_prepare_attempted",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 103,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_stop_confirmed",
+          "declaration": "bool b_stop_confirmed",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 104,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 112
+    },
+    {
+      "type": "drv_rp2040_t",
+      "source": "app_program/subsystem2/drv_rp2040.h",
+      "fields": [
+        {
+          "name": "period",
+          "declaration": "uint16_t period",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 2
+        },
+        {
+          "name": "direction",
+          "declaration": "int8_t direction[DRV_MOTOR_WHEELS]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 2,
+          "arm_bytes": 2
+        },
+        {
+          "name": "b_claimed",
+          "declaration": "bool b_claimed",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 4,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 6
+    },
+    {
+      "type": "enc_capture_sample_t",
+      "source": "app_program/subsystem2/enc_capture.h",
+      "fields": [
+        {
+          "name": "sample",
+          "declaration": "motion_estimator_sample_t sample[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 48
+        },
+        {
+          "name": "invalid",
+          "declaration": "uint32_t invalid[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 48,
+          "arm_bytes": 8
+        },
+        {
+          "name": "b_healthy",
+          "declaration": "bool b_healthy",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 56,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 64
+    },
+    {
+      "type": "enc_capture_t",
+      "source": "app_program/subsystem2/enc_capture.h",
+      "fields": [
+        {
+          "name": "decoder",
+          "declaration": "motion_quad_t decoder[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 48
+        },
+        {
+          "name": "generation",
+          "declaration": "uint32_t generation",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 48,
+          "arm_bytes": 4
+        },
+        {
+          "name": "b_initialised",
+          "declaration": "bool b_initialised",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 52,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_healthy",
+          "declaration": "bool b_healthy",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 53,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 56
+    },
+    {
+      "type": "motion_bus_request_t",
+      "source": "app_program/subsystem2/motion_bus.h",
+      "fields": [
+        {
+          "name": "kind",
+          "declaration": "motion_bus_kind_t kind",
+          "kind": "field",
+          "logical_bits_per_element": 2,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 0,
+          "arm_bytes": 1
+        },
+        {
+          "name": "config",
+          "declaration": "wheel_loop_config_t config",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 4,
+          "arm_bytes": 188
+        },
+        {
+          "name": "encoder_port",
+          "declaration": "drv_encoder_port_t encoder_port",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 192,
+          "arm_bytes": 16
+        },
+        {
+          "name": "command",
+          "declaration": "move_plan_command_t command",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 208,
+          "arm_bytes": 40
+        },
+        {
+          "name": "ack_id",
+          "declaration": "uint32_t ack_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 248,
+          "arm_bytes": 4
+        }
+      ],
+      "arm_bytes": 256
+    },
+    {
+      "type": "motion_bus_t",
+      "source": "app_program/subsystem2/motion_bus.h",
+      "fields": [
+        {
+          "name": "request",
+          "declaration": "motion_bus_request_t request",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 256
+        },
+        {
+          "name": "status",
+          "declaration": "motion_run_status_t status",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 256,
+          "arm_bytes": 136
+        },
+        {
+          "name": "cancel_id",
+          "declaration": "uint32_t cancel_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 392,
+          "arm_bytes": 4
+        },
+        {
+          "name": "b_pending",
+          "declaration": "bool b_pending",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 396,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_inflight",
+          "declaration": "bool b_inflight",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 397,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_stop",
+          "declaration": "bool b_stop",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 398,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_cancel",
+          "declaration": "bool b_cancel",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 399,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 400
+    },
+    {
+      "type": "motion_config_wheel_t",
+      "source": "app_program/subsystem2/motion_config.h",
+      "fields": [
+        {
+          "name": "counts_per_wheel_rev",
+          "declaration": "uint32_t counts_per_wheel_rev",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 4
+        },
+        {
+          "name": "wheel_circumference_um",
+          "declaration": "uint32_t wheel_circumference_um",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 4,
+          "arm_bytes": 4
+        },
+        {
+          "name": "motor_polarity",
+          "declaration": "motion_types_polarity_t motor_polarity",
+          "kind": "field",
+          "logical_bits_per_element": 2,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 8,
+          "arm_bytes": 1
+        },
+        {
+          "name": "encoder_polarity",
+          "declaration": "motion_types_polarity_t encoder_polarity",
+          "kind": "field",
+          "logical_bits_per_element": 2,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 9,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 12
+    },
+    {
+      "type": "motion_config_t",
+      "source": "app_program/subsystem2/motion_config.h",
+      "fields": [
+        {
+          "name": "left",
+          "declaration": "motion_config_wheel_t left",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 12
+        },
+        {
+          "name": "right",
+          "declaration": "motion_config_wheel_t right",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 12,
+          "arm_bytes": 12
+        },
+        {
+          "name": "track_width_um",
+          "declaration": "uint32_t track_width_um",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 24,
+          "arm_bytes": 4
+        },
+        {
+          "name": "max_wheel_speed_mm_s",
+          "declaration": "motion_types_speed_mm_s_t max_wheel_speed_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 28,
+          "arm_bytes": 4
+        },
+        {
+          "name": "calibration",
+          "declaration": "motion_config_calibration_t calibration",
+          "kind": "field",
+          "logical_bits_per_element": 2,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 32,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 36
+    },
+    {
+      "type": "motion_estimator_sample_t",
+      "source": "app_program/subsystem2/motion_estimator.h",
+      "fields": [
+        {
+          "name": "count",
+          "declaration": "motion_types_encoder_count_t count",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 8
+        },
+        {
+          "name": "timestamp_us",
+          "declaration": "uint64_t timestamp_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 8,
+          "arm_bytes": 8
+        },
+        {
+          "name": "generation",
+          "declaration": "uint32_t generation",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 16,
+          "arm_bytes": 4
+        }
+      ],
+      "arm_bytes": 24
+    },
+    {
+      "type": "motion_estimator_measurement_t",
+      "source": "app_program/subsystem2/motion_estimator.h",
+      "fields": [
+        {
+          "name": "position_um",
+          "declaration": "motion_types_distance_um_t position_um",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 8
+        },
+        {
+          "name": "speed_mm_s",
+          "declaration": "motion_types_speed_mm_s_t speed_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 8,
+          "arm_bytes": 4
+        },
+        {
+          "name": "timestamp_us",
+          "declaration": "uint64_t timestamp_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 16,
+          "arm_bytes": 8
+        },
+        {
+          "name": "b_position_valid",
+          "declaration": "bool b_position_valid",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 24,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_speed_valid",
+          "declaration": "bool b_speed_valid",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 25,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 32
+    },
+    {
+      "type": "motion_estimator_t",
+      "source": "app_program/subsystem2/motion_estimator.h",
+      "fields": [
+        {
+          "name": "counts_per_wheel_rev",
+          "declaration": "uint32_t counts_per_wheel_rev",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 4
+        },
+        {
+          "name": "circumference_um",
+          "declaration": "uint32_t circumference_um",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 4,
+          "arm_bytes": 4
+        },
+        {
+          "name": "max_elapsed_us",
+          "declaration": "uint32_t max_elapsed_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 8,
+          "arm_bytes": 4
+        },
+        {
+          "name": "previous",
+          "declaration": "motion_estimator_sample_t previous",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 16,
+          "arm_bytes": 24
+        },
+        {
+          "name": "measurement",
+          "declaration": "motion_estimator_measurement_t measurement",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 40,
+          "arm_bytes": 32
+        },
+        {
+          "name": "remainder",
+          "declaration": "int64_t remainder",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 72,
+          "arm_bytes": 8
+        },
+        {
+          "name": "result",
+          "declaration": "motion_estimator_result_t result",
+          "kind": "field",
+          "logical_bits_per_element": 4,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 80,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_initialised",
+          "declaration": "bool b_initialised",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 81,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_have_baseline",
+          "declaration": "bool b_have_baseline",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 82,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_reset_required",
+          "declaration": "bool b_reset_required",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 83,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 88
+    },
+    {
+      "type": "motion_pid_config_t",
+      "source": "app_program/subsystem2/motion_pid.h",
+      "fields": [
+        {
+          "name": "proportional_gain",
+          "declaration": "motion_pid_value_t proportional_gain",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 4
+        },
+        {
+          "name": "integral_gain",
+          "declaration": "motion_pid_value_t integral_gain",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 4,
+          "arm_bytes": 4
+        },
+        {
+          "name": "derivative_gain",
+          "declaration": "motion_pid_value_t derivative_gain",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 8,
+          "arm_bytes": 4
+        },
+        {
+          "name": "output_min",
+          "declaration": "motion_pid_value_t output_min",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 12,
+          "arm_bytes": 4
+        },
+        {
+          "name": "output_max",
+          "declaration": "motion_pid_value_t output_max",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 16,
+          "arm_bytes": 4
+        },
+        {
+          "name": "integral_min",
+          "declaration": "motion_pid_value_t integral_min",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 20,
+          "arm_bytes": 4
+        },
+        {
+          "name": "integral_max",
+          "declaration": "motion_pid_value_t integral_max",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 24,
+          "arm_bytes": 4
+        },
+        {
+          "name": "max_elapsed_us",
+          "declaration": "uint32_t max_elapsed_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 28,
+          "arm_bytes": 4
+        },
+        {
+          "name": "calibration",
+          "declaration": "motion_config_calibration_t calibration",
+          "kind": "field",
+          "logical_bits_per_element": 2,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 32,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 36
+    },
+    {
+      "type": "motion_pid_t",
+      "source": "app_program/subsystem2/motion_pid.h",
+      "fields": [
+        {
+          "name": "config",
+          "declaration": "motion_pid_config_t config",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 36
+        },
+        {
+          "name": "integral",
+          "declaration": "motion_pid_value_t integral",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 36,
+          "arm_bytes": 4
+        },
+        {
+          "name": "previous_measurement_mm_s",
+          "declaration": "motion_types_speed_mm_s_t previous_measurement_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 40,
+          "arm_bytes": 4
+        },
+        {
+          "name": "previous_target_mm_s",
+          "declaration": "motion_types_speed_mm_s_t previous_target_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 44,
+          "arm_bytes": 4
+        },
+        {
+          "name": "b_have_measurement",
+          "declaration": "bool b_have_measurement",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 48,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_initialised",
+          "declaration": "bool b_initialised",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 49,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 52
+    },
+    {
+      "type": "motion_quad_t",
+      "source": "app_program/subsystem2/motion_quad.h",
+      "fields": [
+        {
+          "name": "count",
+          "declaration": "motion_types_encoder_count_t count",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 8
+        },
+        {
+          "name": "invalid_transitions",
+          "declaration": "uint32_t invalid_transitions",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 8,
+          "arm_bytes": 4
+        },
+        {
+          "name": "polarity",
+          "declaration": "motion_types_polarity_t polarity",
+          "kind": "field",
+          "logical_bits_per_element": 2,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 12,
+          "arm_bytes": 1
+        },
+        {
+          "name": "previous_ab",
+          "declaration": "uint8_t previous_ab",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 13,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_initialised",
+          "declaration": "bool b_initialised",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 14,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_have_state",
+          "declaration": "bool b_have_state",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 15,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_count_limit",
+          "declaration": "bool b_count_limit",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 16,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 24
+    },
+    {
+      "type": "motion_run_status_t",
+      "source": "app_program/subsystem2/motion_run.h",
+      "fields": [
+        {
+          "name": "timestamp_us",
+          "declaration": "uint64_t timestamp_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 8
+        },
+        {
+          "name": "state",
+          "declaration": "motion_run_state_t state",
+          "kind": "field",
+          "logical_bits_per_element": 3,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 8,
+          "arm_bytes": 1
+        },
+        {
+          "name": "active_id",
+          "declaration": "uint32_t active_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 12,
+          "arm_bytes": 4
+        },
+        {
+          "name": "active_kind",
+          "declaration": "move_plan_kind_t active_kind",
+          "kind": "field",
+          "logical_bits_per_element": 3,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 16,
+          "arm_bytes": 1
+        },
+        {
+          "name": "terminal_id",
+          "declaration": "uint32_t terminal_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 20,
+          "arm_bytes": 4
+        },
+        {
+          "name": "terminal_result",
+          "declaration": "motion_run_result_t terminal_result",
+          "kind": "field",
+          "logical_bits_per_element": 4,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 24,
+          "arm_bytes": 1
+        },
+        {
+          "name": "fault_result",
+          "declaration": "motion_run_result_t fault_result",
+          "kind": "field",
+          "logical_bits_per_element": 4,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 25,
+          "arm_bytes": 1
+        },
+        {
+          "name": "last_request_id",
+          "declaration": "uint32_t last_request_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 28,
+          "arm_bytes": 4
+        },
+        {
+          "name": "last_request_issued_us",
+          "declaration": "uint64_t last_request_issued_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 32,
+          "arm_bytes": 8
+        },
+        {
+          "name": "b_request_accepted",
+          "declaration": "bool b_request_accepted",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 40,
+          "arm_bytes": 1
+        },
+        {
+          "name": "measurement_timestamp_us",
+          "declaration": "uint64_t measurement_timestamp_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 48,
+          "arm_bytes": 8
+        },
+        {
+          "name": "measurement_max_age_us",
+          "declaration": "uint32_t measurement_max_age_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 56,
+          "arm_bytes": 4
+        },
+        {
+          "name": "position_um",
+          "declaration": "int64_t position_um[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 64,
+          "arm_bytes": 16
+        },
+        {
+          "name": "speed_mm_s",
+          "declaration": "int32_t speed_mm_s[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 80,
+          "arm_bytes": 8
+        },
+        {
+          "name": "target_mm_s",
+          "declaration": "int32_t target_mm_s[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 88,
+          "arm_bytes": 8
+        },
+        {
+          "name": "b_measurement_valid",
+          "declaration": "bool b_measurement_valid",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 96,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_standstill",
+          "declaration": "bool b_standstill",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 97,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_stop_command_confirmed",
+          "declaration": "bool b_stop_command_confirmed",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 98,
+          "arm_bytes": 1
+        },
+        {
+          "name": "encoder_count",
+          "declaration": "motion_types_encoder_count_t encoder_count[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 104,
+          "arm_bytes": 16
+        },
+        {
+          "name": "encoder_timestamp_us",
+          "declaration": "uint64_t encoder_timestamp_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 120,
+          "arm_bytes": 8
+        },
+        {
+          "name": "encoder_generation",
+          "declaration": "uint32_t encoder_generation",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 128,
+          "arm_bytes": 4
+        },
+        {
+          "name": "b_encoder_valid",
+          "declaration": "bool b_encoder_valid",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 132,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 136
+    },
+    {
+      "type": "motion_run_t",
+      "source": "app_program/subsystem2/motion_run.h",
+      "fields": [
+        {
+          "name": "loop",
+          "declaration": "wheel_loop_t loop",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 752
+        },
+        {
+          "name": "plan",
+          "declaration": "move_plan_t plan",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 752,
+          "arm_bytes": 72
+        },
+        {
+          "name": "status",
+          "declaration": "motion_run_status_t status",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 824,
+          "arm_bytes": 136
+        },
+        {
+          "name": "deadline_us",
+          "declaration": "uint64_t deadline_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 960,
+          "arm_bytes": 8
+        },
+        {
+          "name": "stopping_since_us",
+          "declaration": "uint64_t stopping_since_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 968,
+          "arm_bytes": 8
+        },
+        {
+          "name": "last_id",
+          "declaration": "uint32_t last_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 976,
+          "arm_bytes": 4
+        },
+        {
+          "name": "pending_result",
+          "declaration": "motion_run_result_t pending_result",
+          "kind": "field",
+          "logical_bits_per_element": 4,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 980,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_initialised",
+          "declaration": "bool b_initialised",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 981,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 984
+    },
+    {
+      "type": "move_plan_command_t",
+      "source": "app_program/subsystem2/move_plan.h",
+      "fields": [
+        {
+          "name": "id",
+          "declaration": "uint32_t id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 4
+        },
+        {
+          "name": "kind",
+          "declaration": "move_plan_kind_t kind",
+          "kind": "field",
+          "logical_bits_per_element": 3,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 4,
+          "arm_bytes": 1
+        },
+        {
+          "name": "issued_us",
+          "declaration": "uint64_t issued_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 8,
+          "arm_bytes": 8
+        },
+        {
+          "name": "lifetime_us",
+          "declaration": "uint32_t lifetime_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 16,
+          "arm_bytes": 4
+        },
+        {
+          "name": "left_mm_s",
+          "declaration": "int32_t left_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 20,
+          "arm_bytes": 4
+        },
+        {
+          "name": "right_mm_s",
+          "declaration": "int32_t right_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 24,
+          "arm_bytes": 4
+        },
+        {
+          "name": "distance_um",
+          "declaration": "int32_t distance_um",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 28,
+          "arm_bytes": 4
+        },
+        {
+          "name": "cruise_mm_s",
+          "declaration": "int32_t cruise_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 32,
+          "arm_bytes": 4
+        }
+      ],
+      "arm_bytes": 40
+    },
+    {
+      "type": "move_plan_config_t",
+      "source": "app_program/subsystem2/move_plan.h",
+      "fields": [
+        {
+          "name": "accel_mm_s2",
+          "declaration": "uint32_t accel_mm_s2",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 4
+        },
+        {
+          "name": "decel_mm_s2",
+          "declaration": "uint32_t decel_mm_s2",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 4,
+          "arm_bytes": 4
+        },
+        {
+          "name": "tolerance_um",
+          "declaration": "uint32_t tolerance_um",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 8,
+          "arm_bytes": 4
+        },
+        {
+          "name": "turn_scale_ppm",
+          "declaration": "uint32_t turn_scale_ppm[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 12,
+          "arm_bytes": 8
+        },
+        {
+          "name": "correction_gain",
+          "declaration": "motion_pid_value_t correction_gain",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 20,
+          "arm_bytes": 4
+        },
+        {
+          "name": "correction_limit_mm_s",
+          "declaration": "int32_t correction_limit_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 24,
+          "arm_bytes": 4
+        }
+      ],
+      "arm_bytes": 28
+    },
+    {
+      "type": "move_plan_t",
+      "source": "app_program/subsystem2/move_plan.h",
+      "fields": [
+        {
+          "name": "command",
+          "declaration": "move_plan_command_t command",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 40
+        },
+        {
+          "name": "origin_um",
+          "declaration": "int64_t origin_um[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 40,
+          "arm_bytes": 16
+        },
+        {
+          "name": "goal_um",
+          "declaration": "int32_t goal_um[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 56,
+          "arm_bytes": 8
+        },
+        {
+          "name": "b_finite",
+          "declaration": "bool b_finite",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 64,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_initialised",
+          "declaration": "bool b_initialised",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 65,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 72
+    },
+    {
+      "type": "SAMPLE_MSG",
+      "source": "app_program/subsystem2/subsystem2.h",
+      "fields": [
+        {
+          "name": "hdr",
+          "declaration": "T_MSG hdr",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 4
+        },
+        {
+          "name": "seq",
+          "declaration": "UW seq",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 4,
+          "arm_bytes": 4
+        },
+        {
+          "name": "time_ms",
+          "declaration": "UW time_ms",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 8,
+          "arm_bytes": 4
+        },
+        {
+          "name": "value",
+          "declaration": "INT value",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 12,
+          "arm_bytes": 4
+        },
+        {
+          "name": "prc",
+          "declaration": "INT prc",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 16,
+          "arm_bytes": 4
+        }
+      ],
+      "arm_bytes": 20
+    },
+    {
+      "type": "wheel_loop_config_t",
+      "source": "app_program/subsystem2/wheel_loop.h",
+      "fields": [
+        {
+          "name": "geometry",
+          "declaration": "motion_config_t geometry",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 36
+        },
+        {
+          "name": "motor",
+          "declaration": "drv_motor_config_t motor",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 36,
+          "arm_bytes": 24
+        },
+        {
+          "name": "pid",
+          "declaration": "motion_pid_config_t pid[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 60,
+          "arm_bytes": 72
+        },
+        {
+          "name": "profile",
+          "declaration": "move_plan_config_t profile",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 132,
+          "arm_bytes": 28
+        },
+        {
+          "name": "period_us",
+          "declaration": "uint32_t period_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 160,
+          "arm_bytes": 4
+        },
+        {
+          "name": "sample_limit_us",
+          "declaration": "uint32_t sample_limit_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 164,
+          "arm_bytes": 4
+        },
+        {
+          "name": "stop_dwell_us",
+          "declaration": "uint32_t stop_dwell_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 168,
+          "arm_bytes": 4
+        },
+        {
+          "name": "stop_timeout_us",
+          "declaration": "uint32_t stop_timeout_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 172,
+          "arm_bytes": 4
+        },
+        {
+          "name": "progress_timeout_us",
+          "declaration": "uint32_t progress_timeout_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 176,
+          "arm_bytes": 4
+        },
+        {
+          "name": "stop_speed_mm_s",
+          "declaration": "int32_t stop_speed_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 180,
+          "arm_bytes": 4
+        },
+        {
+          "name": "overspeed_mm_s",
+          "declaration": "int32_t overspeed_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 184,
+          "arm_bytes": 4
+        }
+      ],
+      "arm_bytes": 188
+    },
+    {
+      "type": "wheel_loop_t",
+      "source": "app_program/subsystem2/wheel_loop.h",
+      "fields": [
+        {
+          "name": "config",
+          "declaration": "wheel_loop_config_t config",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 188
+        },
+        {
+          "name": "motor",
+          "declaration": "drv_motor_t motor",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 192,
+          "arm_bytes": 112
+        },
+        {
+          "name": "estimator",
+          "declaration": "motion_estimator_t estimator[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 304,
+          "arm_bytes": 176
+        },
+        {
+          "name": "pid",
+          "declaration": "motion_pid_t pid[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 480,
+          "arm_bytes": 104
+        },
+        {
+          "name": "measured",
+          "declaration": "motion_estimator_measurement_t measured[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 584,
+          "arm_bytes": 64
+        },
+        {
+          "name": "velocity_um_s",
+          "declaration": "int64_t velocity_um_s[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 648,
+          "arm_bytes": 16
+        },
+        {
+          "name": "slew_remainder",
+          "declaration": "uint64_t slew_remainder[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 664,
+          "arm_bytes": 16
+        },
+        {
+          "name": "last_count",
+          "declaration": "int64_t last_count[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 680,
+          "arm_bytes": 16
+        },
+        {
+          "name": "quiet_since_us",
+          "declaration": "uint64_t quiet_since_us[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 696,
+          "arm_bytes": 16
+        },
+        {
+          "name": "progress_since_us",
+          "declaration": "uint64_t progress_since_us[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 712,
+          "arm_bytes": 16
+        },
+        {
+          "name": "last_tick_us",
+          "declaration": "uint64_t last_tick_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 728,
+          "arm_bytes": 8
+        },
+        {
+          "name": "b_quiet",
+          "declaration": "bool b_quiet[2]",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 736,
+          "arm_bytes": 2
+        },
+        {
+          "name": "b_standstill",
+          "declaration": "bool b_standstill[2]",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 738,
+          "arm_bytes": 2
+        },
+        {
+          "name": "b_tracking",
+          "declaration": "bool b_tracking[2]",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 740,
+          "arm_bytes": 2
+        },
+        {
+          "name": "b_valid",
+          "declaration": "bool b_valid",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 742,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_enabled",
+          "declaration": "bool b_enabled",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 743,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_fault",
+          "declaration": "bool b_fault",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 744,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 752
+    },
+    {
+      "type": "vehicle_config_t",
+      "source": "app_program/vehicle.h",
+      "fields": [
+        {
+          "name": "sensor_age_us",
+          "declaration": "uint32_t sensor_age_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 4
+        },
+        {
+          "name": "command_ttl_us",
+          "declaration": "uint32_t command_ttl_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 4,
+          "arm_bytes": 4
+        },
+        {
+          "name": "transition_timeout_us",
+          "declaration": "uint32_t transition_timeout_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 8,
+          "arm_bytes": 4
+        },
+        {
+          "name": "remote_age_ms",
+          "declaration": "uint32_t remote_age_ms",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 12,
+          "arm_bytes": 4
+        },
+        {
+          "name": "forward_mm_s",
+          "declaration": "int32_t forward_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 16,
+          "arm_bytes": 4
+        },
+        {
+          "name": "correction_mm_s",
+          "declaration": "int32_t correction_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 20,
+          "arm_bytes": 4
+        },
+        {
+          "name": "turn_mm_s",
+          "declaration": "int32_t turn_mm_s",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 24,
+          "arm_bytes": 4
+        },
+        {
+          "name": "straight_um",
+          "declaration": "int32_t straight_um",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 28,
+          "arm_bytes": 4
+        },
+        {
+          "name": "obstacle_stop_cm",
+          "declaration": "uint16_t obstacle_stop_cm",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 32,
+          "arm_bytes": 2
+        },
+        {
+          "name": "b_calibrated",
+          "declaration": "bool b_calibrated",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 34,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_power_authorised",
+          "declaration": "bool b_power_authorised",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 35,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_uturn_right",
+          "declaration": "bool b_uturn_right",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 36,
+          "arm_bytes": 1
+        },
+        {
+          "name": "route",
+          "declaration": "s5_route_config_t route",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 40,
+          "arm_bytes": 56
+        }
+      ],
+      "arm_bytes": 96
+    },
+    {
+      "type": "vehicle_input_t",
+      "source": "app_program/vehicle.h",
+      "fields": [
+        {
+          "name": "now_us",
+          "declaration": "uint64_t now_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 8
+        },
+        {
+          "name": "raw_now_us",
+          "declaration": "uint64_t raw_now_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 8,
+          "arm_bytes": 8
+        },
+        {
+          "name": "motion",
+          "declaration": "motion_run_status_t motion",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 16,
+          "arm_bytes": 136
+        },
+        {
+          "name": "remote",
+          "declaration": "s1_codec_command_t remote",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 152,
+          "arm_bytes": 8
+        },
+        {
+          "name": "navigation",
+          "declaration": "nav_event_t navigation",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 160,
+          "arm_bytes": 16
+        },
+        {
+          "name": "navigation_id",
+          "declaration": "uint32_t navigation_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 176,
+          "arm_bytes": 4
+        },
+        {
+          "name": "pending_navigation_id",
+          "declaration": "uint32_t pending_navigation_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 180,
+          "arm_bytes": 4
+        },
+        {
+          "name": "line_time_us",
+          "declaration": "uint64_t line_time_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 184,
+          "arm_bytes": 8
+        },
+        {
+          "name": "line",
+          "declaration": "line_observation_t line",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 192,
+          "arm_bytes": 1
+        },
+        {
+          "name": "line_state",
+          "declaration": "line_state_t line_state",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 193,
+          "arm_bytes": 1
+        },
+        {
+          "name": "line_mode",
+          "declaration": "line_mode_t line_mode",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 194,
+          "arm_bytes": 1
+        },
+        {
+          "name": "black_mask",
+          "declaration": "uint8_t black_mask",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 195,
+          "arm_bytes": 1
+        },
+        {
+          "name": "imu",
+          "declaration": "imu_core_status_t imu",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 196,
+          "arm_bytes": 32
+        },
+        {
+          "name": "obstacle",
+          "declaration": "s5_obstacle_profile_t obstacle",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 228,
+          "arm_bytes": 20
+        },
+        {
+          "name": "clearance",
+          "declaration": "s5_clearance_t clearance",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 248,
+          "arm_bytes": 80
+        },
+        {
+          "name": "scan_id_us",
+          "declaration": "uint64_t scan_id_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 328,
+          "arm_bytes": 8
+        },
+        {
+          "name": "scan_completed_us",
+          "declaration": "uint64_t scan_completed_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 336,
+          "arm_bytes": 8
+        },
+        {
+          "name": "b_scan_held",
+          "declaration": "bool b_scan_held",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 344,
+          "arm_bytes": 1
+        },
+        {
+          "name": "forward_cm",
+          "declaration": "uint16_t forward_cm",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 346,
+          "arm_bytes": 2
+        },
+        {
+          "name": "b_forward_valid",
+          "declaration": "bool b_forward_valid",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 348,
+          "arm_bytes": 1
+        },
+        {
+          "name": "obstacle_started_us",
+          "declaration": "uint64_t obstacle_started_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 352,
+          "arm_bytes": 8
+        },
+        {
+          "name": "obstacle_time_us",
+          "declaration": "uint64_t obstacle_time_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 360,
+          "arm_bytes": 8
+        },
+        {
+          "name": "encoder_count",
+          "declaration": "int64_t encoder_count[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 368,
+          "arm_bytes": 16
+        },
+        {
+          "name": "b_motion_available",
+          "declaration": "bool b_motion_available",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 384,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_line_available",
+          "declaration": "bool b_line_available",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 385,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_line_calibrated",
+          "declaration": "bool b_line_calibrated",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 386,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_line_valid",
+          "declaration": "bool b_line_valid",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 387,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_imu_available",
+          "declaration": "bool b_imu_available",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 388,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_obstacle_available",
+          "declaration": "bool b_obstacle_available",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 389,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_counts_valid",
+          "declaration": "bool b_counts_valid",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 390,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_link_up",
+          "declaration": "bool b_link_up",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 391,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_estop",
+          "declaration": "bool b_estop",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 392,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_provider_fault",
+          "declaration": "bool b_provider_fault",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 393,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 400
+    },
+    {
+      "type": "vehicle_output_t",
+      "source": "app_program/vehicle.h",
+      "fields": [
+        {
+          "name": "command",
+          "declaration": "move_plan_command_t command",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 40
+        },
+        {
+          "name": "acknowledge_id",
+          "declaration": "uint32_t acknowledge_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 40,
+          "arm_bytes": 4
+        },
+        {
+          "name": "navigation_done_id",
+          "declaration": "uint32_t navigation_done_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 44,
+          "arm_bytes": 4
+        },
+        {
+          "name": "obstacle_recovered_us",
+          "declaration": "uint64_t obstacle_recovered_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 48,
+          "arm_bytes": 8
+        },
+        {
+          "name": "mode",
+          "declaration": "line_mode_t mode",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 56,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_command",
+          "declaration": "bool b_command",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 57,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_enable",
+          "declaration": "bool b_enable",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 58,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_stop",
+          "declaration": "bool b_stop",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 59,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_estop",
+          "declaration": "bool b_estop",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 60,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_mode",
+          "declaration": "bool b_mode",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 61,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 64
+    },
+    {
+      "type": "vehicle_t",
+      "source": "app_program/vehicle.h",
+      "fields": [
+        {
+          "name": "config",
+          "declaration": "vehicle_config_t config",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 96
+        },
+        {
+          "name": "state",
+          "declaration": "vehicle_state_t state",
+          "kind": "field",
+          "logical_bits_per_element": 4,
+          "range_basis": "current enum values; invalid-input checks remain required",
+          "arm_offset": 96,
+          "arm_bytes": 1
+        },
+        {
+          "name": "blockers",
+          "declaration": "uint32_t blockers",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 100,
+          "arm_bytes": 4
+        },
+        {
+          "name": "next_id",
+          "declaration": "uint32_t next_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 104,
+          "arm_bytes": 4
+        },
+        {
+          "name": "active_id",
+          "declaration": "uint32_t active_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 108,
+          "arm_bytes": 4
+        },
+        {
+          "name": "navigation_id",
+          "declaration": "uint32_t navigation_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 112,
+          "arm_bytes": 4
+        },
+        {
+          "name": "last_navigation_id",
+          "declaration": "uint32_t last_navigation_id",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 116,
+          "arm_bytes": 4
+        },
+        {
+          "name": "navigation",
+          "declaration": "nav_command_t navigation",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 120,
+          "arm_bytes": 1
+        },
+        {
+          "name": "transition_us",
+          "declaration": "uint64_t transition_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 128,
+          "arm_bytes": 8
+        },
+        {
+          "name": "last_now_us",
+          "declaration": "uint64_t last_now_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 136,
+          "arm_bytes": 8
+        },
+        {
+          "name": "b_initialised",
+          "declaration": "bool b_initialised",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 144,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_run_requested",
+          "declaration": "bool b_run_requested",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 145,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_pause_requested",
+          "declaration": "bool b_pause_requested",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 146,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_turn_completed",
+          "declaration": "bool b_turn_completed",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 147,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_recovery_required",
+          "declaration": "bool b_recovery_required",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 148,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_pending_command",
+          "declaration": "bool b_pending_command",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 149,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_line_found",
+          "declaration": "bool b_line_found",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 150,
+          "arm_bytes": 1
+        },
+        {
+          "name": "pending_command",
+          "declaration": "move_plan_command_t pending_command",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 152,
+          "arm_bytes": 40
+        },
+        {
+          "name": "route",
+          "declaration": "s5_obstacle_plan_t route",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 192,
+          "arm_bytes": 64
+        },
+        {
+          "name": "route_started_us",
+          "declaration": "uint64_t route_started_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 256,
+          "arm_bytes": 8
+        },
+        {
+          "name": "route_step_raw_us",
+          "declaration": "uint64_t route_step_raw_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 264,
+          "arm_bytes": 8
+        },
+        {
+          "name": "route_ready_raw_us",
+          "declaration": "uint64_t route_ready_raw_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 272,
+          "arm_bytes": 8
+        },
+        {
+          "name": "route_index",
+          "declaration": "uint8_t route_index",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 280,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_obstacle_pending",
+          "declaration": "bool b_obstacle_pending",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 281,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_route_active",
+          "declaration": "bool b_route_active",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 282,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_route_terminal",
+          "declaration": "bool b_route_terminal",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 283,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_route_found",
+          "declaration": "bool b_route_found",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 284,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_route_finishing",
+          "declaration": "bool b_route_finishing",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 285,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 288
+    },
+    {
+      "type": "vehicle_odometry_t",
+      "source": "app_program/vehicle.h",
+      "fields": [
+        {
+          "name": "previous_um",
+          "declaration": "int64_t previous_um[2]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 16
+        },
+        {
+          "name": "previous_us",
+          "declaration": "uint64_t previous_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 16,
+          "arm_bytes": 8
+        },
+        {
+          "name": "distance_um",
+          "declaration": "uint64_t distance_um",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 24,
+          "arm_bytes": 8
+        },
+        {
+          "name": "raw_timestamp_us",
+          "declaration": "uint64_t raw_timestamp_us",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 32,
+          "arm_bytes": 8
+        },
+        {
+          "name": "half_um",
+          "declaration": "uint8_t half_um",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 40,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_baseline",
+          "declaration": "bool b_baseline",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 41,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_previous_forward",
+          "declaration": "bool b_previous_forward",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 42,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_tracking_forward",
+          "declaration": "bool b_tracking_forward",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 43,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 48
+    },
+    {
+      "type": "vehicle_setup_t",
+      "source": "app_program/vehicle_rt.h",
+      "fields": [
+        {
+          "name": "mission",
+          "declaration": "vehicle_config_t mission",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 96
+        },
+        {
+          "name": "motion",
+          "declaration": "wheel_loop_config_t motion",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 96,
+          "arm_bytes": 188
+        },
+        {
+          "name": "navigation",
+          "declaration": "s3_config_t navigation",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 284,
+          "arm_bytes": 84
+        },
+        {
+          "name": "obstacle",
+          "declaration": "s5_live_config_t obstacle",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 368,
+          "arm_bytes": 60
+        },
+        {
+          "name": "b_obstacle_requested",
+          "declaration": "bool b_obstacle_requested",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 428,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 432
+    },
+    {
+      "type": "gpio_bank_io_t",
+      "source": "app_program/gpio_bank.h",
+      "fields": [
+        {
+          "name": "p_read",
+          "declaration": "uint32_t (*p_read)(uint32_t address)",
+          "kind": "callback",
+          "range_basis": "ABI pointer/callback; interpretation clarification needed",
+          "arm_offset": 0,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_write",
+          "declaration": "void (*p_write)(uint32_t address, uint32_t value)",
+          "kind": "callback",
+          "range_basis": "ABI pointer/callback; interpretation clarification needed",
+          "arm_offset": 4,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_core",
+          "declaration": "uint32_t (*p_core)(void)",
+          "kind": "callback",
+          "range_basis": "ABI pointer/callback; interpretation clarification needed",
+          "arm_offset": 8,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_enter",
+          "declaration": "bool (*p_enter)(uint32_t * p_saved)",
+          "kind": "callback",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 12,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_leave",
+          "declaration": "void (*p_leave)(uint32_t saved)",
+          "kind": "callback",
+          "range_basis": "ABI pointer/callback; interpretation clarification needed",
+          "arm_offset": 16,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_install",
+          "declaration": "bool (*p_install)(void)",
+          "kind": "callback",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 20,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_fault",
+          "declaration": "void (*p_fault)(void)",
+          "kind": "callback",
+          "range_basis": "ABI pointer/callback; interpretation clarification needed",
+          "arm_offset": 24,
+          "arm_bytes": 4
+        }
+      ],
+      "arm_bytes": 28
+    },
+    {
+      "type": "gpio_bank_client_t",
+      "source": "app_program/gpio_bank.h",
+      "fields": [
+        {
+          "name": "mask",
+          "declaration": "uint32_t mask",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_sink",
+          "declaration": "drv_encoder_sink_t p_sink",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 4,
+          "arm_bytes": 4
+        },
+        {
+          "name": "p_context",
+          "declaration": "void * p_context",
+          "kind": "field",
+          "range_basis": "ABI pointer/callback; interpretation clarification needed",
+          "arm_offset": 8,
+          "arm_bytes": 4
+        },
+        {
+          "name": "b_enabled",
+          "declaration": "bool b_enabled",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 12,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 16
+    },
+    {
+      "type": "gpio_bank_t",
+      "source": "app_program/gpio_bank.h",
+      "fields": [
+        {
+          "name": "io",
+          "declaration": "gpio_bank_io_t io",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 0,
+          "arm_bytes": 28
+        },
+        {
+          "name": "clients",
+          "declaration": "gpio_bank_client_t clients[GPIO_BANK_CLIENTS]",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 28,
+          "arm_bytes": 32
+        },
+        {
+          "name": "allowed_mask",
+          "declaration": "uint32_t allowed_mask",
+          "kind": "field",
+          "range_basis": "review units/range/resolution/lifetime; no narrowing authorised by inventory",
+          "arm_offset": 60,
+          "arm_bytes": 4
+        },
+        {
+          "name": "b_initialised",
+          "declaration": "bool b_initialised",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 64,
+          "arm_bytes": 1
+        },
+        {
+          "name": "b_installed",
+          "declaration": "bool b_installed",
+          "kind": "field",
+          "logical_bits_per_element": 1,
+          "range_basis": "false/true; preserve current ownership",
+          "arm_offset": 65,
+          "arm_bytes": 1
+        }
+      ],
+      "arm_bytes": 68
+    }
+  ],
+  "enums": {
+    "drv_motor_wheel_t": {
+      "values": [
+        "DRV_MOTOR_LEFT",
+        "DRV_MOTOR_RIGHT"
+      ],
+      "bits": 1
+    },
+    "drv_motor_stop_t": {
+      "values": [
+        "DRV_MOTOR_BRAKE",
+        "DRV_MOTOR_COAST"
+      ],
+      "bits": 1
+    },
+    "drv_motor_result_t": {
+      "values": [
+        "DRV_MOTOR_OK",
+        "DRV_MOTOR_WAIT",
+        "DRV_MOTOR_BAD_PARAM",
+        "DRV_MOTOR_BAD_TIME",
+        "DRV_MOTOR_DISABLED",
+        "DRV_MOTOR_FAULT",
+        "DRV_MOTOR_HARDWARE"
+      ],
+      "bits": 3
+    },
+    "drv_motor_state_t": {
+      "values": [
+        "DRV_MOTOR_STOPPED",
+        "DRV_MOTOR_RUNNING",
+        "DRV_MOTOR_REVERSING"
+      ],
+      "bits": 2
+    },
+    "motion_api_result_t": {
+      "values": [
+        "MOTION_API_QUEUED",
+        "MOTION_API_BUSY",
+        "MOTION_API_INVALID",
+        "MOTION_API_UNAVAILABLE",
+        "MOTION_API_ERROR"
+      ],
+      "bits": 3
+    },
+    "motion_bus_kind_t": {
+      "values": [
+        "MOTION_BUS_CONFIG",
+        "MOTION_BUS_ENABLE",
+        "MOTION_BUS_COMMAND",
+        "MOTION_BUS_ACK"
+      ],
+      "bits": 2
+    },
+    "motion_config_calibration_t": {
+      "values": [
+        "MOTION_CONFIG_CALIBRATION_UNCONFIGURED",
+        "MOTION_CONFIG_CALIBRATION_UNVERIFIED",
+        "MOTION_CONFIG_CALIBRATION_CONFIRMED"
+      ],
+      "bits": 2
+    },
+    "motion_config_result_t": {
+      "values": [
+        "MOTION_CONFIG_VALID",
+        "MOTION_CONFIG_NULL",
+        "MOTION_CONFIG_UNCONFIGURED",
+        "MOTION_CONFIG_BAD_CALIBRATION",
+        "MOTION_CONFIG_BAD_LEFT_WHEEL",
+        "MOTION_CONFIG_BAD_RIGHT_WHEEL",
+        "MOTION_CONFIG_BAD_TRACK_WIDTH",
+        "MOTION_CONFIG_BAD_SPEED_LIMIT",
+        "MOTION_CONFIG_UNVERIFIED"
+      ],
+      "bits": 4
+    },
+    "motion_estimator_wheel_t": {
+      "values": [
+        "MOTION_ESTIMATOR_LEFT",
+        "MOTION_ESTIMATOR_RIGHT"
+      ],
+      "bits": 1
+    },
+    "motion_estimator_result_t": {
+      "values": [
+        "MOTION_ESTIMATOR_OK",
+        "MOTION_ESTIMATOR_BASELINE",
+        "MOTION_ESTIMATOR_UNAVAILABLE",
+        "MOTION_ESTIMATOR_NULL",
+        "MOTION_ESTIMATOR_BAD_CONFIG",
+        "MOTION_ESTIMATOR_BAD_TIME",
+        "MOTION_ESTIMATOR_STALE",
+        "MOTION_ESTIMATOR_RESET_REQUIRED",
+        "MOTION_ESTIMATOR_OVERFLOW"
+      ],
+      "bits": 4
+    },
+    "motion_pid_result_t": {
+      "values": [
+        "MOTION_PID_OK",
+        "MOTION_PID_IDLE",
+        "MOTION_PID_NULL",
+        "MOTION_PID_UNINITIALISED",
+        "MOTION_PID_BAD_CONFIG",
+        "MOTION_PID_BAD_TIME",
+        "MOTION_PID_ARITHMETIC"
+      ],
+      "bits": 3
+    },
+    "motion_quad_result_t": {
+      "values": [
+        "MOTION_QUAD_OK",
+        "MOTION_QUAD_BASELINE",
+        "MOTION_QUAD_REPEATED",
+        "MOTION_QUAD_INVALID_TRANSITION",
+        "MOTION_QUAD_NULL",
+        "MOTION_QUAD_UNINITIALISED",
+        "MOTION_QUAD_BAD_POLARITY",
+        "MOTION_QUAD_BAD_STATE",
+        "MOTION_QUAD_COUNT_LIMIT"
+      ],
+      "bits": 4
+    },
+    "motion_run_state_t": {
+      "values": [
+        "MOTION_RUN_UNCONFIGURED",
+        "MOTION_RUN_CONFIGURED",
+        "MOTION_RUN_SETTLING",
+        "MOTION_RUN_READY",
+        "MOTION_RUN_ACTIVE",
+        "MOTION_RUN_STOPPING",
+        "MOTION_RUN_FAULT"
+      ],
+      "bits": 3
+    },
+    "motion_run_result_t": {
+      "values": [
+        "MOTION_RUN_NONE",
+        "MOTION_RUN_DONE",
+        "MOTION_RUN_STOPPED",
+        "MOTION_RUN_CANCELLED",
+        "MOTION_RUN_EXPIRED",
+        "MOTION_RUN_TIMEOUT",
+        "MOTION_RUN_EMERGENCY",
+        "MOTION_RUN_SENSOR",
+        "MOTION_RUN_OUTPUT",
+        "MOTION_RUN_REJECTED",
+        "MOTION_RUN_OVERSHOOT"
+      ],
+      "bits": 4
+    },
+    "motion_types_polarity_t": {
+      "values": [
+        "MOTION_TYPES_POLARITY_UNKNOWN",
+        "MOTION_TYPES_POLARITY_NORMAL",
+        "MOTION_TYPES_POLARITY_REVERSED"
+      ],
+      "bits": 2
+    },
+    "move_plan_kind_t": {
+      "values": [
+        "MOVE_PLAN_SPEED",
+        "MOVE_PLAN_TRAVEL",
+        "MOVE_PLAN_LEFT",
+        "MOVE_PLAN_RIGHT",
+        "MOVE_PLAN_U_LEFT",
+        "MOVE_PLAN_U_RIGHT"
+      ],
+      "bits": 3
+    },
+    "vehicle_state_t": {
+      "values": [
+        "VEHICLE_UNCONFIGURED",
+        "VEHICLE_BLOCKED",
+        "VEHICLE_READY",
+        "VEHICLE_FOLLOW",
+        "VEHICLE_STOPPING",
+        "VEHICLE_MANOEUVRE",
+        "VEHICLE_RECOVERY",
+        "VEHICLE_PAUSED",
+        "VEHICLE_OBSTACLE",
+        "VEHICLE_FAULT",
+        "VEHICLE_BYPASS"
+      ],
+      "bits": 4
+    }
+  }
+}

@@ -1,0 +1,333 @@
+{
+  "tested_head": "93740736dd1c3407eaf7f496089a096cee70c140",
+  "status": " M app_program/subsystem2/drv_motor.h\n M app_program/subsystem2/motion_bus.c\n M app_program/subsystem2/motion_bus.h\n M app_program/subsystem2/motion_quad.h\n M app_program/subsystem2/task_motion.c\n M app_program/subsystem2/test_drive.c\n M app_program/subsystem2/wheel_loop.h\n M testing/subsystem2/TEST_LOG.md\n M testing/subsystem2/verify_motion.py\n?? docs/buddy2/DATA_REPRESENTATION.md\n?? testing/integration/logs/minbits_20261028_after_arm_arm.log\n?? testing/integration/logs/minbits_20261028_after_arm_metadata.json\n?? testing/integration/logs/minbits_20261028_after_default.log\n?? testing/integration/logs/minbits_20261028_after_metadata.json\n?? testing/integration/logs/minbits_20261028_after_optimized.log\n?? testing/integration/logs/minbits_20261028_before_default.log\n?? testing/integration/logs/minbits_20261028_before_metadata.json\n?? testing/integration/logs/minbits_20261028_before_optimized.log\n?? testing/integration/logs/minbits_before_20261021_arm_arm.log\n?? testing/integration/logs/minbits_before_20261021_arm_metadata.json\n?? testing/integration/logs/minbits_before_20261021_arm_retry_arm.log\n?? testing/integration/logs/minbits_before_20261021_arm_retry_metadata.json\n?? testing/integration/logs/minbits_before_20261021_default.log\n?? testing/integration/logs/minbits_before_20261021_metadata.json\n?? testing/integration/logs/minbits_before_20261021_optimized.log\n?? testing/subsystem2/logs/minbits_20261028_layout_after/\n?? testing/subsystem2/logs/minbits_20261028_layout_before/\n?? testing/subsystem2/logs/minbits_20261028_s1_before.json\n?? testing/subsystem2/logs/minbits_20261028_s3_before.json\n?? testing/subsystem2/logs/minbits_environment_20261021.txt\n?? testing/subsystem2/logs/minbits_firmware_20261028_after/\n?? testing/subsystem2/logs/minbits_firmware_20261028_before/\n?? testing/subsystem2/logs/minbits_firmware_before_20261021/\n?? testing/subsystem2/logs/minbits_layout_before_20261021/\n?? testing/subsystem2/logs/minbits_layout_before_20261021_retry/\n?? testing/subsystem2/logs/verify_minbits_20261028_after_arm_arm.log\n?? testing/subsystem2/logs/verify_minbits_20261028_after_arm_metadata.json\n?? testing/subsystem2/logs/verify_minbits_20261028_after_checks.log\n?? testing/subsystem2/logs/verify_minbits_20261028_after_default.log\n?? testing/subsystem2/logs/verify_minbits_20261028_after_metadata.json\n?? testing/subsystem2/logs/verify_minbits_20261028_after_optimized.log\n?? testing/subsystem2/logs/verify_minbits_20261028_before_arm_arm.log\n?? testing/subsystem2/logs/verify_minbits_20261028_before_arm_metadata.json\n?? testing/subsystem2/logs/verify_minbits_20261028_before_checks.log\n?? testing/subsystem2/logs/verify_minbits_20261028_before_default.log\n?? testing/subsystem2/logs/verify_minbits_20261028_before_metadata.json\n?? testing/subsystem2/logs/verify_minbits_20261028_before_optimized.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_arm_arm.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_arm_metadata.json\n?? testing/subsystem2/logs/verify_minbits_before_20261021_arm_retry_arm.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_arm_retry_metadata.json\n?? testing/subsystem2/logs/verify_minbits_before_20261021_checks.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_default.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_metadata.json\n?? testing/subsystem2/logs/verify_minbits_before_20261021_optimized.log\n?? testing/subsystem2/measure_representation.py\n",
+  "production_tick_ms": 10,
+  "file_sha256": {
+    "app_program/subsystem3/drv_barcode.c": "7dd81b1cbece5b718cd58fd7222a289863e04ca12d37113ea898c1d76dc0d67f",
+    "app_program/subsystem3/drv_barcode.h": "0233464e3261f17d704a9225d716f8d42d7f9e7cb133b6ff4005fd7350209a71",
+    "app_program/subsystem3/drv_ir_input.c": "5f5d1fe08403d5a3530e3b8b47da61c4056cb737e6e41cf5258d9c41c12f9b51",
+    "app_program/subsystem3/drv_ir_input.h": "0964f762581497d9087fa0942c1bcad738e5a458340aa1d56a1dc5d96fbf6dcb",
+    "app_program/subsystem3/drv_ir_rtos.c": "595a5035629959eaa3870d20607eb833ecffa4618ddcd1fe1ae912b10fc6efeb",
+    "app_program/subsystem3/drv_ir_rtos.h": "2fc79f87a12c8eb61eda6c23285a8ae936adce5233ea4c3163422ce62f0da6cf",
+    "app_program/subsystem3/drv_junction.c": "e44dc8dd6a5354c6543d9dcb9e01887407fcf227625359f27282b2f10c3b1aed",
+    "app_program/subsystem3/drv_junction.h": "36f685b78e9e5a78d4cc0f68fbf13f804b422002b0d06d8af840e9ec8c638595",
+    "app_program/subsystem3/drv_line_tracking.c": "0b807a985c65f44a6d06c6c8c2fe78673b42004ac7171e68d22a8aa7a15ee3a8",
+    "app_program/subsystem3/drv_line_tracking.h": "6c07917daa47aff6c80a62a69767e41b855f98e37aac864636745f7897199579",
+    "app_program/subsystem3/drv_navigation_map.c": "bce01bd2ded1b0e57194568ab2c76674e5a38374a6f707a4814bfe032dbd6f50",
+    "app_program/subsystem3/drv_navigation_map.h": "2ad24134dcc5c9c633662bf38a14edc335bccd877bcf4352a4802f084c069cd4",
+    "app_program/subsystem3/drv_s3_codec.c": "586af8694793b9160154c45c745bd03dd8060c57995fb8952b9871410a435ee4",
+    "app_program/subsystem3/drv_s3_codec.h": "83269d0680d1998d9063861e5af5214362f0b6552575d5f55de9cfca1c5e2bdd",
+    "app_program/subsystem3/line/barcode.h": "0678995fde469d3962340636812923e793365045df2c6e6109be8d9f8cb41e18",
+    "app_program/subsystem3/line/ir_input.h": "892d84a537b9c7eaa2e9aacfb9c2ad58e767de0f868db1c3a4a1d5d938aca088",
+    "app_program/subsystem3/line/junction.h": "370db81c03263edded2c4b09cbab53ca892372f815b7d773bf07054db524ba60",
+    "app_program/subsystem3/line/line_tracking.h": "66080b268fd4d03010c0f7a769d0bbcea2978fd883f581edfd02b4c136cbb0cb",
+    "app_program/subsystem3/line/navigation_map.h": "3ba08cd86cc5ce381750d08c62b3a768c2ae0ca4e1b6e0037a7aec8ce541fa9f",
+    "app_program/subsystem3/line/navigation_types.h": "c8cebdad2c7c310bb781f942e9cf557b4089c552b8c5c699391c5a246c9b27da",
+    "app_program/subsystem3/member3_data.h": "a7287aaefe20bfba4a2d244afa61af0c25b42667d068478f1ec82685f37ed088",
+    "app_program/subsystem3/member3_navigation.c": "404746cf164ca4d4e36a8a6eb03297f61bfb91e2144be0020fc1ffe8f5c0e8e2",
+    "app_program/subsystem3/member3_navigation.h": "a913b1c8f0e30c37f7c146745d8e06e6df5851a59164de31eff878a8a025d646",
+    "app_program/subsystem3/subsystem3.c": "a87e68981b190c0777073560b64f9d675abbde99e2146bd78549c8060f6887ea",
+    "app_program/subsystem3/subsystem3.h": "f06fe613162b2f2988ab3e35ba21e53973842631314c513dd14ec008376ef1f4",
+    "app_program/subsystem3/subsystem3_test.c": "67247d6cd4a53cf0893ea7f3cda43da0eba4cf3f7b8fec4a574b366d1e9bb114",
+    "app_program/subsystem3/subsystem3_test.h": "d97b20034f95ccc0b9504b7eb05a0c8f85eac583bfe6ccec3e7c9643f1a3cc79",
+    "app_program/subsystem3/task_consumer.c": "c7fbb59ef05cc0ded4b63cfc9a725abcafabdbf036c7f6629977e8426047ffff",
+    "app_program/subsystem3/task_consumer.h": "f9da9ffbca371efd3421c9ecf523eca8746e8e77e8daf397eb4a35ec84610bc8",
+    "config/config.h": "afc5e0df62d0245f455fb5bcf3b077a31bdabd058e9498372755379a4e85a712",
+    "testing/subsystem3/diagnostics/member3_ir_diagnostic.c": "4828f1eb2b55c089d7aa8fe8dfbf5ee52fb55c3f5c7763296a93539050f8b046",
+    "testing/subsystem3/logs/member3_ir_test.c": "a1c880e5b394b7a14696efb5cc0af6f19b230a443f8ecc84961f11119756e5c4",
+    "testing/subsystem3/logs/member3_junction_test.c": "c3997c2e154d0531b056074f35251bfeb83883bdda3c4eee2372606a59721b03",
+    "testing/subsystem3/logs/member3_navigation_test.c": "fdfabc1548a1eace04d0be0c487a889c1516a6d6b55feb33460d64e1ff8a52f1",
+    "testing/subsystem3/logs/member3_rtos_test.c": "0ea1aa4cf3ff111795dfe9ff83cafbda802bd8c2adde595c05d63c95df76d9b5",
+    "testing/subsystem3/member3_feedback_test.c": "5cef2c8658bada88e65c83f5a12bc41955b71f9f4a7a3086ca8dbbde4e731328",
+    "testing/subsystem3/member3_minbits_test.c": "8daf52242da2ebd7b9308d68ba8c7e4a508ec85a099a9bdd18822f23c25bf3f3",
+    "testing/subsystem3/member3_navigation_test.c": "845d08fa6d63109b0bde4f47e4b1e0f2e21f815cafed997aabfd8ab89ed92d09",
+    "testing/subsystem3/member3_production_test.c": "ba3e32e38f921ec2e46cb05a1792144c39617309085788930cf24c71c04ea812",
+    "testing/subsystem3/member3_requirements_test.c": "eab209049a2c2d258edb628fbc4daf581bfffb70453e7af0a54edcb2cdf7a78b",
+    "testing/subsystem3/member3_rtos_test.c": "9aab929ebb6ee794fbf80de2355d268630c0b89be8b02b1acc8d14d2bc80fefc",
+    "testing/subsystem3/member3_safety_test.c": "219e15eb4f093115e586495f35681a20506fac395859d7341415a9e5b13578dc",
+    "testing/subsystem3/verify_production_timing.py": "de324f7b80061ce1b923647556449319ee90e1c4ebb2eeac99a78057066da218"
+  },
+  "scope": "Host simulation only; no target scheduling or physical proof",
+  "checks": [
+    {
+      "command": [
+        "C:\\Users\\Hp\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\testing\\subsystem3\\check_barr_style.py"
+      ],
+      "exit": 0,
+      "stdout": "Checked 29 Member 3 C/header files; longest function: 88 lines.\nPASS: checked rules\nFull conformance remains conditional on manual review and exception approval.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\testing\\subsystem3\\logs\\member3_ir_test.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\ir.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\ir.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 IR tests passed.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_navigation_test.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\navigation.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\navigation.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 navigation tests passed: A-Z both directions, capture, mapping, line rules.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\testing\\subsystem3\\logs\\member3_junction_test.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\junction.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\junction.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 junction tests passed: crossing geometry, barcodes, noise, timing and line filtering.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_rtos_test.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\rtos.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\rtos.exe"
+      ],
+      "exit": 0,
+      "stdout": "Member 3 RTOS owner tests passed: mapping, barcode-to-command, recovery, modes, faults.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_production_test.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\production.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\production.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U10 PASS: 10..100 ms multiples; unsupported periods rejected\nS3-U11 PASS: sampled *A*, forward/reverse, phase sweep, 10/20 ms\nS3-U12 PASS: allowed jitter, excessive gap and reversed clock\nS3-U13 PASS: undersampled frame rejected; hidden pulse unobservable\nS3-U14 PASS: four inputs/cycle; reads continue\nS3-U15 PASS: output overload latches; reads continue\nS3-U16 PASS: completion correlation, stable found, explicit resume\nS3-U17 PASS: bypass, recovery timeout, invalid sensor payload\nS3-U18 PASS: raw interruption restarts stable found interval\nHost simulation only: no RTOS scheduling or physical speed proof.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_feedback_test.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\feedback.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\feedback.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U20 PASS: polling timeout/errors, coherent fields, read != sample\nS3-U21 PASS: unchanged-line freshness, raw/filter lag, sample gap\nS3-U14 PASS: four inputs/cycle; reads continue\nS3-U14 PASS: four inputs/cycle; reads continue\nS3-U22 PASS: contended publication skips; sampling continues\nS3-U23 PASS: paused completion cannot release pending manoeuvre\nS3-U24 PASS: barcode noise rejected; front sensing continues\nS3-U25 PASS: config/map reply IDs and rejected updates preserved\nS3-U16 PASS: completion correlation, stable found, explicit resume\nS3-U18 PASS: raw interruption restarts stable found interval\nHost fakes only; no real mutex latency/SMP/hardware claim.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_minbits_test.c",
+        "-O2",
+        "-Wconversion",
+        "-Wsign-conversion",
+        "-pedantic",
+        "-fanalyzer",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\minbits.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\minbits.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U26 PASS: every action/slot; neighbours and padding preserved\nS3-U27 PASS: input lengths, round trips, truncation and padding\nS3-U28 PASS: output kinds/letters; numeric limits; malformed frames\nS3-U29 PASS: rejection replies, transactionality, receive preservation\nS3-U40 PASS: full gateway IDs echoed in accepted/rejected replies\nsizes: map=16 status=48 output=48 input_adapter=96\nHost simulation only; no physical or SMP timing claim.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_safety_test.c",
+        "-O2",
+        "-Wconversion",
+        "-Wsign-conversion",
+        "-pedantic",
+        "-fanalyzer",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\safety.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\safety.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U32 PASS: first failed delay faults/exits; no retry or busy loop\nS3-U33 PASS: final ID is a fault; no wrap/reuse; drops saturate\nS3-U34 PASS: age boundary, no re-stamp, duplicates and 64-bit limits\nS3-U35 PASS: 64-bit time and same-update confirmation event\nHost simulation only; target latency remains unmeasured.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\testing\\subsystem3\\member3_requirements_test.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_ir_input.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_line_tracking.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_barcode.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_junction.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_s3_codec.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\requirements.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\member3-production\\requirements.exe"
+      ],
+      "exit": 0,
+      "stdout": "S3-U38 PASS: no startup actions; complete maps replace old letters\nS3-U39 PASS: both directions, four actions, wait for junction, repeat\n",
+      "stderr": ""
+    }
+  ],
+  "passed": true
+}

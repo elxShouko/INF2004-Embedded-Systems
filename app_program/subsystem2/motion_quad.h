@@ -32,9 +32,10 @@ typedef struct
     uint32_t invalid_transitions;
     motion_types_polarity_t polarity;
     uint8_t previous_ab;
-    bool b_initialised;
-    bool b_have_state;
-    bool b_count_limit;
+    /* Paired capture retains its existing ISR/task lock around all access. */
+    bool b_initialised : 1;
+    bool b_have_state : 1;
+    bool b_count_limit : 1;
 } motion_quad_t;
 
 /* Clears position/diagnostics/baseline. Invalid polarity leaves it disabled.

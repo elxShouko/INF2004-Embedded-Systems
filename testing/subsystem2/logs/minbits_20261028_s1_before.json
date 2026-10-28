@@ -1,0 +1,384 @@
+{
+  "head": "93740736dd1c3407eaf7f496089a096cee70c140",
+  "status": " M testing/subsystem2/TEST_LOG.md\n?? docs/buddy2/DATA_REPRESENTATION.md\n?? testing/integration/logs/minbits_20261028_before_metadata.json\n?? testing/integration/logs/minbits_before_20261021_arm_arm.log\n?? testing/integration/logs/minbits_before_20261021_arm_metadata.json\n?? testing/integration/logs/minbits_before_20261021_arm_retry_arm.log\n?? testing/integration/logs/minbits_before_20261021_arm_retry_metadata.json\n?? testing/integration/logs/minbits_before_20261021_default.log\n?? testing/integration/logs/minbits_before_20261021_metadata.json\n?? testing/integration/logs/minbits_before_20261021_optimized.log\n?? testing/subsystem2/logs/minbits_environment_20261021.txt\n?? testing/subsystem2/logs/minbits_firmware_before_20261021/\n?? testing/subsystem2/logs/minbits_layout_before_20261021/\n?? testing/subsystem2/logs/minbits_layout_before_20261021_retry/\n?? testing/subsystem2/logs/verify_minbits_before_20261021_arm_arm.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_arm_metadata.json\n?? testing/subsystem2/logs/verify_minbits_before_20261021_arm_retry_arm.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_arm_retry_metadata.json\n?? testing/subsystem2/logs/verify_minbits_before_20261021_checks.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_default.log\n?? testing/subsystem2/logs/verify_minbits_before_20261021_metadata.json\n?? testing/subsystem2/logs/verify_minbits_before_20261021_optimized.log\n?? testing/subsystem2/measure_representation.py\n",
+  "scope": "Host simulation; no real radio, RTOS scheduling or robot",
+  "sha256": {
+    "app_program/subsystem1/s1_codec.c": "02a4735a70ff02565c9469821f7c52ae556796a39d093f3bfb6ff4d78ad7afa7",
+    "app_program/subsystem1/s1_led_legacy.c": "65bb653f991c055bd0378dd1bf09aca4ec1b9439bb74f8be403106f0a5cc94a1",
+    "app_program/subsystem1/s1_map.c": "0da1b1449e1a5d2af388fcf32ca122589c0025e9cb98c12ce2b0c2ad4f25df3a",
+    "app_program/subsystem1/s1_net.c": "45f44705ae6e52a5cf3f675039c15dddfbcc26a4f0d48ffc161eb08b99ebb3fc",
+    "app_program/subsystem1/s1_sim.c": "29eff2e3c1a67788946df837173c0ad3ce350eca3b260d2e2ffa0b5abd5f7d7e",
+    "app_program/subsystem1/subsystem1.c": "6dcc9020ce996f3e46f9b898b802ef274712bdf58193d9ec648b30d094aa0d99",
+    "app_program/subsystem1/subsystem1_test.c": "2b0f591443f86a959e9ec84ce80b63f781baa08d623aebc9cf1ceb4656c14ce4",
+    "app_program/subsystem1/task_led.c": "9270c2ce3c246e4ab7f9a70eb828683bd17fe329353cb1ebe72ad013e99ca3fe",
+    "app_program/subsystem1/s1_bits.h": "5c29feaa214c87ca2583237ea279688b9ba6b36c122b47e95a093af7cc1924e0",
+    "app_program/subsystem1/s1_codec.h": "967a736c1bfa951a21b830e28c0cc4e602d7a8e8e1f1fbd41049b0d04e1a50dc",
+    "app_program/subsystem1/s1_fault.h": "946085bdc2d63657ec17b0769d468b6b14c084ba561ecd163b3389b37373f606",
+    "app_program/subsystem1/s1_led_legacy.h": "f8c608b1cade68e60d09041941c44a2b3f8e40b660fc5e7d1e3f8b411bc4e0ed",
+    "app_program/subsystem1/s1_map.h": "67be9dc48bad4bef95e2f04c5fef706c3255172235b95d836cb077cbdfc01fab",
+    "app_program/subsystem1/s1_net.h": "1248cb18e52da8b26a9ce89bb2c3a10fb77c15027c7e74506c5ad2cddd3845c5",
+    "app_program/subsystem1/s1_sim.h": "b74de1d8192208e65131c17f4629c058717e81410c1b3e5b4066fbc6f9ceb294",
+    "app_program/subsystem1/subsystem1.h": "6151dde44d42c041fd417fc044fe68a74493e411e100f2f0740c75a2aa81f489",
+    "testing/subsystem1/host/dump_frames_host.c": "9a097c3066cfb0c72252575668e5f1e5ae62bc4882f8c5f4693c1e82cf6e1aaa",
+    "testing/subsystem1/host/host_sync.c": "3e4c0d4e310249305de5a4669b7a88324cae6f8a25c6ebe4e42d420907283e8c",
+    "testing/subsystem1/host/kernel_emulation.c": "5c7eaffb2ea698129f4f9932fb2167bd4148e086720f9436f4a62c1fff4510cb",
+    "testing/subsystem1/host/measure_sizes_host.c": "ff61da4196b784b2a2cf9a228490f681bc916c674e39cabeec8469ef06e8ebdf",
+    "testing/subsystem1/host/target_main.c": "a4dfcb0059094440b1791f79cd1c1127bdaac1e63fe45b586f390856ef6f20a4",
+    "testing/subsystem1/host/test_backoff_host.c": "ea4a1d0d530ba3cc7fdefbd5babf03217fcf3ed8c979490c9e3939fb6c312ccc",
+    "testing/subsystem1/host/test_bits_host.c": "36f3e75a524ebda1ca315cdec4934854b0c47c7c927525360f1318cf6695a640",
+    "testing/subsystem1/host/test_codec_bin_host.c": "46d575b0d537bd07e6b02a36e59d0825a28485d6976ddbf2d41eeceec22c889c",
+    "testing/subsystem1/host/test_codec_host.c": "b0ff5ce46d7c0d39439e732ad8ff6b16f71183c6420c1e56c8feed98c36631bb",
+    "testing/subsystem1/host/test_map_host.c": "769bcbadd7944d1c1627420af5a5ae2cec6e681533d28c2ee3eb60cd9e90f764",
+    "testing/subsystem1/host/test_mqtt_host.c": "11ee41df5c2f35fe1cfec0a267f210fa40f4648879f93b1600700e0125ee8ab4",
+    "testing/subsystem1/host/test_net_bin_host.c": "e6a28a6cb6f05d603c62674ba6269532af25d84c56be611996ec8a9aea82f076",
+    "testing/subsystem1/host/test_wifi_host.c": "6137d7b76919e1adb5906e2f85c4c136fe60f3c9a3357834a27d7f5c4c6c56df",
+    "app_program/subsystem3/drv_navigation_map.c": "bce01bd2ded1b0e57194568ab2c76674e5a38374a6f707a4814bfe032dbd6f50",
+    "testing/subsystem1/host/verify_windows.py": "8bf8a9b295da9c433e0f32f7136756f57b6eb1550e39337ecaf5bff3a4c5dfd3"
+  },
+  "checks": [
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_codec_host.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\codec.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\codec.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-codec-1 typical: {\"seq\":7,\"timestamp\":123456,\"robot_state\":2,\"left_motor_speed\":120,\"right_motor_speed\":-120,\"left_encoder_count\":1234567,\"right_encoder_count\":1234560,\"line_status\":2,\"hump_peak\":1.2,\"obstacle_distance\":45.5}\nT-codec-2 worst case (243 bytes): {\"seq\":4294967295,\"timestamp\":4294967295,\"robot_state\":255,\"left_motor_speed\":-32768,\"right_motor_speed\":-32768,\"left_encoder_count\":4294967295,\"right_encoder_count\":4294967295,\"line_status\":255,\"hump_peak\":-9999.9,\"obstacle_distance\":-9999.9}\nT-codec-3 heartbeat: {\"status\":\"ALIVE\",\"uptime_ms\":74829}\nT-codec-v2 maximum across validity masks: 239 bytes\n\n41 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_bits_host.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\bits.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\bits.exe"
+      ],
+      "exit": 0,
+      "stdout": "\n34 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_codec_bin_host.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\codecbin.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\codecbin.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-codec-bin tests\ncodec_bin: 133 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "test_backoff_host.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\backoff.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\backoff.exe"
+      ],
+      "exit": 0,
+      "stdout": "T-backoff-1 sequence: 1000 -> 2000 -> 4000 -> 8000 -> 8000 -> 8000\n\n15 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "-Imocks",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040",
+        "test_mqtt_host.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040\\mqtt_utk.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\mqtt.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\mqtt.exe"
+      ],
+      "exit": 0,
+      "stdout": "T1 connect, subscribe, CONNECTED event\nT2 backoff 1,2,4,8,8 s while the broker refuses, then reset after success (FR19)\n  gap 1 = 1000 ms (expected 1000)\n  gap 2 = 2000 ms (expected 2000)\n  gap 3 = 4000 ms (expected 4000)\n  gap 4 = 8000 ms (expected 8000)\n  gap 5 = 8000 ms (expected 8000)\nT3 connect timeout (no answer) after 5 s\nT4 subscribe failure -> backoff\nT5 dead link from publish failures: 10 in a row yes, a 4-frame stall no\nT6 Wi-Fi link loss: no backoff, discards frames, reconnects at once when the link returns\nT7 commands: fragments, wrong topic, oversize\nT8 cadence: telemetry 100 +/- 10 ms, heartbeat 1000 +/- 50 ms, for several poll intervals\n  poll every  3 ms: telemetry frames 600, worst period error  3 ms | heartbeat worst error  3 ms\n  poll every  5 ms: telemetry frames 600, worst period error  0 ms | heartbeat worst error  0 ms\n  poll every 12 ms: telemetry frames 600, worst period error  8 ms | heartbeat worst error  8 ms\n  poll every 20 ms: telemetry frames 600, worst period error  0 ms | heartbeat worst error  0 ms\n\n33 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c99",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wundef",
+        "-DTM_NET_LWIP=1",
+        "-DTM_MQTT=1",
+        "-DCNF_SMP=1",
+        "-Imocks_wifi",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\lib\\libwifi\\sysdepend\\pico_rp2040",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\lib\\liblwip\\sysdepend\\pico_rp2040",
+        "test_wifi_host.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\lib\\libwifi\\sysdepend\\pico_rp2040\\cyw43_utk.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\wifi.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\wifi.exe"
+      ],
+      "exit": 0,
+      "stdout": "\nW1: first join request fails immediately, second succeeds\n  ok:   two join requests were made (got 2)\n  ok:   retry came after the 1 s backoff (1000 ms)\n  ok:   radio reported ready, init_result 0\n  ok:   task entered the poll loop (2500 polls)\n  ok:   link up, MQTT polled with link up\n  ok:   no delay longer than 2 ms in the task (max 2)\n\nW2: every join request fails immediately -> 1,2,4,8,8,8 s\n  ok:   at least 7 requests in 40 s (got 8)\n        gap 0: 1000 ms (want 1000)\n        gap 1: 2000 ms (want 2000)\n        gap 2: 4000 ms (want 4000)\n        gap 3: 8000 ms (want 8000)\n        gap 4: 8000 ms (want 8000)\n        gap 5: 8000 ms (want 8000)\n  ok:   gaps follow 1,2,4,8,8,8 s (FR19)\n  ok:   never blocks longer than 2 ms (max 2)\n\nW3: link established, then lost -> rejoin after 1 s again\n  ok:   a rejoin request followed the loss (4 requests)\n  ok:   the link was lost at 3100 ms\n  ok:   rejoin came 1 s after the loss, not at the old 4 s step (1000 ms)\n\nW4: radio/interface bring-up failure is NOT retried\n  ok:   no join request when the interface never came up\n  ok:   radio not ready, init_result -5\n  ok:   network service is not polled\n\nW5: interface disappears during a retry -> stop, report not ready\n  ok:   exactly two requests, then no more (got 2)\n  ok:   radio reported not ready after the interface was lost\n\n17 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-DHOST_THREADS=1",
+        "-pthread",
+        "-c",
+        "host_sync.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\host_sync.o"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\host_sync.o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "-DS1_WIRE_JSON=1",
+        "target_main.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_sim.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\target_json.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\target_json.exe"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S1-U01 PASS  telemetry JSON has all FR17 fields\n[TEST] S1-U02 PASS  worst-case JSON is under 256 bytes\n[TEST] S1-U05 PASS  heartbeat is {status ALIVE, uptime_ms}\n[TEST] subsystem1 codec SUMMARY 3 passed, 0 failed\n[TEST] S1-U03 PASS  command parser accepts the four commands, rejects junk\n[TEST] S1-U04 PASS  backoff 1,2,4,8 then capped at 8 s\n[TEST] subsystem1 commands and backoff SUMMARY 2 passed, 0 failed\n[TEST] S1-U06 PASS  telemetry frames keep their order\n[TEST] S1-U07a PASS  every send into a full buffer succeeds (drop-oldest)\n[TEST] S1-U07 PASS  oldest frames are dropped, the newest frame is kept\n[TEST] S1-U07c PASS  each dropped frame is counted in telemetry_overwritten\n[TEST] S1-U07b PASS  buffer accepts frames again after it is drained\n[TEST] subsystem1 telemetry buffer SUMMARY 5 passed, 0 failed\n[TEST] S1-U08a PASS  EMERGENCY_STOP sets the E-STOP event flag\n[TEST] S1-U08b PASS  EMERGENCY_STOP delivered, forwarded in under 50 ms\n[TEST] S1-U09 PASS  unknown command is rejected and not queued\n[TEST] S1-U10 PASS  EMERGENCY_STOP evicts the oldest command when full\n[TEST] subsystem1 command path SUMMARY 4 passed, 0 failed\n[TEST] S1-U11a PASS  CONNECTED flushes stale telemetry\n[TEST] S1-U11b PASS  CONNECTED raises the link-changed flag\n[TEST] S1-U11c PASS  DISCONNECTED clears the connected state\n[TEST] subsystem1 link events SUMMARY 3 passed, 0 failed\n[TEST] S1-U13a PASS  start connected; initial notification consumed\n[TEST] S1-U13b PASS  BACKOFF clears connected and raises link-changed\n[TEST] S1-U13c PASS  BACKOFF is counted and the disconnect is counted once\n[TEST] S1-U13d PASS  repeat BACKOFF / DISCONNECTED while down: no new notification\n[TEST] S1-U13e PASS  DISCONNECTED (without BACKOFF first) still notifies once\n[TEST] subsystem1 backoff notification SUMMARY 5 passed, 0 failed\n[TEST] S1-U14a PASS  writer and reader tasks finished (no deadlock)\n[TEST] S1-U14b PASS  every concurrent snapshot was coherent\n[TEST] S1-U14c PASS  reader saw both states while the writer ran\n[TEST] S1-U14d PASS  no update was lost under contention\ns1: S1-U14 reads=8067 violations=0 seen_up=7299 seen_down=768\n[TEST] subsystem1 concurrent status SUMMARY 4 passed, 0 failed\n[TEST] S1-U16a PASS  latch and pulse published while the hook is still blocked on the held mutex\n[TEST] S1-U16b PASS  readers stay bounded: get_stats times out, latch and link reads never block\n[TEST] S1-U16c PASS  after the mutex is released the hook finishes and counts it\n[TEST] S1-U16d PASS  EMERGENCY_STOP also reaches the queue (full of PAUSE)\n[TEST] subsystem1 emergency with held mutex SUMMARY 4 passed, 0 failed\n[TEST] S1-U17a PASS  an ordinary command does not latch an emergency\n[TEST] S1-U17b PASS  EMERGENCY_STOP sets the latch and the pulse flag\n[TEST] S1-U18a PASS  RESUME, START_RUN, PAUSE, reconnects and draining the queue leave the latch set\n[TEST] S1-U19a PASS  s1_net_estop_clear() releases the latch\n[TEST] S1-U19b PASS  after the clear, RESUME does not latch again\n[TEST] S1-U19c PASS  a new EMERGENCY_STOP latches again; no post failures counted\n[TEST] subsystem1 emergency latch SUMMARY 6 passed, 0 failed\n[TEST] S1-U20a PASS  one failed flag post is retried; the latch is set\n[TEST] S1-U20b PASS  a persistent post failure is counted and the queued command still delivers the emergency\n[TEST] subsystem1 emergency post failure SUMMARY 2 passed, 0 failed\n[TEST] S1-U21a PASS  truncated message: E_SYS, output zeroed, counted\n[TEST] S1-U21b PASS  unknown command id: E_SYS, output zeroed\n[TEST] S1-U21c PASS  empty queue returns the kernel's E_TMOUT unchanged\n[TEST] S1-U21d PASS  a good message after a bad one is delivered\n[TEST] S1-U22a PASS  a 2 s old PAUSE is discarded, the fresh RESUME is delivered\n[TEST] S1-U22b PASS  an old EMERGENCY_STOP is still delivered\n[TEST] S1-U22c PASS  only a stale command queued: nothing is delivered\n[TEST] subsystem1 command validation SUMMARY 7 passed, 0 failed\n[TEST] subsystem1 simulator SUMMARY 0 passed, 0 failed\n[TEST] subsystem1 simulator switch SUMMARY 0 passed, 0 failed\nHOST-RUN: 45 passed, 0 failed, threads=1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\host_sync.o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "target_main.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_sim.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\subsystem1_test.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\target_bin.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\target_bin.exe"
+      ],
+      "exit": 0,
+      "stdout": "[TEST] S1-U01 PASS  telemetry JSON has all FR17 fields\n[TEST] S1-U02 PASS  worst-case JSON is under 256 bytes\n[TEST] S1-U05 PASS  heartbeat is {status ALIVE, uptime_ms}\n[TEST] subsystem1 codec SUMMARY 3 passed, 0 failed\n[TEST] S1-U03 PASS  command parser accepts the four commands, rejects junk\n[TEST] S1-U04 PASS  backoff 1,2,4,8 then capped at 8 s\n[TEST] subsystem1 commands and backoff SUMMARY 2 passed, 0 failed\n[TEST] S1-U06 PASS  telemetry frames keep their order\n[TEST] S1-U07a PASS  every send into a full buffer succeeds (drop-oldest)\n[TEST] S1-U07 PASS  oldest frames are dropped, the newest frame is kept\n[TEST] S1-U07c PASS  each dropped frame is counted in telemetry_overwritten\n[TEST] S1-U07b PASS  buffer accepts frames again after it is drained\n[TEST] subsystem1 telemetry buffer SUMMARY 5 passed, 0 failed\n[TEST] S1-U08a PASS  EMERGENCY_STOP sets the E-STOP event flag\n[TEST] S1-U08b PASS  EMERGENCY_STOP delivered, forwarded in under 50 ms\n[TEST] S1-U09 PASS  unknown command is rejected and not queued\n[TEST] S1-U10 PASS  EMERGENCY_STOP evicts the oldest command when full\n[TEST] subsystem1 command path SUMMARY 4 passed, 0 failed\n[TEST] S1-U11a PASS  CONNECTED flushes stale telemetry\n[TEST] S1-U11b PASS  CONNECTED raises the link-changed flag\n[TEST] S1-U11c PASS  DISCONNECTED clears the connected state\n[TEST] subsystem1 link events SUMMARY 3 passed, 0 failed\n[TEST] S1-U13a PASS  start connected; initial notification consumed\n[TEST] S1-U13b PASS  BACKOFF clears connected and raises link-changed\n[TEST] S1-U13c PASS  BACKOFF is counted and the disconnect is counted once\n[TEST] S1-U13d PASS  repeat BACKOFF / DISCONNECTED while down: no new notification\n[TEST] S1-U13e PASS  DISCONNECTED (without BACKOFF first) still notifies once\n[TEST] subsystem1 backoff notification SUMMARY 5 passed, 0 failed\n[TEST] S1-U14a PASS  writer and reader tasks finished (no deadlock)\n[TEST] S1-U14b PASS  every concurrent snapshot was coherent\n[TEST] S1-U14c PASS  reader saw both states while the writer ran\n[TEST] S1-U14d PASS  no update was lost under contention\ns1: S1-U14 reads=8833 violations=0 seen_up=7902 seen_down=931\n[TEST] subsystem1 concurrent status SUMMARY 4 passed, 0 failed\n[TEST] S1-U16a PASS  latch and pulse published while the hook is still blocked on the held mutex\n[TEST] S1-U16b PASS  readers stay bounded: get_stats times out, latch and link reads never block\n[TEST] S1-U16c PASS  after the mutex is released the hook finishes and counts it\n[TEST] S1-U16d PASS  EMERGENCY_STOP also reaches the queue (full of PAUSE)\n[TEST] subsystem1 emergency with held mutex SUMMARY 4 passed, 0 failed\n[TEST] S1-U17a PASS  an ordinary command does not latch an emergency\n[TEST] S1-U17b PASS  EMERGENCY_STOP sets the latch and the pulse flag\n[TEST] S1-U18a PASS  RESUME, START_RUN, PAUSE, reconnects and draining the queue leave the latch set\n[TEST] S1-U19a PASS  s1_net_estop_clear() releases the latch\n[TEST] S1-U19b PASS  after the clear, RESUME does not latch again\n[TEST] S1-U19c PASS  a new EMERGENCY_STOP latches again; no post failures counted\n[TEST] subsystem1 emergency latch SUMMARY 6 passed, 0 failed\n[TEST] S1-U20a PASS  one failed flag post is retried; the latch is set\n[TEST] S1-U20b PASS  a persistent post failure is counted and the queued command still delivers the emergency\n[TEST] subsystem1 emergency post failure SUMMARY 2 passed, 0 failed\n[TEST] S1-U21a PASS  truncated message: E_SYS, output zeroed, counted\n[TEST] S1-U21b PASS  unknown command id: E_SYS, output zeroed\n[TEST] S1-U21c PASS  empty queue returns the kernel's E_TMOUT unchanged\n[TEST] S1-U21d PASS  a good message after a bad one is delivered\n[TEST] S1-U22a PASS  a 2 s old PAUSE is discarded, the fresh RESUME is delivered\n[TEST] S1-U22b PASS  an old EMERGENCY_STOP is still delivered\n[TEST] S1-U22c PASS  only a stale command queued: nothing is delivered\n[TEST] subsystem1 command validation SUMMARY 7 passed, 0 failed\n[TEST] S1-U23a PASS  telemetry is 29 packed bytes that decode to the same values\n[TEST] S1-U23b PASS  out-of-range obstacle: validity bit cleared, counted, rest kept\n[TEST] S1-U23c PASS  robot_state 9 is refused and never buffered\n[TEST] S1-U23d PASS  1-byte command works; text, 2 bytes, reserved bits, id 7 rejected\n[TEST] S1-U23e PASS  byte 0x01 latches the emergency stop\n[TEST] S1-U23f PASS  heartbeat is 8 bytes with uptime and the latch\n[TEST] subsystem1 binary wire format SUMMARY 6 passed, 0 failed\n[TEST] S1-U24a PASS  two bits set: mask 0x05, carried in the frame\n[TEST] S1-U24b PASS  clearing one bit keeps the other\n[TEST] S1-U24c PASS  setting or clearing a Buddy 1 bit is refused, nothing changes\n[TEST] S1-U24d PASS  bit 5 follows the emergency latch, set and cleared\n[TEST] S1-U24e PASS  Wi-Fi loss bit: reported once after the outage, IMU bit kept\n[TEST] subsystem1 fault mask SUMMARY 5 passed, 0 failed\n[TEST] S1-U25a PASS  both fault tasks finished (no deadlock)\n[TEST] S1-U25b PASS  two cores toggling their own bits: the third bit is never lost\ns1: S1-U25 violations a=0 b=0 final=0x45\n[TEST] subsystem1 fault mask, two cores SUMMARY 2 passed, 0 failed\n[TEST] S1-U26a PASS  MAP text becomes a binary update read with nav_action_get()\n[TEST] S1-U26b PASS  bad MAP text: nothing queued, counted, heartbeat says REJECTED\n[TEST] S1-U26c PASS  ACCEPTED from the reply is kept (revision low 8 bits); stale report ignored\n[TEST] S1-U26d PASS  EMERGENCY_STOP latches at once behind a flood of MAP updates\n[TEST] subsystem1 mapping update path SUMMARY 4 passed, 0 failed\n[TEST] S1-U27 PASS  demo map copied through dedicated buffer, command queue empty\n[TEST] subsystem1 consolidated demo mapping SUMMARY 1 passed, 0 failed\n[TEST] subsystem1 simulator SUMMARY 0 passed, 0 failed\n[TEST] subsystem1 simulator switch SUMMARY 0 passed, 0 failed\nHOST-RUN: 63 passed, 0 failed, threads=1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\host_sync.o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "test_net_bin_host.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\netbin.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\netbin.exe"
+      ],
+      "exit": 0,
+      "stdout": "net_bin: 68 checks, 0 failed\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:/msys64/ucrt64/bin/gcc.exe",
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-pthread",
+        "-Wno-int-to-pointer-cast",
+        "-DPROHIBIT_DEF_SIZE_T",
+        "-include",
+        "stddef.h",
+        "-DAPP_TEST=1",
+        "-D_PICO_RP2040_",
+        "-DS1_SIMULATE_TELEMETRY=0",
+        "-DTM_MQTT=0",
+        "-DS1_TEST_HOST_FAULTS=1",
+        "-DHOST_THREADS=1",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\include",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\config",
+        "-IC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program",
+        "kernel_emulation.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\host_sync.o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_net.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_codec.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem3\\drv_navigation_map.c",
+        "test_map_host.c",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\app_program\\subsystem1\\s1_map.c",
+        "-o",
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\mapgw.exe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build\\s1-native\\mapping-_husk8k7\\mapgw.exe"
+      ],
+      "exit": 0,
+      "stdout": "map: 43 checks, 0 failed\n",
+      "stderr": ""
+    }
+  ],
+  "passed": true
+}

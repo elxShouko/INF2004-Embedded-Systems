@@ -70,6 +70,9 @@ static bool test_motion_admission_result (void);
 static bool test_motion_durable_fault (void);
 static bool test_motion_reversal_timeout (void);
 static bool test_motion_end_to_end (void);
+static bool test_motion_packed_flags (void);
+static bool test_motion_payload_copy (void);
+static bool test_motion_payload_invalid (void);
 static uint32_t test_drive_run (void);
 #if !defined(MOTION_CONFIG_HOST_TEST)
 static uint64_t g_test_drive_stack[1024]; /* 8 KiB, synthetic TEST=1 worker. */
@@ -181,12 +184,16 @@ static uint32_t test_drive_run (void)
         test_motion_sample_time, test_motion_progress_timeout,
         test_motion_config_copy, test_motion_freshness,
         test_motion_admission_result, test_motion_durable_fault,
-        test_motion_reversal_timeout, test_motion_end_to_end};
+        test_motion_reversal_timeout, test_motion_end_to_end,
+        test_motion_packed_flags, test_motion_payload_copy,
+        test_motion_payload_invalid};
 
     for (size_t index = 0U; index < sizeof(tests)/sizeof(tests[0]); ++index)
     {
         bool b_pass = tests[index]();
-        unsigned int ident = 57U + (unsigned int)index;
+        /* Preserve U57..U97; U98..U140 belong to adapter/lifecycle tests. */
+        unsigned int ident = (index < 41U) ? 57U + (unsigned int)index :
+            141U + (unsigned int)index - 41U;
 
         failed += b_pass ? 0U : 1U;
 #if defined(MOTION_CONFIG_HOST_TEST)
@@ -326,20 +333,20 @@ static bool test_motion_bus (void)
     bool b_present=false, b_stop=false, b_cancel=false;
     bool b_pass = motion_bus_put(&bus,&request);
 
-    request.config.geometry.track_width_um=999U;
+    request.payload.configure.config.geometry.track_width_um=999U;
     b_pass = !(motion_bus_put(&bus,&request)) && b_pass;
     motion_bus_take(&bus,&copy,&b_present,&b_stop,&b_cancel);
     b_pass = b_present && !b_stop &&
-        (0U==copy.config.geometry.track_width_um) && b_pass;
+        (0U==copy.payload.configure.config.geometry.track_width_um) && b_pass;
     bus.b_inflight=false;
     bus.status.state=MOTION_RUN_READY;
     request.kind=MOTION_BUS_COMMAND;
-    request.command.id=1U;
+    request.payload.command.id=1U;
     b_pass = (motion_bus_put(&bus,&request)) && b_pass;
     bus.b_pending=false;
     bus.status.terminal_id=1U;
     b_pass = !(motion_bus_put(&bus,&request)) && b_pass;
-    request.kind=MOTION_BUS_ACK; request.ack_id=1U;
+    request.kind=MOTION_BUS_ACK; request.payload.ack_id=1U;
     b_pass = (motion_bus_put(&bus,&request)) && b_pass;
     return (b_pass);
 }
@@ -353,7 +360,7 @@ static bool test_motion_cancel (void)
 
     bus.b_inflight=false;
     bus.status.state=MOTION_RUN_READY;
-    request.kind=MOTION_BUS_COMMAND;request.command.id=7U;
+    request.kind=MOTION_BUS_COMMAND;request.payload.command.id=7U;
     b_pass = (motion_bus_put(&bus,&request)) && b_pass;
     b_pass = (motion_bus_stop(&bus,true,7U)) && b_pass;
     b_pass = !(motion_bus_put(&bus,&request)) && b_pass;
@@ -1295,6 +1302,152 @@ static bool test_motion_end_to_end (void)
         !motion_run_tick(&run,&sample,50000U) &&
         (MOTION_RUN_SENSOR == run.status.fault_result) &&
         (0U == fake.a[0]) && (0U == fake.a[1]) && b_pass;
+    return (b_pass);
+}
+
+static bool test_motion_packed_flags (void)
+{
+    bool b_pass = true;
+
+    for (uint32_t bits = 0U; bits < 32U; ++bits)
+    {
+        drv_motor_t motor = {0};
+        motion_quad_t decoder = {0};
+        wheel_loop_t loop = {0};
+
+        motor.period = 3456U;
+        motor.last_time_us = UINT64_MAX;
+        motor.b_initialised = (0U != (bits & 1U));
+        motor.b_armed = (0U != (bits & 2U));
+        motor.b_fault = (0U != (bits & 4U));
+        motor.b_prepare_attempted = (0U != (bits & 8U));
+        motor.b_stop_confirmed = (0U != (bits & 16U));
+        decoder.count = INT64_MIN;
+        decoder.invalid_transitions = UINT32_MAX;
+        decoder.previous_ab = 3U;
+        decoder.b_initialised = motor.b_initialised;
+        decoder.b_have_state = motor.b_armed;
+        decoder.b_count_limit = motor.b_fault;
+        loop.last_tick_us = UINT64_MAX;
+        loop.b_tracking[0] = true;
+        loop.b_tracking[1] = false;
+        loop.b_valid = motor.b_initialised;
+        loop.b_enabled = motor.b_armed;
+        loop.b_fault = motor.b_fault;
+
+        const drv_motor_t copied_motor = motor;
+        const motion_quad_t copied_decoder = decoder;
+        const wheel_loop_t copied_loop = loop;
+
+        motor.b_armed = false;
+        decoder.b_have_state = false;
+        loop.b_enabled = false;
+        b_pass = (copied_motor.b_initialised == (0U != (bits & 1U))) &&
+            (copied_motor.b_armed == (0U != (bits & 2U))) &&
+            (copied_motor.b_fault == (0U != (bits & 4U))) &&
+            (copied_motor.b_prepare_attempted == (0U != (bits & 8U))) &&
+            (copied_motor.b_stop_confirmed == (0U != (bits & 16U))) &&
+            (copied_decoder.b_initialised == copied_motor.b_initialised) &&
+            (copied_decoder.b_have_state == copied_motor.b_armed) &&
+            (copied_decoder.b_count_limit == copied_motor.b_fault) &&
+            (copied_loop.b_valid == copied_motor.b_initialised) &&
+            (copied_loop.b_enabled == copied_motor.b_armed) &&
+            (copied_loop.b_fault == copied_motor.b_fault) &&
+            !motor.b_armed && !decoder.b_have_state && !loop.b_enabled &&
+            (motor.b_fault == copied_motor.b_fault) &&
+            (decoder.b_count_limit == copied_decoder.b_count_limit) &&
+            (loop.b_fault == copied_loop.b_fault) &&
+            (3456U == copied_motor.period) &&
+            (UINT64_MAX == copied_motor.last_time_us) &&
+            (INT64_MIN == copied_decoder.count) &&
+            (UINT32_MAX == copied_decoder.invalid_transitions) &&
+            (3U == copied_decoder.previous_ab) &&
+            (UINT64_MAX == copied_loop.last_tick_us) &&
+            copied_loop.b_tracking[0] && !copied_loop.b_tracking[1] && b_pass;
+    }
+    return (b_pass);
+}
+
+static bool test_motion_payload_copy (void)
+{
+    bool b_pass = true;
+    uint32_t context = 123U;
+
+    for (uint32_t kind = 0U; kind < 4U; ++kind)
+    {
+        motion_bus_t bus = {0};
+        motion_bus_request_t request = {0};
+        motion_bus_request_t copied = {0};
+        bool b_present = false, b_stop = false, b_cancel = false;
+
+        request.kind = (motion_bus_kind_t)kind;
+        switch (request.kind)
+        {
+            case MOTION_BUS_CONFIG:
+                request.payload.configure.config = test_motion_loop_config();
+                request.payload.configure.encoder_port.p_context = &context;
+            break;
+            case MOTION_BUS_ENABLE:
+                bus.status.state = MOTION_RUN_CONFIGURED;
+            break;
+            case MOTION_BUS_COMMAND:
+                bus.status.state = MOTION_RUN_READY;
+                request.payload.command = test_motion_command(MOVE_PLAN_TRAVEL);
+                request.payload.command.distance_um = INT32_MIN;
+            break;
+            case MOTION_BUS_ACK:
+                request.payload.ack_id = UINT32_MAX;
+                bus.status.terminal_id = UINT32_MAX;
+            break;
+            default:
+                return (false);
+            break;
+        }
+        b_pass = motion_bus_put(&bus,&request) && b_pass;
+        request.payload = (motion_bus_payload_t){0};
+        motion_bus_take(&bus,&copied,&b_present,&b_stop,&b_cancel);
+        b_pass = b_present && !b_stop && !b_cancel && bus.b_inflight &&
+            (copied.kind == (motion_bus_kind_t)kind) && b_pass;
+        if (MOTION_BUS_CONFIG == copied.kind)
+        {
+            b_pass = (150000U ==
+                copied.payload.configure.config.geometry.track_width_um) &&
+                (&context == copied.payload.configure.encoder_port.p_context)
+                && b_pass;
+        }
+        else if (MOTION_BUS_COMMAND == copied.kind)
+        {
+            b_pass = (INT32_MIN == copied.payload.command.distance_um) &&
+                (MOVE_PLAN_TRAVEL == copied.payload.command.kind) && b_pass;
+        }
+        else if (MOTION_BUS_ACK == copied.kind)
+        {
+            b_pass = (UINT32_MAX == copied.payload.ack_id) && b_pass;
+        }
+    }
+    return (b_pass);
+}
+
+static bool test_motion_payload_invalid (void)
+{
+    motion_bus_t bus = {0};
+    motion_bus_request_t request = {0};
+    const motion_bus_kind_t invalid[] = {(motion_bus_kind_t)255,
+                                         (motion_bus_kind_t)-1};
+    bool b_pass = true;
+
+    bus.status.state = MOTION_RUN_READY;
+    bus.request.kind = MOTION_BUS_COMMAND;
+    bus.request.payload.command.id = 777U;
+    for (size_t index = 0U; index < sizeof(invalid)/sizeof(invalid[0]); ++index)
+    {
+        request.kind = invalid[index];
+        request.payload.ack_id = UINT32_MAX;
+        b_pass = !motion_bus_put(&bus,&request) && !bus.b_pending &&
+            !bus.b_inflight && !bus.b_stop && !bus.b_cancel &&
+            (MOTION_BUS_COMMAND == bus.request.kind) &&
+            (777U == bus.request.payload.command.id) && b_pass;
+    }
     return (b_pass);
 }
 

@@ -1,0 +1,710 @@
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-gcc.exe" --version
+arm-none-eabi-gcc.exe (GNU Arm Embedded Toolchain 10.3-2021.10) 10.3.1 20210824 (release)
+Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-gcc.exe" -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\app_program -mcpu=cortex-m0plus -mthumb -ffreestanding -std=gnu11 -O2 -g3 -MMD -MP -mfloat-abi=soft -DCNF_SMP=1 -DAPP_TEST=1 -DTM_CONSOLE_UART=0 -DBOARD_UART0_FREE=1 -DTM_CONSOLE_USB_CDC=1 -DNDEBUG -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/tinyusb/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -DTM_WIFI_CYW43=1 -DCYW43_LWIP=0 -DCYW43_ENABLE_BLUETOOTH=0 -DCYW43_USE_OTP_MAC=1 -DPICO_CYW43_LOGGING_ENABLED=0 -DPICO_RP2040=1 -DPICO_32BIT=1 -DPICO_ON_DEVICE=1 -DPICO_BUILD=1 -DPICO_NO_HARDWARE=0 -DRASPBERRYPI_PICO_W=1 -DCYW43_DEFAULT_PIN_WL_REG_ON=23u -DCYW43_DEFAULT_PIN_WL_DATA_OUT=24u -DCYW43_DEFAULT_PIN_WL_DATA_IN=24u -DCYW43_DEFAULT_PIN_WL_HOST_WAKE=24u -DCYW43_DEFAULT_PIN_WL_CLOCK=29u -DCYW43_DEFAULT_PIN_WL_CS=25u -DNDEBUG -ffunction-sections -fdata-sections -I../lib/libwifi/sysdepend/pico_rp2040 -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/firmware -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_cyw43_driver/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/boards/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/hardware_claim/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_util/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_pio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_gpio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_dma/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_clocks/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -D_PICO_RP2040_ -I../include -I../config -I../kernel/knlinc -MFC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_42a2hj0w\layout.d -MTC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_42a2hj0w\layout.o -c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_42a2hj0w\layout.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_42a2hj0w\layout.c
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-nm.exe" -S C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\layout_42a2hj0w\layout.o
+00000000 00000004 R field__drv_encoder_port_t__p_context
+00000000 00000004 R field__drv_encoder_port_t__p_enable
+00000000 00000004 R field__drv_encoder_port_t__p_release
+00000000 00000004 R field__drv_encoder_port_t__p_reserve
+00000000 00000001 R field__drv_motor_channel_t__b_neutral
+00000000 00000001 R field__drv_motor_channel_t__last_direction
+00000000 00000008 R field__drv_motor_channel_t__neutral_since_us
+00000000 00000001 R field__drv_motor_channel_t__pending_direction
+00000000 00000002 R field__drv_motor_channel_t__pending_level
+00000000 00000001 R field__drv_motor_channel_t__state
+00000000 00000001 R field__drv_motor_config_t__b_resources_verified
+00000000 00000001 R field__drv_motor_config_t__calibration
+00000000 00000004 R field__drv_motor_config_t__clock_hz
+00000000 00000004 R field__drv_motor_config_t__max_duty
+00000000 00000002 R field__drv_motor_config_t__polarity
+00000000 00000004 R field__drv_motor_config_t__pwm_hz
+00000000 00000004 R field__drv_motor_config_t__reversal_guard_us
+00000000 00000001 R field__drv_motor_config_t__zero_mode
+00000000 00000004 R field__drv_motor_io_t__p_apply
+00000000 00000004 R field__drv_motor_io_t__p_context
+00000000 00000004 R field__drv_motor_io_t__p_prepare
+00000000 00000004 R field__drv_motor_io_t__p_stop_all
+00000000 00000001 R field__drv_motor_t__b_armed
+00000000 00000001 R field__drv_motor_t__b_fault
+00000000 00000001 R field__drv_motor_t__b_initialised
+00000000 00000001 R field__drv_motor_t__b_prepare_attempted
+00000000 00000001 R field__drv_motor_t__b_stop_confirmed
+00000000 00000030 R field__drv_motor_t__channel
+00000000 00000018 R field__drv_motor_t__config
+00000000 00000002 R field__drv_motor_t__duty_limit
+00000000 00000010 R field__drv_motor_t__io
+00000000 00000008 R field__drv_motor_t__last_time_us
+00000000 00000002 R field__drv_motor_t__period
+00000000 00000001 R field__drv_rp2040_t__b_claimed
+00000000 00000002 R field__drv_rp2040_t__direction
+00000000 00000002 R field__drv_rp2040_t__period
+00000000 00000001 R field__enc_capture_sample_t__b_healthy
+00000000 00000008 R field__enc_capture_sample_t__invalid
+00000000 00000030 R field__enc_capture_sample_t__sample
+00000000 00000001 R field__enc_capture_t__b_healthy
+00000000 00000001 R field__enc_capture_t__b_initialised
+00000000 00000030 R field__enc_capture_t__decoder
+00000000 00000004 R field__enc_capture_t__generation
+00000000 00000001 R field__gpio_bank_client_t__b_enabled
+00000000 00000004 R field__gpio_bank_client_t__mask
+00000000 00000004 R field__gpio_bank_client_t__p_context
+00000000 00000004 R field__gpio_bank_client_t__p_sink
+00000000 00000004 R field__gpio_bank_io_t__p_core
+00000000 00000004 R field__gpio_bank_io_t__p_enter
+00000000 00000004 R field__gpio_bank_io_t__p_fault
+00000000 00000004 R field__gpio_bank_io_t__p_install
+00000000 00000004 R field__gpio_bank_io_t__p_leave
+00000000 00000004 R field__gpio_bank_io_t__p_read
+00000000 00000004 R field__gpio_bank_io_t__p_write
+00000000 00000004 R field__gpio_bank_t__allowed_mask
+00000000 00000001 R field__gpio_bank_t__b_initialised
+00000000 00000001 R field__gpio_bank_t__b_installed
+00000000 00000020 R field__gpio_bank_t__clients
+00000000 0000001c R field__gpio_bank_t__io
+00000000 00000004 R field__motion_bus_request_t__ack_id
+00000000 00000028 R field__motion_bus_request_t__command
+00000000 000000bc R field__motion_bus_request_t__config
+00000000 00000010 R field__motion_bus_request_t__encoder_port
+00000000 00000001 R field__motion_bus_request_t__kind
+00000000 00000001 R field__motion_bus_t__b_cancel
+00000000 00000001 R field__motion_bus_t__b_inflight
+00000000 00000001 R field__motion_bus_t__b_pending
+00000000 00000001 R field__motion_bus_t__b_stop
+00000000 00000004 R field__motion_bus_t__cancel_id
+00000000 00000100 R field__motion_bus_t__request
+00000000 00000088 R field__motion_bus_t__status
+00000000 00000001 R field__motion_config_t__calibration
+00000000 0000000c R field__motion_config_t__left
+00000000 00000004 R field__motion_config_t__max_wheel_speed_mm_s
+00000000 0000000c R field__motion_config_t__right
+00000000 00000004 R field__motion_config_t__track_width_um
+00000000 00000004 R field__motion_config_wheel_t__counts_per_wheel_rev
+00000000 00000001 R field__motion_config_wheel_t__encoder_polarity
+00000000 00000001 R field__motion_config_wheel_t__motor_polarity
+00000000 00000004 R field__motion_config_wheel_t__wheel_circumference_um
+00000000 00000001 R field__motion_estimator_measurement_t__b_position_valid
+00000000 00000001 R field__motion_estimator_measurement_t__b_speed_valid
+00000000 00000008 R field__motion_estimator_measurement_t__position_um
+00000000 00000004 R field__motion_estimator_measurement_t__speed_mm_s
+00000000 00000008 R field__motion_estimator_measurement_t__timestamp_us
+00000000 00000008 R field__motion_estimator_sample_t__count
+00000000 00000004 R field__motion_estimator_sample_t__generation
+00000000 00000008 R field__motion_estimator_sample_t__timestamp_us
+00000000 00000001 R field__motion_estimator_t__b_have_baseline
+00000000 00000001 R field__motion_estimator_t__b_initialised
+00000000 00000001 R field__motion_estimator_t__b_reset_required
+00000000 00000004 R field__motion_estimator_t__circumference_um
+00000000 00000004 R field__motion_estimator_t__counts_per_wheel_rev
+00000000 00000004 R field__motion_estimator_t__max_elapsed_us
+00000000 00000020 R field__motion_estimator_t__measurement
+00000000 00000018 R field__motion_estimator_t__previous
+00000000 00000008 R field__motion_estimator_t__remainder
+00000000 00000001 R field__motion_estimator_t__result
+00000000 00000001 R field__motion_pid_config_t__calibration
+00000000 00000004 R field__motion_pid_config_t__derivative_gain
+00000000 00000004 R field__motion_pid_config_t__integral_gain
+00000000 00000004 R field__motion_pid_config_t__integral_max
+00000000 00000004 R field__motion_pid_config_t__integral_min
+00000000 00000004 R field__motion_pid_config_t__max_elapsed_us
+00000000 00000004 R field__motion_pid_config_t__output_max
+00000000 00000004 R field__motion_pid_config_t__output_min
+00000000 00000004 R field__motion_pid_config_t__proportional_gain
+00000000 00000001 R field__motion_pid_t__b_have_measurement
+00000000 00000001 R field__motion_pid_t__b_initialised
+00000000 00000024 R field__motion_pid_t__config
+00000000 00000004 R field__motion_pid_t__integral
+00000000 00000004 R field__motion_pid_t__previous_measurement_mm_s
+00000000 00000004 R field__motion_pid_t__previous_target_mm_s
+00000000 00000001 R field__motion_quad_t__b_count_limit
+00000000 00000001 R field__motion_quad_t__b_have_state
+00000000 00000001 R field__motion_quad_t__b_initialised
+00000000 00000008 R field__motion_quad_t__count
+00000000 00000004 R field__motion_quad_t__invalid_transitions
+00000000 00000001 R field__motion_quad_t__polarity
+00000000 00000001 R field__motion_quad_t__previous_ab
+00000000 00000004 R field__motion_run_status_t__active_id
+00000000 00000001 R field__motion_run_status_t__active_kind
+00000000 00000001 R field__motion_run_status_t__b_encoder_valid
+00000000 00000001 R field__motion_run_status_t__b_measurement_valid
+00000000 00000001 R field__motion_run_status_t__b_request_accepted
+00000000 00000001 R field__motion_run_status_t__b_standstill
+00000000 00000001 R field__motion_run_status_t__b_stop_command_confirmed
+00000000 00000010 R field__motion_run_status_t__encoder_count
+00000000 00000004 R field__motion_run_status_t__encoder_generation
+00000000 00000008 R field__motion_run_status_t__encoder_timestamp_us
+00000000 00000001 R field__motion_run_status_t__fault_result
+00000000 00000004 R field__motion_run_status_t__last_request_id
+00000000 00000008 R field__motion_run_status_t__last_request_issued_us
+00000000 00000004 R field__motion_run_status_t__measurement_max_age_us
+00000000 00000008 R field__motion_run_status_t__measurement_timestamp_us
+00000000 00000010 R field__motion_run_status_t__position_um
+00000000 00000008 R field__motion_run_status_t__speed_mm_s
+00000000 00000001 R field__motion_run_status_t__state
+00000000 00000008 R field__motion_run_status_t__target_mm_s
+00000000 00000004 R field__motion_run_status_t__terminal_id
+00000000 00000001 R field__motion_run_status_t__terminal_result
+00000000 00000008 R field__motion_run_status_t__timestamp_us
+00000000 00000001 R field__motion_run_t__b_initialised
+00000000 00000008 R field__motion_run_t__deadline_us
+00000000 00000004 R field__motion_run_t__last_id
+00000000 000002f0 R field__motion_run_t__loop
+00000000 00000001 R field__motion_run_t__pending_result
+00000000 00000048 R field__motion_run_t__plan
+00000000 00000088 R field__motion_run_t__status
+00000000 00000008 R field__motion_run_t__stopping_since_us
+00000000 00000004 R field__move_plan_command_t__cruise_mm_s
+00000000 00000004 R field__move_plan_command_t__distance_um
+00000000 00000004 R field__move_plan_command_t__id
+00000000 00000008 R field__move_plan_command_t__issued_us
+00000000 00000001 R field__move_plan_command_t__kind
+00000000 00000004 R field__move_plan_command_t__left_mm_s
+00000000 00000004 R field__move_plan_command_t__lifetime_us
+00000000 00000004 R field__move_plan_command_t__right_mm_s
+00000000 00000004 R field__move_plan_config_t__accel_mm_s2
+00000000 00000004 R field__move_plan_config_t__correction_gain
+00000000 00000004 R field__move_plan_config_t__correction_limit_mm_s
+00000000 00000004 R field__move_plan_config_t__decel_mm_s2
+00000000 00000004 R field__move_plan_config_t__tolerance_um
+00000000 00000008 R field__move_plan_config_t__turn_scale_ppm
+00000000 00000001 R field__move_plan_t__b_finite
+00000000 00000001 R field__move_plan_t__b_initialised
+00000000 00000028 R field__move_plan_t__command
+00000000 00000008 R field__move_plan_t__goal_um
+00000000 00000010 R field__move_plan_t__origin_um
+00000000 00000004 R field__SAMPLE_MSG__hdr
+00000000 00000004 R field__SAMPLE_MSG__prc
+00000000 00000004 R field__SAMPLE_MSG__seq
+00000000 00000004 R field__SAMPLE_MSG__time_ms
+00000000 00000004 R field__SAMPLE_MSG__value
+00000000 00000001 R field__vehicle_config_t__b_calibrated
+00000000 00000001 R field__vehicle_config_t__b_power_authorised
+00000000 00000001 R field__vehicle_config_t__b_uturn_right
+00000000 00000004 R field__vehicle_config_t__command_ttl_us
+00000000 00000004 R field__vehicle_config_t__correction_mm_s
+00000000 00000004 R field__vehicle_config_t__forward_mm_s
+00000000 00000002 R field__vehicle_config_t__obstacle_stop_cm
+00000000 00000004 R field__vehicle_config_t__remote_age_ms
+00000000 00000038 R field__vehicle_config_t__route
+00000000 00000004 R field__vehicle_config_t__sensor_age_us
+00000000 00000004 R field__vehicle_config_t__straight_um
+00000000 00000004 R field__vehicle_config_t__transition_timeout_us
+00000000 00000004 R field__vehicle_config_t__turn_mm_s
+00000000 00000001 R field__vehicle_input_t__b_counts_valid
+00000000 00000001 R field__vehicle_input_t__b_estop
+00000000 00000001 R field__vehicle_input_t__b_forward_valid
+00000000 00000001 R field__vehicle_input_t__b_imu_available
+00000000 00000001 R field__vehicle_input_t__b_line_available
+00000000 00000001 R field__vehicle_input_t__b_line_calibrated
+00000000 00000001 R field__vehicle_input_t__b_line_valid
+00000000 00000001 R field__vehicle_input_t__b_link_up
+00000000 00000001 R field__vehicle_input_t__b_motion_available
+00000000 00000001 R field__vehicle_input_t__b_obstacle_available
+00000000 00000001 R field__vehicle_input_t__b_provider_fault
+00000000 00000001 R field__vehicle_input_t__b_scan_held
+00000000 00000001 R field__vehicle_input_t__black_mask
+00000000 00000050 R field__vehicle_input_t__clearance
+00000000 00000010 R field__vehicle_input_t__encoder_count
+00000000 00000002 R field__vehicle_input_t__forward_cm
+00000000 00000030 R field__vehicle_input_t__imu
+00000000 00000001 R field__vehicle_input_t__line
+00000000 00000001 R field__vehicle_input_t__line_mode
+00000000 00000001 R field__vehicle_input_t__line_state
+00000000 00000008 R field__vehicle_input_t__line_time_us
+00000000 00000088 R field__vehicle_input_t__motion
+00000000 00000010 R field__vehicle_input_t__navigation
+00000000 00000004 R field__vehicle_input_t__navigation_id
+00000000 00000008 R field__vehicle_input_t__now_us
+00000000 00000014 R field__vehicle_input_t__obstacle
+00000000 00000008 R field__vehicle_input_t__obstacle_started_us
+00000000 00000008 R field__vehicle_input_t__obstacle_time_us
+00000000 00000004 R field__vehicle_input_t__pending_navigation_id
+00000000 00000008 R field__vehicle_input_t__raw_now_us
+00000000 00000008 R field__vehicle_input_t__remote
+00000000 00000008 R field__vehicle_input_t__scan_completed_us
+00000000 00000008 R field__vehicle_input_t__scan_id_us
+00000000 00000001 R field__vehicle_odometry_t__b_baseline
+00000000 00000001 R field__vehicle_odometry_t__b_previous_forward
+00000000 00000001 R field__vehicle_odometry_t__b_tracking_forward
+00000000 00000008 R field__vehicle_odometry_t__distance_um
+00000000 00000001 R field__vehicle_odometry_t__half_um
+00000000 00000010 R field__vehicle_odometry_t__previous_um
+00000000 00000008 R field__vehicle_odometry_t__previous_us
+00000000 00000008 R field__vehicle_odometry_t__raw_timestamp_us
+00000000 00000004 R field__vehicle_output_t__acknowledge_id
+00000000 00000001 R field__vehicle_output_t__b_command
+00000000 00000001 R field__vehicle_output_t__b_enable
+00000000 00000001 R field__vehicle_output_t__b_estop
+00000000 00000001 R field__vehicle_output_t__b_mode
+00000000 00000001 R field__vehicle_output_t__b_stop
+00000000 00000028 R field__vehicle_output_t__command
+00000000 00000001 R field__vehicle_output_t__mode
+00000000 00000004 R field__vehicle_output_t__navigation_done_id
+00000000 00000008 R field__vehicle_output_t__obstacle_recovered_us
+00000000 00000001 R field__vehicle_setup_t__b_obstacle_requested
+00000000 00000060 R field__vehicle_setup_t__mission
+00000000 000000bc R field__vehicle_setup_t__motion
+00000000 00000054 R field__vehicle_setup_t__navigation
+00000000 0000003c R field__vehicle_setup_t__obstacle
+00000000 00000004 R field__vehicle_t__active_id
+00000000 00000001 R field__vehicle_t__b_initialised
+00000000 00000001 R field__vehicle_t__b_line_found
+00000000 00000001 R field__vehicle_t__b_obstacle_pending
+00000000 00000001 R field__vehicle_t__b_pause_requested
+00000000 00000001 R field__vehicle_t__b_pending_command
+00000000 00000001 R field__vehicle_t__b_recovery_required
+00000000 00000001 R field__vehicle_t__b_route_active
+00000000 00000001 R field__vehicle_t__b_route_finishing
+00000000 00000001 R field__vehicle_t__b_route_found
+00000000 00000001 R field__vehicle_t__b_route_terminal
+00000000 00000001 R field__vehicle_t__b_run_requested
+00000000 00000001 R field__vehicle_t__b_turn_completed
+00000000 00000004 R field__vehicle_t__blockers
+00000000 00000060 R field__vehicle_t__config
+00000000 00000004 R field__vehicle_t__last_navigation_id
+00000000 00000008 R field__vehicle_t__last_now_us
+00000000 00000001 R field__vehicle_t__navigation
+00000000 00000004 R field__vehicle_t__navigation_id
+00000000 00000004 R field__vehicle_t__next_id
+00000000 00000028 R field__vehicle_t__pending_command
+00000000 00000040 R field__vehicle_t__route
+00000000 00000001 R field__vehicle_t__route_index
+00000000 00000008 R field__vehicle_t__route_ready_raw_us
+00000000 00000008 R field__vehicle_t__route_started_us
+00000000 00000008 R field__vehicle_t__route_step_raw_us
+00000000 00000001 R field__vehicle_t__state
+00000000 00000008 R field__vehicle_t__transition_us
+00000000 00000024 R field__wheel_loop_config_t__geometry
+00000000 00000018 R field__wheel_loop_config_t__motor
+00000000 00000004 R field__wheel_loop_config_t__overspeed_mm_s
+00000000 00000004 R field__wheel_loop_config_t__period_us
+00000000 00000048 R field__wheel_loop_config_t__pid
+00000000 0000001c R field__wheel_loop_config_t__profile
+00000000 00000004 R field__wheel_loop_config_t__progress_timeout_us
+00000000 00000004 R field__wheel_loop_config_t__sample_limit_us
+00000000 00000004 R field__wheel_loop_config_t__stop_dwell_us
+00000000 00000004 R field__wheel_loop_config_t__stop_speed_mm_s
+00000000 00000004 R field__wheel_loop_config_t__stop_timeout_us
+00000000 00000001 R field__wheel_loop_t__b_enabled
+00000000 00000001 R field__wheel_loop_t__b_fault
+00000000 00000002 R field__wheel_loop_t__b_quiet
+00000000 00000002 R field__wheel_loop_t__b_standstill
+00000000 00000002 R field__wheel_loop_t__b_tracking
+00000000 00000001 R field__wheel_loop_t__b_valid
+00000000 000000bc R field__wheel_loop_t__config
+00000000 000000b0 R field__wheel_loop_t__estimator
+00000000 00000010 R field__wheel_loop_t__last_count
+00000000 00000008 R field__wheel_loop_t__last_tick_us
+00000000 00000040 R field__wheel_loop_t__measured
+00000000 00000070 R field__wheel_loop_t__motor
+00000000 00000068 R field__wheel_loop_t__pid
+00000000 00000010 R field__wheel_loop_t__progress_since_us
+00000000 00000010 R field__wheel_loop_t__quiet_since_us
+00000000 00000010 R field__wheel_loop_t__slew_remainder
+00000000 00000010 R field__wheel_loop_t__velocity_um_s
+00000000 00000001 R offset__drv_encoder_port_t__p_context
+00000000 00000009 R offset__drv_encoder_port_t__p_enable
+00000000 0000000d R offset__drv_encoder_port_t__p_release
+00000000 00000005 R offset__drv_encoder_port_t__p_reserve
+00000000 00000011 R offset__drv_motor_channel_t__b_neutral
+00000000 00000002 R offset__drv_motor_channel_t__last_direction
+00000000 00000009 R offset__drv_motor_channel_t__neutral_since_us
+00000000 00000003 R offset__drv_motor_channel_t__pending_direction
+00000000 00000005 R offset__drv_motor_channel_t__pending_level
+00000000 00000001 R offset__drv_motor_channel_t__state
+00000000 00000015 R offset__drv_motor_config_t__b_resources_verified
+00000000 00000014 R offset__drv_motor_config_t__calibration
+00000000 00000001 R offset__drv_motor_config_t__clock_hz
+00000000 0000000d R offset__drv_motor_config_t__max_duty
+00000000 00000011 R offset__drv_motor_config_t__polarity
+00000000 00000005 R offset__drv_motor_config_t__pwm_hz
+00000000 00000009 R offset__drv_motor_config_t__reversal_guard_us
+00000000 00000013 R offset__drv_motor_config_t__zero_mode
+00000000 00000009 R offset__drv_motor_io_t__p_apply
+00000000 00000001 R offset__drv_motor_io_t__p_context
+00000000 00000005 R offset__drv_motor_io_t__p_prepare
+00000000 0000000d R offset__drv_motor_io_t__p_stop_all
+00000000 00000066 R offset__drv_motor_t__b_armed
+00000000 00000067 R offset__drv_motor_t__b_fault
+00000000 00000065 R offset__drv_motor_t__b_initialised
+00000000 00000068 R offset__drv_motor_t__b_prepare_attempted
+00000000 00000069 R offset__drv_motor_t__b_stop_confirmed
+00000000 00000029 R offset__drv_motor_t__channel
+00000000 00000001 R offset__drv_motor_t__config
+00000000 00000063 R offset__drv_motor_t__duty_limit
+00000000 00000019 R offset__drv_motor_t__io
+00000000 00000059 R offset__drv_motor_t__last_time_us
+00000000 00000061 R offset__drv_motor_t__period
+00000000 00000005 R offset__drv_rp2040_t__b_claimed
+00000000 00000003 R offset__drv_rp2040_t__direction
+00000000 00000001 R offset__drv_rp2040_t__period
+00000000 00000039 R offset__enc_capture_sample_t__b_healthy
+00000000 00000031 R offset__enc_capture_sample_t__invalid
+00000000 00000001 R offset__enc_capture_sample_t__sample
+00000000 00000036 R offset__enc_capture_t__b_healthy
+00000000 00000035 R offset__enc_capture_t__b_initialised
+00000000 00000001 R offset__enc_capture_t__decoder
+00000000 00000031 R offset__enc_capture_t__generation
+00000000 0000000d R offset__gpio_bank_client_t__b_enabled
+00000000 00000001 R offset__gpio_bank_client_t__mask
+00000000 00000009 R offset__gpio_bank_client_t__p_context
+00000000 00000005 R offset__gpio_bank_client_t__p_sink
+00000000 00000009 R offset__gpio_bank_io_t__p_core
+00000000 0000000d R offset__gpio_bank_io_t__p_enter
+00000000 00000019 R offset__gpio_bank_io_t__p_fault
+00000000 00000015 R offset__gpio_bank_io_t__p_install
+00000000 00000011 R offset__gpio_bank_io_t__p_leave
+00000000 00000001 R offset__gpio_bank_io_t__p_read
+00000000 00000005 R offset__gpio_bank_io_t__p_write
+00000000 0000003d R offset__gpio_bank_t__allowed_mask
+00000000 00000041 R offset__gpio_bank_t__b_initialised
+00000000 00000042 R offset__gpio_bank_t__b_installed
+00000000 0000001d R offset__gpio_bank_t__clients
+00000000 00000001 R offset__gpio_bank_t__io
+00000000 000000f9 R offset__motion_bus_request_t__ack_id
+00000000 000000d1 R offset__motion_bus_request_t__command
+00000000 00000005 R offset__motion_bus_request_t__config
+00000000 000000c1 R offset__motion_bus_request_t__encoder_port
+00000000 00000001 R offset__motion_bus_request_t__kind
+00000000 00000190 R offset__motion_bus_t__b_cancel
+00000000 0000018e R offset__motion_bus_t__b_inflight
+00000000 0000018d R offset__motion_bus_t__b_pending
+00000000 0000018f R offset__motion_bus_t__b_stop
+00000000 00000189 R offset__motion_bus_t__cancel_id
+00000000 00000001 R offset__motion_bus_t__request
+00000000 00000101 R offset__motion_bus_t__status
+00000000 00000021 R offset__motion_config_t__calibration
+00000000 00000001 R offset__motion_config_t__left
+00000000 0000001d R offset__motion_config_t__max_wheel_speed_mm_s
+00000000 0000000d R offset__motion_config_t__right
+00000000 00000019 R offset__motion_config_t__track_width_um
+00000000 00000001 R offset__motion_config_wheel_t__counts_per_wheel_rev
+00000000 0000000a R offset__motion_config_wheel_t__encoder_polarity
+00000000 00000009 R offset__motion_config_wheel_t__motor_polarity
+00000000 00000005 R offset__motion_config_wheel_t__wheel_circumference_um
+00000000 00000019 R offset__motion_estimator_measurement_t__b_position_valid
+00000000 0000001a R offset__motion_estimator_measurement_t__b_speed_valid
+00000000 00000001 R offset__motion_estimator_measurement_t__position_um
+00000000 00000009 R offset__motion_estimator_measurement_t__speed_mm_s
+00000000 00000011 R offset__motion_estimator_measurement_t__timestamp_us
+00000000 00000001 R offset__motion_estimator_sample_t__count
+00000000 00000011 R offset__motion_estimator_sample_t__generation
+00000000 00000009 R offset__motion_estimator_sample_t__timestamp_us
+00000000 00000053 R offset__motion_estimator_t__b_have_baseline
+00000000 00000052 R offset__motion_estimator_t__b_initialised
+00000000 00000054 R offset__motion_estimator_t__b_reset_required
+00000000 00000005 R offset__motion_estimator_t__circumference_um
+00000000 00000001 R offset__motion_estimator_t__counts_per_wheel_rev
+00000000 00000009 R offset__motion_estimator_t__max_elapsed_us
+00000000 00000029 R offset__motion_estimator_t__measurement
+00000000 00000011 R offset__motion_estimator_t__previous
+00000000 00000049 R offset__motion_estimator_t__remainder
+00000000 00000051 R offset__motion_estimator_t__result
+00000000 00000021 R offset__motion_pid_config_t__calibration
+00000000 00000009 R offset__motion_pid_config_t__derivative_gain
+00000000 00000005 R offset__motion_pid_config_t__integral_gain
+00000000 00000019 R offset__motion_pid_config_t__integral_max
+00000000 00000015 R offset__motion_pid_config_t__integral_min
+00000000 0000001d R offset__motion_pid_config_t__max_elapsed_us
+00000000 00000011 R offset__motion_pid_config_t__output_max
+00000000 0000000d R offset__motion_pid_config_t__output_min
+00000000 00000001 R offset__motion_pid_config_t__proportional_gain
+00000000 00000031 R offset__motion_pid_t__b_have_measurement
+00000000 00000032 R offset__motion_pid_t__b_initialised
+00000000 00000001 R offset__motion_pid_t__config
+00000000 00000025 R offset__motion_pid_t__integral
+00000000 00000029 R offset__motion_pid_t__previous_measurement_mm_s
+00000000 0000002d R offset__motion_pid_t__previous_target_mm_s
+00000000 00000011 R offset__motion_quad_t__b_count_limit
+00000000 00000010 R offset__motion_quad_t__b_have_state
+00000000 0000000f R offset__motion_quad_t__b_initialised
+00000000 00000001 R offset__motion_quad_t__count
+00000000 00000009 R offset__motion_quad_t__invalid_transitions
+00000000 0000000d R offset__motion_quad_t__polarity
+00000000 0000000e R offset__motion_quad_t__previous_ab
+00000000 0000000d R offset__motion_run_status_t__active_id
+00000000 00000011 R offset__motion_run_status_t__active_kind
+00000000 00000085 R offset__motion_run_status_t__b_encoder_valid
+00000000 00000061 R offset__motion_run_status_t__b_measurement_valid
+00000000 00000029 R offset__motion_run_status_t__b_request_accepted
+00000000 00000062 R offset__motion_run_status_t__b_standstill
+00000000 00000063 R offset__motion_run_status_t__b_stop_command_confirmed
+00000000 00000069 R offset__motion_run_status_t__encoder_count
+00000000 00000081 R offset__motion_run_status_t__encoder_generation
+00000000 00000079 R offset__motion_run_status_t__encoder_timestamp_us
+00000000 0000001a R offset__motion_run_status_t__fault_result
+00000000 0000001d R offset__motion_run_status_t__last_request_id
+00000000 00000021 R offset__motion_run_status_t__last_request_issued_us
+00000000 00000039 R offset__motion_run_status_t__measurement_max_age_us
+00000000 00000031 R offset__motion_run_status_t__measurement_timestamp_us
+00000000 00000041 R offset__motion_run_status_t__position_um
+00000000 00000051 R offset__motion_run_status_t__speed_mm_s
+00000000 00000009 R offset__motion_run_status_t__state
+00000000 00000059 R offset__motion_run_status_t__target_mm_s
+00000000 00000015 R offset__motion_run_status_t__terminal_id
+00000000 00000019 R offset__motion_run_status_t__terminal_result
+00000000 00000001 R offset__motion_run_status_t__timestamp_us
+00000000 000003d6 R offset__motion_run_t__b_initialised
+00000000 000003c1 R offset__motion_run_t__deadline_us
+00000000 000003d1 R offset__motion_run_t__last_id
+00000000 00000001 R offset__motion_run_t__loop
+00000000 000003d5 R offset__motion_run_t__pending_result
+00000000 000002f1 R offset__motion_run_t__plan
+00000000 00000339 R offset__motion_run_t__status
+00000000 000003c9 R offset__motion_run_t__stopping_since_us
+00000000 00000021 R offset__move_plan_command_t__cruise_mm_s
+00000000 0000001d R offset__move_plan_command_t__distance_um
+00000000 00000001 R offset__move_plan_command_t__id
+00000000 00000009 R offset__move_plan_command_t__issued_us
+00000000 00000005 R offset__move_plan_command_t__kind
+00000000 00000015 R offset__move_plan_command_t__left_mm_s
+00000000 00000011 R offset__move_plan_command_t__lifetime_us
+00000000 00000019 R offset__move_plan_command_t__right_mm_s
+00000000 00000001 R offset__move_plan_config_t__accel_mm_s2
+00000000 00000015 R offset__move_plan_config_t__correction_gain
+00000000 00000019 R offset__move_plan_config_t__correction_limit_mm_s
+00000000 00000005 R offset__move_plan_config_t__decel_mm_s2
+00000000 00000009 R offset__move_plan_config_t__tolerance_um
+00000000 0000000d R offset__move_plan_config_t__turn_scale_ppm
+00000000 00000041 R offset__move_plan_t__b_finite
+00000000 00000042 R offset__move_plan_t__b_initialised
+00000000 00000001 R offset__move_plan_t__command
+00000000 00000039 R offset__move_plan_t__goal_um
+00000000 00000029 R offset__move_plan_t__origin_um
+00000000 00000001 R offset__SAMPLE_MSG__hdr
+00000000 00000011 R offset__SAMPLE_MSG__prc
+00000000 00000005 R offset__SAMPLE_MSG__seq
+00000000 00000009 R offset__SAMPLE_MSG__time_ms
+00000000 0000000d R offset__SAMPLE_MSG__value
+00000000 00000023 R offset__vehicle_config_t__b_calibrated
+00000000 00000024 R offset__vehicle_config_t__b_power_authorised
+00000000 00000025 R offset__vehicle_config_t__b_uturn_right
+00000000 00000005 R offset__vehicle_config_t__command_ttl_us
+00000000 00000015 R offset__vehicle_config_t__correction_mm_s
+00000000 00000011 R offset__vehicle_config_t__forward_mm_s
+00000000 00000021 R offset__vehicle_config_t__obstacle_stop_cm
+00000000 0000000d R offset__vehicle_config_t__remote_age_ms
+00000000 00000029 R offset__vehicle_config_t__route
+00000000 00000001 R offset__vehicle_config_t__sensor_age_us
+00000000 0000001d R offset__vehicle_config_t__straight_um
+00000000 00000009 R offset__vehicle_config_t__transition_timeout_us
+00000000 00000019 R offset__vehicle_config_t__turn_mm_s
+00000000 00000197 R offset__vehicle_input_t__b_counts_valid
+00000000 00000199 R offset__vehicle_input_t__b_estop
+00000000 0000016d R offset__vehicle_input_t__b_forward_valid
+00000000 00000195 R offset__vehicle_input_t__b_imu_available
+00000000 00000192 R offset__vehicle_input_t__b_line_available
+00000000 00000193 R offset__vehicle_input_t__b_line_calibrated
+00000000 00000194 R offset__vehicle_input_t__b_line_valid
+00000000 00000198 R offset__vehicle_input_t__b_link_up
+00000000 00000191 R offset__vehicle_input_t__b_motion_available
+00000000 00000196 R offset__vehicle_input_t__b_obstacle_available
+00000000 0000019a R offset__vehicle_input_t__b_provider_fault
+00000000 00000169 R offset__vehicle_input_t__b_scan_held
+00000000 000000c4 R offset__vehicle_input_t__black_mask
+00000000 00000109 R offset__vehicle_input_t__clearance
+00000000 00000181 R offset__vehicle_input_t__encoder_count
+00000000 0000016b R offset__vehicle_input_t__forward_cm
+00000000 000000c5 R offset__vehicle_input_t__imu
+00000000 000000c1 R offset__vehicle_input_t__line
+00000000 000000c3 R offset__vehicle_input_t__line_mode
+00000000 000000c2 R offset__vehicle_input_t__line_state
+00000000 000000b9 R offset__vehicle_input_t__line_time_us
+00000000 00000011 R offset__vehicle_input_t__motion
+00000000 000000a1 R offset__vehicle_input_t__navigation
+00000000 000000b1 R offset__vehicle_input_t__navigation_id
+00000000 00000001 R offset__vehicle_input_t__now_us
+00000000 000000f5 R offset__vehicle_input_t__obstacle
+00000000 00000171 R offset__vehicle_input_t__obstacle_started_us
+00000000 00000179 R offset__vehicle_input_t__obstacle_time_us
+00000000 000000b5 R offset__vehicle_input_t__pending_navigation_id
+00000000 00000009 R offset__vehicle_input_t__raw_now_us
+00000000 00000099 R offset__vehicle_input_t__remote
+00000000 00000161 R offset__vehicle_input_t__scan_completed_us
+00000000 00000159 R offset__vehicle_input_t__scan_id_us
+00000000 0000002a R offset__vehicle_odometry_t__b_baseline
+00000000 0000002b R offset__vehicle_odometry_t__b_previous_forward
+00000000 0000002c R offset__vehicle_odometry_t__b_tracking_forward
+00000000 00000019 R offset__vehicle_odometry_t__distance_um
+00000000 00000029 R offset__vehicle_odometry_t__half_um
+00000000 00000001 R offset__vehicle_odometry_t__previous_um
+00000000 00000011 R offset__vehicle_odometry_t__previous_us
+00000000 00000021 R offset__vehicle_odometry_t__raw_timestamp_us
+00000000 00000029 R offset__vehicle_output_t__acknowledge_id
+00000000 0000003a R offset__vehicle_output_t__b_command
+00000000 0000003b R offset__vehicle_output_t__b_enable
+00000000 0000003d R offset__vehicle_output_t__b_estop
+00000000 0000003e R offset__vehicle_output_t__b_mode
+00000000 0000003c R offset__vehicle_output_t__b_stop
+00000000 00000001 R offset__vehicle_output_t__command
+00000000 00000039 R offset__vehicle_output_t__mode
+00000000 0000002d R offset__vehicle_output_t__navigation_done_id
+00000000 00000031 R offset__vehicle_output_t__obstacle_recovered_us
+00000000 000001ad R offset__vehicle_setup_t__b_obstacle_requested
+00000000 00000001 R offset__vehicle_setup_t__mission
+00000000 00000061 R offset__vehicle_setup_t__motion
+00000000 0000011d R offset__vehicle_setup_t__navigation
+00000000 00000171 R offset__vehicle_setup_t__obstacle
+00000000 0000006d R offset__vehicle_t__active_id
+00000000 00000091 R offset__vehicle_t__b_initialised
+00000000 00000097 R offset__vehicle_t__b_line_found
+00000000 0000011a R offset__vehicle_t__b_obstacle_pending
+00000000 00000093 R offset__vehicle_t__b_pause_requested
+00000000 00000096 R offset__vehicle_t__b_pending_command
+00000000 00000095 R offset__vehicle_t__b_recovery_required
+00000000 0000011b R offset__vehicle_t__b_route_active
+00000000 0000011e R offset__vehicle_t__b_route_finishing
+00000000 0000011d R offset__vehicle_t__b_route_found
+00000000 0000011c R offset__vehicle_t__b_route_terminal
+00000000 00000092 R offset__vehicle_t__b_run_requested
+00000000 00000094 R offset__vehicle_t__b_turn_completed
+00000000 00000065 R offset__vehicle_t__blockers
+00000000 00000001 R offset__vehicle_t__config
+00000000 00000075 R offset__vehicle_t__last_navigation_id
+00000000 00000089 R offset__vehicle_t__last_now_us
+00000000 00000079 R offset__vehicle_t__navigation
+00000000 00000071 R offset__vehicle_t__navigation_id
+00000000 00000069 R offset__vehicle_t__next_id
+00000000 00000099 R offset__vehicle_t__pending_command
+00000000 000000c1 R offset__vehicle_t__route
+00000000 00000119 R offset__vehicle_t__route_index
+00000000 00000111 R offset__vehicle_t__route_ready_raw_us
+00000000 00000101 R offset__vehicle_t__route_started_us
+00000000 00000109 R offset__vehicle_t__route_step_raw_us
+00000000 00000061 R offset__vehicle_t__state
+00000000 00000081 R offset__vehicle_t__transition_us
+00000000 00000001 R offset__wheel_loop_config_t__geometry
+00000000 00000025 R offset__wheel_loop_config_t__motor
+00000000 000000b9 R offset__wheel_loop_config_t__overspeed_mm_s
+00000000 000000a1 R offset__wheel_loop_config_t__period_us
+00000000 0000003d R offset__wheel_loop_config_t__pid
+00000000 00000085 R offset__wheel_loop_config_t__profile
+00000000 000000b1 R offset__wheel_loop_config_t__progress_timeout_us
+00000000 000000a5 R offset__wheel_loop_config_t__sample_limit_us
+00000000 000000a9 R offset__wheel_loop_config_t__stop_dwell_us
+00000000 000000b5 R offset__wheel_loop_config_t__stop_speed_mm_s
+00000000 000000ad R offset__wheel_loop_config_t__stop_timeout_us
+00000000 000002e8 R offset__wheel_loop_t__b_enabled
+00000000 000002e9 R offset__wheel_loop_t__b_fault
+00000000 000002e1 R offset__wheel_loop_t__b_quiet
+00000000 000002e3 R offset__wheel_loop_t__b_standstill
+00000000 000002e5 R offset__wheel_loop_t__b_tracking
+00000000 000002e7 R offset__wheel_loop_t__b_valid
+00000000 00000001 R offset__wheel_loop_t__config
+00000000 00000131 R offset__wheel_loop_t__estimator
+00000000 000002a9 R offset__wheel_loop_t__last_count
+00000000 000002d9 R offset__wheel_loop_t__last_tick_us
+00000000 00000249 R offset__wheel_loop_t__measured
+00000000 000000c1 R offset__wheel_loop_t__motor
+00000000 000001e1 R offset__wheel_loop_t__pid
+00000000 000002c9 R offset__wheel_loop_t__progress_since_us
+00000000 000002b9 R offset__wheel_loop_t__quiet_since_us
+00000000 00000299 R offset__wheel_loop_t__slew_remainder
+00000000 00000289 R offset__wheel_loop_t__velocity_um_s
+00000000 00000010 R size__drv_encoder_port_t
+00000000 00000018 R size__drv_motor_channel_t
+00000000 00000018 R size__drv_motor_config_t
+00000000 00000010 R size__drv_motor_io_t
+00000000 00000070 R size__drv_motor_t
+00000000 00000006 R size__drv_rp2040_t
+00000000 00000040 R size__enc_capture_sample_t
+00000000 00000038 R size__enc_capture_t
+00000000 00000010 R size__gpio_bank_client_t
+00000000 0000001c R size__gpio_bank_io_t
+00000000 00000044 R size__gpio_bank_t
+00000000 00000100 R size__motion_bus_request_t
+00000000 00000190 R size__motion_bus_t
+00000000 00000024 R size__motion_config_t
+00000000 0000000c R size__motion_config_wheel_t
+00000000 00000020 R size__motion_estimator_measurement_t
+00000000 00000018 R size__motion_estimator_sample_t
+00000000 00000058 R size__motion_estimator_t
+00000000 00000024 R size__motion_pid_config_t
+00000000 00000034 R size__motion_pid_t
+00000000 00000018 R size__motion_quad_t
+00000000 00000088 R size__motion_run_status_t
+00000000 000003d8 R size__motion_run_t
+00000000 00000028 R size__move_plan_command_t
+00000000 0000001c R size__move_plan_config_t
+00000000 00000048 R size__move_plan_t
+00000000 00000014 R size__SAMPLE_MSG
+00000000 00000060 R size__vehicle_config_t
+00000000 000001a0 R size__vehicle_input_t
+00000000 00000030 R size__vehicle_odometry_t
+00000000 00000040 R size__vehicle_output_t
+00000000 000001b0 R size__vehicle_setup_t
+00000000 00000120 R size__vehicle_t
+00000000 000000bc R size__wheel_loop_config_t
+00000000 000002f0 R size__wheel_loop_t
+00000000 n wm4.0.9e4e1f006ed6da4347cc5c92495cfbb6
+00000000 n wm4.app.h.28.c8f8d0c78007d3bb415d3856e5209b1b
+00000000 n wm4.config.h.20.ca3654fed1d7ec08e36d688ad3ec0c9a
+00000000 n wm4.config_func.h.20.b1b50d3a41faa92d700ae2aa93fd4f98
+00000000 n wm4.cpudef.h.21.a748d5f5f585da89a81104feb68a1d7a
+00000000 n wm4.drv_barcode.h.7.86de57196cec354d9a35d66b0eaffd32
+00000000 n wm4.drv_motor.h.15.35247f8f4bd627f4432360728faf288a
+00000000 n wm4.drv_navigation_map.h.7.381f9857db582da44a27a28cd3d5b958
+00000000 n wm4.enc_capture.h.9.13e65793c8a4411a92c23988694f7676
+00000000 n wm4.errno.h.73.554eed40f045cc1bc256cb017ab9a5b2
+00000000 n wm4.float.h.29.0e9d9baf95ec39f9555dc80c6e28186b
+00000000 n wm4.gpio_bank.h.7.6ee49d617ba913fb3c201671b552bca5
+00000000 n wm4.imu_core.h.6.62b396abe0b2217c1ddb7583451c24d5
+00000000 n wm4.knldef.h.20.4a78295d4f0391d2896324eeefdbd566
+00000000 n wm4.libbsp.h.15.6d49712f2cd945426949349bcb74e006
+00000000 n wm4.libbsp.h.20.406b73fbfa9e3cae1fe2a59fd6f1b3c4
+00000000 n wm4.machine.h.21.b5c046aa2bdbb413c9da6efc3aeb5358
+00000000 n wm4.machine.h.21.d90df9fa31c3b9630711caec8751e7ab
+00000000 n wm4.machine.h.68.070b132b96d8ad67e4b68f2db4e269c4
+00000000 n wm4.member3_navigation.h.16.b98a2b164a58a8fb91c87ad86555720a
+00000000 n wm4.motion_config.h.10.08b8e910ef3c5072d58e31865dc3580b
+00000000 n wm4.profile.h.21.d11b00a25a581b336ea1a5a9f02f2fc3
+00000000 n wm4.profile.h.31.853046e7ca494d7060ce5fc376742aeb
+00000000 n wm4.profile.h.35.8377f45187ea858906b66c74b5cfee2d
+00000000 n wm4.profile.h.44.24e9d8c6fb44256a0b70d13e18f7a2a2
+00000000 n wm4.s1_codec.h.14.cad688d5e972a784aebaf829e65a0b98
+00000000 n wm4.s5_obstacle_logic.h.8.db758d87f2c1807962377fa981ad3b8a
+00000000 n wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+00000000 n wm4.stddef.h.39.144cf5ddcd53cbfdac30259dc1a6c87f
+00000000 n wm4.stdintgcc.h.29.6d480f4ba0f60596e88234283d42444f
+00000000 n wm4.subsystem2.h.19.0e74821f2bdafa43adfcd1e7b117fc83
+00000000 n wm4.syscall.h.21.0aebae7df9a5a71d711f8e3eadd3661e
+00000000 n wm4.syscall.h.521.9cf93cc6cad055387535aa6d42bf8d6a
+00000000 n wm4.sysdef.h.22.18cb3c0f1610213919f43aa9a5a5e771
+00000000 n wm4.sysdef.h.22.e0fe852ff5d8ce06bea80527695140f0
+00000000 n wm4.sysdef.h.34.e001322deb05ae8e01b524f59f5092c6
+00000000 n wm4.sysdef.h.36.55666e8d5a00208b1495a4cc6e5848b3
+00000000 n wm4.syslib.h.23.49c2a5fd8e7a5136afb3f5313e587ab6
+00000000 n wm4.syslib.h.33.b0de4c9c6c71833d83c7255941c69b3d
+00000000 n wm4.syslib.h.45.392bfea1e542f50ae468b14cfe327ccd
+00000000 n wm4.typedef.h.21.ef505cdbc66a6895a4ba61ff011a942d
+00000000 n wm4.vehicle.h.19.d3234b7dc3a71c9f4123a64c0323679c
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-size.exe" C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\build_make\mtk3pico_smp1_usb_cdc_wifi.elf
+   text	   data	    bss	    dec	    hex	filename
+ 345364	     92	  45092	 390548	  5f594	C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\build_make\mtk3pico_smp1_usb_cdc_wifi.elf
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-size.exe" C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\build_make\mtk3pico_smp1_usb_cdc_wifi_imu.elf
+   text	   data	    bss	    dec	    hex	filename
+ 359528	   1168	  45104	 405800	  63128	C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\build_make\mtk3pico_smp1_usb_cdc_wifi_imu.elf
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-size.exe" C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\build_make\mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_imu.elf
+   text	   data	    bss	    dec	    hex	filename
+ 418936	   1176	 102760	 522872	  7fa78	C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\build_make\mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_imu.elf
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-size.exe" C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\build_make\mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_test_imu.elf
+   text	   data	    bss	    dec	    hex	filename
+ 492064	   1176	 111604	 604844	  93aac	C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\build_make\mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_test_imu.elf
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-size.exe" C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\build_make\mtk3pico_smp1_usb_cdc_wifi_test.elf
+   text	   data	    bss	    dec	    hex	filename
+ 434024	   1160	  53940	 489124	  776a4	C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\build_make\mtk3pico_smp1_usb_cdc_wifi_test.elf
+EXIT 0
+"C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\gcc-arm-none-eabi\bin\arm-none-eabi-size.exe" C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\build_make\mtk3pico_smp1_usb_cdc_wifi_test_imu.elf
+   text	   data	    bss	    dec	    hex	filename
+ 436688	   1168	  53948	 491804	  7811c	C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\build_make\mtk3pico_smp1_usb_cdc_wifi_test_imu.elf
+EXIT 0

@@ -1,0 +1,78 @@
+"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe" -IC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\minbits_candidate_review\app_program -mcpu=cortex-m0plus -mthumb -ffreestanding -std=gnu11 -O2 -g3 -MMD -MP -mfloat-abi=soft -DCNF_SMP=1 -DAPP_TEST=1 -DTM_CONSOLE_UART=0 -DBOARD_UART0_FREE=1 -DTM_CONSOLE_USB_CDC=1 -DNDEBUG -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/tinyusb/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -DTM_WIFI_CYW43=1 -DCYW43_LWIP=0 -DCYW43_ENABLE_BLUETOOTH=0 -DCYW43_USE_OTP_MAC=1 -DPICO_CYW43_LOGGING_ENABLED=0 -DPICO_RP2040=1 -DPICO_32BIT=1 -DPICO_ON_DEVICE=1 -DPICO_BUILD=1 -DPICO_NO_HARDWARE=0 -DRASPBERRYPI_PICO_W=1 -DCYW43_DEFAULT_PIN_WL_REG_ON=23u -DCYW43_DEFAULT_PIN_WL_DATA_OUT=24u -DCYW43_DEFAULT_PIN_WL_DATA_IN=24u -DCYW43_DEFAULT_PIN_WL_HOST_WAKE=24u -DCYW43_DEFAULT_PIN_WL_CLOCK=29u -DCYW43_DEFAULT_PIN_WL_CS=25u -DNDEBUG -ffunction-sections -fdata-sections -I../lib/libwifi/sysdepend/pico_rp2040 -I../lib/libtm/sysdepend/pico_rp2040/usb -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/src -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/lib/cyw43-driver/firmware -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_cyw43_driver/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/boards/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_base_headers/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/hardware_claim/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_binary_info/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/common/pico_util/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/pico_platform/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_regs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2040/hardware_structs/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_common/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_compiler/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_sections/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/pico_platform_panic/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_base/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_pio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_gpio/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_dma/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_irq/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_sync_spin_lock/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_clocks/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_resets/include -IC:/PROGRA~1/RASPBE~2/PICOSD~1.1/pico-sdk/src/rp2_common/hardware_timer/include -D_PICO_RP2040_ -I../include -I../config -I../kernel/knlinc -MFC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\minbits_candidate_review\build_make\review_sizes.d -MTC:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\minbits_candidate_review\build_make\review_sizes.o -c -o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\minbits_candidate_review\build_make\review_sizes.o C:\Users\Hp\Documents\GitHub\INF2004-Embedded-Systems\testing\subsystem2\build\minbits_candidate_review\build_make\review_sizes.c
+00000000 00000010 R review_size__drv_encoder_port_t
+00000000 00000018 R review_size__drv_motor_channel_t
+00000000 00000018 R review_size__drv_motor_config_t
+00000000 00000010 R review_size__drv_motor_io_t
+00000000 00000068 R review_size__drv_motor_t
+00000000 00000006 R review_size__drv_rp2040_t
+00000000 00000040 R review_size__enc_capture_sample_t
+00000000 00000028 R review_size__enc_capture_t
+00000000 00000010 R review_size__gpio_bank_client_t
+00000000 0000001c R review_size__gpio_bank_io_t
+00000000 00000044 R review_size__gpio_bank_t
+00000000 000000d8 R review_size__motion_bus_request_t
+00000000 00000168 R review_size__motion_bus_t
+00000000 00000024 R review_size__motion_config_t
+00000000 0000000c R review_size__motion_config_wheel_t
+00000000 00000020 R review_size__motion_estimator_measurement_t
+00000000 00000018 R review_size__motion_estimator_sample_t
+00000000 00000058 R review_size__motion_estimator_t
+00000000 00000024 R review_size__motion_pid_config_t
+00000000 00000034 R review_size__motion_pid_t
+00000000 00000010 R review_size__motion_quad_t
+00000000 00000088 R review_size__motion_run_status_t
+00000000 000003c8 R review_size__motion_run_t
+00000000 00000028 R review_size__move_plan_command_t
+00000000 0000001c R review_size__move_plan_config_t
+00000000 00000048 R review_size__move_plan_t
+00000000 00000014 R review_size__SAMPLE_MSG
+00000000 0000005c R review_size__vehicle_config_t
+00000000 00000198 R review_size__vehicle_input_t
+00000000 00000030 R review_size__vehicle_odometry_t
+00000000 00000040 R review_size__vehicle_output_t
+00000000 000001ac R review_size__vehicle_setup_t
+00000000 00000118 R review_size__vehicle_t
+00000000 000000bc R review_size__wheel_loop_config_t
+00000000 000002e0 R review_size__wheel_loop_t
+00000000 n wm4.0.9e4e1f006ed6da4347cc5c92495cfbb6
+00000000 n wm4.app.h.28.c8f8d0c78007d3bb415d3856e5209b1b
+00000000 n wm4.config.h.20.ca3654fed1d7ec08e36d688ad3ec0c9a
+00000000 n wm4.config_func.h.20.b1b50d3a41faa92d700ae2aa93fd4f98
+00000000 n wm4.cpudef.h.21.a748d5f5f585da89a81104feb68a1d7a
+00000000 n wm4.drv_barcode.h.7.86de57196cec354d9a35d66b0eaffd32
+00000000 n wm4.drv_motor.h.15.35247f8f4bd627f4432360728faf288a
+00000000 n wm4.drv_navigation_map.h.7.381f9857db582da44a27a28cd3d5b958
+00000000 n wm4.enc_capture.h.9.13e65793c8a4411a92c23988694f7676
+00000000 n wm4.errno.h.73.554eed40f045cc1bc256cb017ab9a5b2
+00000000 n wm4.float.h.29.0e9d9baf95ec39f9555dc80c6e28186b
+00000000 n wm4.gpio_bank.h.7.6ee49d617ba913fb3c201671b552bca5
+00000000 n wm4.imu_core.h.6.62b396abe0b2217c1ddb7583451c24d5
+00000000 n wm4.knldef.h.20.4a78295d4f0391d2896324eeefdbd566
+00000000 n wm4.libbsp.h.15.6d49712f2cd945426949349bcb74e006
+00000000 n wm4.libbsp.h.20.406b73fbfa9e3cae1fe2a59fd6f1b3c4
+00000000 n wm4.machine.h.21.b5c046aa2bdbb413c9da6efc3aeb5358
+00000000 n wm4.machine.h.21.d90df9fa31c3b9630711caec8751e7ab
+00000000 n wm4.machine.h.68.070b132b96d8ad67e4b68f2db4e269c4
+00000000 n wm4.member3_navigation.h.16.b98a2b164a58a8fb91c87ad86555720a
+00000000 n wm4.motion_config.h.10.08b8e910ef3c5072d58e31865dc3580b
+00000000 n wm4.profile.h.21.d11b00a25a581b336ea1a5a9f02f2fc3
+00000000 n wm4.profile.h.31.853046e7ca494d7060ce5fc376742aeb
+00000000 n wm4.profile.h.35.8377f45187ea858906b66c74b5cfee2d
+00000000 n wm4.profile.h.44.24e9d8c6fb44256a0b70d13e18f7a2a2
+00000000 n wm4.s1_codec.h.14.cad688d5e972a784aebaf829e65a0b98
+00000000 n wm4.s5_obstacle_logic.h.8.db758d87f2c1807962377fa981ad3b8a
+00000000 n wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+00000000 n wm4.stddef.h.39.144cf5ddcd53cbfdac30259dc1a6c87f
+00000000 n wm4.stdintgcc.h.29.6d480f4ba0f60596e88234283d42444f
+00000000 n wm4.subsystem2.h.19.0e74821f2bdafa43adfcd1e7b117fc83
+00000000 n wm4.syscall.h.21.0aebae7df9a5a71d711f8e3eadd3661e
+00000000 n wm4.syscall.h.521.9cf93cc6cad055387535aa6d42bf8d6a
+00000000 n wm4.sysdef.h.22.18cb3c0f1610213919f43aa9a5a5e771
+00000000 n wm4.sysdef.h.22.e0fe852ff5d8ce06bea80527695140f0
+00000000 n wm4.sysdef.h.34.e001322deb05ae8e01b524f59f5092c6
+00000000 n wm4.sysdef.h.36.55666e8d5a00208b1495a4cc6e5848b3
+00000000 n wm4.syslib.h.23.49c2a5fd8e7a5136afb3f5313e587ab6
+00000000 n wm4.syslib.h.33.b0de4c9c6c71833d83c7255941c69b3d
+00000000 n wm4.syslib.h.45.392bfea1e542f50ae468b14cfe327ccd
+00000000 n wm4.typedef.h.21.ef505cdbc66a6895a4ba61ff011a942d
+00000000 n wm4.vehicle.h.19.d3234b7dc3a71c9f4123a64c0323679c

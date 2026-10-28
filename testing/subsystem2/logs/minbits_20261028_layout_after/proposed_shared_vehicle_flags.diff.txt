@@ -1,0 +1,50 @@
+--- a/app_program/vehicle.h
++++ b/app_program/vehicle.h
+@@ -33,9 +33,9 @@
+     int32_t turn_mm_s;
+     int32_t straight_um;
+     uint16_t obstacle_stop_cm;
+-    bool b_calibrated;
+-    bool b_power_authorised;
+-    bool b_uturn_right;
++    bool b_calibrated : 1;
++    bool b_power_authorised : 1;
++    bool b_uturn_right : 1;
+     s5_route_config_t route; /* Optional; all zero means disabled. */
+ } vehicle_config_t;
+ 
+@@ -58,22 +58,22 @@
+     s5_clearance_t clearance;
+     uint64_t scan_id_us;
+     uint64_t scan_completed_us;
+-    bool b_scan_held;
++    bool b_scan_held : 1;
+     uint16_t forward_cm;
+-    bool b_forward_valid;
++    bool b_forward_valid : 1;
+     uint64_t obstacle_started_us;
+     uint64_t obstacle_time_us; /* Raw timer domain, checked by provider. */
+     int64_t encoder_count[2]; /* Actual counts, never reconstructed distance. */
+-    bool b_motion_available;
+-    bool b_line_available;
+-    bool b_line_calibrated;
+-    bool b_line_valid;
+-    bool b_imu_available;
+-    bool b_obstacle_available;
+-    bool b_counts_valid;
+-    bool b_link_up;
+-    bool b_estop;
+-    bool b_provider_fault;
++    bool b_motion_available : 1;
++    bool b_line_available : 1;
++    bool b_line_calibrated : 1;
++    bool b_line_valid : 1;
++    bool b_imu_available : 1;
++    bool b_obstacle_available : 1;
++    bool b_counts_valid : 1;
++    bool b_link_up : 1;
++    bool b_estop : 1;
++    bool b_provider_fault : 1;
+ } vehicle_input_t;
+ 
+ typedef struct

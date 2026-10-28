@@ -138,8 +138,10 @@ def verify_host(opts, out, scratch):
             run(flags + list(map(str,pure)) + ['-o',str(exe)],log,scratch)
             output = run([str(exe)],log,scratch,opts.host_timeout)
             ids = re.findall(r'^\[TEST\] (S2-U\d+) PASS ',output,re.M)
-            if len(ids)!=95 or set(ids)!={f'S2-U{i:02}' for i in range(3,98)}:
-                raise SystemExit('Expected 95 distinct pure groups')
+            expected = {f'S2-U{i:02}' for i in range(3,98)} | {
+                f'S2-U{i}' for i in range(141,144)}
+            if len(ids)!=98 or set(ids)!=expected:
+                raise SystemExit('Expected 98 distinct pure groups')
             exe = scratch/('rtos_'+profile+'.exe')
             run(flags + ['-DMOTION_RTOS_HOST_TEST'] + list(map(str,adapter)) +
                 ['-o',str(exe)],log,scratch)
@@ -148,7 +150,7 @@ def verify_host(opts, out, scratch):
                 ids = re.findall(r'^\[TEST\] (S2-U\d+) PASS ',output,re.M)
                 if ids != [f'S2-U{case}']:
                     raise SystemExit('Missing/duplicate adapter test ID')
-            print(profile, 'PASS: 95 pure + 43 adapter/lifecycle/feedback groups')
+            print(profile, 'PASS: 98 pure + 43 adapter/lifecycle/feedback groups')
     with (out/f'verify_{opts.label}_checks.log').open('x') as log:
         host_checks(log,scratch,adapter,opts.host_timeout)
     print('Timeout, host-only guards and 8 focused mutations PASS')

@@ -1,0 +1,60 @@
+[
+  {
+    "profile": "default",
+    "options": [],
+    "exit": 0,
+    "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 354360\t     92\t  45220\t 399672\t  61938\tC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build_make\\mtk3pico_smp1_usb_cdc_wifi.elf\n",
+    "sha256": "0ac60e4576b2f1c01a7dc4ddc7d5b22c4692f5d5678b3503f07579e09c108e43"
+  },
+  {
+    "profile": "test",
+    "options": [
+      "TEST=1"
+    ],
+    "exit": 0,
+    "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 452924\t   1160\t  54100\t 508184\t  7c118\tC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build_make\\mtk3pico_smp1_usb_cdc_wifi_test.elf\n",
+    "sha256": "3f1ee7ef880ef0f9a2be7a93a1553fb3c327ac704131e79663f60f02533595a5"
+  },
+  {
+    "profile": "imu",
+    "options": [
+      "S4_IMU=1"
+    ],
+    "exit": 0,
+    "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 369044\t   1168\t  45232\t 415444\t  656d4\tC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build_make\\mtk3pico_smp1_usb_cdc_wifi_imu.elf\n",
+    "sha256": "cb767e4028e835a25bba258fbe1ebae949cb92110d3137c905352176dcb52f50"
+  },
+  {
+    "profile": "imu_test",
+    "options": [
+      "S4_IMU=1",
+      "TEST=1"
+    ],
+    "exit": 0,
+    "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 455684\t   1168\t  54108\t 510960\t  7cbf0\tC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build_make\\mtk3pico_smp1_usb_cdc_wifi_test_imu.elf\n",
+    "sha256": "8ebf384e38b704478e6b4f79ff6b57601cf30b1808f0a79b925c47cde6a3e6ab"
+  },
+  {
+    "profile": "mqtt",
+    "options": [
+      "NET=lwip",
+      "MQTT=1",
+      "S4_IMU=1"
+    ],
+    "exit": 0,
+    "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 426948\t   1176\t 102888\t 531012\t  81a44\tC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build_make\\mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_imu.elf\n",
+    "sha256": "0f3621c49e642a16d0e47221bb276c42ca5f63cf431b9c5b0450e6e0d6242847"
+  },
+  {
+    "profile": "mqtt_test",
+    "options": [
+      "NET=lwip",
+      "MQTT=1",
+      "S4_IMU=1",
+      "TEST=1"
+    ],
+    "exit": 0,
+    "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 511060\t   1176\t 111764\t 624000\t  98580\tC:\\Users\\Hp\\Documents\\GitHub\\INF2004-Embedded-Systems\\build_make\\mtk3pico_smp1_usb_cdc_wifi_lwip_mqtt_test_imu.elf\n",
+    "sha256": "78e2ed8c3c9441b5dacf660cc842709cd557f9127f08a9f04904652105311a8d"
+  }
+]

@@ -95,12 +95,13 @@ typedef struct
     uint64_t last_time_us;
     uint16_t period;
     uint16_t duty_limit;
-    bool b_initialised;
-    bool b_armed;
-    bool b_fault;
-    bool b_prepare_attempted;
+    /* Owner-only flags, never a wire format or independent atomic fields. */
+    bool b_initialised : 1;
+    bool b_armed : 1;
+    bool b_fault : 1;
+    bool b_prepare_attempted : 1;
     /* Backend confirms a stop COMMAND, never physical standstill/current. */
-    bool b_stop_confirmed;
+    bool b_stop_confirmed : 1;
 } drv_motor_t;
 
 /** @brief Validate and copy immutable settings; performs NO hardware access. */

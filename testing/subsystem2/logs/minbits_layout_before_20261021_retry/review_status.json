@@ -1,0 +1,12 @@
+{
+  "source_revision": "d4c91f271c9801802e3994967c96e9ec8fcba38c",
+  "production_diff": "",
+  "candidate_application": "ignored isolated source tree only",
+  "limitations": [
+    "No on-target execution",
+    "No physical calibration",
+    "Candidate not linked as firmware",
+    "New representation-specific tests pending implementation",
+    "Full numeric-range inventory unresolved"
+  ]
+}

@@ -11,11 +11,24 @@ typedef enum
 } motion_bus_kind_t;
 typedef struct
 {
-    motion_bus_kind_t kind;
     wheel_loop_config_t config;
     drv_encoder_port_t encoder_port;
+} motion_bus_config_t;
+
+/* One active variant, selected only after validating the full-width tag.
+ * Native internal storage; never serialize its padding or pointer bytes.
+ */
+typedef union
+{
+    motion_bus_config_t configure;
     move_plan_command_t command;
     uint32_t ack_id;
+} motion_bus_payload_t;
+
+typedef struct
+{
+    motion_bus_kind_t kind;
+    motion_bus_payload_t payload;
 } motion_bus_request_t;
 typedef struct
 {

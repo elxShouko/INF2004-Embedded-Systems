@@ -1,0 +1,424 @@
+#include <stddef.h>
+#define PROHIBIT_DEF_SIZE_T 1
+#include "vehicle_rt.h"
+#include "gpio_bank.h"
+#include "subsystem2/motion_bus.h"
+#include "subsystem2/subsystem2.h"
+#include "subsystem2/drv_rp2040.h"
+#include "subsystem2/motion_foundation_test.h"
+#include "subsystem2/test_drive.h"
+#include "subsystem2/test_motor.h"
+
+typedef struct {
+    void * p_context;
+    bool (*p_reserve)(void * p_context, uint32_t mask, drv_encoder_sink_t p_sink, void * p_sink_context);
+    bool (*p_enable)(void * p_context, uint32_t mask);
+    void (*p_release)(void * p_context, uint32_t mask);
+} candidate_drv_encoder_port_t;
+const unsigned char candidate_size__drv_encoder_port_t[sizeof(candidate_drv_encoder_port_t)]={0};
+typedef struct {
+    uint32_t clock_hz;
+    uint32_t pwm_hz;
+    uint32_t reversal_guard_us;
+    motion_pid_value_t max_duty;
+    motion_types_polarity_t polarity[DRV_MOTOR_WHEELS];
+    drv_motor_stop_t zero_mode;
+    motion_config_calibration_t calibration;
+    bool b_resources_verified : 1;
+} candidate_drv_motor_config_t;
+const unsigned char candidate_size__drv_motor_config_t[sizeof(candidate_drv_motor_config_t)]={0};
+typedef struct {
+    void * p_context;
+    bool (*p_prepare)(void * p_context, uint16_t period, uint32_t clock_hz);
+    bool (*p_apply)(void * p_context, drv_motor_wheel_t wheel, uint16_t level_a, uint16_t level_b);
+    bool (*p_stop_all)(void * p_context);
+} candidate_drv_motor_io_t;
+const unsigned char candidate_size__drv_motor_io_t[sizeof(candidate_drv_motor_io_t)]={0};
+typedef struct {
+    drv_motor_state_t state;
+    int8_t last_direction;
+    int8_t pending_direction;
+    uint16_t pending_level;
+    uint64_t neutral_since_us;
+    bool b_neutral : 1;
+} candidate_drv_motor_channel_t;
+const unsigned char candidate_size__drv_motor_channel_t[sizeof(candidate_drv_motor_channel_t)]={0};
+typedef struct {
+    drv_motor_config_t config;
+    drv_motor_io_t io;
+    drv_motor_channel_t channel[DRV_MOTOR_WHEELS];
+    uint64_t last_time_us;
+    uint16_t period;
+    uint16_t duty_limit;
+    bool b_initialised : 1;
+    bool b_armed : 1;
+    bool b_fault : 1;
+    bool b_prepare_attempted : 1;
+    bool b_stop_confirmed : 1;
+} candidate_drv_motor_t;
+const unsigned char candidate_size__drv_motor_t[sizeof(candidate_drv_motor_t)]={0};
+typedef struct {
+    uint16_t period;
+    int8_t direction[DRV_MOTOR_WHEELS];
+    bool b_claimed : 1;
+} candidate_drv_rp2040_t;
+const unsigned char candidate_size__drv_rp2040_t[sizeof(candidate_drv_rp2040_t)]={0};
+typedef struct {
+    motion_estimator_sample_t sample[2];
+    uint32_t invalid[2];
+    bool b_healthy : 1;
+} candidate_enc_capture_sample_t;
+const unsigned char candidate_size__enc_capture_sample_t[sizeof(candidate_enc_capture_sample_t)]={0};
+typedef struct {
+    motion_quad_t decoder[2];
+    uint32_t generation;
+    bool b_initialised : 1;
+    bool b_healthy : 1;
+} candidate_enc_capture_t;
+const unsigned char candidate_size__enc_capture_t[sizeof(candidate_enc_capture_t)]={0};
+typedef struct {
+    motion_bus_kind_t kind;
+    wheel_loop_config_t config;
+    drv_encoder_port_t encoder_port;
+    move_plan_command_t command;
+    uint32_t ack_id;
+} candidate_motion_bus_request_t;
+const unsigned char candidate_size__motion_bus_request_t[sizeof(candidate_motion_bus_request_t)]={0};
+typedef struct {
+    motion_bus_request_t request;
+    motion_run_status_t status;
+    uint32_t cancel_id;
+    bool b_pending : 1;
+    bool b_inflight : 1;
+    bool b_stop : 1;
+    bool b_cancel : 1;
+} candidate_motion_bus_t;
+const unsigned char candidate_size__motion_bus_t[sizeof(candidate_motion_bus_t)]={0};
+typedef struct {
+    uint32_t counts_per_wheel_rev;
+    uint32_t wheel_circumference_um;
+    motion_types_polarity_t motor_polarity;
+    motion_types_polarity_t encoder_polarity;
+} candidate_motion_config_wheel_t;
+const unsigned char candidate_size__motion_config_wheel_t[sizeof(candidate_motion_config_wheel_t)]={0};
+typedef struct {
+    motion_config_wheel_t left;
+    motion_config_wheel_t right;
+    uint32_t track_width_um;
+    motion_types_speed_mm_s_t max_wheel_speed_mm_s;
+    motion_config_calibration_t calibration;
+} candidate_motion_config_t;
+const unsigned char candidate_size__motion_config_t[sizeof(candidate_motion_config_t)]={0};
+typedef struct {
+    motion_types_encoder_count_t count;
+    uint64_t timestamp_us;
+    uint32_t generation;
+} candidate_motion_estimator_sample_t;
+const unsigned char candidate_size__motion_estimator_sample_t[sizeof(candidate_motion_estimator_sample_t)]={0};
+typedef struct {
+    motion_types_distance_um_t position_um;
+    motion_types_speed_mm_s_t speed_mm_s;
+    uint64_t timestamp_us;
+    bool b_position_valid : 1;
+    bool b_speed_valid : 1;
+} candidate_motion_estimator_measurement_t;
+const unsigned char candidate_size__motion_estimator_measurement_t[sizeof(candidate_motion_estimator_measurement_t)]={0};
+typedef struct {
+    uint32_t counts_per_wheel_rev;
+    uint32_t circumference_um;
+    uint32_t max_elapsed_us;
+    motion_estimator_sample_t previous;
+    motion_estimator_measurement_t measurement;
+    int64_t remainder;
+    motion_estimator_result_t result;
+    bool b_initialised : 1;
+    bool b_have_baseline : 1;
+    bool b_reset_required : 1;
+} candidate_motion_estimator_t;
+const unsigned char candidate_size__motion_estimator_t[sizeof(candidate_motion_estimator_t)]={0};
+typedef struct {
+    motion_pid_value_t proportional_gain;
+    motion_pid_value_t integral_gain;
+    motion_pid_value_t derivative_gain;
+    motion_pid_value_t output_min;
+    motion_pid_value_t output_max;
+    motion_pid_value_t integral_min;
+    motion_pid_value_t integral_max;
+    uint32_t max_elapsed_us;
+    motion_config_calibration_t calibration;
+} candidate_motion_pid_config_t;
+const unsigned char candidate_size__motion_pid_config_t[sizeof(candidate_motion_pid_config_t)]={0};
+typedef struct {
+    motion_pid_config_t config;
+    motion_pid_value_t integral;
+    motion_types_speed_mm_s_t previous_measurement_mm_s;
+    motion_types_speed_mm_s_t previous_target_mm_s;
+    bool b_have_measurement : 1;
+    bool b_initialised : 1;
+} candidate_motion_pid_t;
+const unsigned char candidate_size__motion_pid_t[sizeof(candidate_motion_pid_t)]={0};
+typedef struct {
+    motion_types_encoder_count_t count;
+    uint32_t invalid_transitions;
+    motion_types_polarity_t polarity;
+    uint8_t previous_ab;
+    bool b_initialised : 1;
+    bool b_have_state : 1;
+    bool b_count_limit : 1;
+} candidate_motion_quad_t;
+const unsigned char candidate_size__motion_quad_t[sizeof(candidate_motion_quad_t)]={0};
+typedef struct {
+    uint64_t timestamp_us;
+    motion_run_state_t state;
+    uint32_t active_id;
+    move_plan_kind_t active_kind;
+    uint32_t terminal_id;
+    motion_run_result_t terminal_result;
+    motion_run_result_t fault_result;
+    uint32_t last_request_id;
+    uint64_t last_request_issued_us;
+    bool b_request_accepted : 1;
+    uint64_t measurement_timestamp_us;
+    uint32_t measurement_max_age_us;
+    int64_t position_um[2];
+    int32_t speed_mm_s[2];
+    int32_t target_mm_s[2];
+    bool b_measurement_valid : 1;
+    bool b_standstill : 1;
+    bool b_stop_command_confirmed : 1;
+    motion_types_encoder_count_t encoder_count[2];
+    uint64_t encoder_timestamp_us;
+    uint32_t encoder_generation;
+    bool b_encoder_valid : 1;
+} candidate_motion_run_status_t;
+const unsigned char candidate_size__motion_run_status_t[sizeof(candidate_motion_run_status_t)]={0};
+typedef struct {
+    wheel_loop_t loop;
+    move_plan_t plan;
+    motion_run_status_t status;
+    uint64_t deadline_us;
+    uint64_t stopping_since_us;
+    uint32_t last_id;
+    motion_run_result_t pending_result;
+    bool b_initialised : 1;
+} candidate_motion_run_t;
+const unsigned char candidate_size__motion_run_t[sizeof(candidate_motion_run_t)]={0};
+typedef struct {
+    uint32_t id;
+    move_plan_kind_t kind;
+    uint64_t issued_us;
+    uint32_t lifetime_us;
+    int32_t left_mm_s;
+    int32_t right_mm_s;
+    int32_t distance_um;
+    int32_t cruise_mm_s;
+} candidate_move_plan_command_t;
+const unsigned char candidate_size__move_plan_command_t[sizeof(candidate_move_plan_command_t)]={0};
+typedef struct {
+    uint32_t accel_mm_s2;
+    uint32_t decel_mm_s2;
+    uint32_t tolerance_um;
+    uint32_t turn_scale_ppm[2];
+    motion_pid_value_t correction_gain;
+    int32_t correction_limit_mm_s;
+} candidate_move_plan_config_t;
+const unsigned char candidate_size__move_plan_config_t[sizeof(candidate_move_plan_config_t)]={0};
+typedef struct {
+    move_plan_command_t command;
+    int64_t origin_um[2];
+    int32_t goal_um[2];
+    bool b_finite : 1;
+    bool b_initialised : 1;
+} candidate_move_plan_t;
+const unsigned char candidate_size__move_plan_t[sizeof(candidate_move_plan_t)]={0};
+typedef struct {
+    T_MSG hdr;
+    UW seq;
+    UW time_ms;
+    INT value;
+    INT prc;
+} candidate_SAMPLE_MSG;
+const unsigned char candidate_size__SAMPLE_MSG[sizeof(candidate_SAMPLE_MSG)]={0};
+typedef struct {
+    motion_config_t geometry;
+    drv_motor_config_t motor;
+    motion_pid_config_t pid[2];
+    move_plan_config_t profile;
+    uint32_t period_us;
+    uint32_t sample_limit_us;
+    uint32_t stop_dwell_us;
+    uint32_t stop_timeout_us;
+    uint32_t progress_timeout_us;
+    int32_t stop_speed_mm_s;
+    int32_t overspeed_mm_s;
+} candidate_wheel_loop_config_t;
+const unsigned char candidate_size__wheel_loop_config_t[sizeof(candidate_wheel_loop_config_t)]={0};
+typedef struct {
+    wheel_loop_config_t config;
+    drv_motor_t motor;
+    motion_estimator_t estimator[2];
+    motion_pid_t pid[2];
+    motion_estimator_measurement_t measured[2];
+    int64_t velocity_um_s[2];
+    uint64_t slew_remainder[2];
+    int64_t last_count[2];
+    uint64_t quiet_since_us[2];
+    uint64_t progress_since_us[2];
+    uint64_t last_tick_us;
+    bool b_quiet[2];
+    bool b_standstill[2];
+    bool b_tracking[2];
+    bool b_valid : 1;
+    bool b_enabled : 1;
+    bool b_fault : 1;
+} candidate_wheel_loop_t;
+const unsigned char candidate_size__wheel_loop_t[sizeof(candidate_wheel_loop_t)]={0};
+typedef struct {
+    uint32_t sensor_age_us;
+    uint32_t command_ttl_us;
+    uint32_t transition_timeout_us;
+    uint32_t remote_age_ms;
+    int32_t forward_mm_s;
+    int32_t correction_mm_s;
+    int32_t turn_mm_s;
+    int32_t straight_um;
+    uint16_t obstacle_stop_cm;
+    bool b_calibrated : 1;
+    bool b_power_authorised : 1;
+    bool b_uturn_right : 1;
+    s5_route_config_t route;
+} candidate_vehicle_config_t;
+const unsigned char candidate_size__vehicle_config_t[sizeof(candidate_vehicle_config_t)]={0};
+typedef struct {
+    uint64_t now_us;
+    uint64_t raw_now_us;
+    motion_run_status_t motion;
+    s1_codec_command_t remote;
+    nav_event_t navigation;
+    uint32_t navigation_id;
+    uint32_t pending_navigation_id;
+    uint64_t line_time_us;
+    line_observation_t line;
+    line_state_t line_state;
+    line_mode_t line_mode;
+    uint8_t black_mask;
+    imu_core_status_t imu;
+    s5_obstacle_profile_t obstacle;
+    s5_clearance_t clearance;
+    uint64_t scan_id_us;
+    uint64_t scan_completed_us;
+    bool b_scan_held : 1;
+    uint16_t forward_cm;
+    bool b_forward_valid : 1;
+    uint64_t obstacle_started_us;
+    uint64_t obstacle_time_us;
+    int64_t encoder_count[2];
+    bool b_motion_available : 1;
+    bool b_line_available : 1;
+    bool b_line_calibrated : 1;
+    bool b_line_valid : 1;
+    bool b_imu_available : 1;
+    bool b_obstacle_available : 1;
+    bool b_counts_valid : 1;
+    bool b_link_up : 1;
+    bool b_estop : 1;
+    bool b_provider_fault : 1;
+} candidate_vehicle_input_t;
+const unsigned char candidate_size__vehicle_input_t[sizeof(candidate_vehicle_input_t)]={0};
+typedef struct {
+    move_plan_command_t command;
+    uint32_t acknowledge_id;
+    uint32_t navigation_done_id;
+    uint64_t obstacle_recovered_us;
+    line_mode_t mode;
+    bool b_command : 1;
+    bool b_enable : 1;
+    bool b_stop : 1;
+    bool b_estop : 1;
+    bool b_mode : 1;
+} candidate_vehicle_output_t;
+const unsigned char candidate_size__vehicle_output_t[sizeof(candidate_vehicle_output_t)]={0};
+typedef struct {
+    vehicle_config_t config;
+    vehicle_state_t state;
+    uint32_t blockers;
+    uint32_t next_id;
+    uint32_t active_id;
+    uint32_t navigation_id;
+    uint32_t last_navigation_id;
+    nav_command_t navigation;
+    uint64_t transition_us;
+    uint64_t last_now_us;
+    bool b_initialised : 1;
+    bool b_run_requested : 1;
+    bool b_pause_requested : 1;
+    bool b_turn_completed : 1;
+    bool b_recovery_required : 1;
+    bool b_pending_command : 1;
+    bool b_line_found : 1;
+    move_plan_command_t pending_command;
+    s5_obstacle_plan_t route;
+    uint64_t route_started_us;
+    uint64_t route_step_raw_us;
+    uint64_t route_ready_raw_us;
+    uint8_t route_index;
+    bool b_obstacle_pending : 1;
+    bool b_route_active : 1;
+    bool b_route_terminal : 1;
+    bool b_route_found : 1;
+    bool b_route_finishing : 1;
+} candidate_vehicle_t;
+const unsigned char candidate_size__vehicle_t[sizeof(candidate_vehicle_t)]={0};
+typedef struct {
+    int64_t previous_um[2];
+    uint64_t previous_us;
+    uint64_t distance_um;
+    uint64_t raw_timestamp_us;
+    uint8_t half_um;
+    bool b_baseline : 1;
+    bool b_previous_forward : 1;
+    bool b_tracking_forward : 1;
+} candidate_vehicle_odometry_t;
+const unsigned char candidate_size__vehicle_odometry_t[sizeof(candidate_vehicle_odometry_t)]={0};
+typedef struct {
+    vehicle_config_t mission;
+    wheel_loop_config_t motion;
+    s3_config_t navigation;
+    s5_live_config_t obstacle;
+    bool b_obstacle_requested : 1;
+} candidate_vehicle_setup_t;
+const unsigned char candidate_size__vehicle_setup_t[sizeof(candidate_vehicle_setup_t)]={0};
+typedef struct {
+    uint32_t (*p_read)(uint32_t address);
+    void (*p_write)(uint32_t address, uint32_t value);
+    uint32_t (*p_core)(void);
+    bool (*p_enter)(uint32_t * p_saved);
+    void (*p_leave)(uint32_t saved);
+    bool (*p_install)(void);
+    void (*p_fault)(void);
+} candidate_gpio_bank_io_t;
+const unsigned char candidate_size__gpio_bank_io_t[sizeof(candidate_gpio_bank_io_t)]={0};
+typedef struct {
+    uint32_t mask;
+    drv_encoder_sink_t p_sink;
+    void * p_context;
+    bool b_enabled : 1;
+} candidate_gpio_bank_client_t;
+const unsigned char candidate_size__gpio_bank_client_t[sizeof(candidate_gpio_bank_client_t)]={0};
+typedef struct {
+    gpio_bank_io_t io;
+    gpio_bank_client_t clients[GPIO_BANK_CLIENTS];
+    uint32_t allowed_mask;
+    bool b_initialised : 1;
+    bool b_installed : 1;
+} candidate_gpio_bank_t;
+const unsigned char candidate_size__gpio_bank_t[sizeof(candidate_gpio_bank_t)]={0};
+typedef struct {
+    motion_bus_kind_t kind;
+    union {
+        struct { wheel_loop_config_t config; drv_encoder_port_t encoder_port; } configure;
+        move_plan_command_t command;
+        uint32_t ack_id;
+    } payload;
+} candidate_request_union_t;
+const unsigned char candidate_size__request_union[sizeof(candidate_request_union_t)]={0};

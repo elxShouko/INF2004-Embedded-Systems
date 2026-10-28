@@ -2466,3 +2466,186 @@ Changed production/test/document files:
 | `verify_feedback_reviewed_default.log` | `c010bf08b1d3c2e2aac9ed231652a40f77d5d6526054a3ad98c90e5bae10a0ff` |
 | `verify_feedback_reviewed_metadata.json` | `d214685a35ac563e03788a45bd276155968681079b3f4d3f79e148b349b11c77` |
 | `verify_feedback_reviewed_optimized.log` | `5f332f63f23ff0e4b39ed0338c366df847f3c1f81aa1d657011d497d60eafc9c` |
+
+## Minimum-bit before-change baseline - 2026-10-21
+
+Tested production revision: `d4c91f271c9801802e3994967c96e9ec8fcba38c`,
+branch `buddy2-Motor-and-encoder-control`, initially clean and identical to
+local main. Only new measurement tooling, documentation and evidence were
+added during this run; no production source changed. No commit/push/flash.
+
+| Existing checks | Actual outcome | Evidence |
+|---|---|---|
+| S2-U03..U140 default/analyser | 138 groups PASS | [default](logs/verify_minbits_before_20261021_default.log) |
+| S2-U03..U140 O2/short-enums/analyser | 138 groups PASS | [optimized](logs/verify_minbits_before_20261021_optimized.log) |
+| Runner timeout, host guards, eight mutations | PASS; expected timeout/rejections not product failures | [checks](logs/verify_minbits_before_20261021_checks.log) |
+| ARM strict objects | 19 x SMP0/1 x TEST0/1 = 76 PASS | [ARM retry](logs/verify_minbits_before_20261021_arm_retry_arm.log) |
+| ARM structure inventory | 35 structures / 299 member declarations measured | [inventory](logs/minbits_layout_before_20261021_retry/inventory.md), [JSON](logs/minbits_layout_before_20261021_retry/layout.json) |
+| Isolated candidate layouts | Compile/size evidence only; no behaviour claimed | [candidate sizes](logs/minbits_layout_before_20261021_retry/candidate_sizes.json) |
+| Six full Make profiles | ELF/UF2 builds PASS; example credential fixture only | [results](logs/minbits_firmware_before_20261021/results.json) |
+
+Commands from repository root:
+
+```text
+python testing/subsystem2/verify_motion.py --analyze --label minbits_before_20261021
+python testing/subsystem2/verify_motion.py --arm --strict --label minbits_before_20261021_arm
+python testing/subsystem2/verify_motion.py --arm --strict --label minbits_before_20261021_arm_retry
+python testing/subsystem2/measure_representation.py --label minbits_layout_before_20261021
+python testing/subsystem2/measure_representation.py --label minbits_layout_before_20261021_retry
+```
+
+The first ARM run could not launch the compiler inside the restricted process
+environment (Windows 623). The approved outside-restriction retry passed with
+existing ARM GCC 10.3.1. Host GCC 14.2.0. Initial layout probe failed because
+its generated includes omitted SAMPLE_MSG; corrected probe passed. Failed logs
+are preserved; neither attempt is counted as a successful compile.
+
+Full builds used existing MSYS2 bash/Make and repository-local SDK, not WSL
+(only docker-desktop was listed). Reproducible shell and orchestration scripts
+are copied into the firmware evidence directory. Invocation from build_make:
+
+```text
+export PICO_SDK_PATH=../build/deps/pico-sdk
+make [profile options] "INCPATH=-I../include -I../config -I../kernel/knlinc -I../build/profiles" -j8
+```
+
+All use SMP=1 CONSOLE=usb_cdc WIFI=cyw43 CRASH_REPORT=0. Profiles: default;
+TEST=1; S4_IMU=1; S4_IMU=1 TEST=1; NET=lwip MQTT=1 S4_IMU=1;
+NET=lwip MQTT=1 S4_IMU=1 TEST=1. Example fixture hash matches the published
+config/wifi_secrets.example.h; no live credentials/network operation.
+
+| Fresh profile | text | data | bss bytes |
+|---|---:|---:|---:|
+| default | 345808 | 92 | 45156 |
+| TEST | 434464 | 1160 | 54004 |
+| IMU | 359972 | 1168 | 45168 |
+| IMU TEST | 437136 | 1168 | 54012 |
+| MQTT IMU | 419380 | 1176 | 102824 |
+| MQTT IMU TEST | 492504 | 1176 | 111668 |
+
+These fresh section sizes differ from existing October 16 images captured in
+layout.json. Cause is not established by this run. Future savings must compare
+matched fresh builds, not mix those artifacts. Static sections do not measure
+runtime heap/stack peaks, control/IRQ timing or physical behaviour.
+
+Measured before: motion_bus_request_t 256 B, motion_bus_t 400 B,
+motion_run_status_t 136 B. Candidate tagged union request 216 B, retaining all
+numerical widths. Selected bool packing has some savings and some zero-saving
+cases. Candidates are declarations only, not modified firmware or completed
+minimum-bit compliance. Proposed shared changes await concrete review in
+[data representation review](../../docs/buddy2/DATA_REPRESENTATION.md).
+
+### Isolated proposed-patch verification
+
+The eight-file proposal is applied ONLY in ignored
+testing/subsystem2/build/minbits_candidate_review. Actual app_program remains
+unchanged. The draft includes selected owner bool fields, an internal tagged
+request union and scalar flags in shared vehicle.h. No numeric field shrinks.
+
+| Candidate checks | Actual result |
+|---|---|
+| Existing Buddy 2 suites | 138 groups/profile and eight mutations PASS |
+| Existing integration suites | 79 unique INT IDs/profile including TEST startup; eight mutations/profile PASS; existing S5 suites PASS |
+| Strict ARM | 76 Buddy 2 and 44 shared/provider objects PASS |
+| Final formatting | whitespace-only equivalence checked; 19-file style subset PASS |
+
+Raw logs/metadata are retained under
+logs/minbits_layout_before_20261021_retry/candidate_subsystem2_evidence and
+candidate_integration_evidence. Initial ARM candidate attempts lacked an
+unmodified device header in the isolated copy; retries passed after copying
+tracked headers. Failures are retained, not counted as product regressions.
+
+Commands used the existing verify_motion.py and verify_integration.py in that
+isolated tree, labels minbits_candidate_review, minbits_candidate_review_arm
+and minbits_candidate_review_arm_retry. The review diff is
+logs/minbits_layout_before_20261021_retry/proposed_first_patch.diff.txt.
+Formatting hashes and exact measured nested sizes are beside it. Existing
+behavioural results bind the pre-formatting source; whitespace-only final
+formatting is recorded explicitly. New representation-specific tests and full
+candidate firmware links remain required after approval to apply the patch.
+
+## Merged minimum-bit increment - 2026-10-28
+
+Definitions before implementation. Baseline HEAD
+`93740736dd1c3407eaf7f496089a096cee70c140` on
+`buddy2-Motor-and-encoder-control`, identical to local main. October 21
+uncommitted documentation/evidence is preserved as history, not relabelled as
+this revision's verification. No teammate production implementation is in scope.
+
+| ID | Method | Expected result |
+|---|---|---|
+| S2-U141 | Pure host and synthetic TEST worker | All combinations of compact motor/decoder/loop scalar flags survive assignment/copy/clear without changing adjacent data |
+| S2-U142 | Actual one-slot bus with synthetic requests | CONFIG, COMMAND, ACK and payload-free ENABLE copy their selected variant; changing sender storage cannot change the copied request |
+| S2-U143 | Actual one-slot bus with invalid tags | Invalid positive/negative request kinds reject without changing pending/inflight/stop state or retained payload |
+
+Planned implementation: compact only scalar bool members of drv_motor_t,
+motion_quad_t and wheel_loop_t, and replace mutually exclusive internal request
+storage with a named tagged union. All numerical widths, public motion API
+signatures, encoder locking and emergency signalling remain. Review/test each
+variant access rather than applying the October 21 draft wholesale.
+Shared vehicle.h and teammate code will not be edited in this increment.
+
+### Implemented increment and actual results
+
+Tested working tree: HEAD above plus seven modified S2 source/header files,
+the host runner's expected-ID update and the representation probe. No peer or
+shared production edits. The current data-representation guide records the
+measured layouts and remaining range/interface decisions.
+
+| Verification | Actual outcome |
+|---|---|
+| Motion baseline / after, default and optimized | 138 / 141 groups per profile PASS; eight mutations and timeout guards PASS |
+| Integration before / after | 83 unique INT groups per profile including separate TEST startup PASS; eight mutations per profile and S5 suites PASS |
+| Strict Buddy 2 ARM after | 19 objects x SMP0/1 x TEST0/1 = 76 PASS |
+| Integration/provider ARM after | 11 objects x SMP0/1 x TEST0/1 = 44 PASS |
+| S1 and S3 maintained host runners, before / after | PASS |
+| Layout probe | Before 35 types/299 declarations; after 37/301; target sizes recorded |
+| Full Make profiles before / after | All six links PASS; no compiler warnings in these full-build logs |
+| Preservation | 78 peer and 631 shared/platform files byte-identical to pre-edit capture |
+| Style / whitespace | 19-file S2 style subset PASS; git diff --check PASS |
+
+Commands from repository root (existing tools only):
+
+```text
+python testing/subsystem2/verify_motion.py --analyze --label minbits_20261028_before
+python testing/subsystem2/verify_motion.py --analyze --label minbits_20261028_after
+python testing/subsystem2/verify_motion.py --arm --strict --label minbits_20261028_before_arm
+python testing/subsystem2/verify_motion.py --arm --strict --label minbits_20261028_after_arm
+python testing/integration/verify_integration.py --label minbits_20261028_before
+python testing/integration/verify_integration.py --label minbits_20261028_after
+python testing/integration/verify_integration.py --arm --label minbits_20261028_after_arm
+python testing/subsystem1/host/verify_windows.py --log testing/subsystem2/logs/minbits_20261028_s1_after.json
+python testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem2/logs/minbits_20261028_s3_after.json
+python testing/subsystem2/measure_representation.py --label minbits_20261028_layout_before
+python testing/subsystem2/measure_representation.py --label minbits_20261028_layout_after
+python testing/subsystem2/build/minbits_make_20261028_before.py
+python testing/subsystem2/build/minbits_make_20261028_after.py
+python testing/subsystem2/verify_motion.py --style
+git diff --check
+```
+
+S1/S3 baseline commands used the corresponding `_before.json` log names.
+Saved full-build driver copies document the ignored helper scripts. Make runs
+from build_make with -j8 and the explicit example-fixture include path.
+All six use SMP=1 CONSOLE=usb_cdc WIFI=cyw43 CRASH_REPORT=0:
+
+| Additional options | text before / after | data before / after | BSS before / after |
+|---|---:|---:|---:|
+| Defaults | 354360 / 354348 | 92 / 92 | 45220 / 45148 |
+| TEST=1 | 452924 / 453920 | 1160 / 1160 | 54100 / 54028 |
+| S4_IMU=1 | 369044 / 369032 | 1168 / 1168 | 45232 / 45160 |
+| S4_IMU=1 TEST=1 | 455684 / 456680 | 1168 / 1168 | 54108 / 54036 |
+| NET=lwip MQTT=1 S4_IMU=1 | 426948 / 426936 | 1176 / 1176 | 102888 / 102816 |
+| NET=lwip MQTT=1 S4_IMU=1 TEST=1 | 511060 / 512056 | 1176 / 1176 | 111764 / 111692 |
+
+Raw firmware results, section sizes, image hashes, commands and input manifests
+are in logs/minbits_firmware_20261028_before and `_after`. Layout evidence is
+in logs/minbits_20261028_layout_before and `_after`. Other logs use the command
+labels above. logs/minbits_20261028_preservation.json records the byte audit.
+
+Limits: existing SDK 2.2.0 and ARM GCC 10.3.1; compare this matched pair only.
+These are host checks, ARM compilation and links, not execution of TEST on the
+Pico. Runtime memory peaks, IRQ/control/emergency timing, electrical operation
+and motion accuracy remain unmeasured. Numeric narrowing, public status/enums,
+fault translation and shared vehicle flags remain open; no complete minimum-bit
+compliance claim. No flashing, network access, installation, staging or commit.

@@ -1,0 +1,263 @@
+--- a/app_program/subsystem2/drv_motor.h
++++ b/app_program/subsystem2/drv_motor.h
+@@ -95,12 +95,12 @@
+     uint64_t last_time_us;
+     uint16_t period;
+     uint16_t duty_limit;
+-    bool b_initialised;
+-    bool b_armed;
+-    bool b_fault;
+-    bool b_prepare_attempted;
++    bool b_initialised : 1;
++    bool b_armed : 1;
++    bool b_fault : 1;
++    bool b_prepare_attempted : 1;
+     /* Backend confirms a stop COMMAND, never physical standstill/current. */
+-    bool b_stop_confirmed;
++    bool b_stop_confirmed : 1;
+ } drv_motor_t;
+ 
+ /** @brief Validate and copy immutable settings; performs NO hardware access. */
+--- a/app_program/subsystem2/motion_quad.h
++++ b/app_program/subsystem2/motion_quad.h
+@@ -32,9 +32,9 @@
+     uint32_t invalid_transitions;
+     motion_types_polarity_t polarity;
+     uint8_t previous_ab;
+-    bool b_initialised;
+-    bool b_have_state;
+-    bool b_count_limit;
++    bool b_initialised : 1;
++    bool b_have_state : 1;
++    bool b_count_limit : 1;
+ } motion_quad_t;
+ 
+ /* Clears position/diagnostics/baseline. Invalid polarity leaves it disabled.
+--- a/app_program/subsystem2/wheel_loop.h
++++ b/app_program/subsystem2/wheel_loop.h
+@@ -34,9 +34,9 @@
+     bool b_quiet[2];
+     bool b_standstill[2];
+     bool b_tracking[2];
+-    bool b_valid;
+-    bool b_enabled;
+-    bool b_fault;
++    bool b_valid : 1;
++    bool b_enabled : 1;
++    bool b_fault : 1;
+ } wheel_loop_t;
+ bool wheel_loop_validate (wheel_loop_config_t const * p_config);
+ bool wheel_loop_init (wheel_loop_t * p_loop,
+--- a/app_program/vehicle.h
++++ b/app_program/vehicle.h
+@@ -33,9 +33,9 @@
+     int32_t turn_mm_s;
+     int32_t straight_um;
+     uint16_t obstacle_stop_cm;
+-    bool b_calibrated;
+-    bool b_power_authorised;
+-    bool b_uturn_right;
++    bool b_calibrated : 1;
++    bool b_power_authorised : 1;
++    bool b_uturn_right : 1;
+     s5_route_config_t route; /* Optional; all zero means disabled. */
+ } vehicle_config_t;
+ 
+@@ -58,22 +58,22 @@
+     s5_clearance_t clearance;
+     uint64_t scan_id_us;
+     uint64_t scan_completed_us;
+-    bool b_scan_held;
++    bool b_scan_held : 1;
+     uint16_t forward_cm;
+-    bool b_forward_valid;
++    bool b_forward_valid : 1;
+     uint64_t obstacle_started_us;
+     uint64_t obstacle_time_us; /* Raw timer domain, checked by provider. */
+     int64_t encoder_count[2]; /* Actual counts, never reconstructed distance. */
+-    bool b_motion_available;
+-    bool b_line_available;
+-    bool b_line_calibrated;
+-    bool b_line_valid;
+-    bool b_imu_available;
+-    bool b_obstacle_available;
+-    bool b_counts_valid;
+-    bool b_link_up;
+-    bool b_estop;
+-    bool b_provider_fault;
++    bool b_motion_available : 1;
++    bool b_line_available : 1;
++    bool b_line_calibrated : 1;
++    bool b_line_valid : 1;
++    bool b_imu_available : 1;
++    bool b_obstacle_available : 1;
++    bool b_counts_valid : 1;
++    bool b_link_up : 1;
++    bool b_estop : 1;
++    bool b_provider_fault : 1;
+ } vehicle_input_t;
+ 
+ typedef struct
+--- a/app_program/subsystem2/motion_bus.h
++++ b/app_program/subsystem2/motion_bus.h
+@@ -12,10 +12,16 @@
+ typedef struct
+ {
+     motion_bus_kind_t kind;
+-    wheel_loop_config_t config;
+-    drv_encoder_port_t encoder_port;
+-    move_plan_command_t command;
+-    uint32_t ack_id;
++    union
++    {
++        struct
++        {
++            wheel_loop_config_t config;
++            drv_encoder_port_t encoder_port;
++        } configure;
++        move_plan_command_t command;
++        uint32_t ack_id;
++    } payload;
+ } motion_bus_request_t;
+ typedef struct
+ {
+--- a/app_program/subsystem2/task_motion.c
++++ b/app_program/subsystem2/task_motion.c
+@@ -152,8 +152,8 @@
+         motion_bus_request_t request = {0};
+ 
+         request.kind = MOTION_BUS_CONFIG;
+-        request.config = *p_config;
+-        request.encoder_port = *p_encoder_port;
++        request.payload.configure.config = *p_config;
++        request.payload.configure.encoder_port = *p_encoder_port;
+         result = task_motion_post(&request);
+     }
+     return (result);
+@@ -177,7 +177,7 @@
+         motion_bus_request_t request = {0};
+ 
+         request.kind = MOTION_BUS_COMMAND;
+-        request.command = *p_command;
++        request.payload.command = *p_command;
+         result = task_motion_post(&request);
+     }
+     return (result);
+@@ -216,7 +216,7 @@
+     motion_bus_request_t request = {0};
+ 
+     request.kind = MOTION_BUS_ACK;
+-    request.ack_id = terminal_id;
++    request.payload.ack_id = terminal_id;
+     return (task_motion_post(&request));
+ }
+ 
+@@ -398,9 +398,10 @@
+             bool b_ok = drv_rp2040_bind(&g_task_motion_backend,
+                                        &g_task_motion_raw_io);
+ 
+-            b_ok = (motion_run_init(&g_task_motion_run,&p_request->config,
++            b_ok = (motion_run_init(&g_task_motion_run,
++                &p_request->payload.configure.config,
+                                    &io)) && b_ok;
+-            g_task_motion_encoder = p_request->encoder_port;
++            g_task_motion_encoder = p_request->payload.configure.encoder_port;
+             if (!b_ok)
+             {
+                 motion_run_emergency(&g_task_motion_run,MOTION_RUN_OUTPUT,
+@@ -441,20 +442,22 @@
+         }
+         break;
+         case MOTION_BUS_COMMAND:
+-            if (!motion_run_command(&g_task_motion_run,&p_request->command,
++            if (!motion_run_command(&g_task_motion_run,
++                &p_request->payload.command,
+                                     now_us))
+             {
+                 if ((0U == g_task_motion_run.status.active_id) &&
+                     (0U == g_task_motion_run.status.terminal_id))
+                 {
+-                    g_task_motion_run.status.terminal_id=p_request->command.id;
++                    g_task_motion_run.status.terminal_id=
++                        p_request->payload.command.id;
+                     g_task_motion_run.status.terminal_result =
+                         MOTION_RUN_REJECTED;
+                 }
+             }
+         break;
+         case MOTION_BUS_ACK:
+-            (void)motion_run_ack(&g_task_motion_run,p_request->ack_id);
++            (void)motion_run_ack(&g_task_motion_run,p_request->payload.ack_id);
+         break;
+         default:
+             motion_run_emergency(&g_task_motion_run,MOTION_RUN_REJECTED,now_us);
+--- a/app_program/subsystem2/motion_bus.c
++++ b/app_program/subsystem2/motion_bus.c
+@@ -21,16 +21,18 @@
+                     b_ok = (MOTION_RUN_CONFIGURED == p_bus->status.state);
+                 break;
+                 case MOTION_BUS_ACK:
+-                    b_ok = (0U != p_request->ack_id) &&
+-                        (p_request->ack_id == p_bus->status.terminal_id);
++                    b_ok = (0U != p_request->payload.ack_id) &&
++                        (p_request->payload.ack_id ==
++                         p_bus->status.terminal_id);
+                 break;
+                 case MOTION_BUS_COMMAND:
+                     b_ok = ((MOTION_RUN_READY == p_bus->status.state) &&
+                             (0U == p_bus->status.terminal_id)) ||
+                         ((MOTION_RUN_ACTIVE == p_bus->status.state) &&
+                          (MOVE_PLAN_SPEED == p_bus->status.active_kind) &&
+-                         (MOVE_PLAN_SPEED == p_request->command.kind) &&
+-                         (p_request->command.id == p_bus->status.active_id));
++                         (MOVE_PLAN_SPEED == p_request->payload.command.kind) &&
++                         (p_request->payload.command.id ==
++                          p_bus->status.active_id));
+                 break;
+                 default:
+                     b_ok = false;
+@@ -72,7 +74,7 @@
+         b_ok = (0U != id) && ((id == p_bus->status.active_id) ||
+             ((p_bus->b_pending || p_bus->b_inflight) &&
+              (MOTION_BUS_COMMAND == p_bus->request.kind) &&
+-             (id == p_bus->request.command.id)));
++             (id == p_bus->request.payload.command.id)));
+     }
+     if (b_ok)
+     {
+--- a/app_program/subsystem2/test_drive.c
++++ b/app_program/subsystem2/test_drive.c
+@@ -326,20 +326,20 @@
+     bool b_present=false, b_stop=false, b_cancel=false;
+     bool b_pass = motion_bus_put(&bus,&request);
+ 
+-    request.config.geometry.track_width_um=999U;
++    request.payload.configure.config.geometry.track_width_um=999U;
+     b_pass = !(motion_bus_put(&bus,&request)) && b_pass;
+     motion_bus_take(&bus,&copy,&b_present,&b_stop,&b_cancel);
+     b_pass = b_present && !b_stop &&
+-        (0U==copy.config.geometry.track_width_um) && b_pass;
++        (0U==copy.payload.configure.config.geometry.track_width_um) && b_pass;
+     bus.b_inflight=false;
+     bus.status.state=MOTION_RUN_READY;
+     request.kind=MOTION_BUS_COMMAND;
+-    request.command.id=1U;
++    request.payload.command.id=1U;
+     b_pass = (motion_bus_put(&bus,&request)) && b_pass;
+     bus.b_pending=false;
+     bus.status.terminal_id=1U;
+     b_pass = !(motion_bus_put(&bus,&request)) && b_pass;
+-    request.kind=MOTION_BUS_ACK; request.ack_id=1U;
++    request.kind=MOTION_BUS_ACK; request.payload.ack_id=1U;
+     b_pass = (motion_bus_put(&bus,&request)) && b_pass;
+     return (b_pass);
+ }
+@@ -353,7 +353,7 @@
+ 
+     bus.b_inflight=false;
+     bus.status.state=MOTION_RUN_READY;
+-    request.kind=MOTION_BUS_COMMAND;request.command.id=7U;
++    request.kind=MOTION_BUS_COMMAND;request.payload.command.id=7U;
+     b_pass = (motion_bus_put(&bus,&request)) && b_pass;
+     b_pass = (motion_bus_stop(&bus,true,7U)) && b_pass;
+     b_pass = !(motion_bus_put(&bus,&request)) && b_pass;
