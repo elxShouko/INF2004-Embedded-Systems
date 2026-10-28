@@ -291,6 +291,159 @@ static void test_gateway_reply (void)
     puts("S3-U40 PASS: full gateway IDs echoed in accepted/rejected replies");
 }
 
+/** @brief Exercise the public queue codec and owner at a supplied raw time. */
+static void deliver_input (s3_context_t * p_context,
+                            const s3_input_t * p_request, uint64_t now)
+{
+    s3_input_t decoded = {0};
+    assert(E_OK == s3_submit(p_request, TMO_POL));
+    assert(s3_input_decode(g_submitted_input, g_submitted_size, &decoded));
+    input(p_context, &decoded, now);
+}
+
+/** @brief Conflicting duplicates cannot change acquisition identity or age. */
+static void test_odometry_identity (void)
+{
+    s3_context_t context;
+    init_context(&context);
+    const uint64_t timestamp = UINT64_C(0x100000123);
+    const uint64_t distance = UINT64_C(0x200000789);
+    s3_input_t request = {0};
+    request.kind = S3_INPUT_ODOMETRY;
+    request.value.odometry = (s3_odometry_t){timestamp, distance, true};
+    deliver_input(&context, &request, timestamp);
+    assert(context.b_odometry_usable);
+    assert(timestamp == context.odometry_us);
+    assert(distance == context.distance_um);
+    const unsigned int before = g_count;
+    const uint64_t boundary = timestamp + context.config.odometry_stale_us;
+    deliver_input(&context, &request, boundary);
+    assert(context.b_odometry_usable);
+    assert(timestamp == context.odometry_us);
+
+    request.value.odometry.tracking_forward = false;
+    deliver_input(&context, &request, boundary);
+    assert(!context.b_odometry_usable);
+    assert(context.b_odometry_forward);
+    assert(distance == context.distance_um);
+    assert(timestamp == context.odometry_us);
+    request.value.odometry.tracking_forward = true;
+    ++request.value.odometry.forward_distance_um;
+    deliver_input(&context, &request, boundary);
+    assert(!context.b_odometry_usable);
+    assert(distance == context.distance_um);
+    request.value.odometry.forward_distance_um = distance;
+    deliver_input(&context, &request, boundary);
+    assert(context.b_odometry_usable);
+    deliver_input(&context, &request, boundary + 1U);
+    assert(!context.b_odometry_usable);
+    assert(timestamp == context.odometry_us);
+    assert(distance == context.distance_um);
+
+    /* A genuinely newer sample may change tracking state, with no movement. */
+    request.value.odometry.timestamp_us = boundary + 1U;
+    request.value.odometry.tracking_forward = false;
+    deliver_input(&context, &request, boundary + 1U);
+    assert(context.b_odometry_usable);
+    assert(!context.b_odometry_forward);
+    assert(boundary + 1U == context.odometry_us);
+    assert(distance == context.distance_um);
+    assert(before == g_count); /* Odometry does not generate reply events. */
+    puts("S3-U41 PASS: packed odometry identity, full width and source age");
+}
+
+/** @brief Only the navigation payload releases S3's pending event. */
+static void test_completion_identity (void)
+{
+    s3_context_t context;
+    init_context(&context);
+    const uint32_t navigation_id = 71U;
+    const uint32_t motion_id = 9001U;
+    context.status.state = LINE_STATE_AWAITING_MANOEUVRE;
+    context.status.pending_manoeuvre_event_id = navigation_id;
+    s3_input_t request = {0};
+    request.kind = S3_INPUT_MANOEUVRE_DONE;
+    request.request_id = navigation_id;
+    request.value.manoeuvre_event_id = motion_id;
+    deliver_input(&context, &request, 100U);
+    assert(!g_outputs[g_count - 1U].accepted);
+    assert(navigation_id == context.status.pending_manoeuvre_event_id);
+    assert(LINE_STATE_AWAITING_MANOEUVRE == context.status.state);
+
+    /* Model the controller having confirmed S2 success and standstill.
+     * S3 receives only its correlated event ID, never the S2 terminal result.
+     * The reply token is independent of the navigation payload.
+     */
+    request.request_id = motion_id;
+    request.value.manoeuvre_event_id = navigation_id;
+    deliver_input(&context, &request, 200U);
+    assert(g_outputs[g_count - 1U].accepted);
+    assert(motion_id == g_outputs[g_count - 1U].request_id);
+    assert(0U == context.status.pending_manoeuvre_event_id);
+    assert(LINE_STATE_RECOVERY == context.status.state);
+    assert(LINE_MODE_RECOVERY == context.status.mode);
+    assert(200U == context.recovery_since_us);
+    deliver_input(&context, &request, 300U);
+    assert(!g_outputs[g_count - 1U].accepted);
+    assert(200U == context.recovery_since_us);
+    puts("S3-U42 PASS: motion, navigation and reply IDs stay independent");
+}
+
+/** @brief Preserve every command/state and controller mode in packed data. */
+static void test_navigation_meanings (void)
+{
+    uint8_t bytes[S3_OUTPUT_WIRE_MAX];
+    for (uint32_t state = LINE_STATE_CALIBRATING;
+         state <= LINE_STATE_FAULT_REPORTED; ++state)
+    {
+        for (uint32_t command = NAV_COMMAND_NONE;
+             command <= NAV_COMMAND_U_TURN; ++command)
+        {
+            s3_output_t event = {0};
+            event.kind = S3_OUTPUT_NAVIGATION;
+            event.event_id = 123U;
+            event.navigation.kind = NAV_EVENT_JUNCTION;
+            event.navigation.state = (line_state_t)state;
+            event.navigation.command = (nav_command_t)command;
+            event.navigation.timestamp_us = UINT64_C(0x100000123);
+            event.navigation.black_mask = 7U;
+            event.navigation.barcode_character = 'Z';
+            g_receive_size = (INT)s3_output_encode(&event, g_receive_bytes);
+            assert(19 == g_receive_size);
+            s3_output_t received = {0};
+            assert(E_OK == s3_receive(&received, TMO_POL));
+            assert(event.navigation.state == received.navigation.state);
+            assert(event.navigation.command == received.navigation.command);
+            assert(event.navigation.kind == received.navigation.kind);
+            assert(event.event_id == received.event_id);
+            assert(event.navigation.timestamp_us ==
+                   received.navigation.timestamp_us);
+            assert(event.navigation.black_mask ==
+                   received.navigation.black_mask);
+            assert('Z' == received.navigation.barcode_character);
+        }
+    }
+    s3_context_t context;
+    init_context(&context);
+    for (uint32_t mode = LINE_MODE_PAUSED; mode <= LINE_MODE_RECOVERY; ++mode)
+    {
+        s3_input_t request = {0};
+        request.kind = S3_INPUT_MODE;
+        request.value.mode = (line_mode_t)mode;
+        deliver_input(&context, &request, 100U + mode);
+        assert(g_outputs[g_count - 1U].accepted);
+        assert(mode == context.status.mode);
+        assert(((LINE_MODE_RECOVERY == mode) ? LINE_STATE_RECOVERY :
+                LINE_STATE_TRACKING) == context.status.state);
+    }
+    /* Reserved three-bit states cannot be published as navigation events. */
+    s3_output_t event = {0};
+    event.kind = S3_OUTPUT_NAVIGATION;
+    event.navigation.state = (line_state_t)6U;
+    assert(0U == s3_output_encode(&event, bytes));
+    puts("S3-U43 PASS: packed commands/states and all controller modes");
+}
+
 int main (void)
 {
     assert(E_OK == s3_navigation_init());
@@ -307,6 +460,9 @@ int main (void)
     test_outputs();
     test_rejection();
     test_gateway_reply();
+    test_odometry_identity();
+    test_completion_identity();
+    test_navigation_meanings();
     printf("sizes: map=%zu status=%zu output=%zu input_adapter=%zu\n",
            sizeof(nav_map_t), sizeof(s3_status_t), sizeof(s3_output_t),
            sizeof(s3_input_t));

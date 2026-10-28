@@ -24,6 +24,12 @@ IMPORT volatile ID tid_s3_navigation;
  * a retained filtered observation suitable for steering. See the proposed
  * handoff in docs/buddy3/production-timing-and-handoff.md. vehicle_rt.c is
  * the current controller caller; these providers never actuate motors.
+ * Controller reads current mode/state from s3_get_status(), including changes
+ * without a new line event. Navigation messages preserve event-time state and
+ * command: actionable JUNCTION + AWAITING_MANOEUVRE requests a manoeuvre;
+ * LINE_LOST reports recovery; LINE_FOUND reports reacquisition, then status
+ * becomes PAUSED/TRACKING until explicit controller resume. S3_OUTPUT_LINE
+ * carries observation/time/mask only, not mode/state. No IMU call is required.
  */
 /** @brief Copy one request into the bounded owner-task input queue. */
 ER s3_submit (const s3_input_t * p_input, TMO timeout);

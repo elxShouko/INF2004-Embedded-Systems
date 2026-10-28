@@ -154,3 +154,87 @@ their current freshness/fault/handshake checks. Buddy 1's binary MQTT migration,
 Buddy 2's physical motion calibration, Buddy 5's route identity and verification
 of the course letter mapping remain separate responsibilities. No shared/controller,
 motor, Wi-Fi, IMU or obstacle production implementation is changed by this audit.
+
+## Buddy 2 handoff clarification — 2026-10-28
+
+The existing S3 contract and packed formats remain unchanged. S3-U41 and
+S3-U42 exercise the public packed input path and real owner dispatch.
+
+- S2 requested/measured wheel speeds are signed int32 mm/s; per-wheel
+  positions are signed int64 micrometres. Preserve sign and units in the
+  controller. S3 consumes cumulative forward uint64 micrometres, not signed
+  wheel position or a speed magnitude. Reverse/turn/bypass observations must
+  not be fabricated as forward progress.
+- S2 measurement timestamps and command times use kernel monotonic time;
+  S2 publication time is a separate field. S3 raw/navigation/odometry times
+  use the RP2040 raw timer. The controller owns explicit clock conversion
+  preserving source age. Reading, retrying or republishing is not acquisition.
+- Equal S3 odometry timestamps require identical distance AND tracking-forward
+  state. Inconsistent duplicates invalidate eligibility while preserving the
+  last accepted baseline; consistent duplicates expire from original source
+  time. Only a newer acquisition can carry a changed tracking state.
+- S2 owns its motion command/terminal ID and result. The controller must match
+  the active command, require successful manoeuvre execution and its required
+  stop/standstill condition, then correlate that command with S3's separately
+  stored navigation-event ID. Queue admission, cancellation, timeout and failure
+  are not successful manoeuvre completion.
+- S3_INPUT_MANOEUVRE_DONE carries that S3 navigation-event ID. request_id only
+  correlates the reply; it is not completion evidence. S3 checks pending ID,
+  tracking mode, awaiting state and fault, then begins line recovery. It has no
+  motion-result/standstill fields and cannot independently verify the controller's
+  assertion. No new S2-to-S3 completion API or shared interface was introduced.
+
+Scope: S3 header comments, host regressions and S3 documentation only. S2 and
+shared controller code are unchanged. These tests preserve the consumer's
+contract; they do not validate S2 terminal generation, the controller's clock
+conversion, physical standstill or target SMP timing.
+
+## Controller mode handoff preservation — 2026-10-28
+
+The Vehicle Controller's vehicle_read() already reads current line_state,
+line_mode and pending_navigation_id from s3_get_status(). Packed navigation
+events retain event-time state and command; S3_OUTPUT_LINE is only an
+observation/time/mask message. No extra turning-mode enum is needed:
+
+| Transition | Packed navigation meaning | Current status available to controller |
+|---|---|---|
+| Ordinary line following | Line observation events on changes | TRACKING mode; TRACKING or BARCODE_DECODING state |
+| Actionable junction | JUNCTION, LEFT/RIGHT/STRAIGHT/U_TURN, AWAITING_MANOEUVRE, separate S3 event ID | TRACKING mode, AWAITING_MANOEUVRE; controller owns motor execution |
+| Successful correlated completion | Controller submits S3 MANOEUVRE_DONE | RECOVERY mode and state |
+| Sustained line loss | LINE_LOST with RECOVERY state | RECOVERY mode and state |
+| Stable reacquisition | LINE_FOUND with RECOVERY event-time state | Then PAUSED mode, TRACKING state; explicit controller resume required |
+| Resume accepted | Mode reply confirms owner acceptance | TRACKING mode/state; fresh filtered sensing still required |
+
+Event-time state and current mode are separate facts. LINE_FOUND does not itself
+authorize driving. Re-reading an unchanged snapshot does not renew sensing.
+S3-U43 checks all packed command/state combinations and all mode inputs;
+S3-U44 checks real owner transitions for all four actions through packed output
+and the public status API. Snapshot publication is modeled by the host fixture;
+controller execution and actual SMP delivery are outside those S3 tests.
+The existing controller/provider path was inspected; no IMU interface or
+shared controller implementation change is required by this feedback.
+
+## Motion increment compatibility — 2026-10-28
+
+Disposition of the additional line/barcode/navigation feedback: no S3 runtime
+or protocol change is required for this increment. Continue using the existing
+motion/controller APIs, subject to the team's existing interface agreement;
+this note does not establish a new agreement or finalize provisional APIs.
+
+Continuous differential wheel-speed requests, finite manoeuvres and the motion
+command lifecycle retain their existing semantics. S3 supplies line/navigation
+observations to the Vehicle Controller; the controller arbitrates motion and
+Buddy 2 actuates the motors. Do not introduce direct S3 motor requests or a
+second completion channel for this increment.
+
+Successful submission means queued intake, not successful execution or physical
+completion. Keep owner acceptance, successful terminal result, required
+stop/standstill, motion acknowledgement and correlated S3 navigation completion
+as separate steps under the existing lifecycle. Preserve the distinct motion
+command and navigation-event IDs described above.
+
+The S3 input/output queues, message kinds, packed field widths and message
+lengths are unchanged. Existing S3-U16/U23/U42 completion regressions and
+S3-U27/U28/U43 packing regressions remain applicable. The immediately preceding
+host run passed those checks; this additional disposition changes documentation
+only and does not constitute a new test run or hardware validation.

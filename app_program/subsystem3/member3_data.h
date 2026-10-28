@@ -39,7 +39,13 @@ typedef enum
     S3_INPUT_MANOEUVRE_DONE
 } s3_input_kind_t;
 
-/** @brief Describe one timestamped forward-odometry observation. */
+/** @brief Describe one forward-odometry acquisition, not a publication.
+ * timestamp_us uses S3's RP2040 raw timer domain. The controller must translate
+ * S2's kernel measurement time while preserving source age; never use S2's
+ * publication time or refresh time on read/retry. Distance is cumulative
+ * forward micrometres, not signed wheel position or speed in mm/s. Repeated
+ * timestamps require identical distance AND tracking_forward values.
+ */
 typedef struct
 {
     uint64_t timestamp_us;
@@ -54,6 +60,10 @@ typedef union
     line_mode_t   mode;
     nav_update_t  mapping;
     s3_odometry_t odometry;
+    /* S3 navigation event ID, distinct from the S2 motion command ID.
+     * Controller sends DONE only after matching S2 success and required
+     * stop/standstill. S3 cannot establish physical completion from this ID.
+     */
     uint32_t      manoeuvre_event_id;
 } s3_input_payload_t;
 
