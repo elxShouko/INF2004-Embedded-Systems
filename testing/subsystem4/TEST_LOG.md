@@ -405,3 +405,25 @@ before/after RP2040 and host sizes, and packed-state correctness tests are in
 monitor still controls Buddy 1's demonstration LED task through IF-05; this
 existing cross-buddy behaviour was not changed or hardware-tested. Physical
 IMU enablement and calibration gates remain pending.
+
+## Robot raw diagnostic copy definitions 2026-10-28
+
+| ID | Method | Expected result |
+|---|---|---|
+| S4-U210 | APP_ROBOT=1 runtime fake | Null arguments rejected; unobserved raw sample has result UINT32_MAX; copying performs no additional sensor read |
+| S4-U211 | Same, mutex failure | Return E_TMOUT and preserve caller storage; no extra sensor read |
+
+Included by `testing/integration/verify_integration.py --robot`. Target timing and actual IMU readings remain NOT RUN.
+
+S4-U212: run the actual IMU owner with the existing sensor fake through a transport failure. Expected: diagnostics retain the last successful acceleration/time, report the latest IO error, and perform no additional sensor read. Included in the robot host suite.
+
+
+### Software verification run 2026-10-28 (uncommitted production commissioning)
+
+HEAD `993927ce2a0a258f7dc7ab91838194a22d45eda0` plus the approved dirty working
+tree. Final commands, scope, source/artifact hashes, external raw evidence paths
+and the complete changed-file list are recorded in
+[`docs/commissioning.md`](../../docs/commissioning.md#software-verification-and-delivery-2026-10-28).
+No physical hardware test, firmware flash or real MQTT session was performed.
+
+S4-U210..212 pass in both robot host profiles. Existing core/runtime/transport functional checks pass with the pre-existing conversion/type-limit warning categories nonfatal and visible. Strict selected imu_runtime.c ARM compilation passes; no clean strict whole-S4 or physical calibration claim.

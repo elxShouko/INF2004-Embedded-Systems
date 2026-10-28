@@ -23,6 +23,22 @@ static uint64_t g_s5_motion_sample_us;
 static uint32_t g_s5_motion_raw_ms;
 static bool g_s5_motion_baseline;
 static drv_s5_t g_s5_driver;
+#if defined(APP_ROBOT) && APP_ROBOT
+static bool g_s5_enable_requested;
+static bool g_s5_active;
+
+ER s5_live_start_sensing (void)
+{
+    if (!g_s5_configured) { return (E_OBJ); }
+    ER error = tk_loc_mtx(g_s5_mutex, TMO_POL);
+    if (E_OK == error)
+    {
+        g_s5_enable_requested = true;
+        error = tk_unl_mtx(g_s5_mutex);
+    }
+    return (error);
+}
+#endif
 
 static void s5_live_task (INT code, void * p_context);
 static void s5_live_cleanup (void);
@@ -178,7 +194,18 @@ static void s5_live_task (INT code, void * p_context)
         ER fault = s5_live_fault();
 
         b_ok = b_ok && (E_TMOUT == fault);
-        if (b_ok && g_s5_configured)
+        bool b_active = g_s5_configured;
+#if defined(APP_ROBOT) && APP_ROBOT
+        ER enable_lock = tk_loc_mtx(g_s5_mutex, TMO_POL);
+        if (E_OK == enable_lock)
+        {
+            g_s5_active = g_s5_active || g_s5_enable_requested;
+            if (E_OK != tk_unl_mtx(g_s5_mutex)) { b_ok = false; }
+        }
+        else if (E_TMOUT != enable_lock) { b_ok = false; }
+        b_active = b_active && g_s5_active;
+#endif
+        if (b_ok && b_active)
         {
             b_ok = s5_live_cycle(now_us,&b_scan_requested);
         }

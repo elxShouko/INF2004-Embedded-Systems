@@ -382,7 +382,7 @@ static wheel_loop_config_t test_motion_loop_config (void)
         -0.5F,0.5F,100000U,MOTION_CONFIG_CALIBRATION_CONFIRMED};
     cfg.pid[1] = cfg.pid[0];
     cfg.profile = (move_plan_config_t){1000U,1000U,1000U,{1000000U,
-        1000000U},1.0F,100};
+        1000000U},1.0F,100,false};
     cfg.period_us = 10000U;
     cfg.sample_limit_us = 100000U;
     cfg.stop_dwell_us = 20000U;

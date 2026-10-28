@@ -27,13 +27,15 @@ def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--label',required=True)
     parser.add_argument('--arm',action='store_true')
+    parser.add_argument('--robot',action='store_true')
+    parser.add_argument('--output-dir',type=Path,default=HERE/'logs')
     opts=parser.parse_args()
     if not re.fullmatch('[A-Za-z0-9_]+',opts.label):parser.error('invalid label')
-    logs=HERE/'logs';logs.mkdir(exist_ok=True)
+    logs=opts.output_dir.resolve();logs.mkdir(parents=True,exist_ok=True)
     files=sorted([p for p in BASE.rglob('*') if p.suffix in ('.c','.h')]+
         [HERE/'test_ports.h',HERE/'test_vehicle.c',Path(__file__).resolve(),
          ROOT/'testing/subsystem2/test_rtos.h',ROOT/'testing/subsystem2/verify_motion.py',
-         ROOT/'testing/subsystem2/m2_make_recipes.txt']+
+         ROOT/'testing/subsystem2/m2_make_recipes.txt',HERE/'test_commission.c']+
         [ROOT/'testing/subsystem5/host'/n for n in
          ('test_obstacle_logic.c','test_obstacle_runtime.c',
           'test_s5_port.c','test_s5_port.h')])
@@ -41,7 +43,7 @@ def main():
         json.dump({'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
             'branch':subprocess.check_output(['git','branch','--show-current'],cwd=ROOT,text=True).strip(),
             'status':subprocess.check_output(['git','status','--short'],cwd=ROOT,text=True),
-            'utc':datetime.now(timezone.utc).isoformat(),'arm':opts.arm,
+            'utc':datetime.now(timezone.utc).isoformat(),'arm':opts.arm,'robot':opts.robot,
             'sha256':{p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
             # Raw hashes describe compiler inputs; blob IDs bind evidence to Git's
             # configured clean/line-ending normalization for the exact commit.
@@ -88,11 +90,15 @@ def main():
                     flags=[TOOLS['HOST_GCC'],'-std=c99',*TOOLS['WARN'],'-fanalyzer',
                         '-DVEHICLE_HOST_TEST','-DMOTION_CONFIG_HOST_TEST',
                         '-DMOTION_RTOS_HOST_TEST','-DAPP_TEST=0','-I'+str(BASE),
-                        '-I'+str(HERE),'-include',str(HERE/'test_ports.h')]
+                        '-I'+str(HERE),'-I'+str(ROOT/'config'),
+                        '-include',str(HERE/'test_ports.h')]
+                    if opts.robot:flags+=['-DAPP_ROBOT=1']
                     if profile=='optimized':flags+=['-O2','-fshort-enums']
                     exe=temp/(profile+'.exe')
                     objects=[]
-                    for index,source in enumerate(PRODUCTION+[HERE/'test_vehicle.c']):
+                    sources=PRODUCTION+[HERE/'test_vehicle.c']
+                    if opts.robot:sources+=[BASE/'vehicle_profile.c']
+                    for index,source in enumerate(sources):
                         obj=temp/f'{profile}_{index}.o'
                         options=flags.copy()
                         if source.name=='s1_codec.c':
@@ -105,11 +111,75 @@ def main():
                         run(options+['-c',str(source),'-o',str(obj)],log)
                         objects.append(str(obj))
                     run([TOOLS['HOST_GCC'],*objects,'-lm','-o',str(exe)],log)
-                    for case in list(range(3,63))+list(range(64,86)):
+                    cases=list(range(102,109)) if opts.robot else list(range(3,63))+list(range(64,86))+list(range(87,90))
+                    for case in cases:
                         output=run([str(exe),str(case)],log,5)
                         if re.findall(r'^\[TEST\] (INT-\d+) PASS ',output,re.M)!=[f'INT-{case:02}']:
                             raise SystemExit('wrong/missing test ID')
-                    print(profile,'82 normal integration groups PASS')
+                    print(profile,len(cases),'robot' if opts.robot else 'normal','integration groups PASS')
+                    # The production bench/decoder/codec policy with synthetic
+                    # ports, separately compiled with the robot wire extension.
+                    benchsources=[BASE/'subsystem2'/name for name in
+                        ('bench_motion.c','drv_motor.c','motion_quad.c',
+                         'enc_capture.c','motion_config.c')]
+                    benchsources += [BASE/'subsystem1/s1_codec.c',HERE/'test_commission.c']
+                    benchobjects=[]
+                    for index,source in enumerate(benchsources):
+                        obj=temp/f'{profile}_bench_{index}.o'
+                        options=flags.copy()
+                        if not opts.robot:options+=['-DAPP_ROBOT=1']
+                        if source.name=='s1_codec.c':
+                            options+=['-Wno-error=conversion','-Wno-error=sign-conversion']
+                        run(options+['-c',str(source),'-o',str(obj)],log)
+                        benchobjects.append(str(obj))
+                    benchexe=temp/'bench.exe'
+                    run([TOOLS['HOST_GCC'],*benchobjects,'-lm','-o',str(benchexe)],log)
+                    for case in range(90,102):
+                        output=run([str(benchexe),str(case)],log,5)
+                        if f'[TEST] INT-{case} PASS ' not in output:raise SystemExit('bench case failed')
+                    print(profile,'12 production bench/protocol groups PASS')
+                    if opts.robot:
+                        s2=BASE/'subsystem2'
+                        ownernames=('task_motion.c','bench_motion.c','drv_motor.c',
+                            'motion_quad.c','enc_capture.c','drv_encoder.c',
+                            'motion_config.c','motion_pid.c','motion_estimator.c',
+                            'wheel_loop.c','move_plan.c','motion_run.c','motion_bus.c',
+                            'subsystem2.c')
+                        ownerflags=[TOOLS['HOST_GCC'],'-std=c99',*TOOLS['WARN'],
+                            '-fanalyzer','-DAPP_ROBOT=1','-DMOTION_CONFIG_HOST_TEST',
+                            '-DMOTION_RTOS_HOST_TEST','-I'+str(s2),
+                            '-I'+str(ROOT/'testing/subsystem2')]
+                        if profile=='optimized':ownerflags+=['-O2','-fshort-enums']
+                        ownerexe=temp/'bench_owner.exe'
+                        run(ownerflags+[str(s2/name) for name in ownernames]+[
+                            str(ROOT/'testing/subsystem2/test_rtos.c'),'-o',str(ownerexe)],log)
+                        for case in range(144,151):
+                            output=run([str(ownerexe),str(case)],log,5)
+                            if f'[TEST] S2-U{case} PASS ' not in output:raise SystemExit('bench owner case failed')
+                        print(profile,'7 actual S2 owner commissioning groups PASS')
+                        s5=BASE/'subsystem5'
+                        liveexe=temp/'robot_s5.exe'
+                        run(flags+['-DS5_LIVE_HOST_TEST',
+                            str(ROOT/'testing/subsystem5/host/test_obstacle_runtime.c'),
+                            str(s5/'s5_acquire.c'),str(s5/'s5_obstacle_logic.c'),
+                            str(s5/'s5_obstacle_runtime.c'),str(s5/'s5_live.c'),
+                            '-lm','-o',str(liveexe)],log)
+                        for case in range(120,123):run([str(liveexe),str(case)],log,5)
+                        s4=BASE/'subsystem4'
+                        s4host=ROOT/'testing/subsystem4/host'
+                        rawexe=temp/'robot_s4.exe'
+                        rawflags=[TOOLS['HOST_GCC'],'-std=c99','-Wall','-Wextra',
+                            '-Werror','-Wconversion','-Wno-error=conversion',
+                            '-Wno-error=type-limits',
+                            '-Wshadow','-pedantic','-O2','-DAPP_ROBOT=1',
+                            '-DS4_IMU_ENABLE=1','-I'+str(s4host/'fake')]
+                        run(rawflags+[str(s4/n) for n in
+                            ('imu_core.c','imu_runtime.c','imu_guard.c','imu_link.c','imu_packed.c')]+[
+                            str(s4host/'runtime_fake.c'),str(s4host/'runtime_main.c'),
+                            '-lm','-o',str(rawexe)],log)
+                        for case in (210,211,212):run([str(rawexe),str(case)],log,5)
+                        print(profile,'S5 activation and S4 diagnostic copy groups PASS')
+                        continue
                     testobjects=objects.copy()
                     testflags=[a for a in flags if a!='-DAPP_TEST=0']+['-DAPP_TEST=1']
                     for index in (1,3):
@@ -144,9 +214,9 @@ def main():
                               if case==67 else ((BASE/'vehicle.c').read_text()
                               if case in (61,72,77) else runtime))
                         if text.count(old)!=1:raise SystemExit('mutation anchor')
-                        source=temp/'mutated_runtime.c'
+                        source=temp/f'mutated_runtime_{profile}_{case}.c'
                         source.write_text(text.replace(old,new))
-                        obj=temp/'mutated_runtime.o'
+                        obj=temp/f'mutated_runtime_{profile}_{case}.o'
                         run(flags+['-I'+str(BASE/'subsystem5'),'-c',str(source),'-o',str(obj)],log)
                         altered=objects.copy()
                         altered[19 if case==67 else (0 if case in (61,72,77) else 1)]=str(obj)

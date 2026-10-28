@@ -3,11 +3,14 @@
 This branch now contains the complete professor's micro T-Kernel project template.
 Build the integrated firmware from **build_make/** using **make**, as described below.
 
-- Each team member owns **app_program/subsystemN/**.
-- Member 3's IR/line/barcode task is integrated in **app_program/subsystem3/**.
-- Subsystems 1, 2 and 4 currently contain the professor's examples.
-- Subsystem 5 has host-testable obstacle calculations, but its RTOS and
-  hardware integration remains pending.
+- The production Vehicle Controller integrates **app_program/subsystem1/**
+  through **subsystem5/**; each subsystem retains its hardware owner.
+- For the assembled car, use the explicit **ROBOT=1** production profile and
+  [staged robot testing guide](docs/commissioning.md). Its delivered BENCH
+  configuration enables diagnostics and leaves motor actuation disabled.
+- Professor demonstration tasks are retained alongside production modules.
+- Calibration, physical timing and complete-course acceptance remain pending;
+  integrated software and successful builds do not establish those results.
 - Existing **src/**, **include/line/** and **CMakeLists.txt** are preserved for
   the earlier standalone Pico SDK programs. They are not the integrated RTOS build.
 

@@ -378,3 +378,15 @@ is observation only; actionable JUNCTION owns the existing manoeuvre-completion
 handshake. Buddy 2 alone continues to actuate motors. All consumers must rebuild
 with current headers. The 2026-10-26 junction rule supersedes the recorded
 2026-10-21 immediate rule.
+
+## Production robot startup and staged testing 2026-10-28
+
+The user approved shared startup/build/controller and narrow S1/S2/S4/S5 changes for staged testing on the actual car. `ROBOT=1` uses the existing production tasks and Vehicle Controller. One immutable `config/robot_profile.h` supplies configuration before task start. Default BENCH enables raw hand-rotation encoder diagnostics and leaves motor power/limits unconfigured. S2 remains the only motor owner; its independent emergency flag, capture lock and production drivers are retained. Bench and calibrated mission ownership cannot coexist in one boot.
+
+LINE uses the actual controller, S3 sensing and S2 PID/motion executive, with explicit straight/line-only restrictions. Unknown turn scales may remain zero; turn commands are rejected. Mandatory provider freshness and power gates remain. BARCODE additionally needs measured turns/junctions and the existing runtime map. Bypass and hump-height trust are not asserted by this change.
+
+The existing MQTT monitor is extended with session-scoped compact controls and a test lease; no independent network task, SWD command protocol or replacement control stack is added. S4 exposes copied raw samples from its existing owner. S5 remains inactive at boot in ROBOT mode until explicitly requested with an already validated configuration; this command may move the GP15 servo. USB CDC supplies offline diagnostics, without using GP0/GP1 UART.
+
+Team-confirmed wiring follows Week 6, with one servo on GP15. The GP6 white ECHO wire is professor-approved but not electrically measured. The professor instructed ignoring the physically unverified GP28 VBAT jumper; no conflicting GP28 assignment is introduced. These statements supersede the earlier wiring placeholders, not the still-open calibration and physical timing work.
+
+Bench pulses are one-shot, at most 500 ms, with a 500 ms PC lease, a five-second ARM window and owner-side deadlines. Initial autonomous trials are at most 30 s with a maximum 500 ms motion-command TTL. These are development test limits, not measured stopping or navigation guarantees. Hardware authorisation, calibration, timing and mission evidence remain required. Operating/build/flash instructions: `docs/commissioning.md`.

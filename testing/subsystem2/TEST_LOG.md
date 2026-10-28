@@ -2649,3 +2649,29 @@ Pico. Runtime memory peaks, IRQ/control/emergency timing, electrical operation
 and motion accuracy remain unmeasured. Numeric narrowing, public status/enums,
 fault translation and shared vehicle flags remain open; no complete minimum-bit
 compliance claim. No flashing, network access, installation, staging or commit.
+
+## Production bench owner definitions 2026-10-28
+
+| ID | Host fault injection | Expected result |
+|---|---|---|
+| S2-U144 | Real task_motion + production raw capture | No motor prepare at boot; coherent raw counts valid while speed remains uncalibrated |
+| S2-U145 | One-shot pulse through real owner and fake backend | Deadline stops both wheels; owner cannot be configured as mission simultaneously |
+| S2-U146 | PC lease expires before pulse deadline | Owner stops without controller/telemetry intervention |
+| S2-U147 | Emergency while ordinary mutex is busy | Outputs stop through independent flag; queue/status lock cannot hide emergency |
+| S2-U148 | Clock failure during pulse | Outputs stop and owner exits; no continued effort |
+| S2-U149 | Repeated ARM while driving | Test stops and latches fault; no live re-arm or repeat |
+
+Run via `testing/integration/verify_integration.py --robot`; all GPIO/motor ports are host fakes. Physical stop latency is NOT RUN.
+
+S2-U150: inject an invalid quadrature transition during an actual-owner pulse with fake hardware. Expected: independent sensor latch stops both outputs and invalid-edge diagnostics are retained. S2-U144 additionally rejects ARM before the 100 ms count-quiet guard, with no motor preparation.
+
+
+### Software verification run 2026-10-28 (uncommitted production commissioning)
+
+HEAD `993927ce2a0a258f7dc7ab91838194a22d45eda0` plus the approved dirty working
+tree. Final commands, scope, source/artifact hashes, external raw evidence paths
+and the complete changed-file list are recorded in
+[`docs/commissioning.md`](../../docs/commissioning.md#software-verification-and-delivery-2026-10-28).
+No physical hardware test, firmware flash or real MQTT session was performed.
+
+Existing 98 pure + 43 adapter checks pass per host profile; timeout/host guards and eight mutations pass. S2-U144..150 pass through the actual production owner with fake hardware, default and optimized. No physical stop-latency claim.

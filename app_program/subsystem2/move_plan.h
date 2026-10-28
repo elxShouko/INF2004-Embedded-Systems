@@ -27,6 +27,8 @@ typedef struct
     uint32_t turn_scale_ppm[2]; /* Explicit calibration; no nominal default. */
     motion_pid_value_t correction_gain; /* (mm/s)/mm progress mismatch. */
     int32_t correction_limit_mm_s;
+    /* Explicit capability restriction; unknown turn scales may remain zero. */
+    bool b_straight_only : 1;
 } move_plan_config_t;
 typedef struct
 {

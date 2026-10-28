@@ -727,3 +727,24 @@ git diff --check
 
 These are host tests, not a full firmware build, target execution, calibration
 or physical vehicle verification.
+
+## Explicit production robot sensing definitions 2026-10-28
+
+| ID | Host test | Expected result |
+|---|---|---|
+| S5-U120 | Configured ROBOT owner boots without SENSORS | No acquisition open, no servo drive, forward validity false |
+| S5-U121 | Explicit SENSORS on configured owner | Existing acquisition path opens once and publishes real-owner/fake-port forward sample |
+| S5-U122 | SENSORS before configuration | E_OBJ; owner stays without acquisition/output |
+
+Included by `testing/integration/verify_integration.py --robot`. Real servo/sensor activation remains NOT RUN.
+
+
+### Software verification run 2026-10-28 (uncommitted production commissioning)
+
+HEAD `993927ce2a0a258f7dc7ab91838194a22d45eda0` plus the approved dirty working
+tree. Final commands, scope, source/artifact hashes, external raw evidence paths
+and the complete changed-file list are recorded in
+[`docs/commissioning.md`](../../docs/commissioning.md#software-verification-and-delivery-2026-10-28).
+No physical hardware test, firmware flash or real MQTT session was performed.
+
+Existing policy/acquisition/live/MMIO checks pass in the normal integration profiles. S5-U120..122 explicit activation/rejection checks pass in both robot profiles. No physical servo/ranging test.

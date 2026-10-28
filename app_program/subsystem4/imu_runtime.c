@@ -40,6 +40,24 @@ static ID g_fault = 0;
 static ID g_task = 0;
 static imu_runtime_shared_t g_status;
 static imu_runtime_trust_t g_trust;
+#if defined(APP_ROBOT) && APP_ROBOT
+static imu_core_sample_t g_raw_sample;
+static uint32_t g_raw_result = UINT32_MAX;
+
+ER imu_runtime_raw (imu_core_sample_t * p_sample, uint32_t * p_result)
+{
+    if ((NULL == p_sample) || (NULL == p_result)) { return (E_PAR); }
+    ER error = tk_loc_mtx(g_mutex, TMO_POL);
+    if (E_OK == error)
+    {
+        imu_core_sample_t sample = g_raw_sample;
+        uint32_t result = g_raw_result;
+        error = tk_unl_mtx(g_mutex);
+        if (E_OK == error) { *p_sample = sample; *p_result = result; }
+    }
+    return (error);
+}
+#endif
 
 ER imu_runtime_init (void)
 {
@@ -266,6 +284,16 @@ static void sample_loop (imu_core_t *p_core)
         uint32_t work_ms = 0u;
 
         sample.time_ms = drv_imu_time_ms();
+#if defined(APP_ROBOT) && APP_ROBOT
+        ER raw_lock = tk_loc_mtx(g_mutex, IMU_LOCK_TIMEOUT_MS);
+        if (E_OK == raw_lock)
+        {
+            if (DRV_LSM_OK == result) { g_raw_sample = sample; }
+            g_raw_result = (uint32_t)result;
+            if (E_OK != tk_unl_mtx(g_mutex)) { signal_fault(); }
+        }
+        else { signal_fault(); }
+#endif
         if (DRV_LSM_OK == result)
         {
             if (read_distance(&sample, last_sample_ms,

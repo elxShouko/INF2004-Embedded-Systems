@@ -9,6 +9,8 @@
 #include "subsystem4/imu_runtime.h"
 #include "subsystem4/drv_imu.h"
 #include "subsystem2/motion_api.h"
+#include "vehicle_profile.h"
+#include <math.h>
 #if !defined(VEHICLE_HOST_TEST)
 #include <tk/syslib.h>
 #endif
@@ -27,6 +29,22 @@ static vehicle_t g_vehicle_owner;
 static vehicle_t g_vehicle_published;
 static s5_clearance_t g_vehicle_clearance;
 static gpio_bank_t g_vehicle_bank;
+#if APP_ROBOT
+static vehicle_robot_profile_t g_vehicle_robot;
+static uint32_t g_vehicle_robot_session;
+static uint32_t g_vehicle_robot_lease_ms;
+static bool g_vehicle_robot_have_lease;
+static uint64_t g_vehicle_robot_run_us;
+static bool g_vehicle_robot_run_started;
+static bool g_vehicle_robot_prepared;
+static uint8_t g_vehicle_robot_pending;
+static uint32_t g_vehicle_robot_pending_ms;
+static uint64_t g_vehicle_robot_log_us;
+static void vehicle_robot_command (s1_codec_command_t const * p_command,
+    vehicle_input_t const * p_input);
+static void vehicle_robot_guard (vehicle_input_t * p_input);
+static void vehicle_robot_log (vehicle_input_t const * p_input);
+#endif
 
 static void vehicle_task (INT code, void * p_context);
 static void vehicle_irq (UINT number);
@@ -166,6 +184,238 @@ ER vehicle_runtime_start(uint32_t started_mask)
 #endif
 }
 
+#if APP_ROBOT
+ER vehicle_runtime_robot_prepare (vehicle_robot_profile_t const * p_profile)
+{
+    if ((NULL == p_profile) || g_vehicle_started ||
+        g_vehicle_robot_prepared || (g_vehicle_task <= 0) ||
+        (p_profile->stage > VEHICLE_STAGE_BARCODE)) { return (E_PAR); }
+    g_vehicle_robot = *p_profile;
+    /* A boot challenge protects against accidentally replaying old bench
+     * packets. ROSC samples/time are not a cryptographic authentication API. */
+#if defined(VEHICLE_HOST_TEST)
+    g_vehicle_robot_session = 0x12345678U;
+#else
+    for (uint32_t index = 0U; index < 32U; ++index)
+    {
+        g_vehicle_robot_session = (g_vehicle_robot_session << 1U) |
+            (*(volatile uint32_t const *)0x4006001cUL & 1U);
+    }
+    g_vehicle_robot_session ^= (uint32_t)s3_clock_us();
+    if (0U == g_vehicle_robot_session) { g_vehicle_robot_session = 1U; }
+#endif
+    drv_encoder_port_t port = {&g_vehicle_bank, gpio_bank_reserve,
+        gpio_bank_enable, vehicle_release};
+    ER error = E_OK;
+    if (VEHICLE_STAGE_BENCH == p_profile->stage)
+    {
+        if (!motion_api_bench_prepare(&p_profile->bench, &port))
+        {
+            return (E_SYS);
+        }
+        if (p_profile->setup.b_obstacle_requested)
+        {
+            error = s5_live_configure(&p_profile->setup.obstacle, &port);
+        }
+    }
+    else
+    {
+        /* Keep every mandatory readiness provider. No bypass/height claim. */
+        bool b_line = (VEHICLE_STAGE_LINE == p_profile->stage);
+        if ((0U == p_profile->run_limit_ms) ||
+            (p_profile->run_limit_ms > 30000U) ||
+            (p_profile->setup.mission.command_ttl_us > MOTION_BENCH_LEASE_US) ||
+            !p_profile->setup.b_obstacle_requested ||
+            (b_line != p_profile->setup.mission.b_line_only) ||
+            (b_line != p_profile->setup.motion.profile.b_straight_only) ||
+            p_profile->setup.mission.route.b_calibrated ||
+            (!b_line && !p_profile->setup.navigation.junction_enabled))
+        {
+            return (E_PAR);
+        }
+        error = vehicle_runtime_setup(&p_profile->setup);
+    }
+    g_vehicle_robot_prepared = (E_OK == error);
+    return (error);
+}
+
+static void vehicle_robot_command (s1_codec_command_t const * p_command,
+    vehicle_input_t const * p_input)
+{
+    if (!g_vehicle_robot_prepared || p_input->b_estop ||
+        p_input->b_provider_fault || !p_input->b_link_up ||
+        (p_command->session != g_vehicle_robot_session) ||
+        ((uint32_t)(p_input->now_us / 1000U) - p_command->rx_timestamp_ms >=
+            MOTION_BENCH_LEASE_US / 1000U))
+    {
+        tm_printf((UB*)"[ROBOT] rejected stale/session/not-ready command=%u\n",
+            (unsigned int)p_command->command_id);
+        return;
+    }
+    if (S1_CMD_ROBOT_LEASE == p_command->command_id)
+    {
+        uint32_t delta = p_command->rx_timestamp_ms - g_vehicle_robot_lease_ms;
+        if (!g_vehicle_robot_have_lease ||
+            ((0U != delta) && (delta < 0x80000000U)))
+        {
+            g_vehicle_robot_lease_ms = p_command->rx_timestamp_ms;
+            g_vehicle_robot_have_lease = true;
+        }
+        if (VEHICLE_STAGE_BENCH == g_vehicle_robot.stage)
+        {
+            if (MOTION_API_ERROR ==
+                motion_api_bench_lease(p_command->rx_timestamp_ms))
+            {
+                (void)motion_api_estop();
+            }
+        }
+        return;
+    }
+    /* Defer actuation requests until every provider has been checked. */
+    if (0U == g_vehicle_robot_pending)
+    {
+        g_vehicle_robot_pending = (uint8_t)p_command->command_id;
+        g_vehicle_robot_pending_ms = p_command->rx_timestamp_ms;
+    }
+}
+
+static void vehicle_robot_guard (vehicle_input_t * p_input)
+{
+    uint8_t pending = g_vehicle_robot_pending;
+    g_vehicle_robot_pending = 0U;
+    if (p_input->b_provider_fault || p_input->b_estop)
+    {
+        (void)motion_api_estop();
+        return;
+    }
+    bool b_lease = p_input->b_link_up && g_vehicle_robot_have_lease &&
+        ((uint32_t)(p_input->now_us / 1000U) - g_vehicle_robot_lease_ms <
+            MOTION_BENCH_LEASE_US / 1000U);
+    if (!g_vehicle_robot_prepared)
+    {
+        p_input->remote.command_id = S1_CMD_NONE;
+        return;
+    }
+    if (((uint32_t)(p_input->now_us / 1000U) - g_vehicle_robot_pending_ms >=
+            MOTION_BENCH_LEASE_US / 1000U) || !p_input->b_link_up ||
+        (S1_CMD_PAUSE == p_input->remote.command_id) ||
+        (S1_CMD_EMERGENCY_STOP == p_input->remote.command_id))
+    {
+        pending = 0U;
+    }
+    if (S1_CMD_ROBOT_SENSORS == pending)
+    {
+        ER error = s5_live_start_sensing();
+        tm_printf((UB*)"[ROBOT] sensor start=%d (may centre servo GP15)\n", error);
+    }
+    if (VEHICLE_STAGE_BENCH == g_vehicle_robot.stage)
+    {
+        if ((pending >= S1_CMD_BENCH_ENCODERS) &&
+            (pending <= S1_CMD_BENCH_PULSE))
+        {
+            motion_bench_request_t request = (motion_bench_request_t)
+                (pending - S1_CMD_BENCH_ENCODERS + 1);
+            motion_api_result_t result = motion_api_bench_request(request);
+            tm_printf((UB*)"[ROBOT] bench command=%u intake=%u; owner result follows\n",
+                (unsigned int)request, (unsigned int)result);
+        }
+        /* PC/broker loss cannot leave an armed bench owner renewing itself. */
+        if (!p_input->b_link_up) { (void)motion_api_stop(); }
+        p_input->remote.command_id =
+            (S1_CMD_PAUSE == p_input->remote.command_id) ? S1_CMD_PAUSE :
+            S1_CMD_NONE;
+        return;
+    }
+    if (((S1_CMD_START_RUN == p_input->remote.command_id) ||
+         (S1_CMD_RESUME == p_input->remote.command_id)) && !b_lease)
+    {
+        p_input->remote.command_id = S1_CMD_NONE;
+    }
+    if (((S1_CMD_START_RUN == p_input->remote.command_id) ||
+         (S1_CMD_RESUME == p_input->remote.command_id)) &&
+        !g_vehicle_robot_run_started)
+    {
+        g_vehicle_robot_run_us = p_input->now_us;
+        g_vehicle_robot_run_started = true;
+    }
+    if (g_vehicle_robot_run_started &&
+        (!b_lease || (p_input->now_us < g_vehicle_robot_run_us) ||
+         (p_input->now_us - g_vehicle_robot_run_us >=
+            (uint64_t)g_vehicle_robot.run_limit_ms * 1000U)))
+    {
+        /* One bounded trial per boot. S2 command TTL also acts if this task
+         * stalls; it never depends on this logging or on MQTT queue delivery. */
+        p_input->b_estop = true;
+        (void)motion_api_estop();
+    }
+}
+
+static int32_t vehicle_robot_milli (float value)
+{
+    if (!isfinite(value) || (value > 1000000.0F) || (value < -1000000.0F))
+    {
+        return (INT32_MIN);
+    }
+    return ((int32_t)(value * 1000.0F));
+}
+
+static void vehicle_robot_log (vehicle_input_t const * p_input)
+{
+    if ((p_input->now_us >= g_vehicle_robot_log_us) &&
+        (p_input->now_us - g_vehicle_robot_log_us < 1000000U)) { return; }
+    g_vehicle_robot_log_us = p_input->now_us;
+    tm_printf((UB*)"[ROBOT] stage=%u prepared=%u session=0x%08x state=%u blockers=0x%x mqtt=%u faults=0x%x\n",
+        (unsigned int)g_vehicle_robot.stage, (unsigned int)g_vehicle_robot_prepared,
+        (unsigned int)g_vehicle_robot_session, (unsigned int)g_vehicle_owner.state,
+        (unsigned int)g_vehicle_owner.blockers, (unsigned int)p_input->b_link_up,
+        (unsigned int)s1_net_fault_get());
+    s3_status_t line = {0};
+    ER line_error = s3_get_status(&line);
+    tm_printf((UB*)"[ROBOT] IR api=%d raw=%u calibrated=%u black=%u valid=%u fault=0x%x sample_us_low=%u\n",
+        line_error, (unsigned int)line.raw.levels, (unsigned int)line.calibrated,
+        (unsigned int)line.black_mask, (unsigned int)line.line_valid,
+        (unsigned int)line.fault, (unsigned int)line.raw.timestamp_us);
+    motion_bench_status_t bench = {0};
+    motion_api_result_t bench_result = motion_api_bench_status(&bench);
+    tm_printf((UB*)"[ROBOT] S2 state=%u fault=%u counts_valid=%u Lhex=%08x:%08x Rhex=%08x:%08x target=%d,%d\n",
+        (unsigned int)p_input->motion.state, (unsigned int)p_input->motion.fault_result,
+        (unsigned int)p_input->motion.b_encoder_valid,
+        (unsigned int)((uint64_t)p_input->motion.encoder_count[0] >> 32U),
+        (unsigned int)p_input->motion.encoder_count[0],
+        (unsigned int)((uint64_t)p_input->motion.encoder_count[1] >> 32U),
+        (unsigned int)p_input->motion.encoder_count[1],
+        p_input->motion.target_mm_s[0], p_input->motion.target_mm_s[1]);
+    tm_printf((UB*)"[ROBOT] bench_api=%u accepted=1/rejected=2/result=%u enc=%u quiet=%u armed=%u running=%u used=%u fault=%u effort_permille=%d,%d pwm=%u,%u last_pwm=%u,%u invalid=%u,%u\n",
+        (unsigned int)bench_result, (unsigned int)bench.result,
+        (unsigned int)bench.b_encoders, (unsigned int)bench.b_count_quiet,
+        (unsigned int)bench.b_armed,
+        (unsigned int)bench.b_running, (unsigned int)bench.b_used,
+        (unsigned int)bench.b_fault, (int)bench.effort_permille[0],
+        (int)bench.effort_permille[1], (unsigned int)bench.pwm_level[0],
+        (unsigned int)bench.pwm_level[1], (unsigned int)bench.last_pulse_pwm[0],
+        (unsigned int)bench.last_pulse_pwm[1], (unsigned int)bench.invalid_edges[0],
+        (unsigned int)bench.invalid_edges[1]);
+    imu_core_sample_t raw = {0};
+    uint32_t raw_result = UINT32_MAX;
+    ER raw_error = imu_runtime_raw(&raw, &raw_result);
+    tm_printf((UB*)"[ROBOT] IMU api=%d transport=%u sample_ms=%u accel_mg=%d,%d,%d mag_mgauss=%d,%d,%d phase=%u height_valid=%u\n",
+        raw_error, (unsigned int)raw_result, (unsigned int)raw.time_ms,
+        vehicle_robot_milli(raw.accel_g[0]), vehicle_robot_milli(raw.accel_g[1]),
+        vehicle_robot_milli(raw.accel_g[2]), vehicle_robot_milli(raw.mag_gauss[0]),
+        vehicle_robot_milli(raw.mag_gauss[1]), vehicle_robot_milli(raw.mag_gauss[2]),
+        (unsigned int)p_input->imu.phase, (unsigned int)p_input->imu.b_highest_valid);
+    s5_live_status_t obstacle = {0};
+    ER obstacle_error = s5_live_status(&obstacle);
+    tm_printf((UB*)"[ROBOT] S5 api=%d configured=%u forward_cm=%u valid=%u fault=%u acquisition=%u scan=%u width_cm=%u\n",
+        obstacle_error, (unsigned int)obstacle.b_configured,
+        (unsigned int)obstacle.forward_cm, (unsigned int)obstacle.b_forward_valid,
+        (unsigned int)obstacle.b_fault,
+        (unsigned int)obstacle.policy.acquisition_status,
+        (unsigned int)obstacle.policy.scan_valid,
+        (unsigned int)obstacle.policy.profile.estimated_width_cm);
+}
+#endif /* APP_ROBOT */
+
 ER vehicle_runtime_status(vehicle_t *p_status)
 {
     if ((NULL == p_status) || (g_vehicle_mutex <= 0))
@@ -258,7 +508,25 @@ static void vehicle_task(INT code, void *p_context)
                                          ((E_OK != error) && (E_TMOUT != error));
             }
         }
-        (void)vehicle_step(&g_vehicle_owner, &input, &output);
+#if APP_ROBOT
+        vehicle_robot_guard(&input);
+        if (VEHICLE_STAGE_BENCH != g_vehicle_robot.stage)
+#endif
+        {
+            (void)vehicle_step(&g_vehicle_owner, &input, &output);
+        }
+#if APP_ROBOT
+        else
+        {
+            g_vehicle_owner.state = (input.b_estop || input.b_provider_fault ||
+                (MOTION_RUN_FAULT == input.motion.state)) ?
+                VEHICLE_FAULT : VEHICLE_PAUSED;
+            if (S1_CMD_PAUSE == input.remote.command_id)
+            {
+                output.b_stop = true;
+            }
+        }
+#endif
         vehicle_apply(&output);
         if (g_vehicle_have_setup && (VEHICLE_FAULT != g_vehicle_owner.state) &&
             (0U != (g_vehicle_started_mask & 4U)) &&
@@ -319,6 +587,9 @@ static void vehicle_task(INT code, void *p_context)
             g_vehicle_published = g_vehicle_owner;
             (void)tk_unl_mtx(g_vehicle_mutex);
         }
+#if APP_ROBOT
+        vehicle_robot_log(&input);
+#endif
         if (E_OK != tk_dly_tsk(VEHICLE_PERIOD_MS))
         {
             (void)motion_api_estop();
@@ -413,11 +684,18 @@ static void vehicle_collect(vehicle_input_t *p_input)
                 break;
             }
             if ((E_OK != error) ||
-                ((uint32_t)command.command_id > S1_CMD_RESUME))
+                ((uint32_t)command.command_id > S1_CMD_LAST))
             {
                 p_input->b_provider_fault = true;
                 break;
             }
+#if APP_ROBOT
+            if (command.command_id > S1_CMD_RESUME)
+            {
+                vehicle_robot_command(&command, p_input);
+                continue;
+            }
+#endif
             /* Safety precedence within one bounded drain: ESTOP, PAUSE,
              * then the latest START/RESUME. No second queue consumer.
              */

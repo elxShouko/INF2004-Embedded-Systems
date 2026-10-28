@@ -30,6 +30,10 @@ typedef struct
 
 ER s5_live_init (void);
 ER s5_live_start (void);
+#if defined(APP_ROBOT) && APP_ROBOT
+/* Owner activates already configured sensing; may move the GP15 servo. */
+ER s5_live_start_sensing (void);
+#endif
 /* Pre-start initial task only; immutable and explicit calibration opt-in.
  * No defaults, no powered GPIO from automatic init/start. Only confirmed GP15
  * servo wiring is supported; do not set confirmation before physical checks.

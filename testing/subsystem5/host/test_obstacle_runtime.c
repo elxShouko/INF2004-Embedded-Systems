@@ -252,6 +252,37 @@ static bool enable_irq (void * p,uint32_t mask)
 static void release_irq (void * p,uint32_t mask) { (void)p; (void)mask; }
 static int test_live (uint32_t number)
 {
+#if defined(APP_ROBOT) && APP_ROBOT
+    if ((number >= 120U) && (number <= 122U))
+    {
+        s5_live_config_t config = {0};
+        drv_encoder_port_t irq = {NULL,reserve_irq,enable_irq,release_irq};
+        s5_live_status_t status = {0};
+        config.acquisition = acquire_config();
+        config.policy = make_config();
+        config.policy.forward_sample_max_age_ms = 200U;
+        bool ok = (E_OK == s5_live_init());
+        if (122U == number)
+        {
+            ok = ok && (E_OBJ == s5_live_start_sensing());
+        }
+        else { ok = ok && (E_OK == s5_live_configure(&config, &irq)); }
+        if (121U == number) { ok = ok && (E_OK == s5_live_start_sensing()); }
+        ok = ok && (E_OK == s5_live_start());
+        g_limit = 4U;
+        if (!ok || (NULL == g_task.task)) { return 1; }
+        if (0 == setjmp(g_end)) { g_task.task(0, NULL); }
+        ok = ok && (E_OK == s5_live_status(&status)) && !g_bad_resource;
+        if (121U == number)
+        {
+            ok = ok && (1U == g_open_count) && status.b_forward_valid;
+        }
+        else { ok = ok && (0U == g_open_count) && !status.b_forward_valid; }
+        char name[20]; (void)snprintf(name, sizeof(name), "S5-U%u", number);
+        check_result(name, ok, "explicit robot sensor activation; no boot servo drive");
+        return ok ? 0 : 1;
+    }
+#endif
     bool result;
     g_live_case = number;
     if (58U == number)

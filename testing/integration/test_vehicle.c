@@ -1,6 +1,7 @@
 /** @file test_vehicle.c @brief Real shared policy/dispatcher with boundary fakes. */
 #include "test_ports.h"
 #include "vehicle_rt.h"
+#include "vehicle_profile.h"
 #include "gpio_bank.h"
 #include "subsystem1/s1_net.h"
 #include "subsystem1/s1_map.h"
@@ -43,6 +44,38 @@ static uint32_t g_mapping_calls;
 static bool g_exit;
 static bool g_late_sample;
 static bool g_ok = true;
+#if APP_ROBOT
+static uint32_t g_bench_requests;
+static uint32_t g_bench_leases;
+static bool g_bench_prepared;
+
+bool motion_api_bench_prepare (motion_bench_config_t const * p_config,
+    drv_encoder_port_t const * p_port)
+{
+    g_ok = (0U == g_starts) && (NULL != p_port) && g_ok;
+    g_bench_prepared = true;
+    return (!p_config->b_power_authorised && !p_config->b_wheels_raised);
+}
+motion_api_result_t motion_api_bench_request (motion_bench_request_t request)
+{
+    g_ok = (MOTION_BENCH_ENCODERS == request) && g_ok;
+    ++g_bench_requests;
+    return (MOTION_API_QUEUED);
+}
+motion_api_result_t motion_api_bench_lease (uint32_t received_ms)
+{
+    (void)received_ms; ++g_bench_leases; return (MOTION_API_QUEUED);
+}
+motion_api_result_t motion_api_bench_status (motion_bench_status_t * p_status)
+{
+    *p_status = (motion_bench_status_t){0}; return (MOTION_API_QUEUED);
+}
+ER imu_runtime_raw (imu_core_sample_t * p_sample, uint32_t * p_result)
+{
+    *p_sample = (imu_core_sample_t){0}; *p_result = UINT32_MAX; return (E_OK);
+}
+ER s5_live_start_sensing (void) { return (E_OK); }
+#endif
 static jmp_buf g_end;
 static uint32_t g_regs[1024];
 static uint32_t g_levels;
@@ -183,10 +216,24 @@ ER s1_net_command_receive (s1_codec_command_t * p_cmd, TMO timeout)
         p_cmd->rx_timestamp_ms = 20U;
         return (E_OK);
     }
+#if APP_ROBOT
+    if (((106U == g_case) || (107U == g_case) || (108U == g_case)) &&
+        !b_mapping_sent)
+    {
+        b_mapping_sent = true;
+        *p_cmd = (s1_codec_command_t){0};
+        p_cmd->command_id = (108U == g_case) ? S1_CMD_ROBOT_LEASE :
+            S1_CMD_BENCH_ENCODERS;
+        p_cmd->session = (106U == g_case) ? 1U : 0x12345678U;
+        p_cmd->rx_timestamp_ms = (108U == g_case) ? 21U : 20U;
+        return (E_OK);
+    }
+#endif
     return (E_TMOUT);
 }
 static s1_codec_map_result_t g_map_result;
 static uint8_t g_fault_bits;
+uint8_t s1_net_fault_get (void) { return (g_fault_bits); }
 ER s1_net_fault_set (uint8_t bits)
 { g_fault_bits |= bits; return (E_OK); }
 ER s1_net_fault_clear (uint8_t bits)
@@ -243,7 +290,7 @@ ER s5_live_status (s5_live_status_t * p_status)
     {
         p_status->b_configured = true;
         p_status->b_forward_valid = true;
-        p_status->forward_cm = 100U;
+        p_status->forward_cm = 101U;
         p_status->forward_timestamp_us = (59U == g_case) ? 1U : 1020000U;
     }
     return (E_OK);
@@ -468,8 +515,8 @@ int main (int argc, char * argv[])
 
 static vehicle_config_t test_config (void)
 {
-    return ((vehicle_config_t){100000U, 300000U, 2000000U, 100U,
-        100, 20, 80, 100000, 30U, true, true, false, {0}});
+    return ((vehicle_config_t){100000U, 300000U, 2000000U, 101U,
+        100, 20, 80, 100000, 30U, true, true, false, false, {0}});
 }
 static vehicle_input_t test_input (void)
 {
@@ -497,8 +544,8 @@ static vehicle_input_t test_input (void)
     input.b_obstacle_available = true;
     input.obstacle.valid = true;
     input.b_forward_valid = true;
-    input.forward_cm = 100U;
-    input.obstacle.closest_distance_cm = 100U;
+    input.forward_cm = 101U;
+    input.obstacle.closest_distance_cm = 101U;
     input.obstacle_time_us = input.raw_now_us;
     return (input);
 }
@@ -512,14 +559,14 @@ static wheel_loop_config_t test_motion_config (void)
     cfg.geometry.track_width_um = 150000U;
     cfg.geometry.max_wheel_speed_mm_s = 500;
     cfg.geometry.calibration = MOTION_CONFIG_CALIBRATION_CONFIRMED;
-    cfg.motor = (drv_motor_config_t){125000000U, 20000U, 100U, 1.0F,
+    cfg.motor = (drv_motor_config_t){125000000U, 20000U, 101U, 1.0F,
         {MOTION_TYPES_POLARITY_NORMAL, MOTION_TYPES_POLARITY_NORMAL},
         DRV_MOTOR_BRAKE, MOTION_CONFIG_CALIBRATION_CONFIRMED, true};
     cfg.pid[0] = (motion_pid_config_t){0.01F, 0.0F, 0.0F, -1.0F, 1.0F,
         -0.5F, 0.5F, 100000U, MOTION_CONFIG_CALIBRATION_CONFIRMED};
     cfg.pid[1] = cfg.pid[0];
     cfg.profile = (move_plan_config_t){1000U, 1000U, 1000U,
-        {1000000U, 1000000U}, 1.0F, 100};
+        {1000000U, 1000000U}, 1.0F, 100, false};
     cfg.period_us = 10000U;
     cfg.sample_limit_us = 100000U;
     cfg.stop_dwell_us = 10000U;
@@ -557,6 +604,72 @@ static void test_run_owner (void)
 }
 static bool test_case (void)
 {
+#if APP_ROBOT
+    if ((g_case >= 102U) && (g_case <= 108U))
+    {
+        if (102U == g_case)
+        {
+            if (0 == setjmp(g_end)) { (void)usermain(); }
+            return (g_bench_prepared && (5U == g_inits) && (5U == g_starts) &&
+                (0U == g_enables) && (0U == g_submits));
+        }
+        if (E_OK != vehicle_runtime_init()) { return (false); }
+        vehicle_robot_profile_t profile = {0};
+        if (103U == g_case)
+        {
+            profile.stage = VEHICLE_STAGE_LINE;
+            return ((E_PAR == vehicle_runtime_robot_prepare(&profile)) &&
+                (0U == g_enables) && (0U == g_submits));
+        }
+        if (104U == g_case)
+        {
+            profile.stage = VEHICLE_STAGE_LINE;
+            profile.run_limit_ms = 1000U;
+            profile.setup.mission = test_config();
+            profile.setup.mission.b_line_only = true;
+            profile.setup.motion = test_motion_config();
+            profile.setup.motion.profile.b_straight_only = true;
+            profile.setup.motion.profile.turn_scale_ppm[0] = 0U;
+            profile.setup.motion.profile.turn_scale_ppm[1] = 0U;
+            profile.setup.b_obstacle_requested = true;
+            return ((E_OK == vehicle_runtime_robot_prepare(&profile)) &&
+                (1U == g_s5_configures) && (0U == g_enables));
+        }
+        if ((E_OK != vehicle_runtime_robot_prepare(&profile)) ||
+            (E_OK != vehicle_runtime_start(31U))) { return (false); }
+        test_run_owner();
+        return ((g_bench_requests == ((107U == g_case) ? 1U : 0U)) &&
+            (0U == g_bench_leases) && (0U == g_enables) && (0U == g_submits));
+    }
+#endif
+    if ((g_case >= 87U) && (g_case <= 89U))
+    {
+        vehicle_config_t cfg = test_config();
+        cfg.b_line_only = true;
+        cfg.turn_mm_s = 0;
+        cfg.straight_um = 0;
+        vehicle_t vehicle = {0};
+        vehicle_input_t input = test_input();
+        vehicle_output_t output = {0};
+        if (!vehicle_init(&vehicle, &cfg)) { return (false); }
+        input.remote.command_id = S1_CMD_START_RUN;
+        input.remote.rx_timestamp_ms = 20U;
+        if (87U == g_case) { input.black_mask = 7U; }
+        if (88U == g_case)
+        {
+            input.navigation.kind = NAV_EVENT_JUNCTION;
+            input.navigation.command = NAV_COMMAND_LEFT;
+            input.navigation.timestamp_us = input.raw_now_us;
+            input.navigation_id = 1U;
+        }
+        if (89U == g_case) { input.b_imu_available = false; }
+        if (!vehicle_step(&vehicle, &input, &output) || output.b_enable ||
+            output.b_command || (0U != vehicle.navigation_id)) { return (false); }
+        return ((89U == g_case) ?
+            ((VEHICLE_BLOCKED == vehicle.state) &&
+             (0U != (vehicle.blockers & VEHICLE_BLOCK_IMU))) :
+            (VEHICLE_PAUSED == vehicle.state));
+    }
     if (85U == g_case)
     {
         vehicle_setup_t setup = {0};
@@ -592,7 +705,7 @@ static bool test_case (void)
         setup.b_obstacle_requested = true;
         setup.obstacle.acquisition = (s5_acquire_config_t){61000U,24000U,
             10000U,2000000U,20000U,1000U,2000U,58U,400U,15U,true,true};
-        setup.obstacle.policy = (s5_runtime_config_t){200U,100U,100U,2000U,
+        setup.obstacle.policy = (s5_runtime_config_t){200U,101U,101U,2000U,
             1000U,1000U,25U,2U};
         if ((E_OK != vehicle_runtime_init()) ||
             (E_PAR != vehicle_runtime_setup(&setup)) ||
@@ -826,7 +939,7 @@ static bool test_case (void)
     }
     if (42U == g_case)
     {
-        input.motion.active_id = 99U;
+        input.motion.active_id = 100U;
         input.motion.state = MOTION_RUN_ACTIVE;
         input.b_line_available = false;
         if (!vehicle_step(&vehicle, &input, &output) || !output.b_estop)

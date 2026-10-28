@@ -388,7 +388,7 @@ static wheel_loop_config_t test_rtos_config (void)
         -0.5F, 0.5F, 100000U, MOTION_CONFIG_CALIBRATION_CONFIRMED};
     cfg.pid[1] = cfg.pid[0];
     cfg.profile = (move_plan_config_t){1000U, 1000U, 1000U,
-        {1000000U, 1000000U}, 1.0F, 100};
+        {1000000U, 1000000U}, 1.0F, 100, false};
     cfg.period_us = (105U == g_test_rtos.case_id) ? 30000U : 10000U;
     cfg.sample_limit_us = 100000U;
     cfg.stop_dwell_us = cfg.period_us;
@@ -522,6 +522,101 @@ static uint32_t test_rtos_live (void)
 
 static void test_rtos_script (void)
 {
+#if APP_ROBOT
+    if ((g_test_rtos.case_id >= 144U) && (g_test_rtos.case_id <= 150U))
+    {
+        uint32_t id = g_test_rtos.case_id;
+        if ((147U == id) && (3U == g_test_rtos.stage))
+        {
+            g_test_rtos.b_ok = (g_test_rtos.stops > 0U) &&
+                (0U == g_test_rtos.levels[0][0]) && g_test_rtos.b_ok;
+            g_test_rtos.b_mutex_busy = false;
+            g_test_rtos.b_checked = true;
+            longjmp(g_test_rtos_exit, 1);
+        }
+        motion_bench_status_t bench = {0};
+        if (MOTION_API_QUEUED != motion_api_bench_status(&bench))
+        {
+            g_test_rtos.b_ok = false; longjmp(g_test_rtos_exit, 1);
+        }
+        if (!bench.b_encoders &&
+            !((3U == g_test_rtos.stage) && bench.b_fault)) { return; }
+        if (144U == id)
+        {
+            if (0U == g_test_rtos.stage)
+            {
+                g_test_rtos.b_ok = !bench.b_count_quiet &&
+                    (MOTION_API_QUEUED ==
+                        motion_api_bench_lease(g_test_rtos.now_ms)) &&
+                    (MOTION_API_QUEUED ==
+                        motion_api_bench_request(MOTION_BENCH_ARM)) &&
+                    g_test_rtos.b_ok;
+                g_test_rtos.stage = 1U;
+                return;
+            }
+            motion_run_status_t raw = {0};
+            g_test_rtos.b_checked = (0U == g_test_rtos.prepares) &&
+                (2U == bench.result) &&
+                (MOTION_API_QUEUED == motion_api_status(&raw)) &&
+                raw.b_encoder_valid && !raw.b_measurement_valid;
+            longjmp(g_test_rtos_exit, 1);
+        }
+        if ((0U == g_test_rtos.stage) && !bench.b_armed)
+        {
+            if (!bench.b_count_quiet) { return; }
+            g_test_rtos.b_ok = (MOTION_API_QUEUED ==
+                motion_api_bench_lease(g_test_rtos.now_ms)) &&
+                (MOTION_API_QUEUED ==
+                        motion_api_bench_request(MOTION_BENCH_ARM)) &&
+                g_test_rtos.b_ok;
+            g_test_rtos.stage = 1U;
+        }
+        else if ((1U == g_test_rtos.stage) && bench.b_armed)
+        {
+            if (146U == id) { g_test_rtos.now_ms = 200U; }
+            g_test_rtos.b_ok = (MOTION_API_QUEUED ==
+                motion_api_bench_request(MOTION_BENCH_PULSE)) &&
+                g_test_rtos.b_ok;
+            g_test_rtos.stage = 2U;
+        }
+        else if ((2U == g_test_rtos.stage) && bench.b_running)
+        {
+            g_test_rtos.b_ok = (g_test_rtos.levels[0][0] > 0U) &&
+                g_test_rtos.b_ok;
+            g_test_rtos.stage = 3U;
+            if (147U == id)
+            {
+                g_test_rtos.b_mutex_busy = true;
+                g_test_rtos.b_ok = (MOTION_API_QUEUED == motion_api_estop()) &&
+                    g_test_rtos.b_ok;
+            }
+            else if (148U == id) { g_test_rtos.b_clock_error = true; }
+            else if (146U == id) { g_test_rtos.now_ms = 501U; }
+            else if (149U == id)
+            {
+                g_test_rtos.b_ok = (MOTION_API_QUEUED ==
+                    motion_api_bench_request(MOTION_BENCH_ARM)) &&
+                    g_test_rtos.b_ok;
+            }
+            else if (150U == id)
+            {
+                g_test_rtos.p_sink(g_test_rtos.p_sink_context,
+                    ENC_CAPTURE_LEFT_MASK, (1UL << 7U) | (1UL << 28U));
+            }
+            else { g_test_rtos.now_ms = (uint32_t)(bench.deadline_us / 1000U); }
+        }
+        else if ((3U == g_test_rtos.stage) &&
+                 !bench.b_running && !bench.b_armed)
+        {
+            g_test_rtos.b_checked = bench.b_used &&
+                (0U == g_test_rtos.levels[0][0]) &&
+                (0U == g_test_rtos.levels[1][0]) &&
+                ((145U == id) || bench.b_fault);
+            longjmp(g_test_rtos_exit, 1);
+        }
+        return;
+    }
+#endif
     motion_run_status_t status = {0};
 
     if ((106U == g_test_rtos.case_id) && (2U == g_test_rtos.stage))
@@ -746,6 +841,33 @@ static bool test_rtos_case (void)
     drv_encoder_port_t port = {NULL, test_rtos_reserve, test_rtos_enable,
                                test_rtos_release};
     motion_run_status_t status = {0};
+#if APP_ROBOT
+    if ((id >= 144U) && (id <= 150U))
+    {
+        motion_bench_config_t bench = {0};
+        bench.motor = cfg.motor;
+        bench.effort_permille[0] = 100;
+        bench.effort_permille[1] = 100;
+        bench.pulse_us = (146U == id) ? 500000U : 30000U;
+        bench.b_power_authorised = true;
+        bench.b_wheels_raised = true;
+        bench.b_encoder_on_boot = true;
+        if ((E_OK != task_motion_init()) ||
+            !motion_api_bench_prepare(&bench, &port) ||
+            (MOTION_API_INVALID != motion_api_configure(&cfg, &port)) ||
+            (MOTION_API_INVALID != motion_api_enable()) ||
+            (E_OK != task_motion_start()) ||
+            motion_api_bench_prepare(&bench, &port)) { return (false); }
+        test_rtos_run();
+        if (148U == id)
+        {
+            return (g_test_rtos.b_exited && (g_test_rtos.stops > 0U) &&
+                (0U == g_test_rtos.levels[0][0]) &&
+                (0U == g_test_rtos.levels[1][0]));
+        }
+        return (g_test_rtos.b_checked);
+    }
+#endif
 
     if ((id >= 135U) && (id <= 138U)) { return (test_rtos_feedback()); }
     if (139U == id)

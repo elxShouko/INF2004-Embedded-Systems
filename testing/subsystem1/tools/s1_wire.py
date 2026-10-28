@@ -21,6 +21,15 @@ FORMAT = 1
 TELEMETRY_BYTES = 29
 HEARTBEAT_BYTES = 8
 COMMANDS = {"EMERGENCY_STOP": 1, "START_RUN": 2, "PAUSE": 3, "RESUME": 4}
+ROBOT_COMMANDS = {"ENCODERS": 0xA1, "ARM": 0xA2, "PULSE": 0xA3,
+                  "LEASE": 0xA4, "SENSORS": 0xA5}
+
+
+def encode_robot_command(name, session):
+    """ROBOT=1 only; 32-bit boot challenge is printed on the USB console."""
+    if name not in ROBOT_COMMANDS or not 0 < session <= 0xFFFFFFFF:
+        raise ValueError("invalid robot operation or boot session")
+    return bytes([ROBOT_COMMANDS[name]]) + session.to_bytes(4, "little")
 STATES = ["INITIALISING", "READY", "OPERATIONAL", "PAUSED", "SAFE_STOP",
           "MISSION_COMPLETE", "STOPPED", "FAULT"]
 FAULT_BITS = ["MOTOR_STALL", "ENCODER", "IMU", "NO_ECHO", "WIFI_LOSS",

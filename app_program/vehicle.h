@@ -36,6 +36,7 @@ typedef struct
     bool b_calibrated;
     bool b_power_authorised;
     bool b_uturn_right;
+    bool b_line_only; /* Explicit stage restriction, not a calibration claim. */
     s5_route_config_t route; /* Optional; all zero means disabled. */
 } vehicle_config_t;
 

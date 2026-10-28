@@ -77,6 +77,7 @@ def main():
                            app / 'subsystem1_test.c'],
             'netbin': ['test_net_bin_host.c'],
             'mapgw': ['test_map_host.c', app / 's1_map.c']}
+        kernel_suites['netbin_robot'] = ['-DAPP_ROBOT=1', 'test_net_bin_host.c']
         for name, sources in kernel_suites.items():
             exe = temp / (name + '.exe')
             if run(command + sources + ['-o', exe]):

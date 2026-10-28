@@ -38,18 +38,40 @@ def main():
     ap.add_argument("--broker", required=True)
     ap.add_argument("--port", type=int, default=1883)
     ap.add_argument("--send", choices=sorted(w.COMMANDS))
+    ap.add_argument("--bench", choices=sorted(w.ROBOT_COMMANDS),
+                    help="ROBOT=1 operation; ARM/PULSE require configured bench limits")
+    ap.add_argument("--session", type=lambda value: int(value, 0),
+                    help="boot challenge from USB output, e.g. 0x12345678")
+    ap.add_argument("--lease", action="store_true",
+                    help="send the session lease every 100 ms while this monitor runs")
     ap.add_argument("--map", help='mapping update text, e.g. "MAP A=FORWARD B=LEFT"')
     ap.add_argument("--seconds", type=float, default=0, help="stop after this long (0 = until Ctrl-C)")
     args = ap.parse_args()
+    if (args.bench or args.lease) and args.session is None:
+        ap.error("--bench/--lease require --session from this boot's USB output")
+    if args.session is not None and not 0 < args.session <= 0xFFFFFFFF:
+        ap.error("session must be a nonzero uint32")
+    if sum(bool(value) for value in (args.send, args.map, args.bench)) > 1:
+        ap.error("select only one of --send, --map and --bench")
 
     state = {"last_seq": None, "lost": 0, "map": None}
 
     def on_connect(c, _u, _f, rc, *_a):
         print("connected, rc=%s" % rc)
         c.subscribe([("robot/telemetry", 0), ("robot/status", 0)])
+        if args.lease:
+            c.publish("robot/cmd", w.encode_robot_command("LEASE", args.session),
+                      qos=0, retain=False)
         if args.send:
             c.publish("robot/cmd", w.encode_command(args.send), qos=0)
             print("sent %s -> %s" % (args.send, w.encode_command(args.send).hex()))
+        if args.bench:
+            # Single send only: never automatically resend ARM/PULSE on reconnect.
+            if not state.get("bench_sent"):
+                payload = w.encode_robot_command(args.bench, args.session)
+                c.publish("robot/cmd", payload, qos=0, retain=False)
+                state["bench_sent"] = True
+                print("bench %s queued on MQTT; check USB owner acknowledgement" % args.bench)
         if args.map:
             c.publish("robot/cmd", w.encode_map(args.map), qos=0)
             print("sent mapping update: %s" % args.map)
@@ -84,8 +106,13 @@ def main():
     c.loop_start()
     end = time.time() + args.seconds if args.seconds else None
     try:
+        next_lease = 0.0
         while end is None or time.time() < end:
-            time.sleep(0.2)
+            if args.lease and time.monotonic() >= next_lease:
+                c.publish("robot/cmd", w.encode_robot_command("LEASE", args.session),
+                          qos=0, retain=False)
+                next_lease = time.monotonic() + 0.1
+            time.sleep(0.02)
             if args.map and state["map"]:
                 print("mapping update result: %s" % state["map"])
                 break

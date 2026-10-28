@@ -9,6 +9,7 @@ Release
 *.elf
 *.uf2
 *.map
+*.objects.rsp
 *.o
 *.d
 build_make/tools/elf2uf2

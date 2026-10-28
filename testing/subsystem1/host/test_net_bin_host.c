@@ -229,7 +229,7 @@ int main(void)
 
     /* B6: binary commands. */
     {
-        s1_codec_command_t c = {S1_CMD_NONE, 0u};
+        s1_codec_command_t c = {0};
         UINT fl = 0u;
         s1_net_stats_t a, b;
         s1_net_events_wait(S1_NET_FLG_COMMAND | S1_NET_FLG_ESTOP, &fl, TMO_POL);
@@ -267,6 +267,29 @@ int main(void)
     }
 
     test_faults();
+#if APP_ROBOT
+    {
+        uint8_t robot[5] = {0xA1u, 0x78u, 0x56u, 0x34u, 0x12u};
+        s1_codec_command_t command = {0};
+        SYSTIM now = {0};
+        while (E_OK == s1_net_command_receive(&command, TMO_POL)) { }
+        tk_get_otm(&now);
+        for (uint8_t code = 0xA1u; code <= 0xA5u; ++code)
+        {
+            robot[0] = code;
+            s1_net_hook_on_command((char const *)robot, sizeof robot, now.lo);
+            check((E_OK == s1_net_command_receive(&command, TMO_POL)) &&
+                (command.command_id == (s1_codec_command_id_t)
+                    (S1_CMD_BENCH_ENCODERS + code - 0xA1u)) &&
+                (0x12345678u == command.session),
+                "S1-U28 robot command/session survives actual queue");
+        }
+        s1_net_estop_clear();
+        s1_net_hook_on_command((char const *)robot, 4u, now.lo);
+        check(s1_net_estop_latched(),
+            "S1-U28 malformed robot frame posts independent safety latch");
+    }
+#endif
 
     printf("net_bin: %d checks, %d failed\n", g_checks, g_failures);
     return g_failures ? 1 : 0;

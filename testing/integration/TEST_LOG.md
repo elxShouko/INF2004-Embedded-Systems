@@ -910,3 +910,32 @@ and firmware source fingerprints match current inputs, including S3 file_sha256.
 No additional production edits or firmware builds were necessary in this review.
 Requirement-by-requirement outcomes and policy differences:
 [Joint reconciliation review](../../docs/tribunal1-barcode-reconciliation.md).
+
+## Production startup and staged commissioning definitions 2026-10-28
+
+These are host checks of production logic, not robot test results. INT-86 is
+reserved for the existing hump-wire boundary test and is unchanged.
+
+| IDs | Implementation | Expected result |
+|---|---|---|
+| INT-87..89 | test_vehicle.c, normal profile | Line-only pauses at side markings/junctions; missing mandatory IMU still blocks; no finite turn is issued |
+| INT-90..92 | test_commission.c | Robot framing/session/ranges rejected correctly; raw x4 capture needs no geometry and latches invalid transitions |
+| INT-93..97 | test_commission.c | Unknown motor config, missing power/raised-wheel permission, duration bounds and missing feedback/lease never arm outputs |
+| INT-98..101 | test_commission.c | Expired ARM, exact pulse deadline, lost PC lease and partial output failure stop; replay/re-arm rejected |
+| INT-102..105 | test_vehicle.c, --robot | Real startup calls bench preparation without enable; incomplete autonomous profile rejected; straight-only startup accepts unknown turn scales; bench does not issue mission motion |
+| INT-106..108 | test_vehicle.c, --robot | Wrong session/future receive time rejected; valid session reaches owner request |
+
+Commands: `python testing/integration/verify_integration.py --label LABEL --output-dir EXTERNAL_DIRECTORY` and the same with `--robot`.
+`--robot` also runs the real S2 owner commissioning cases and S4/S5 diagnostic/activation checks.
+Generated review outputs belong outside Git unless deliberately retained as final evidence.
+
+
+### Software verification run 2026-10-28 (uncommitted production commissioning)
+
+HEAD `993927ce2a0a258f7dc7ab91838194a22d45eda0` plus the approved dirty working
+tree. Final commands, scope, source/artifact hashes, external raw evidence paths
+and the complete changed-file list are recorded in
+[`docs/commissioning.md`](../../docs/commissioning.md#software-verification-and-delivery-2026-10-28).
+No physical hardware test, firmware flash or real MQTT session was performed.
+
+Normal integration and robot commissioning pass in default/optimized host profiles. INT-86 passes separately. Four actual ARM firmware profiles build successfully.

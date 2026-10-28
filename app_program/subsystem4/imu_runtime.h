@@ -18,6 +18,10 @@ typedef struct
 ER imu_runtime_init (void);
 ER imu_runtime_start (void);
 ER imu_runtime_get_status (imu_runtime_status_t *p_status);
+#if defined(APP_ROBOT) && APP_ROBOT
+/* Diagnostic copy from the sensor owner; never reads the sensor again. */
+ER imu_runtime_raw (imu_core_sample_t * p_sample, uint32_t * p_result);
+#endif
 /** Copies a queued transition; caller owns the returned value. Nonblocking. */
 ER imu_runtime_get_event (imu_core_status_t *p_event);
 /** Latched, independent of the telemetry queue; never clears on read.

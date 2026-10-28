@@ -59,6 +59,7 @@
 #include "vehicle_rt.h"
 #include "subsystem2/motion_api.h"
 #include "subsystem1/s1_sim.h"
+#include "vehicle_profile.h"
 
 EXPORT INT usermain (void); /* Kernel initial-task entry. */
 
@@ -149,6 +150,11 @@ EXPORT INT usermain(void)
      * normal robot firmware must never publish synthetic provider readings.
      */
     s1_sim_set_enabled(false);
+#endif
+#if APP_ROBOT
+    /* All owners/dispatcher exist; none has started. Never arm at startup. */
+    ER profile_error = vehicle_profile_startup();
+    CHECK(profile_error, "robot profile (movement remains blocked)");
 #endif
     for (uint32_t i = 0U; i < 5U; ++i)
     {

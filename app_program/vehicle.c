@@ -26,7 +26,8 @@ bool vehicle_init (vehicle_t * p_vehicle, vehicle_config_t const * p_config)
             (p_config->forward_mm_s > 0) &&
             (p_config->correction_mm_s >= 0) &&
             (p_config->correction_mm_s < p_config->forward_mm_s) &&
-            (p_config->turn_mm_s > 0) && (p_config->straight_um > 0) &&
+            (p_config->b_line_only ||
+             ((p_config->turn_mm_s > 0) && (p_config->straight_um > 0))) &&
             (p_config->obstacle_stop_cm > 0U) && p_config->b_calibrated &&
             (!p_config->route.b_calibrated || s5_route_validate(&p_config->route));
         if (b_ok)
@@ -153,7 +154,14 @@ bool vehicle_step (vehicle_t * p_vehicle, vehicle_input_t const * p_input,
         }
         return (vehicle_bypass(p_vehicle,p_input,p_output));
     }
-    if ((p_input->navigation_id > p_vehicle->last_navigation_id) &&
+    if (p_cfg->b_line_only &&
+        ((NAV_EVENT_JUNCTION == p_input->navigation.kind) ||
+         ((p_input->black_mask & 4U) != 0U)))
+    {
+        p_vehicle->b_pause_requested = true;
+    }
+    if (!p_cfg->b_line_only &&
+        (p_input->navigation_id > p_vehicle->last_navigation_id) &&
         (NAV_EVENT_JUNCTION == p_input->navigation.kind) &&
         (NAV_COMMAND_NONE != p_input->navigation.command))
     {

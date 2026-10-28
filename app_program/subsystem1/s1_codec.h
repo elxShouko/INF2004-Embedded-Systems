@@ -15,6 +15,9 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#ifndef APP_ROBOT
+#define APP_ROBOT 0
+#endif
 
 /** Size of the buffer that must be passed to the telemetry encoder. */
 #define S1_CODEC_TELEMETRY_JSON_CAPACITY 256u
@@ -42,8 +45,18 @@ typedef enum
     S1_CMD_EMERGENCY_STOP,
     S1_CMD_START_RUN,
     S1_CMD_PAUSE,
-    S1_CMD_RESUME
+    S1_CMD_RESUME,
+    S1_CMD_BENCH_ENCODERS,
+    S1_CMD_BENCH_ARM,
+    S1_CMD_BENCH_PULSE,
+    S1_CMD_ROBOT_LEASE,
+    S1_CMD_ROBOT_SENSORS
 } s1_codec_command_id_t;
+#if APP_ROBOT
+#define S1_CMD_LAST S1_CMD_ROBOT_SENSORS
+#else
+#define S1_CMD_LAST S1_CMD_RESUME
+#endif
 
 /** Indexes of s1_codec_frame_t.sensor_age_us (raw-source ages in us). */
 typedef enum
@@ -98,7 +111,15 @@ typedef struct
 {
     s1_codec_command_id_t command_id;
     uint32_t              rx_timestamp_ms; /**< Arrival at Buddy 1. */
+#if APP_ROBOT
+    uint32_t session; /* Explicit boot challenge, not a security credential. */
+#endif
 } s1_codec_command_t;
+#if APP_ROBOT
+/* Exactly 5 bytes: A1..A5 then uint32 LE boot challenge. Others rejected. */
+s1_codec_command_id_t s1_codec_parse_robot (uint8_t const * p_bytes,
+    uint32_t length, uint32_t * p_session);
+#endif
 
 /**
  * @brief Encode a telemetry frame as a JSON object (FR17).

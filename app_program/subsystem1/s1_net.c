@@ -46,7 +46,7 @@ typedef struct
 #define S1_NET_COMMAND_DEPTH 8u
 #define S1_NET_MESSAGE_OVERHEAD 8u /* Kernel bookkeeping per message. */
 #define S1_NET_FLUSH_LIMIT 32u
-#define S1_NET_SCRATCH_BYTES 8u
+#define S1_NET_SCRATCH_BYTES (sizeof(s1_codec_command_t))
 #define S1_NET_ESTOP_POST_TRIES 3u
 #define S1_NET_CLOCK_HALF_RANGE \
     0x80000000u                      /* Ages beyond this are future times. */
@@ -248,7 +248,7 @@ ER s1_net_telemetry_send(const s1_codec_frame_t *p_frame)
 /* Take the oldest valid remote command (see s1_net.h). */
 ER s1_net_command_receive(s1_codec_command_t *p_command, TMO timeout)
 {
-    s1_codec_command_t message = {S1_CMD_NONE, 0u};
+    s1_codec_command_t message = {0};
     TMO wait = timeout;
     ER result = E_TMOUT;
     bool b_done = false;
@@ -270,10 +270,10 @@ ER s1_net_command_receive(s1_codec_command_t *p_command, TMO timeout)
         }
         else if ((sizeof(message) != (uint32_t)size) ||
                  (message.command_id <= S1_CMD_NONE) ||
-                 (message.command_id > S1_CMD_RESUME))
+                 (message.command_id > S1_CMD_LAST))
         {
             status_count_nowait(&g_s1_net.stats.commands_bad_size);
-            message = (s1_codec_command_t){S1_CMD_NONE, 0u};
+            message = (s1_codec_command_t){0};
             result = E_SYS; /* Never hand out a partly filled command. */
             b_done = true;
             message = (s1_codec_command_t){0};
@@ -285,7 +285,7 @@ ER s1_net_command_receive(s1_codec_command_t *p_command, TMO timeout)
                  (age_ms < S1_NET_CLOCK_HALF_RANGE))
         {
             status_count_nowait(&g_s1_net.stats.commands_stale);
-            message = (s1_codec_command_t){S1_CMD_NONE, 0u};
+            message = (s1_codec_command_t){0};
             result = E_TMOUT; /* Stale: look at the next one, if any. */
         }
         else
@@ -609,6 +609,18 @@ void s1_net_hook_on_command(const char *p_payload, uint32_t length, uint32_t rx_
     }
     command.command_id =
         s1_codec_parse_command_bin((const uint8_t *)p_payload, length);
+#if APP_ROBOT
+    if (S1_CMD_NONE == command.command_id)
+    {
+        command.command_id = s1_codec_parse_robot((uint8_t const *)p_payload,
+            length, &command.session);
+        if ((S1_CMD_NONE == command.command_id) && (NULL != p_payload) &&
+            (length > 0U) && (((uint8_t)p_payload[0] & 0xF0U) == 0xA0U))
+        {
+            post_estop(); /* Malformed robot control cannot leave a live test. */
+        }
+    }
+#endif
 #endif
 
     command.rx_timestamp_ms = rx_ms;

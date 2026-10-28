@@ -4,6 +4,7 @@
 #ifndef MOTION_API_H
 #define MOTION_API_H
 #include "motion_bus.h"
+#include "bench_motion.h"
 typedef enum
 {
     MOTION_API_QUEUED = 0, MOTION_API_BUSY, MOTION_API_INVALID,
@@ -54,6 +55,15 @@ bool motion_api_now (uint64_t * p_now_us);
  * independent power removal policy, not assume a physical stop occurred.
  */
 motion_api_result_t motion_api_estop (void);
+#if APP_ROBOT
+/* Initial task only, before start. Bench is exclusive of calibrated motion. */
+bool motion_api_bench_prepare (motion_bench_config_t const * p_config,
+    drv_encoder_port_t const * p_port);
+motion_api_result_t motion_api_bench_request (motion_bench_request_t request);
+motion_api_result_t motion_api_bench_status (motion_bench_status_t * p_status);
+/* Forward ORIGINAL PC receive time; repeats do not renew a lease. */
+motion_api_result_t motion_api_bench_lease (uint32_t received_ms);
+#endif
 #endif /* MOTION_API_H */
 
 /*** end of file ***/

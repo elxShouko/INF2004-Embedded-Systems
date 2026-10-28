@@ -111,7 +111,19 @@ CRASH_SUFFIX := _crash
 endif
 
 # Opt-in Buddy 4 hardware profile; enabling is not wiring verification.
+ROBOT ?= 0
+ifneq ($(filter $(ROBOT),0 1),$(ROBOT))
+$(error ROBOT must be 0 or 1)
+endif
+ifeq ($(ROBOT),1)
+ifneq ($(SMP)$(CONSOLE)$(CRASH_REPORT)$(TEST),1usb_cdc00)
+$(error ROBOT=1 requires SMP=1 CONSOLE=usb_cdc CRASH_REPORT=0 TEST=0)
+endif
+S4_IMU ?= 1
+ROBOT_SUFFIX := _robot
+else
 S4_IMU ?= 0
+endif
 ifneq ($(filter $(S4_IMU),0 1),$(S4_IMU))
 $(error S4_IMU must be 0 or 1)
 endif
@@ -129,6 +141,7 @@ endif
 # only the banner in the log revealed it.
 #
 EXE_FILE := mtk3pico_smp$(SMP)_$(CONSOLE)$(WIFI_SUFFIX)$(NET_SUFFIX)$(MQTT_SUFFIX)$(CRASH_SUFFIX)$(TEST_SUFFIX)$(S4_SUFFIX)
+EXE_FILE := $(EXE_FILE)$(ROBOT_SUFFIX)
 
 GCC := arm-none-eabi-gcc
 AS := arm-none-eabi-gcc
@@ -222,7 +235,9 @@ endif
 ################################################################################
 
 CFLAGS += -DS4_IMU_ENABLE=$(S4_IMU)
+CFLAGS += -DAPP_ROBOT=$(ROBOT)
 PROFILE_ID := smp$(SMP)-$(CONSOLE)-wifi$(WIFI)-net$(NET)-mqtt$(MQTT)-crash$(CRASH_REPORT)-test$(TEST)-s4imu$(S4_IMU)
+PROFILE_ID := $(PROFILE_ID)-robot$(ROBOT)
 PROFILE_FILE := .build_profile
 
 ifneq ($(strip $(shell cat $(PROFILE_FILE) 2>/dev/null)),$(PROFILE_ID))

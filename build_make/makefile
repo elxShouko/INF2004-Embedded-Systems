@@ -88,9 +88,18 @@ endif
 # All EXE_FILE
 all: $(EXE_FILE).elf
 
+# Native Windows' linker launch can truncate the integrated MQTT object list
+# at 8191 characters. GNU Make 4.x writes the list without a shell command;
+# forward it directly to ld so the GCC driver does not expand it again.
+# The documented WSL/Unix workflow retains its original link invocation.
+LINK_INPUTS = $(OBJS)
+ifeq ($(OS),Windows_NT)
+LINK_INPUTS = $(file >$(EXE_FILE).objects.rsp,$(OBJS)) -Wl,@$(EXE_FILE).objects.rsp
+endif
+
 $(EXE_FILE).elf: $(OBJS)
 	@echo 'Linker: $@'
-	$(LINK)  $(LFLAGS) -T $(LNKFILE) -Wl,-Map,"$(EXE_FILE).map" -o "$(EXE_FILE).elf" $(OBJS) -lm
+	$(LINK)  $(LFLAGS) -T $(LNKFILE) -Wl,-Map,"$(EXE_FILE).map" -o "$(EXE_FILE).elf" $(LINK_INPUTS) -lm
 	@echo 'Finished building target: $@'
 ifneq ($(SIZE),)
 	$(SIZE) $(EXE_FILE).elf
@@ -102,7 +111,7 @@ endif
 
 # Other EXE_FILEs
 clean:
-	-$(RM) $(OBJS) $(SECONDARY_SIZE) $(ASM_DEPS) $(S_UPPER_DEPS) $(C_DEPS) $(EXE_FILE).elf $(EXE_FILE).map
+	-$(RM) $(OBJS) $(SECONDARY_SIZE) $(ASM_DEPS) $(S_UPPER_DEPS) $(C_DEPS) $(EXE_FILE).elf $(EXE_FILE).map $(EXE_FILE).objects.rsp
 	-@echo ' '
 
 .PHONY: all clean dependents

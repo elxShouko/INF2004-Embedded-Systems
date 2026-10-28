@@ -17,8 +17,9 @@ bool move_plan_validate (move_plan_config_t const * p_config, int32_t max_speed)
         (p_config->decel_mm_s2 <= INT32_MAX) &&
         (p_config->tolerance_um > 0U) &&
         (p_config->tolerance_um <= INT32_MAX) &&
-        (p_config->turn_scale_ppm[0] > 0U) &&
-        (p_config->turn_scale_ppm[1] > 0U) &&
+        (p_config->b_straight_only ||
+         ((p_config->turn_scale_ppm[0] > 0U) &&
+          (p_config->turn_scale_ppm[1] > 0U))) &&
         isfinite(p_config->correction_gain) &&
         (p_config->correction_gain >= 0.0F) &&
         (p_config->correction_limit_mm_s >= 0) &&
@@ -68,6 +69,11 @@ bool move_plan_begin (move_plan_t * p_plan,
             case MOVE_PLAN_U_LEFT:
             case MOVE_PLAN_U_RIGHT:
             {
+                if (p_config->b_straight_only)
+                {
+                    b_ok = false;
+                    break;
+                }
                 bool b_left = (MOVE_PLAN_LEFT == p_command->kind) ||
                               (MOVE_PLAN_U_LEFT == p_command->kind);
                 uint64_t divisor = ((MOVE_PLAN_LEFT == p_command->kind) ||

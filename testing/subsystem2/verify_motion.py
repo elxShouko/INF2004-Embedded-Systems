@@ -222,9 +222,7 @@ def main():
         print('\n'.join(problems) if problems else f'Style subset PASS {len(paths)} files')
         return bool(problems)
     out = opts.output_dir.resolve()
-    evidence_root = (HERE/'logs').resolve()
-    if out != evidence_root and evidence_root not in out.parents:
-        parser.error('evidence must stay inside testing/subsystem2/logs')
+    # An explicitly selected external folder keeps review output out of Git.
     out.mkdir(parents=True,exist_ok=True)
     paths = sorted(p for root in (BASE,HERE) for p in root.iterdir()
                    if p.suffix in ('.c','.h','.py') or p.name=='m2_make_recipes.txt')

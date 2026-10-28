@@ -3,6 +3,7 @@
  */
 #include "runtime_fake.h"
 #include "../../../app_program/subsystem4/imu_link.h"
+#include "../../../app_program/subsystem4/drv_lsm.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -48,6 +49,25 @@ static bool run_case (uint32_t number)
     {
         return false;
     }
+#if defined(APP_ROBOT) && APP_ROBOT
+    if ((210u == number) || (211u == number))
+    {
+        imu_core_sample_t raw = {0};
+        uint32_t result = 123u;
+        if (210u == number)
+        {
+            return ((E_PAR == imu_runtime_raw(NULL, &result)) &&
+                (E_PAR == imu_runtime_raw(&raw, NULL)) &&
+                (E_OK == imu_runtime_raw(&raw, &result)) &&
+                (UINT32_MAX == result) && (0u == g_fake.samples));
+        }
+        raw.time_ms = 777u;
+        g_fake.b_lock_failure = true;
+        return ((E_TMOUT == imu_runtime_raw(&raw, &result)) &&
+            (777u == raw.time_ms) && (123u == result) &&
+            (0u == g_fake.samples));
+    }
+#endif
     if (153u == number)
     {
         return (!g_fake.b_started) && (0u == g_fake.samples) &&
@@ -90,6 +110,17 @@ static bool run_case (uint32_t number)
         return false;
     }
     runtime_fake_run();
+#if defined(APP_ROBOT) && APP_ROBOT
+    if (212u == number)
+    {
+        imu_core_sample_t raw = {0};
+        uint32_t result = 123u;
+        uint32_t reads = g_fake.samples;
+        return ((reads > 0u) && (E_OK == imu_runtime_raw(&raw, &result)) &&
+            (DRV_LSM_IO_ERROR == result) && (raw.accel_g[2] == 1.0f) &&
+            (raw.time_ms < g_fake.time_ms) && (reads == g_fake.samples));
+    }
+#endif
     if ((E_OK != imu_runtime_wait_fault(TMO_POL)) ||
         (E_OK != imu_runtime_wait_fault(TMO_POL)) ||
         (E_OK != imu_runtime_get_status(&status)))

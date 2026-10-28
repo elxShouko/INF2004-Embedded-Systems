@@ -4,6 +4,20 @@
 #include "enc_capture.h"
 #include <stddef.h>
 
+bool enc_capture_init_raw (enc_capture_t * p_capture, uint32_t generation)
+{
+    if ((NULL == p_capture) || (0U == generation)) { return (false); }
+    *p_capture = (enc_capture_t){0};
+    bool b_ok = (MOTION_QUAD_OK == motion_quad_init(&p_capture->decoder[0],
+        MOTION_TYPES_POLARITY_NORMAL)) &&
+        (MOTION_QUAD_OK == motion_quad_init(&p_capture->decoder[1],
+        MOTION_TYPES_POLARITY_NORMAL));
+    p_capture->generation = generation;
+    p_capture->b_initialised = b_ok;
+    p_capture->b_healthy = b_ok;
+    return (b_ok);
+}
+
 bool enc_capture_init (enc_capture_t * p_capture,
     motion_config_t const * p_config, uint32_t generation)
 {

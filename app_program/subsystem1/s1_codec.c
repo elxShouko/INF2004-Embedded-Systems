@@ -1097,6 +1097,27 @@ s1_codec_parse_command_bin(const uint8_t *p_payload, uint32_t length)
     return b_ok ? (s1_codec_command_id_t)id : S1_CMD_NONE;
 }
 
+#if APP_ROBOT
+s1_codec_command_id_t s1_codec_parse_robot (uint8_t const * p_bytes,
+    uint32_t length, uint32_t * p_session)
+{
+    if ((NULL == p_bytes) || (NULL == p_session) || (5U != length) ||
+        (p_bytes[0] < 0xA1U) || (p_bytes[0] > 0xA5U))
+    {
+        return (S1_CMD_NONE);
+    }
+    uint32_t session = 0U;
+    for (uint32_t index = 0U; index < 4U; ++index)
+    {
+        session |= (uint32_t)p_bytes[index + 1U] << (8U * index);
+    }
+    if (0U == session) { return (S1_CMD_NONE); }
+    *p_session = session;
+    return ((s1_codec_command_id_t)(S1_CMD_BENCH_ENCODERS +
+        (p_bytes[0] - 0xA1U)));
+}
+#endif
+
 uint32_t
 s1_codec_encode_command_bin(s1_codec_command_id_t command_id,
                             uint8_t *p_buffer, uint32_t capacity)

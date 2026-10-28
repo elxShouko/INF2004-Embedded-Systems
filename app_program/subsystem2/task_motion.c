@@ -34,6 +34,20 @@ static drv_rp2040_t g_task_motion_backend;
 static drv_motor_io_t g_task_motion_raw_io;
 static drv_encoder_port_t g_task_motion_encoder;
 static bool g_task_motion_encoder_open;
+#if APP_ROBOT
+static bool g_task_motion_bench_mode;
+static bool g_task_motion_started;
+static motion_bench_t g_task_motion_bench;
+static motion_bench_status_t g_task_motion_bench_published;
+static uint16_t g_task_motion_bench_levels[2];
+static int64_t g_task_motion_bench_counts[2];
+static uint64_t g_task_motion_bench_quiet_us;
+static bool g_task_motion_bench_baseline;
+static uint8_t g_task_motion_bench_request;
+static uint32_t g_task_motion_bench_lease_ms;
+static bool g_task_motion_bench_have_lease;
+static void task_motion_bench_cycle (uint64_t now_us, UINT safety);
+#endif
 #if TK_SUPPORT_SMP
 static T_SPLOCK g_task_motion_capture_lock;
 #endif
@@ -116,7 +130,15 @@ ER task_motion_init (void)
 
 ER task_motion_start (void)
 {
+#if APP_ROBOT
+    if (!g_task_motion_ready || g_task_motion_started) { return (E_OBJ); }
+    g_task_motion_started = true;
+    ER error = tk_sta_tsk(g_task_motion_id, 0);
+    if (E_OK != error) { g_task_motion_started = false; }
+    return (error);
+#else
     return (g_task_motion_ready ? tk_sta_tsk(g_task_motion_id,0) : E_OBJ);
+#endif
 }
 
 bool motion_api_now (uint64_t * p_now_us)
@@ -142,6 +164,9 @@ motion_api_result_t motion_api_configure (wheel_loop_config_t const * p_config,
     drv_encoder_port_t const * p_encoder_port)
 {
     motion_api_result_t result = MOTION_API_INVALID;
+#if APP_ROBOT
+    if (g_task_motion_bench_mode) { return (result); }
+#endif
 
     if ((wheel_loop_validate(p_config)) && (NULL != p_encoder_port) &&
         (NULL != p_encoder_port->p_reserve) &&
@@ -161,6 +186,9 @@ motion_api_result_t motion_api_configure (wheel_loop_config_t const * p_config,
 
 motion_api_result_t motion_api_enable (void)
 {
+#if APP_ROBOT
+    if (g_task_motion_bench_mode) { return (MOTION_API_INVALID); }
+#endif
     motion_bus_request_t request = {0};
 
     request.kind = MOTION_BUS_ENABLE;
@@ -170,6 +198,9 @@ motion_api_result_t motion_api_enable (void)
 motion_api_result_t motion_api_submit (move_plan_command_t const * p_command)
 {
     motion_api_result_t result = MOTION_API_INVALID;
+#if APP_ROBOT
+    if (g_task_motion_bench_mode) { return (result); }
+#endif
 
     if ((NULL != p_command) && (0U != p_command->id) &&
         (0U != p_command->lifetime_us))
@@ -351,8 +382,16 @@ static bool task_motion_apply (void * p_context, drv_motor_wheel_t wheel,
         (void)task_motion_stop_outputs(NULL);
         return (false);
     }
-    return (g_task_motion_raw_io.p_apply(g_task_motion_raw_io.p_context,
-                                         wheel,level_a,level_b));
+    bool b_ok = g_task_motion_raw_io.p_apply(g_task_motion_raw_io.p_context,
+        wheel, level_a, level_b);
+#if APP_ROBOT
+    if (b_ok && g_task_motion_bench_mode && ((uint32_t)wheel < 2U))
+    {
+        g_task_motion_bench_levels[wheel] =
+            (level_a > level_b) ? level_a : level_b;
+    }
+#endif
+    return (b_ok);
 }
 
 static bool task_motion_stop_outputs (void * p_context)
@@ -470,6 +509,13 @@ static void task_motion_cycle (uint64_t now_us)
     motion_bus_request_t request = {0};
     bool b_present=false, b_stop=false, b_cancel=false;
     UINT safety = task_motion_safety();
+#if APP_ROBOT
+    if (g_task_motion_bench_mode)
+    {
+        task_motion_bench_cycle(now_us, safety);
+        return;
+    }
+#endif
 
     if (0U != safety)
     {
@@ -547,6 +593,9 @@ static void task_motion_entry (INT stacd, void * p_exinf)
         uint64_t now_us;
         TMO wait_ms = g_task_motion_run.b_initialised ?
             (TMO)(g_task_motion_run.loop.config.period_us/1000U) : TMO_FEVR;
+#if APP_ROBOT
+        if (g_task_motion_bench_mode) { wait_ms = 10; }
+#endif
         if (g_task_motion_run.loop.b_enabled && motion_api_now(&now_us))
         {
             uint64_t last_us = g_task_motion_run.loop.last_tick_us;
@@ -571,6 +620,16 @@ static void task_motion_entry (INT stacd, void * p_exinf)
         if (((E_OK != error) && (E_TMOUT != error)) ||
             !(motion_api_now(&now_us)))
         {
+#if APP_ROBOT
+            if (g_task_motion_bench_mode)
+            {
+                task_motion_bench_cycle(g_task_motion_bench.previous_us,
+                    TASK_MOTION_INTERNAL);
+                (void)task_motion_signal(TASK_MOTION_INTERNAL);
+                tk_ext_tsk();
+                return;
+            }
+#endif
             motion_run_emergency(&g_task_motion_run,MOTION_RUN_OUTPUT,
                                  g_task_motion_run.status.timestamp_us);
             if (g_task_motion_encoder_open)
@@ -639,6 +698,247 @@ static motion_api_result_t task_motion_lock (void)
     }
     return (result);
 }
+#if APP_ROBOT
+bool motion_api_bench_prepare (motion_bench_config_t const * p_config,
+    drv_encoder_port_t const * p_port)
+{
+    if (!g_task_motion_ready || g_task_motion_started ||
+        g_task_motion_bench_mode ||
+        (NULL == p_config) || (NULL == p_port) ||
+        (NULL == p_port->p_reserve) || (NULL == p_port->p_enable) ||
+        (NULL == p_port->p_release)) { return (false); }
+    drv_motor_io_t io = {NULL, task_motion_prepare, task_motion_apply,
+        task_motion_stop_outputs};
+    if (!drv_rp2040_bind(&g_task_motion_backend, &g_task_motion_raw_io) ||
+        !motion_bench_init(&g_task_motion_bench, p_config, &io))
+    {
+        return (false);
+    }
+    g_task_motion_encoder = *p_port;
+    g_task_motion_bench_mode = true;
+    if (p_config->b_encoder_on_boot)
+    {
+        g_task_motion_bench_request = MOTION_BENCH_ENCODERS;
+    }
+    return (true);
+}
+
+motion_api_result_t motion_api_bench_request (motion_bench_request_t request)
+{
+    if (!g_task_motion_bench_mode || (request < MOTION_BENCH_ENCODERS) ||
+        (request > MOTION_BENCH_PULSE)) { return (MOTION_API_INVALID); }
+    motion_api_result_t result = task_motion_lock();
+    if (MOTION_API_QUEUED == result)
+    {
+        if (0U != g_task_motion_bench_request) { result = MOTION_API_BUSY; }
+        else { g_task_motion_bench_request = (uint8_t)request; }
+        if (E_OK != tk_unl_mtx(g_task_motion_mutex))
+        {
+            (void)task_motion_signal(TASK_MOTION_INTERNAL);
+            result = MOTION_API_ERROR;
+        }
+        if (E_OK != tk_set_flg(g_task_motion_wake, TASK_MOTION_WAKE))
+        {
+            (void)task_motion_signal(TASK_MOTION_INTERNAL);
+            result = MOTION_API_ERROR;
+        }
+    }
+    return (result);
+}
+
+motion_api_result_t motion_api_bench_lease (uint32_t received_ms)
+{
+    if (!g_task_motion_bench_mode) { return (MOTION_API_INVALID); }
+    motion_api_result_t result = task_motion_lock();
+    if (MOTION_API_QUEUED == result)
+    {
+        uint32_t delta = received_ms - g_task_motion_bench_lease_ms;
+        if (!g_task_motion_bench_have_lease ||
+            ((0U != delta) && (delta < 0x80000000U)))
+        {
+            g_task_motion_bench_lease_ms = received_ms;
+            g_task_motion_bench_have_lease = true;
+        }
+        if (E_OK != tk_unl_mtx(g_task_motion_mutex))
+        {
+            (void)task_motion_signal(TASK_MOTION_INTERNAL);
+            result = MOTION_API_ERROR;
+        }
+    }
+    return (result);
+}
+
+motion_api_result_t motion_api_bench_status (motion_bench_status_t * p_status)
+{
+    if (!g_task_motion_bench_mode || (NULL == p_status))
+    {
+        return (MOTION_API_INVALID);
+    }
+    motion_api_result_t result = task_motion_lock();
+    if (MOTION_API_QUEUED == result)
+    {
+        *p_status = g_task_motion_bench_published;
+        if (E_OK != tk_unl_mtx(g_task_motion_mutex))
+        {
+            (void)task_motion_signal(TASK_MOTION_INTERNAL);
+            result = MOTION_API_ERROR;
+        }
+    }
+    return (result);
+}
+
+static void task_motion_bench_cycle (uint64_t now_us, UINT safety)
+{
+    uint8_t request = 0U;
+    uint32_t lease_ms = 0U;
+    bool b_lease = false;
+    bool b_stop = false;
+    if (MOTION_API_QUEUED == task_motion_lock())
+    {
+        request = g_task_motion_bench_request;
+        g_task_motion_bench_request = 0U;
+        lease_ms = g_task_motion_bench_lease_ms;
+        b_lease = g_task_motion_bench_have_lease &&
+            ((uint32_t)(now_us / 1000U) - lease_ms <
+                MOTION_BENCH_LEASE_US / 1000U);
+        b_stop = g_task_motion_bus.b_stop;
+        g_task_motion_bus.b_stop = false;
+        g_task_motion_bus.b_cancel = false;
+        if (E_OK != tk_unl_mtx(g_task_motion_mutex))
+        {
+            safety |= TASK_MOTION_INTERNAL;
+        }
+    }
+    /* No lock/transport can extend an existing motor pulse's local deadline. */
+    if ((MOTION_BENCH_ENCODERS == request) &&
+        !g_task_motion_encoder_open && (0U == safety) &&
+        !g_task_motion_bench.status.b_fault)
+    {
+        UINT saved;
+        bool b_ok = task_motion_capture_enter(&saved);
+        if (b_ok)
+        {
+            b_ok = enc_capture_init_raw(&g_task_motion_capture, 1U);
+            task_motion_capture_leave(saved);
+        }
+        if (b_ok)
+        {
+            b_ok = drv_encoder_open(&g_task_motion_encoder,
+                task_motion_edges, NULL);
+        }
+        g_task_motion_encoder_open = b_ok;
+        if (!b_ok) { safety |= TASK_MOTION_SENSOR; }
+    }
+    enc_capture_sample_t sample = {0};
+    bool b_healthy = false;
+    if (g_task_motion_encoder_open)
+    {
+        UINT saved;
+        if (task_motion_capture_enter(&saved))
+        {
+            b_healthy = enc_capture_get(&g_task_motion_capture,
+                now_us, &sample);
+            task_motion_capture_leave(saved);
+        }
+        if (!b_healthy) { safety |= TASK_MOTION_SENSOR; }
+    }
+    if (b_healthy)
+    {
+        if (!g_task_motion_bench_baseline ||
+            (g_task_motion_bench_counts[0] != sample.sample[0].count) ||
+            (g_task_motion_bench_counts[1] != sample.sample[1].count) ||
+            (now_us < g_task_motion_bench_quiet_us))
+        {
+            g_task_motion_bench_quiet_us = now_us;
+        }
+        g_task_motion_bench_counts[0] = sample.sample[0].count;
+        g_task_motion_bench_counts[1] = sample.sample[1].count;
+        g_task_motion_bench_baseline = true;
+    }
+    bool b_quiet = b_healthy && g_task_motion_bench_baseline &&
+        (now_us >= g_task_motion_bench_quiet_us) &&
+        (now_us - g_task_motion_bench_quiet_us >= MOTION_BENCH_QUIET_US);
+    g_task_motion_bench.status.b_count_quiet = b_quiet;
+    motion_bench_tick(&g_task_motion_bench, now_us, b_healthy, b_lease,
+        b_stop, 0U != safety);
+    bool b_accepted = false;
+    if ((0U == safety) && !b_stop && !g_task_motion_bench.status.b_fault)
+    {
+        if (MOTION_BENCH_ARM == request)
+        {
+            b_accepted = motion_bench_arm(&g_task_motion_bench, now_us,
+                b_quiet, b_lease);
+        }
+        else if (MOTION_BENCH_PULSE == request)
+        {
+            b_accepted = motion_bench_pulse(&g_task_motion_bench, now_us,
+                b_quiet, b_lease);
+        }
+        else { b_accepted = (MOTION_BENCH_ENCODERS == request) && b_healthy; }
+    }
+    if ((0U != request) && !b_accepted &&
+        g_task_motion_bench.status.b_armed)
+    {
+        motion_bench_tick(&g_task_motion_bench, now_us, b_healthy, b_lease,
+            true, true);
+    }
+    if (0U != request)
+    {
+        g_task_motion_bench.status.result = b_accepted ? 1U : 2U;
+    }
+    g_task_motion_bench.status.b_encoders = b_healthy;
+    for (uint32_t wheel = 0U; wheel < 2U; ++wheel)
+    {
+        if (0U != sample.sample[wheel].generation)
+        {
+            g_task_motion_bench.status.invalid_edges[wheel] =
+                sample.invalid[wheel];
+        }
+        g_task_motion_bench.status.pwm_level[wheel] =
+            g_task_motion_bench.status.b_running ?
+            g_task_motion_bench_levels[wheel] : 0U;
+        if (g_task_motion_bench.status.b_running)
+        {
+            g_task_motion_bench.status.last_pulse_pwm[wheel] =
+                g_task_motion_bench_levels[wheel];
+        }
+    }
+    if (g_task_motion_bench.status.b_fault && g_task_motion_encoder_open)
+    {
+        drv_encoder_close(&g_task_motion_encoder);
+        g_task_motion_encoder_open = false;
+    }
+    if (MOTION_API_QUEUED == task_motion_lock())
+    {
+        motion_run_status_t * p_status = &g_task_motion_bus.status;
+        p_status->timestamp_us = now_us;
+        p_status->state = g_task_motion_bench.status.b_fault ?
+            MOTION_RUN_FAULT : MOTION_RUN_UNCONFIGURED;
+        p_status->fault_result = g_task_motion_bench.status.b_fault ?
+            MOTION_RUN_EMERGENCY : MOTION_RUN_NONE;
+        p_status->b_encoder_valid = b_healthy &&
+            !g_task_motion_bench.status.b_fault;
+        if (b_healthy)
+        {
+            p_status->encoder_timestamp_us = now_us;
+            p_status->encoder_generation = g_task_motion_capture.generation;
+        }
+        p_status->measurement_max_age_us = MOTION_BENCH_POLL_US * 3U;
+        for (uint32_t wheel = 0U; wheel < 2U; ++wheel)
+        {
+            if (0U != sample.sample[wheel].generation)
+            {
+                p_status->encoder_count[wheel] = sample.sample[wheel].count;
+            }
+        }
+        g_task_motion_bench_published = g_task_motion_bench.status;
+        if (E_OK != tk_unl_mtx(g_task_motion_mutex))
+        {
+            (void)task_motion_signal(TASK_MOTION_INTERNAL);
+        }
+    }
+}
+#endif /* APP_ROBOT */
 #else
 typedef int task_motion_host_excluded_t;
 #endif /* Actual micro T-Kernel firmware, never host hardware. */

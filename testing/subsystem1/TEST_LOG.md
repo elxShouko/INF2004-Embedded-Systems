@@ -188,3 +188,18 @@ Exact compiler/Python commands and outputs are in the JSON. No production
 source changed in this audit, so prior matching-source build/test results
 remain applicable. No new firmware builds, hardware access or flash; no
 stage/commit/push. All cleanup changes still reside in the local main working tree.
+
+## Robot control extension definition 2026-10-28
+
+S1-U28: `host/test_net_bin_host.c`, compiled with APP_ROBOT=1. Expected: five-byte robot operation plus boot session survives the actual S1 command queue unchanged; malformed robot packet posts the independent emergency latch. Ordinary one-byte controls and 29-byte telemetry retain their layout. Included by `host/verify_windows.py`. No broker or radio is contacted.
+
+
+### Software verification run 2026-10-28 (uncommitted production commissioning)
+
+HEAD `993927ce2a0a258f7dc7ab91838194a22d45eda0` plus the approved dirty working
+tree. Final commands, scope, source/artifact hashes, external raw evidence paths
+and the complete changed-file list are recorded in
+[`docs/commissioning.md`](../../docs/commissioning.md#software-verification-and-delivery-2026-10-28).
+No physical hardware test, firmware flash or real MQTT session was performed.
+
+Existing host suites and the actual robot command queue suite pass; final robot netbin: 74 checks, zero failures. Published example credentials were used only for firmware linkage.

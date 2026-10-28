@@ -28,6 +28,8 @@ typedef struct
 /** @brief Init while acquisition stopped; generation must change on reset. */
 bool enc_capture_init (enc_capture_t * p_capture,
     motion_config_t const * p_config, uint32_t generation);
+/* Raw AB convention only; does not assert calibrated vehicle polarity/scale. */
+bool enc_capture_init_raw (enc_capture_t * p_capture, uint32_t generation);
 /** @brief Feed one simultaneous GPIO_IN read for the indicated encoder pins.
  * Baseline ALL pins before enabling edge events. Unknown events are ignored.
  * Invalid transitions/count limits latch unhealthy, never inferred as zero.
