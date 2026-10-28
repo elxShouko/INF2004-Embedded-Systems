@@ -701,3 +701,29 @@ git diff --check
 
 Host fakes do not verify electrical compatibility, timing on the target,
 original-route identity evidence or physical bypass/recovery.
+
+## Buddy 2 status compatibility check — 2026-10-28
+
+Reviewed Buddy 2's `447e83c` motion-status extension against the current Buddy
+5 consumer. The extension adds encoder-count feedback fields; the S5 stationary
+scan gate still uses the existing validity, standstill, state, active-command,
+sample-time and freshness fields. No Buddy 5 source or interface change was
+needed. Host verification was run at HEAD
+`93740736dd1c3407eaf7f496089a096cee70c140` on `buddy5-obstacle-actual`.
+
+| Scope | Result | Evidence |
+|---|---|---|
+| Shared integration and S5 policy/acquisition/live/MMIO regression | 82 normal groups PASS and eight deliberate mutations detected per default and optimized profiles | `../integration/logs/buddy5_s2_alignment_9374073_default.log`, `_optimized.log`, `_metadata.json` |
+| Buddy 5 acquisition bounds and driver/MMIO regression | 23 checks PASS and two deliberate acquisition regressions detected per default and optimized profiles | `logs/buddy5_s2_alignment_9374073.txt` |
+| Whitespace validation | PASS | `git diff --check` |
+
+Commands:
+
+```powershell
+python testing\integration\verify_integration.py --label buddy5_s2_alignment_9374073
+python testing\subsystem5\verify_representation.py --label buddy5_s2_alignment_9374073
+git diff --check
+```
+
+These are host tests, not a full firmware build, target execution, calibration
+or physical vehicle verification.

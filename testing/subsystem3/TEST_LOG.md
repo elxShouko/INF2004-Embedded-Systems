@@ -507,3 +507,62 @@ The log records source fingerprints, exact compiler commands and working-tree
 status. `git diff --check` passes. Only S3 source comments, S3 tests and S3 docs
 were edited. The production change is comment-only, so no firmware rebuild
 was needed; no flash, hardware access, staging, commit or push was performed.
+
+## Buddy 2 motion contract preservation — 2026-10-28
+
+Base: `93740736dd1c3407eaf7f496089a096cee70c140` on `buddy3-barcode`, plus
+uncommitted S3 header comments, tests and documentation. No runtime algorithm,
+wire layout, S2 implementation or shared controller change.
+
+| ID | Method | Expected result |
+|---|---|---|
+| S3-U41 | s3_submit, real packed input decoder and owner dispatch, synthetic raw timer above 32 bits | Preserve full-width micrometres/time; consistent duplicate expires at source-age boundary; changed distance or tracking flag rejected without baseline mutation; fresh tracking-state change accepted |
+| S3-U42 | Same public packed path with distinct synthetic motion, navigation and reply IDs | Motion ID in navigation payload rejected; matching navigation payload accepted regardless of reply token; recovery begins once; replay rejected |
+
+S3-U42 models the controller asserting successful stopped completion; it cannot
+validate that assertion because S3's existing DONE input carries no S2 status.
+Existing S3-U20/U23/U34 status-age, paused completion and odometry checks remain.
+
+Command (bundled Python runtime; native GCC):
+`C:/Users/linco/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -B testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-28_motion_contract.json`.
+
+| Date | Tests | Actual result | Evidence |
+|---|---|---|---|
+| 2026-10-28 | S3-U41/U42, all nine existing host suites and S3 style checks | PASS, host simulation | logs/2026-10-28_motion_contract.json |
+
+The JSON records exact compiler/run commands, HEAD, working-tree status and
+source hashes. `git diff --check` passed. Runtime source changes are comments
+only; no integrated firmware rebuild or on-target/hardware test was run.
+A read-only WSL prerequisite probe returned Wsl/E_ACCESSDENIED. No dependency
+installation, flash, hardware access, stage, commit or push was performed.
+
+Static inspection: S2 motion_run.c publishes successful completion from its
+STOPPING path only after b_standstill and motion_run_at_goal checks. The
+controller retains distinct active motion ID and navigation ID. This is source
+inspection, not new execution evidence for either owner.
+
+## Controller mode/message semantics — 2026-10-28
+
+Base `93740736dd1c3407eaf7f496089a096cee70c140`, buddy3-barcode plus uncommitted
+S3 motion-contract and mode-handoff comments, tests and documentation.
+
+| ID | Method | Expected result |
+|---|---|---|
+| S3-U43 | Real packed output encoder/s3_receive; packed mode submission/owner dispatch | Every valid command/state survives 19-byte navigation output; all four modes survive input packing; reserved state rejected |
+| S3-U44 | Real owner barcode/junction/completion/recovery sequence, packed output fake and s3_get_status with modeled publication | All four actions preserve AWAITING_MANOEUVRE; completion enters RECOVERY; LINE_FOUND retains recovery event-time state while current snapshot becomes PAUSED/TRACKING; only explicit resume restores tracking mode |
+
+These are S3 provider regressions, not an execution test of the Vehicle
+Controller or IMU. No new interface, enum, message length or runtime policy.
+
+Command:
+`C:/Users/linco/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -B testing/subsystem3/verify_production_timing.py --gcc C:/msys64/ucrt64/bin/gcc.exe --log testing/subsystem3/logs/2026-10-28_mode_handoff.json`.
+
+| Date | Tests | Actual result | Evidence |
+|---|---|---|---|
+| 2026-10-28 | S3-U43/U44, prior motion-contract regressions, all nine host suites and S3 style checks | PASS, host simulation | logs/2026-10-28_mode_handoff.json |
+
+The evidence records source hashes and compiler commands. A subsequent test
+comment was clarified only; executable logic is unchanged. `git diff --check`
+passes. Shared Vehicle Controller handoff was statically inspected, not executed
+by these provider tests. No firmware rebuild, hardware run, IMU change, stage,
+commit or push. Target delivery latency and SMP timing remain unmeasured.

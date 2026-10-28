@@ -8,7 +8,10 @@
 
 #include <stdint.h>
 
-/* Proposed Member 3 boundary types; no queue or controller implementation. */
+/* S3 boundary types used by the packed queue and Vehicle Controller.
+ * AWAITING_MANOEUVRE is S3's handoff state, not proof of motor execution.
+ * The command selects left/right/straight/U-turn; there is no turning mode.
+ */
 typedef enum
 {
     LINE_STATE_CALIBRATING = 0,
