@@ -64,14 +64,15 @@ EXPORT INT usermain(void); /* Kernel initial-task entry. */
 
 /* Bring-up profile for vehicle_runtime_setup(). ROUGH PLACEHOLDER VALUES taken
  * from the synthetic integration tests: measure the real robot and replace them.
- * b_calibrated and b_power_authorised stay false, so the mission stays blocked.
+ * vehicle_init() REQUIRES b_calibrated = true. b_power_authorised stays false, so
+ * the mission stays blocked by VEHICLE_BLOCK_POWER and the wheels cannot run.
  */
 static ER app_vehicle_profile(void)
 {
     vehicle_setup_t setup = {0};
 
     setup.mission = (vehicle_config_t){
-        100000U, 300000U, 2000000U, 100U, 100, 20, 80, 100000, 30U, false, false, false, {0}};
+        100000U, 300000U, 2000000U, 100U, 100, 20, 80, 100000, 30U, true, false, false, {0}}; /* calibrated: required by setup; power NOT authorised */
 
     setup.motion.geometry.left = (motion_config_wheel_t){
         1000U, 100000U, MOTION_TYPES_POLARITY_NORMAL,
