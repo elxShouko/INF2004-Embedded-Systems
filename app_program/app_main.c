@@ -236,6 +236,8 @@ EXPORT INT usermain(void)
     /* Test build (make TEST=1): run every subsystem's tests in turn,
        here in the initial task, while the system is running.  Tests may
        call tk_dly_tsk() to let the other tasks work for a while. */
+    (void)tk_dly_tsk(8000);
+    (void)tk_chg_pri(TSK_SELF, 10);
     tm_printf((UB *)"[TEST] === test run start ===\n");
     subsystem1_test();
     subsystem2_test();
